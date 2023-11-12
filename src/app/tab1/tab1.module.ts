@@ -6,7 +6,7 @@ import { Tab1Page } from './tab1.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
-import { InputModule } from '@noah231515/receipt-wrangler-core';
+import { InputModule } from '@receipt-wrangler/receipt-wrangler-core';
 
 @NgModule({
   imports: [

@@ -10,7 +10,9 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () =>
-      import('@noah231515/receipt-wrangler-core').then((m) => m.AuthModule),
+      import('@receipt-wrangler/receipt-wrangler-core').then(
+        (m) => m.AuthModule
+      ),
   },
   {
     path: '',

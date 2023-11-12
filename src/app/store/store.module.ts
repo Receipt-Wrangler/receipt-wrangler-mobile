@@ -6,7 +6,7 @@ import {
   AuthState,
   FeatureConfigState,
   GroupState,
-} from '@noah231515/receipt-wrangler-core';
+} from '@receipt-wrangler/receipt-wrangler-core';
 
 @NgModule({
   declarations: [],

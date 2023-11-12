@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FeatureConfigService } from '@noah231515/receipt-wrangler-core';
+import { FeatureConfigService } from '@receipt-wrangler/receipt-wrangler-core';
 
 @Component({
   selector: 'app-root',
