@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { authRoutes } from '@receipt-wrangler/receipt-wrangler-core';
-import { MobileAuthFormComponent } from './auth-form/mobile-auth-form.component';
+import { MobileAuthFormComponent } from './mobile-auth-form/mobile-auth-form.component';
 
 const routes: Routes = [...authRoutes];
 
