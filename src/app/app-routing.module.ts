@@ -12,10 +12,7 @@ const routes: Routes = [
   {
     path: 'auth',
     canActivate: [homeserverGuard],
-    loadChildren: () =>
-      import('@receipt-wrangler/receipt-wrangler-core').then(
-        (m) => m.AuthModule
-      ),
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: '',
