@@ -3,12 +3,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { homeserverGuard } from './guards/homeserver.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    canActivate: [homeserverGuard],
-    loadChildren: () =>
-      import('./tabs/tabs.module').then((m) => m.TabsPageModule),
-  },
+  // {
+  //   path: '',
+  //   canActivate: [homeserverGuard],
+  //   loadChildren: () =>
+  //     import('./tabs/tabs.module').then((m) => m.TabsPageModule),
+  // },
   {
     path: 'auth',
     canActivate: [homeserverGuard],
