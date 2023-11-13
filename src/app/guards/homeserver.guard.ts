@@ -8,5 +8,5 @@ export const homeserverGuard: CanActivateFn = (route, state) => {
   const serverUrl = store.selectSnapshot(ServerState.url);
   // TODO: reroute back to configure homeserver screen
 
-  return !!serverUrl;
+  return true;
 };

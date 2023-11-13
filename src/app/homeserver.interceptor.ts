@@ -24,7 +24,7 @@ export class HomeserverInterceptor implements HttpInterceptor {
 
     console.warn(request.url);
     const clone = request.clone({
-      url: 'https://google.com',
+      //url: 'https://google.com',
     });
     return next.handle(clone);
   }
