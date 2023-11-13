@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
+import { MobileAuthFormComponent } from './mobile-auth-form.component';
 
-import { AuthFormComponent } from './mobile-auth-form.component';
-
-describe('AuthFormComponent', () => {
-  let component: AuthFormComponent;
-  let fixture: ComponentFixture<AuthFormComponent>;
+describe('MobileAuthFormComponent', () => {
+  let component: MobileAuthFormComponent;
+  let fixture: ComponentFixture<MobileAuthFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthFormComponent],
+      declarations: [MobileAuthFormComponent],
       imports: [IonicModule.forRoot()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AuthFormComponent);
+    fixture = TestBed.createComponent(MobileAuthFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
