@@ -1,1 +1,12 @@
-<p></p>
+<app-auth-form
+  [emitSubmit]="true"
+  [additionalFieldsTemplate]="additionalFields"
+  (submitted)="submit()"
+></app-auth-form>
+
+<ng-template #additionalFields>
+  <app-input
+    label="Homeserver URL"
+    [inputFormControl]="homeserverUrlFormControl"
+  ></app-input>
+</ng-template>
