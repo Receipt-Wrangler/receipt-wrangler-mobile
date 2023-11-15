@@ -1,6 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  ViewChild,
+  runInInjectionContext,
+} from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { AuthForm } from '@receipt-wrangler/receipt-wrangler-core';
+import { Store } from '@ngxs/store';
+import {
+  AuthForm,
+  AuthFormUtil,
+} from '@receipt-wrangler/receipt-wrangler-core';
+import { catchError, of, take, tap } from 'rxjs';
+import { SetServerUrl } from 'src/app/store/server.state.actions';
 
 @Component({
   selector: 'app-mobile-auth-form',
@@ -12,7 +24,11 @@ export class MobileAuthFormComponent implements OnInit {
 
   public homeserverUrlFormControl!: FormControl;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private store: Store,
+    private authFormUtil: AuthFormUtil
+  ) {}
 
   public ngOnInit() {
     this.initHomeserverUrlFormControl();
@@ -20,13 +36,26 @@ export class MobileAuthFormComponent implements OnInit {
 
   private initHomeserverUrlFormControl(): void {
     this.homeserverUrlFormControl = this.formBuilder.control('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/https?:\/\/.*/)],
     });
   }
 
   public submit(): void {
-    console.warn('subbmitted');
-    console.warn(this.homeserverUrlFormControl.value);
-    console.warn(this.authForm.form.value);
+    if (this.authForm.form.valid && this.homeserverUrlFormControl.valid) {
+      this.store.dispatch(
+        new SetServerUrl(this.homeserverUrlFormControl.value)
+      );
+
+      this.authFormUtil
+        .getSubmitObservable(this.authForm.form, this.authForm.isSignUp.value)
+        .pipe(
+          take(1),
+          catchError((err) => {
+            this.store.dispatch(new SetServerUrl(''));
+            return of(err);
+          })
+        )
+        .subscribe();
+    }
   }
 }
