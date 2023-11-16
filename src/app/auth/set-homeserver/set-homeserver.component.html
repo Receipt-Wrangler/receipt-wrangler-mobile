@@ -1,0 +1,19 @@
+<div class="d-flex align-items-center justify-content-center">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2>Set Homeserver URL</h2>
+    <div class="d-flex flex-column">
+      <app-input
+        label="Homeserver Url"
+        [inputFormControl]="form | formGet : 'url'"
+      ></app-input>
+    </div>
+    <div class="w-100 d-flex flex-column">
+      <app-button
+        class="w-100"
+        buttonClass="w-100 mb-2"
+        buttonText="Next"
+        type="submit"
+      ></app-button>
+    </div>
+  </form>
+</div>

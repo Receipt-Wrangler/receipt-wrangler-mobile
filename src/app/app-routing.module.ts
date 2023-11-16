@@ -11,12 +11,12 @@ const routes: Routes = [
   // },
   {
     path: 'auth',
-    canActivate: [homeserverGuard],
+    canActivate: [],
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: '',
-    redirectTo: '/auth/login',
+    redirectTo: '/auth/homeserver',
     pathMatch: 'full',
   },
 ];
