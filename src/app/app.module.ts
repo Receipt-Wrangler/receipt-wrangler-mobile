@@ -1,22 +1,45 @@
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
-
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-
+import { Config, IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import {
+  ApiModule,
+  Configuration,
+  InputModule,
+} from '@receipt-wrangler/receipt-wrangler-core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { InputModule } from '@noah231515/receipt-wrangler-core';
+import { StoreModule } from './store/store.module';
+import { HomeserverInterceptor } from './homeserver.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
+    ApiModule.forRoot(() => {
+      return new Configuration({
+        withCredentials: true,
+      });
+    }),
     AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    HttpClientModule,
     InputModule,
+    IonicModule.forRoot(),
+    MatSnackBarModule,
+    StoreModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HomeserverInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
