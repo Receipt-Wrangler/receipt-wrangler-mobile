@@ -11,7 +11,8 @@ import {
   FeatureConfigService,
   SnackbarService,
 } from '@receipt-wrangler/receipt-wrangler-core';
-import { catchError, take, tap } from 'rxjs';
+import { catchError, of, take, tap } from 'rxjs';
+import { ServerState } from 'src/app/store/server.state';
 import { SetServerUrl } from 'src/app/store/server.state.actions';
 
 @Component({
@@ -37,13 +38,8 @@ export class SetHomeserverComponent implements OnInit {
   private initForm(): void {
     this.form.addControl(
       'url',
-      this.formBuilder.control('', {
-        validators: [
-          Validators.required,
-          Validators.pattern(
-            /^(https?:\/\/)([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,6})\/?$/
-          ),
-        ],
+      this.formBuilder.control(this.store.selectSnapshot(ServerState.url), {
+        validators: [Validators.required],
       })
     );
   }
@@ -51,17 +47,21 @@ export class SetHomeserverComponent implements OnInit {
   public submit(): void {
     if (this.form.valid) {
       this.store.dispatch(new SetServerUrl(this.form.value.url));
-      this.featureConfigService.getFeatureConfig().pipe(
-        take(1),
-        tap(() => {
-          this.router.navigate(['/auth', 'login']);
-        }),
-        catchError((err) => {
-          this.snackbarService.error("Couldn't connect to server");
-          this.store.dispatch(new SetServerUrl(''));
-          return err;
-        })
-      );
+      this.featureConfigService
+        .getFeatureConfig()
+        .pipe(
+          take(1),
+          tap(() => {
+            this.snackbarService.success('Successfully connected to server');
+            this.router.navigate(['/auth', 'login']);
+          }),
+          catchError((err) => {
+            this.snackbarService.error("Couldn't connect to server");
+            this.store.dispatch(new SetServerUrl(''));
+            return of(err);
+          })
+        )
+        .subscribe();
     }
   }
 }

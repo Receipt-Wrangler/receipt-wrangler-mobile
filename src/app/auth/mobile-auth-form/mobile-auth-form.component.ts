@@ -1,18 +1,12 @@
-import {
-  Component,
-  Injector,
-  OnInit,
-  ViewChild,
-  runInInjectionContext,
-} from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import {
   AuthForm,
   AuthFormUtil,
 } from '@receipt-wrangler/receipt-wrangler-core';
-import { catchError, of, take, tap } from 'rxjs';
-import { SetServerUrl } from 'src/app/store/server.state.actions';
+import { take } from 'rxjs';
+import { ServerState } from 'src/app/store/server.state';
 
 @Component({
   selector: 'app-mobile-auth-form',
@@ -35,26 +29,16 @@ export class MobileAuthFormComponent implements OnInit {
   }
 
   private initHomeserverUrlFormControl(): void {
-    this.homeserverUrlFormControl = this.formBuilder.control('', {
-      validators: [Validators.required, Validators.pattern(/https?:\/\/.*/)],
-    });
+    this.homeserverUrlFormControl = this.formBuilder.control(
+      this.store.selectSnapshot(ServerState.url)
+    );
   }
 
   public submit(): void {
-    if (this.authForm.form.valid && this.homeserverUrlFormControl.valid) {
-      this.store.dispatch(
-        new SetServerUrl(this.homeserverUrlFormControl.value)
-      );
-
+    if (this.authForm.form.valid) {
       this.authFormUtil
         .getSubmitObservable(this.authForm.form, this.authForm.isSignUp.value)
-        .pipe(
-          take(1),
-          catchError((err) => {
-            this.store.dispatch(new SetServerUrl(''));
-            return of(err);
-          })
-        )
+        .pipe(take(1))
         .subscribe();
     }
   }

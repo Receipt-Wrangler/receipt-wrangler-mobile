@@ -4,7 +4,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { Config, IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import {
   ApiModule,
   Configuration,
@@ -18,7 +18,11 @@ import { HomeserverInterceptor } from './homeserver.interceptor';
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    ApiModule,
+    ApiModule.forRoot(() => {
+      return new Configuration({
+        withCredentials: true,
+      });
+    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
