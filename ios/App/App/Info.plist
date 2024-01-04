@@ -6,6 +6,7 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>receipt-wrangler-mobile</string>
+        <string>receipt-wrangler-mobile</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
