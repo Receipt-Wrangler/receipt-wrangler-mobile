@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   AuthForm,
   AuthFormUtil,
 } from '@receipt-wrangler/receipt-wrangler-core';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { ServerState } from 'src/app/store/server.state';
 
 @Component({
@@ -21,7 +22,8 @@ export class MobileAuthFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private store: Store,
-    private authFormUtil: AuthFormUtil
+    private authFormUtil: AuthFormUtil,
+    private router: Router
   ) {}
 
   public ngOnInit() {
@@ -38,7 +40,12 @@ export class MobileAuthFormComponent implements OnInit {
     if (this.authForm.form.valid) {
       this.authFormUtil
         .getSubmitObservable(this.authForm.form, this.authForm.isSignUp.value)
-        .pipe(take(1))
+        .pipe(
+          take(1),
+          tap(() => {
+            this.router.navigate(['/']);
+          })
+        )
         .subscribe();
     }
   }

@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { homeserverGuard } from './guards/homeserver.guard';
+import { TabsComponent } from './tabs/tabs.compnent';
+import { TabsPageModule } from './tabs/tabs.module';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   canActivate: [homeserverGuard],
-  //   loadChildren: () =>
-  //     import('./tabs/tabs.module').then((m) => m.TabsPageModule),
-  // },
+  {
+    path: '',
+    canActivate: [homeserverGuard],
+    component: TabsComponent,
+    children: [],
+  },
   {
     path: 'auth',
     canActivate: [],
@@ -21,7 +23,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), TabsPageModule],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
