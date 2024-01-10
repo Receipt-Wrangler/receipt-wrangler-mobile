@@ -9,7 +9,14 @@ const routes: Routes = [
     path: '',
     canActivate: [homeserverGuard],
     component: TabsComponent,
-    children: [],
+    children: [
+      {
+        path: 'groups',
+        canActivate: [],
+        loadChildren: () =>
+          import('./groups/groups.module').then((m) => m.GroupsModule),
+      },
+    ],
   },
   {
     path: 'auth',
