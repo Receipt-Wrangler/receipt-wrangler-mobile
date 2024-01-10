@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { homeserverGuard } from './guards/homeserver.guard';
 import { TabsComponent } from './tabs/tabs.compnent';
 import { TabsPageModule } from './tabs/tabs.module';
+import { AuthGuard } from '@receipt-wrangler/receipt-wrangler-core';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
     children: [
       {
         path: 'groups',
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('./groups/groups.module').then((m) => m.GroupsModule),
       },

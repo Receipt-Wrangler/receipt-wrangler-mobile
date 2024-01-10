@@ -33,7 +33,7 @@
     "@ionic/angular": "^7.5.4",
     "@ngxs/storage-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
-    "@receipt-wrangler/receipt-wrangler-core": "1.40.0",
+    "@receipt-wrangler/receipt-wrangler-core": "1.48.0",
     "bootstrap-scss": "^5.3.2",
     "ionicons": "^7.2.1",
     "material-icons": "^1.13.1",
