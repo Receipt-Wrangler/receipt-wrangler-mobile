@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { homeserverGuard } from './guards/homeserver.guard';
-import { TabsPage } from './tabs/tabs.page';
+import { TabsComponent } from './tabs/tabs.compnent';
 import { TabsPageModule } from './tabs/tabs.module';
 
 const routes: Routes = [
   {
     path: '',
     canActivate: [homeserverGuard],
-    component: TabsPage,
+    component: TabsComponent,
     children: [],
   },
   {
