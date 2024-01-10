@@ -12,7 +12,6 @@ const routes: Routes = [
     children: [
       {
         path: 'groups',
-        canActivate: [],
         loadChildren: () =>
           import('./groups/groups.module').then((m) => m.GroupsModule),
       },

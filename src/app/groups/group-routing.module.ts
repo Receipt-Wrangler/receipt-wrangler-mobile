@@ -4,7 +4,7 @@ import { GroupsListComponent } from './groups-list/groups-list.component';
 
 const routes: Routes = [
   {
-    path: '/',
+    path: '',
     component: GroupsListComponent,
   },
 ];
