@@ -1,3 +1,4 @@
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
@@ -19,6 +20,9 @@ import { ServerState } from './server.state';
       FeatureConfigState,
       ServerState,
     ]),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      disabled: true,
+    }),
     NgxsStoragePluginModule.forRoot({
       key: ['groups', 'layout', 'receiptTable', 'server'],
     }),

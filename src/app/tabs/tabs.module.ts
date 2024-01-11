@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { TabsComponent } from './tabs.compnent';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
   declarations: [TabsComponent],
 })
 export class TabsPageModule {}

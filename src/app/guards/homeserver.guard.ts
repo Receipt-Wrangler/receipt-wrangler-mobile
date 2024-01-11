@@ -1,7 +1,9 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
+
 import { ServerState } from '../store/server.state';
+import { HOME_ROUTE } from '../constants';
 
 export const homeserverGuard: CanActivateFn = (route, state) => {
   const store = inject(Store);
@@ -9,7 +11,7 @@ export const homeserverGuard: CanActivateFn = (route, state) => {
   const serverUrl = store.selectSnapshot(ServerState.url);
 
   if (!serverUrl) {
-    router.navigate(['']);
+    router.navigate([HOME_ROUTE]);
   }
 
   return !!serverUrl;
