@@ -1,3 +1,7 @@
-<p>
-  groups-list works!
-</p>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let group of groups | async">
+      <ion-label>{{ group.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
