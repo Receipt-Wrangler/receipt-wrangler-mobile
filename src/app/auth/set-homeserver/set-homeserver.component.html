@@ -1,6 +1,6 @@
-<ion-content>
-  <div class="d-flex align-items-center justify-content-center">
-    <form [formGroup]="form" (ngSubmit)="submit()">
+<ion-content class="ion-padding">
+  <div class="d-flex align-items-center justify-content-center w-100 h-100">
+    <form class="w-100" [formGroup]="form" (ngSubmit)="submit()">
       <h2>Set Homeserver URL</h2>
       <div class="d-flex flex-column">
         <wrangler-mobile-input
@@ -10,7 +10,7 @@
       </div>
       <div class="w-100 d-flex flex-column">
         <wrangler-mobile-button
-          expand="full"
+          expand="block"
           buttonText="Next"
           type="submit"
         ></wrangler-mobile-button>
