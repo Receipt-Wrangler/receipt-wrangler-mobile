@@ -1,9 +1,11 @@
 <ion-content class="ion-padding">
   <form
     [formGroup]="form"
+    (ngSubmit)="submit()"
     class="d-flex ion-align-items-center ion-justify-content-center w-100 h-100"
   >
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column w-100">
+      <ion-title>Login</ion-title>
       <wrangler-mobile-input
         label="URL"
         [inputFormControl]="homeserverUrlFormControl"
@@ -15,10 +17,19 @@
       >
       </wrangler-mobile-input>
       <wrangler-mobile-input
+        class="mb-2"
         label="Password"
         [inputFormControl]="form | formGet : 'password'"
       >
       </wrangler-mobile-input>
+
+      <div class="d-flex flex-column">
+        <wrangler-mobile-button
+          expand="block"
+          type="submit"
+          buttonText="Login"
+        ></wrangler-mobile-button>
+      </div>
     </div>
   </form>
 </ion-content>
