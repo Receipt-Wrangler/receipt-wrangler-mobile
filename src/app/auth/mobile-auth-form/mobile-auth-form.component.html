@@ -1,8 +1,27 @@
-<app-auth-form
-  [emitSubmit]="true"
-  [additionalFieldsTemplate]="additionalFields"
-  (submitted)="submit()"
-></app-auth-form>
+<ion-content class="ion-padding">
+  <form
+    [formGroup]="form"
+    class="d-flex ion-align-items-center ion-justify-content-center w-100 h-100"
+  >
+    <div class="d-flex flex-column">
+      <wrangler-mobile-input
+        label="URL"
+        [inputFormControl]="homeserverUrlFormControl"
+      >
+      </wrangler-mobile-input>
+      <wrangler-mobile-input
+        label="Username"
+        [inputFormControl]="form | formGet : 'username'"
+      >
+      </wrangler-mobile-input>
+      <wrangler-mobile-input
+        label="Password"
+        [inputFormControl]="form | formGet : 'password'"
+      >
+      </wrangler-mobile-input>
+    </div>
+  </form>
+</ion-content>
 
 <ng-template #additionalFields>
   <app-input
