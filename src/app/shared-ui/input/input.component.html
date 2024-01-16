@@ -6,3 +6,12 @@
   [placeholder]="placeholder"
   [type]="type"
 ></ion-input>
+
+<ng-container *ngIf="inputFormControl?.touched">
+  <small
+    class="helper-text error-text error-color sc-ion-input-md"
+    *ngFor="let err of formControlErrors | async"
+  >
+    {{ err.message }}
+  </small>
+</ng-container>
