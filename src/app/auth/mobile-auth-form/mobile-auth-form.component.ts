@@ -1,14 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
-  AppInitService,
   AuthForm,
   AuthFormUtil,
   UserValidators,
 } from '@receipt-wrangler/receipt-wrangler-core';
-import { switchMap, take, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { ServerState } from 'src/app/store/server.state';
 
 @Component({
@@ -21,7 +20,6 @@ export class MobileAuthFormComponent extends AuthForm implements OnInit {
   public homeserverUrlFormControl!: FormControl;
 
   constructor(
-    private appInitService: AppInitService,
     protected override authFormUtil: AuthFormUtil,
     protected override formBuilder: FormBuilder,
     protected override route: ActivatedRoute,
@@ -50,7 +48,9 @@ export class MobileAuthFormComponent extends AuthForm implements OnInit {
         .pipe(
           take(1),
           tap(() => {
-            this.router.navigate(['/']);
+            if (!this.isSignUp.value) {
+              this.router.navigate(['/']);
+            }
           })
         )
         .subscribe();

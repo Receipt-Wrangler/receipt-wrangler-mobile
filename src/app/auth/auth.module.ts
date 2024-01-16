@@ -4,6 +4,7 @@ import {
   AuthFormUtil,
   ButtonModule,
   AuthModule as CoreAuthModule,
+  DirectivesModule,
   InputModule,
   PipesModule,
 } from '@receipt-wrangler/receipt-wrangler-core';
@@ -22,6 +23,7 @@ import { SharedUiModule } from '../shared-ui/shared-ui.module';
     ButtonModule,
     CommonModule,
     CoreAuthModule,
+    DirectivesModule,
     InputModule,
     IonicModule,
     PipesModule,

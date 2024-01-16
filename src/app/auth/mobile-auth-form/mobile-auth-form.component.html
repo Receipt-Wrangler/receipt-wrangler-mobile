@@ -5,12 +5,19 @@
     class="d-flex ion-align-items-center ion-justify-content-center w-100 h-100"
   >
     <div class="d-flex flex-column w-100">
-      <ion-title>Login</ion-title>
+      <h2>{{ headerText }}</h2>
       <wrangler-mobile-input
         label="URL"
         [inputFormControl]="homeserverUrlFormControl"
       >
       </wrangler-mobile-input>
+      <ng-container *ngIf="isSignUp | async">
+        <wrangler-mobile-input
+          label="Displayname"
+          [inputFormControl]="form | formGet : 'displayname'"
+        >
+        </wrangler-mobile-input>
+      </ng-container>
       <wrangler-mobile-input
         label="Username"
         [inputFormControl]="form | formGet : 'username'"
@@ -27,7 +34,14 @@
         <wrangler-mobile-button
           expand="block"
           type="submit"
-          buttonText="Login"
+          [buttonText]="primaryButtonText"
+        ></wrangler-mobile-button>
+        <wrangler-mobile-button
+          *appFeature="'enableLocalSignUp'"
+          expand="block"
+          type="button"
+          [buttonText]="secondaryButtonText"
+          [routerLink]="secondaryButtonRouterLink"
         ></wrangler-mobile-button>
       </div>
     </div>
