@@ -18,8 +18,6 @@ import { ServerState } from 'src/app/store/server.state';
   providers: [UserValidators],
 })
 export class MobileAuthFormComponent extends AuthForm implements OnInit {
-  @ViewChild(AuthForm) public authForm!: AuthForm;
-
   public homeserverUrlFormControl!: FormControl;
 
   constructor(
@@ -46,12 +44,11 @@ export class MobileAuthFormComponent extends AuthForm implements OnInit {
   }
 
   public override submit(): void {
-    if (this.authForm.form.valid) {
+    if (this.form.valid) {
       this.authFormUtil
-        .getSubmitObservable(this.authForm.form, this.authForm.isSignUp.value)
+        .getSubmitObservable(this.form, this.isSignUp.value)
         .pipe(
           take(1),
-          switchMap(() => this.appInitService.initAppData()),
           tap(() => {
             this.router.navigate(['/']);
           })
