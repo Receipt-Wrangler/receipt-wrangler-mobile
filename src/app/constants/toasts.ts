@@ -1,4 +1,6 @@
 import { ToastOptions } from '@ionic/angular';
+import { SnackbarService } from '@receipt-wrangler/receipt-wrangler-core';
+import { ToastService } from '../services/toast.service';
 
 export const DEFAULT_TOAST_CONFIG: ToastOptions = {
   position: 'top',
@@ -10,4 +12,9 @@ export const DEFAULT_TOAST_CONFIG: ToastOptions = {
       role: 'cancel',
     },
   ],
+};
+
+export const TOAST_PROVIDER = {
+  provide: SnackbarService,
+  useClass: ToastService,
 };

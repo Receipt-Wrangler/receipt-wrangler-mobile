@@ -2,7 +2,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { NgxsModule } from '@ngxs/store';
-import { ApiModule } from '@receipt-wrangler/receipt-wrangler-core';
+import {
+  ApiModule,
+  PipesModule,
+} from '@receipt-wrangler/receipt-wrangler-core';
+import { TOAST_PROVIDER } from 'src/app/constants';
 import { SetHomeserverComponent } from './set-homeserver.component';
 
 describe('SetHomeserverComponent', () => {
@@ -14,10 +18,12 @@ describe('SetHomeserverComponent', () => {
       declarations: [SetHomeserverComponent],
       imports: [
         ApiModule,
+        HttpClientTestingModule,
         IonicModule.forRoot(),
         NgxsModule.forRoot([]),
-        HttpClientTestingModule,
+        PipesModule,
       ],
+      providers: [TOAST_PROVIDER],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SetHomeserverComponent);

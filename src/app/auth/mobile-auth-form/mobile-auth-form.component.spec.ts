@@ -1,13 +1,16 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { MobileAuthFormComponent } from './mobile-auth-form.component';
+import { NgxsModule } from '@ngxs/store';
 import {
   ApiModule,
   AuthFormUtil,
+  PipesModule,
 } from '@receipt-wrangler/receipt-wrangler-core';
-import { NgxsModule } from '@ngxs/store';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InjectionToken } from '@angular/core';
+import { of } from 'rxjs';
+import { TOAST_PROVIDER } from 'src/app/constants';
+import { MobileAuthFormComponent } from './mobile-auth-form.component';
 
 describe('MobileAuthFormComponent', () => {
   let component: MobileAuthFormComponent;
@@ -18,15 +21,19 @@ describe('MobileAuthFormComponent', () => {
       declarations: [MobileAuthFormComponent],
       imports: [
         ApiModule,
+        HttpClientTestingModule,
         IonicModule.forRoot(),
         NgxsModule.forRoot([]),
-        HttpClientTestingModule,
+        PipesModule,
       ],
       providers: [
         AuthFormUtil,
+        TOAST_PROVIDER,
         {
-          provide: new InjectionToken('MatSnackBar'),
-          useValue: {},
+          provide: ActivatedRoute,
+          useValue: {
+            data: of({}),
+          },
         },
       ],
     }).compileComponents();
