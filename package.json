@@ -34,7 +34,7 @@
     "@ngxs/storage-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
     "@ngneat/until-destroy": "^9.2.3",
-    "@receipt-wrangler/receipt-wrangler-core": "1.51.0",
+    "@receipt-wrangler/receipt-wrangler-core": "1.52.0",
     "bootstrap-scss": "^5.3.2",
     "ionicons": "^7.2.1",
     "material-icons": "^1.13.1",

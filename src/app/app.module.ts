@@ -9,11 +9,13 @@ import {
   ApiModule,
   Configuration,
   InputModule,
+  SnackbarService,
 } from '@receipt-wrangler/receipt-wrangler-core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoreModule } from './store/store.module';
 import { HomeserverInterceptor } from './homeserver.interceptor';
+import { ToastService } from './services/toast.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +40,10 @@ import { HomeserverInterceptor } from './homeserver.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: HomeserverInterceptor,
       multi: true,
+    },
+    {
+      provide: SnackbarService,
+      useClass: ToastService,
     },
   ],
   bootstrap: [AppComponent],

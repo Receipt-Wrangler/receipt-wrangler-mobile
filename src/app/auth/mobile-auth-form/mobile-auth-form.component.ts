@@ -49,7 +49,7 @@ export class MobileAuthFormComponent extends AuthForm implements OnInit {
           take(1),
           tap(() => {
             if (!this.isSignUp.value) {
-              this.router.navigate(['/']);
+              this.router.navigate(['/groups']);
             }
           })
         )
