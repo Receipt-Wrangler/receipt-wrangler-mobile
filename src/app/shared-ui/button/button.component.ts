@@ -1,9 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'wrangler-mobile-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ButtonComponent {
   @Input() public buttonText: string = '';
@@ -13,6 +20,8 @@ export class ButtonComponent {
   @Input() public disabled: boolean = false;
 
   @Input() public type: 'button' | 'submit' | 'reset' = 'button';
+
+  @Input() public color: string = 'primary';
 
   @Output() public clicked: EventEmitter<MouseEvent> =
     new EventEmitter<MouseEvent>();
