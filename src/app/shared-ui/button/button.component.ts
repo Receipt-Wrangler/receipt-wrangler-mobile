@@ -1,16 +1,9 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'wrangler-mobile-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class ButtonComponent {
   @Input() public buttonText: string = '';
