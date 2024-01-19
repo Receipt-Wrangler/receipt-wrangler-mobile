@@ -14,6 +14,8 @@ export class ButtonComponent {
 
   @Input() public type: 'button' | 'submit' | 'reset' = 'button';
 
+  @Input() public color: string = 'primary';
+
   @Output() public clicked: EventEmitter<MouseEvent> =
     new EventEmitter<MouseEvent>();
 
