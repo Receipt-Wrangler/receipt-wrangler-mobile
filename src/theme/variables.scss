@@ -3,12 +3,12 @@
 @import "/node_modules/@receipt-wrangler/receipt-wrangler-core/styles/variables.scss";
 
 $primary-color: map-get($primary-palette, 400);
-$primary-color-contrast: map-get(map-get($primary-palette, contrast), 100);
+$primary-color-contrast: white;
 $primary-color-shade: map-get($primary-palette, 600);
 $primary-color-tint: map-get($primary-palette, 200);
 
 $secondary-color: map-get($accent-palette, 400);
-$secondary-color-contrast: map-get(map-get($accent-palette, contrast), 100);
+$secondary-color-contrast: white;
 $secondary-color-shade: map-get($accent-palette, 600);
 $secondary-color-tint: map-get($accent-palette, 200);
 
@@ -24,6 +24,8 @@ $warning-color-tint: map-get($warn-palette, 200);
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-font-family: Raleway, sans-serif;
+
   /** primary **/
   --ion-color-primary: #{$primary-color};
   --ion-color-primary-rgb: #{rgba($primary-color, 1)};
@@ -31,8 +33,6 @@ $warning-color-tint: map-get($warn-palette, 200);
   --ion-color-primary-contrast-rgb: #{rgba($primary-color-contrast, 1)};
   --ion-color-primary-shade: #{$primary-color-shade};
   --ion-color-primary-tint: #{$primary-color-tint};
-
-  @debug var(primary);
 
   /** secondary **/
   --ion-color-secondary: #{$secondary-color};
