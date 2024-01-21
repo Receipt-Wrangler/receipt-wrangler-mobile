@@ -8,6 +8,7 @@ import { Config, IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import {
   ApiModule,
   Configuration,
+  FeatureConfigService,
   InputModule,
   SnackbarService,
 } from '@receipt-wrangler/receipt-wrangler-core';
@@ -16,6 +17,7 @@ import { AppComponent } from './app.component';
 import { StoreModule } from './store/store.module';
 import { HomeserverInterceptor } from './homeserver.interceptor';
 import { ToastService } from './services/toast.service';
+import { FeatureConfigServiceWrapper } from './services/wrappers/feature-config-service-wrapper.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,6 +46,10 @@ import { ToastService } from './services/toast.service';
     {
       provide: SnackbarService,
       useClass: ToastService,
+    },
+    {
+      provide: FeatureConfigService,
+      useClass: FeatureConfigServiceWrapper,
     },
   ],
   bootstrap: [AppComponent],

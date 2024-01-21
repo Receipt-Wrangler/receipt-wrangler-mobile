@@ -15,8 +15,8 @@ export interface ServerStateInterface {
 @Injectable()
 export class ServerState {
   @Selector()
-  static url(state: ServerStateInterface): string | undefined {
-    return state.url;
+  static url(state: ServerStateInterface): string {
+    return state.url ?? '';
   }
 
   @Action(SetServerUrl)
