@@ -41,6 +41,7 @@ import {
   ReceiptServiceWrapper,
   SearchServiceWrapper,
   TagServiceWrapper,
+  UserPreferenceServiceWrapper,
   UserServiceWrapper,
 } from './services/wrappers';
 
@@ -118,7 +119,7 @@ import {
     },
     {
       provide: UserPreferencesService,
-      useClass: UserServiceWrapper,
+      useClass: UserPreferenceServiceWrapper,
     },
     {
       provide: UserService,
