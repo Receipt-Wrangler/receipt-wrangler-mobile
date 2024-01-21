@@ -5,8 +5,14 @@ const config: CapacitorConfig = {
   appName: 'receipt-wrangler-mobile',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'http',
+    cleartext: true,
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
+  },
 };
 
 export default config;
