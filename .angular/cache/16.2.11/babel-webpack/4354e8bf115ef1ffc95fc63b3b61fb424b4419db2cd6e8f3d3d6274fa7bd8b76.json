@@ -1,0 +1,1 @@
+{"ast":null,"code":"export let SetServerUrl = /*#__PURE__*/(() => {\n  var _class;\n  class SetServerUrl {\n    constructor(url) {\n      this.url = url;\n    }\n  }\n  _class = SetServerUrl;\n  _class.type = '[Server] Set Server URL';\n  return SetServerUrl;\n})();","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

@@ -1,0 +1,235 @@
+/**
+ * Convert a font size to a dynamic font size.
+ * Fonts that participate in Dynamic Type should use
+ * dynamic font sizes.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param unit (optional) - The unit to convert to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * a maximum font size.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param maxScale - The maximum scale of the font (i.e. 2.5 for a maximum 250% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * a minimum font size.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param minScale - The minimum scale of the font (i.e. 0.8 for a minimum 80% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * maximum and minimum font sizes.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param minScale - The minimum scale of the font (i.e. 0.8 for a minimum 80% scale).
+ * @param maxScale - The maximum scale of the font (i.e. 2.5 for a maximum 250% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * A heuristic that applies CSS to tablet
+ * viewports.
+ *
+ * Usage:
+ * @include tablet-viewport() {
+ *   :host {
+ *     background-color: green;
+ *   }
+ * }
+ */
+/**
+ * A heuristic that applies CSS to mobile
+ * viewports (i.e. phones, not tablets).
+ *
+ * Usage:
+ * @include mobile-viewport() {
+ *   :host {
+ *     background-color: blue;
+ *   }
+ * }
+ */
+/**
+ * Convert a font size to a dynamic font size.
+ * Fonts that participate in Dynamic Type should use
+ * dynamic font sizes.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param unit (optional) - The unit to convert to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * a maximum font size.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param maxScale - The maximum scale of the font (i.e. 2.5 for a maximum 250% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * a minimum font size.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param minScale - The minimum scale of the font (i.e. 0.8 for a minimum 80% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * Convert a font size to a dynamic font size but impose
+ * maximum and minimum font sizes.
+ * @param size - The initial font size including the unit (i.e. px or pt)
+ * @param minScale - The minimum scale of the font (i.e. 0.8 for a minimum 80% scale).
+ * @param maxScale - The maximum scale of the font (i.e. 2.5 for a maximum 250% scale).
+ * @param unit (optional) - The unit to convert the initial font size to. Use this if you want to
+ * convert to a unit other than $baselineUnit.
+ */
+/**
+ * A heuristic that applies CSS to tablet
+ * viewports.
+ *
+ * Usage:
+ * @include tablet-viewport() {
+ *   :host {
+ *     background-color: green;
+ *   }
+ * }
+ */
+/**
+ * A heuristic that applies CSS to mobile
+ * viewports (i.e. phones, not tablets).
+ *
+ * Usage:
+ * @include mobile-viewport() {
+ *   :host {
+ *     background-color: blue;
+ *   }
+ * }
+ */
+/**
+ * A heuristic that applies CSS to tablet
+ * viewports.
+ *
+ * Usage:
+ * @include tablet-viewport() {
+ *   :host {
+ *     background-color: green;
+ *   }
+ * }
+ */
+/**
+ * A heuristic that applies CSS to mobile
+ * viewports (i.e. phones, not tablets).
+ *
+ * Usage:
+ * @include mobile-viewport() {
+ *   :host {
+ *     background-color: blue;
+ *   }
+ * }
+ */
+:host {
+  /**
+   * @prop --ion-grid-padding: Padding for the Grid
+   * @prop --ion-grid-padding-xs: Padding for the Grid on xs screens
+   * @prop --ion-grid-padding-sm: Padding for the Grid on sm screens
+   * @prop --ion-grid-padding-md: Padding for the Grid on md screens
+   * @prop --ion-grid-padding-lg: Padding for the Grid on lg screens
+   * @prop --ion-grid-padding-xl: Padding for the Grid on xl screens
+   *
+   * @prop --ion-grid-width: Width of the fixed Grid
+   * @prop --ion-grid-width-xs: Width of the fixed Grid on xs screens
+   * @prop --ion-grid-width-sm: Width of the fixed Grid on sm screens
+   * @prop --ion-grid-width-md: Width of the fixed Grid on md screens
+   * @prop --ion-grid-width-lg: Width of the fixed Grid on lg screens
+   * @prop --ion-grid-width-xl: Width of the fixed Grid on xl screens
+   */
+  -webkit-padding-start: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-inline-start: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  -webkit-padding-end: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-inline-end: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-top: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  padding-bottom: var(--ion-grid-padding-xs, var(--ion-grid-padding, 5px));
+  -webkit-margin-start: auto;
+  margin-inline-start: auto;
+  -webkit-margin-end: auto;
+  margin-inline-end: auto;
+  display: block;
+  flex: 1;
+}
+@media (min-width: 576px) {
+  :host {
+    -webkit-padding-start: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+    padding-inline-start: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+    -webkit-padding-end: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+    padding-inline-end: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+    padding-top: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+    padding-bottom: var(--ion-grid-padding-sm, var(--ion-grid-padding, 5px));
+  }
+}
+@media (min-width: 768px) {
+  :host {
+    -webkit-padding-start: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+    padding-inline-start: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+    -webkit-padding-end: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+    padding-inline-end: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+    padding-top: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+    padding-bottom: var(--ion-grid-padding-md, var(--ion-grid-padding, 5px));
+  }
+}
+@media (min-width: 992px) {
+  :host {
+    -webkit-padding-start: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+    padding-inline-start: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+    -webkit-padding-end: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+    padding-inline-end: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+    padding-top: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+    padding-bottom: var(--ion-grid-padding-lg, var(--ion-grid-padding, 5px));
+  }
+}
+@media (min-width: 1200px) {
+  :host {
+    -webkit-padding-start: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+    padding-inline-start: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+    -webkit-padding-end: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+    padding-inline-end: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+    padding-top: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+    padding-bottom: var(--ion-grid-padding-xl, var(--ion-grid-padding, 5px));
+  }
+}
+
+:host(.grid-fixed) {
+  width: var(--ion-grid-width-xs, var(--ion-grid-width, 100%));
+  max-width: 100%;
+}
+@media (min-width: 576px) {
+  :host(.grid-fixed) {
+    width: var(--ion-grid-width-sm, var(--ion-grid-width, 540px));
+  }
+}
+@media (min-width: 768px) {
+  :host(.grid-fixed) {
+    width: var(--ion-grid-width-md, var(--ion-grid-width, 720px));
+  }
+}
+@media (min-width: 992px) {
+  :host(.grid-fixed) {
+    width: var(--ion-grid-width-lg, var(--ion-grid-width, 960px));
+  }
+}
+@media (min-width: 1200px) {
+  :host(.grid-fixed) {
+    width: var(--ion-grid-width-xl, var(--ion-grid-width, 1140px));
+  }
+}
+
+:host(.ion-no-padding) {
+  --ion-grid-column-padding: 0;
+  --ion-grid-column-padding-xs: 0;
+  --ion-grid-column-padding-sm: 0;
+  --ion-grid-column-padding-md: 0;
+  --ion-grid-column-padding-lg: 0;
+  --ion-grid-column-padding-xl: 0;
+}

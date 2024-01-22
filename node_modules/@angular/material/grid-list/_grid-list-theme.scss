@@ -1,0 +1,40 @@
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+
+
+// Include this empty mixin for consistency with the other components.
+@mixin color($config-or-theme) {}
+
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-grid-list.$prefix,
+      tokens-mat-grid-list.get-typography-tokens($config));
+  }
+}
+
+@mixin density($config-or-theme) {}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-grid-list') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

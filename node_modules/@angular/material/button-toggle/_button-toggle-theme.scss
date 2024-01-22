@@ -1,0 +1,59 @@
+@use '../core/theming/theming';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
+@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-color-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-color-tokens($config));
+  }
+}
+
+@mixin typography($config-or-theme) {
+  $config: typography.private-typography-to-2014-config(
+      theming.get-typography-config($config-or-theme));
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-typography-tokens($config));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-typography-tokens($config));
+  }
+}
+
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-density-tokens($density-scale));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-density-tokens($density-scale));
+  }
+}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}

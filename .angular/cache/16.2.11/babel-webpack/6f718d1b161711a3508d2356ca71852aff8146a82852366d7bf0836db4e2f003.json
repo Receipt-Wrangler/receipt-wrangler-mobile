@@ -1,0 +1,1 @@
+{"ast":null,"code":"/*!\n * (C) Ionic http://ionicframework.com - MIT License\n */\nconst win = typeof window !== 'undefined' ? window : undefined;\nconst doc = typeof document !== 'undefined' ? document : undefined;\nexport { doc as d, win as w };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
