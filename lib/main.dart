@@ -23,7 +23,7 @@ class ReceiptWrangler extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const Home(),
     );
   }
 }

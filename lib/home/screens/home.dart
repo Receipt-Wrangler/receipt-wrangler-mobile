@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/set-homeserver-url/screens/set_homeserver_url.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var layoutModel = Provider.of<LayoutModel>(context, listen: true);
