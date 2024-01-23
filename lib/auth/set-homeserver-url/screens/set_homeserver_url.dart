@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SetHomeserverUrl extends StatefulWidget {
-  const SetHomeserverUrl({super.key, required this.title});
-
-  final String title;
+  const SetHomeserverUrl({super.key});
 
   @override
   State<SetHomeserverUrl> createState() => _SetHomeserverUrl();

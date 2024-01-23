@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[SetHomeserverUrl(title: "hello?")],
+          children: <Widget>[SetHomeserverUrl()],
         ),
       ),
     );
