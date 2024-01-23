@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class CategoryApi {
-  CategoryApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  CategoryApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -26,7 +26,9 @@ class CategoryApi {
   ///
   /// * [Category] category (required):
   ///   Category to create
-  Future<Response> createCategoryWithHttpInfo(Category category,) async {
+  Future<Response> createCategoryWithHttpInfo(
+    Category category,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/category/';
 
@@ -38,7 +40,6 @@ class CategoryApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -59,8 +60,12 @@ class CategoryApi {
   ///
   /// * [Category] category (required):
   ///   Category to create
-  Future<void> createCategory(Category category,) async {
-    final response = await createCategoryWithHttpInfo(category,);
+  Future<void> createCategory(
+    Category category,
+  ) async {
+    final response = await createCategoryWithHttpInfo(
+      category,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -76,10 +81,12 @@ class CategoryApi {
   ///
   /// * [int] categoryId (required):
   ///   Category Id to get
-  Future<Response> deleteCategoryWithHttpInfo(int categoryId,) async {
+  Future<Response> deleteCategoryWithHttpInfo(
+    int categoryId,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/category/{categoryId}'
-      .replaceAll('{categoryId}', categoryId.toString());
+        .replaceAll('{categoryId}', categoryId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -89,7 +96,6 @@ class CategoryApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -110,8 +116,12 @@ class CategoryApi {
   ///
   /// * [int] categoryId (required):
   ///   Category Id to get
-  Future<void> deleteCategory(int categoryId,) async {
-    final response = await deleteCategoryWithHttpInfo(categoryId,);
+  Future<void> deleteCategory(
+    int categoryId,
+  ) async {
+    final response = await deleteCategoryWithHttpInfo(
+      categoryId,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -135,7 +145,6 @@ class CategoryApi {
 
     const contentTypes = <String>[];
 
-
     return apiClient.invokeAPI(
       path,
       'GET',
@@ -158,12 +167,13 @@ class CategoryApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Category>') as List)
-        .cast<Category>()
-        .toList(growable: false);
-
+      return (await apiClient.deserializeAsync(responseBody, 'List<Category>')
+              as List)
+          .cast<Category>()
+          .toList(growable: false);
     }
     return null;
   }
@@ -178,10 +188,12 @@ class CategoryApi {
   ///
   /// * [String] categoryName (required):
   ///   Category name to get count of
-  Future<Response> getCategoryCountByNameWithHttpInfo(String categoryName,) async {
+  Future<Response> getCategoryCountByNameWithHttpInfo(
+    String categoryName,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/category/{categoryName}'
-      .replaceAll('{categoryName}', categoryName);
+    final path =
+        r'/category/{categoryName}'.replaceAll('{categoryName}', categoryName);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -191,7 +203,6 @@ class CategoryApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -212,17 +223,24 @@ class CategoryApi {
   ///
   /// * [String] categoryName (required):
   ///   Category name to get count of
-  Future<int?> getCategoryCountByName(String categoryName,) async {
-    final response = await getCategoryCountByNameWithHttpInfo(categoryName,);
+  Future<int?> getCategoryCountByName(
+    String categoryName,
+  ) async {
+    final response = await getCategoryCountByNameWithHttpInfo(
+      categoryName,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'int',) as int;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'int',
+      ) as int;
     }
     return null;
   }
@@ -237,7 +255,9 @@ class CategoryApi {
   ///
   /// * [PagedRequestCommand] pagedRequestCommand (required):
   ///   Paging and sorting data
-  Future<Response> getPagedCategoriesWithHttpInfo(PagedRequestCommand pagedRequestCommand,) async {
+  Future<Response> getPagedCategoriesWithHttpInfo(
+    PagedRequestCommand pagedRequestCommand,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/category/getPagedCategories';
 
@@ -250,7 +270,6 @@ class CategoryApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -260,29 +279,6 @@ class CategoryApi {
       formParams,
       contentTypes.isEmpty ? null : contentTypes.first,
     );
-  }
-
-  /// Get paged categories
-  ///
-  /// This will return paged categories
-  ///
-  /// Parameters:
-  ///
-  /// * [PagedRequestCommand] pagedRequestCommand (required):
-  ///   Paging and sorting data
-  Future<PagedData?> getPagedCategories(PagedRequestCommand pagedRequestCommand,) async {
-    final response = await getPagedCategoriesWithHttpInfo(pagedRequestCommand,);
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PagedData',) as PagedData;
-    
-    }
-    return null;
   }
 
   /// Update category
@@ -298,10 +294,13 @@ class CategoryApi {
   ///
   /// * [Category] category (required):
   ///   Category to update
-  Future<Response> updateCategoryWithHttpInfo(int categoryId, Category category,) async {
+  Future<Response> updateCategoryWithHttpInfo(
+    int categoryId,
+    Category category,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/category/{categoryId}'
-      .replaceAll('{categoryId}', categoryId.toString());
+        .replaceAll('{categoryId}', categoryId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody = category;
@@ -311,7 +310,6 @@ class CategoryApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -335,8 +333,14 @@ class CategoryApi {
   ///
   /// * [Category] category (required):
   ///   Category to update
-  Future<void> updateCategory(int categoryId, Category category,) async {
-    final response = await updateCategoryWithHttpInfo(categoryId, category,);
+  Future<void> updateCategory(
+    int categoryId,
+    Category category,
+  ) async {
+    final response = await updateCategoryWithHttpInfo(
+      categoryId,
+      category,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
