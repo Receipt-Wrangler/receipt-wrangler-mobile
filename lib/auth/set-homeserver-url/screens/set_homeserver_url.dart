@@ -1,5 +1,6 @@
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +32,8 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Successfully connected to server"),
                   backgroundColor: Colors.green,
-                ))
+                )),
+                context.go("/login"),
               })
           .catchError((error) =>
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
