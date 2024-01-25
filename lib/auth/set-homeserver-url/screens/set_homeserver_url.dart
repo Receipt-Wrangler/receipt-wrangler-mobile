@@ -29,6 +29,7 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
       api.FeatureConfigApi()
           .getFeatureConfig()
           .then((value) => {
+                print(value!.aiPoweredReceipts),
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Successfully connected to server"),
                   backgroundColor: Colors.green,

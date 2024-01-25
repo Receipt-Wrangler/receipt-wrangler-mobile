@@ -21,7 +21,6 @@ class PagedRequestFieldValue {
   @override
   int get hashCode => 1;
   // ignore: unnecessary_parenthesis
-  // ignore: unnecessary_parenthesis
 
   @override
   String toString() => 'PagedRequestFieldValue[]';

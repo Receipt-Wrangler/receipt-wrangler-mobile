@@ -14,20 +14,14 @@ class MagicFillCommand {
   /// Returns a new [MagicFillCommand] instance.
   MagicFillCommand({
     this.imageData = const [],
-    this.filename,
+    required this.filename,
   });
 
   /// Image data
   List<int> imageData;
 
   /// Name of file
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? filename;
+  String filename;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is MagicFillCommand &&
@@ -38,19 +32,15 @@ class MagicFillCommand {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (imageData.hashCode) +
-    (filename == null ? 0 : filename!.hashCode);
+    (filename.hashCode);
 
   @override
   String toString() => 'MagicFillCommand[imageData=$imageData, filename=$filename]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'ImageData'] = this.imageData;
-    if (this.filename != null) {
-      json[r'Filename'] = this.filename;
-    } else {
-      json[r'Filename'] = null;
-    }
+      json[r'imageData'] = this.imageData;
+      json[r'filename'] = this.filename;
     return json;
   }
 
@@ -73,10 +63,10 @@ class MagicFillCommand {
       }());
 
       return MagicFillCommand(
-        imageData: json[r'ImageData'] is Iterable
-            ? (json[r'ImageData'] as Iterable).cast<int>().toList(growable: false)
+        imageData: json[r'imageData'] is Iterable
+            ? (json[r'imageData'] as Iterable).cast<int>().toList(growable: false)
             : const [],
-        filename: mapValueOfType<String>(json, r'Filename'),
+        filename: mapValueOfType<String>(json, r'filename')!,
       );
     }
     return null;
@@ -124,6 +114,8 @@ class MagicFillCommand {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'imageData',
+    'filename',
   };
 }
 

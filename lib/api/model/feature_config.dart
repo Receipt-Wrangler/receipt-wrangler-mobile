@@ -13,27 +13,15 @@ part of openapi.api;
 class FeatureConfig {
   /// Returns a new [FeatureConfig] instance.
   FeatureConfig({
-    this.aiPoweredReceipts,
-    this.enableLocalSignUp,
+    required this.aiPoweredReceipts,
+    required this.enableLocalSignUp,
   });
 
   /// Whether AI powered receipts are enabled
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? aiPoweredReceipts;
+  bool aiPoweredReceipts;
 
   /// Whether local sign up is enabled
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? enableLocalSignUp;
+  bool enableLocalSignUp;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is FeatureConfig &&
@@ -43,24 +31,16 @@ class FeatureConfig {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (aiPoweredReceipts == null ? 0 : aiPoweredReceipts!.hashCode) +
-    (enableLocalSignUp == null ? 0 : enableLocalSignUp!.hashCode);
+    (aiPoweredReceipts.hashCode) +
+    (enableLocalSignUp.hashCode);
 
   @override
   String toString() => 'FeatureConfig[aiPoweredReceipts=$aiPoweredReceipts, enableLocalSignUp=$enableLocalSignUp]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.aiPoweredReceipts != null) {
-      json[r'AiPoweredReceipts'] = this.aiPoweredReceipts;
-    } else {
-      json[r'AiPoweredReceipts'] = null;
-    }
-    if (this.enableLocalSignUp != null) {
-      json[r'EnableLocalSignUp'] = this.enableLocalSignUp;
-    } else {
-      json[r'EnableLocalSignUp'] = null;
-    }
+      json[r'aiPoweredReceipts'] = this.aiPoweredReceipts;
+      json[r'enableLocalSignUp'] = this.enableLocalSignUp;
     return json;
   }
 
@@ -83,8 +63,8 @@ class FeatureConfig {
       }());
 
       return FeatureConfig(
-        aiPoweredReceipts: mapValueOfType<bool>(json, r'AiPoweredReceipts'),
-        enableLocalSignUp: mapValueOfType<bool>(json, r'EnableLocalSignUp'),
+        aiPoweredReceipts: mapValueOfType<bool>(json, r'aiPoweredReceipts')!,
+        enableLocalSignUp: mapValueOfType<bool>(json, r'enableLocalSignUp')!,
       );
     }
     return null;
@@ -132,6 +112,8 @@ class FeatureConfig {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'aiPoweredReceipts',
+    'enableLocalSignUp',
   };
 }
 
