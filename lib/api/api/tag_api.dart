@@ -10,6 +10,7 @@
 
 part of openapi.api;
 
+
 class TagApi {
   TagApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
@@ -25,9 +26,7 @@ class TagApi {
   ///
   /// * [UpsertTagCommand] upsertTagCommand (required):
   ///   Tag to create
-  Future<Response> createTagWithHttpInfo(
-    UpsertTagCommand upsertTagCommand,
-  ) async {
+  Future<Response> createTagWithHttpInfo(UpsertTagCommand upsertTagCommand,) async {
     // ignore: prefer_const_declarations
     final path = r'/tag/';
 
@@ -39,6 +38,7 @@ class TagApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -59,12 +59,8 @@ class TagApi {
   ///
   /// * [UpsertTagCommand] upsertTagCommand (required):
   ///   Tag to create
-  Future<void> createTag(
-    UpsertTagCommand upsertTagCommand,
-  ) async {
-    final response = await createTagWithHttpInfo(
-      upsertTagCommand,
-    );
+  Future<void> createTag(UpsertTagCommand upsertTagCommand,) async {
+    final response = await createTagWithHttpInfo(upsertTagCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -80,11 +76,10 @@ class TagApi {
   ///
   /// * [int] tagId (required):
   ///   Id of tag to get
-  Future<Response> deleteTagWithHttpInfo(
-    int tagId,
-  ) async {
+  Future<Response> deleteTagWithHttpInfo(int tagId,) async {
     // ignore: prefer_const_declarations
-    final path = r'/tag/{tagId}'.replaceAll('{tagId}', tagId.toString());
+    final path = r'/tag/{tagId}'
+      .replaceAll('{tagId}', tagId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -94,6 +89,7 @@ class TagApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -114,12 +110,8 @@ class TagApi {
   ///
   /// * [int] tagId (required):
   ///   Id of tag to get
-  Future<void> deleteTag(
-    int tagId,
-  ) async {
-    final response = await deleteTagWithHttpInfo(
-      tagId,
-    );
+  Future<void> deleteTag(int tagId,) async {
+    final response = await deleteTagWithHttpInfo(tagId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -143,6 +135,7 @@ class TagApi {
 
     const contentTypes = <String>[];
 
+
     return apiClient.invokeAPI(
       path,
       'GET',
@@ -165,13 +158,12 @@ class TagApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Tag>')
-              as List)
-          .cast<Tag>()
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<Tag>') as List)
+        .cast<Tag>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -186,9 +178,7 @@ class TagApi {
   ///
   /// * [PagedRequestCommand] pagedRequestCommand (required):
   ///   Paging and sorting data
-  Future<Response> getPagedTagsWithHttpInfo(
-    PagedRequestCommand pagedRequestCommand,
-  ) async {
+  Future<Response> getPagedTagsWithHttpInfo(PagedRequestCommand pagedRequestCommand,) async {
     // ignore: prefer_const_declarations
     final path = r'/tag/getPagedTags';
 
@@ -201,6 +191,7 @@ class TagApi {
 
     const contentTypes = <String>['application/json'];
 
+
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -210,6 +201,29 @@ class TagApi {
       formParams,
       contentTypes.isEmpty ? null : contentTypes.first,
     );
+  }
+
+  /// Get paged tags
+  ///
+  /// This will return paged tags
+  ///
+  /// Parameters:
+  ///
+  /// * [PagedRequestCommand] pagedRequestCommand (required):
+  ///   Paging and sorting data
+  Future<PagedData?> getPagedTags(PagedRequestCommand pagedRequestCommand,) async {
+    final response = await getPagedTagsWithHttpInfo(pagedRequestCommand,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PagedData',) as PagedData;
+    
+    }
+    return null;
   }
 
   /// Get tag count by name
@@ -222,11 +236,10 @@ class TagApi {
   ///
   /// * [String] tagName (required):
   ///   Tag name to get count of
-  Future<Response> getTagCountByNameWithHttpInfo(
-    String tagName,
-  ) async {
+  Future<Response> getTagCountByNameWithHttpInfo(String tagName,) async {
     // ignore: prefer_const_declarations
-    final path = r'/tag/{tagName}'.replaceAll('{tagName}', tagName);
+    final path = r'/tag/{tagName}'
+      .replaceAll('{tagName}', tagName);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -236,6 +249,7 @@ class TagApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -256,24 +270,17 @@ class TagApi {
   ///
   /// * [String] tagName (required):
   ///   Tag name to get count of
-  Future<int?> getTagCountByName(
-    String tagName,
-  ) async {
-    final response = await getTagCountByNameWithHttpInfo(
-      tagName,
-    );
+  Future<int?> getTagCountByName(String tagName,) async {
+    final response = await getTagCountByNameWithHttpInfo(tagName,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'int',
-      ) as int;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'int',) as int;
+    
     }
     return null;
   }
@@ -291,12 +298,10 @@ class TagApi {
   ///
   /// * [UpsertTagCommand] upsertTagCommand (required):
   ///   Tag to update
-  Future<Response> updateTagWithHttpInfo(
-    int tagId,
-    UpsertTagCommand upsertTagCommand,
-  ) async {
+  Future<Response> updateTagWithHttpInfo(int tagId, UpsertTagCommand upsertTagCommand,) async {
     // ignore: prefer_const_declarations
-    final path = r'/tag/{tagId}'.replaceAll('{tagId}', tagId.toString());
+    final path = r'/tag/{tagId}'
+      .replaceAll('{tagId}', tagId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody = upsertTagCommand;
@@ -306,6 +311,7 @@ class TagApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -329,14 +335,8 @@ class TagApi {
   ///
   /// * [UpsertTagCommand] upsertTagCommand (required):
   ///   Tag to update
-  Future<void> updateTag(
-    int tagId,
-    UpsertTagCommand upsertTagCommand,
-  ) async {
-    final response = await updateTagWithHttpInfo(
-      tagId,
-      upsertTagCommand,
-    );
+  Future<void> updateTag(int tagId, UpsertTagCommand upsertTagCommand,) async {
+    final response = await updateTagWithHttpInfo(tagId, upsertTagCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

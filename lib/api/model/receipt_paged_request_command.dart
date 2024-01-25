@@ -10,13 +10,14 @@
 
 part of openapi.api;
 
-class PagedRequestCommand {
-  /// Returns a new [PagedRequestCommand] instance.
-  PagedRequestCommand({
+class ReceiptPagedRequestCommand {
+  /// Returns a new [ReceiptPagedRequestCommand] instance.
+  ReceiptPagedRequestCommand({
     required this.page,
     required this.pageSize,
     this.orderBy,
     this.sortDirection,
+    this.filter,
   });
 
   /// Page number
@@ -42,12 +43,21 @@ class PagedRequestCommand {
   ///
   String? sortDirection;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ReceiptPagedRequestFilter? filter;
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PagedRequestCommand &&
+  bool operator ==(Object other) => identical(this, other) || other is ReceiptPagedRequestCommand &&
     other.page == page &&
     other.pageSize == pageSize &&
     other.orderBy == orderBy &&
-    other.sortDirection == sortDirection;
+    other.sortDirection == sortDirection &&
+    other.filter == filter;
 
   @override
   int get hashCode =>
@@ -55,10 +65,11 @@ class PagedRequestCommand {
     (page.hashCode) +
     (pageSize.hashCode) +
     (orderBy == null ? 0 : orderBy!.hashCode) +
-    (sortDirection == null ? 0 : sortDirection!.hashCode);
+    (sortDirection == null ? 0 : sortDirection!.hashCode) +
+    (filter == null ? 0 : filter!.hashCode);
 
   @override
-  String toString() => 'PagedRequestCommand[page=$page, pageSize=$pageSize, orderBy=$orderBy, sortDirection=$sortDirection]';
+  String toString() => 'ReceiptPagedRequestCommand[page=$page, pageSize=$pageSize, orderBy=$orderBy, sortDirection=$sortDirection, filter=$filter]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -74,13 +85,18 @@ class PagedRequestCommand {
     } else {
       json[r'sortDirection'] = null;
     }
+    if (this.filter != null) {
+      json[r'filter'] = this.filter;
+    } else {
+      json[r'filter'] = null;
+    }
     return json;
   }
 
-  /// Returns a new [PagedRequestCommand] instance and imports its values from
+  /// Returns a new [ReceiptPagedRequestCommand] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static PagedRequestCommand? fromJson(dynamic value) {
+  static ReceiptPagedRequestCommand? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -89,27 +105,28 @@ class PagedRequestCommand {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "PagedRequestCommand[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "PagedRequestCommand[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "ReceiptPagedRequestCommand[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "ReceiptPagedRequestCommand[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return PagedRequestCommand(
+      return ReceiptPagedRequestCommand(
         page: mapValueOfType<int>(json, r'page')!,
         pageSize: mapValueOfType<int>(json, r'pageSize')!,
         orderBy: mapValueOfType<String>(json, r'orderBy'),
         sortDirection: mapValueOfType<String>(json, r'sortDirection'),
+        filter: ReceiptPagedRequestFilter.fromJson(json[r'filter']),
       );
     }
     return null;
   }
 
-  static List<PagedRequestCommand> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <PagedRequestCommand>[];
+  static List<ReceiptPagedRequestCommand> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <ReceiptPagedRequestCommand>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = PagedRequestCommand.fromJson(row);
+        final value = ReceiptPagedRequestCommand.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -118,12 +135,12 @@ class PagedRequestCommand {
     return result.toList(growable: growable);
   }
 
-  static Map<String, PagedRequestCommand> mapFromJson(dynamic json) {
-    final map = <String, PagedRequestCommand>{};
+  static Map<String, ReceiptPagedRequestCommand> mapFromJson(dynamic json) {
+    final map = <String, ReceiptPagedRequestCommand>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = PagedRequestCommand.fromJson(entry.value);
+        final value = ReceiptPagedRequestCommand.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -132,14 +149,14 @@ class PagedRequestCommand {
     return map;
   }
 
-  // maps a json object with a list of PagedRequestCommand-objects as value to a dart map
-  static Map<String, List<PagedRequestCommand>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<PagedRequestCommand>>{};
+  // maps a json object with a list of ReceiptPagedRequestCommand-objects as value to a dart map
+  static Map<String, List<ReceiptPagedRequestCommand>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<ReceiptPagedRequestCommand>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PagedRequestCommand.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ReceiptPagedRequestCommand.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;

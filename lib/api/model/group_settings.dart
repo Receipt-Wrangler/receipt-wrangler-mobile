@@ -57,7 +57,13 @@ class GroupSettings {
   List<GroupSettingsWhiteListEmail> emailWhiteList;
 
   /// Default receipt status
-  GroupSettingsEmailDefaultReceiptStatusEnum? emailDefaultReceiptStatus;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? emailDefaultReceiptStatus;
 
   /// User foreign key
   ///
@@ -193,7 +199,7 @@ class GroupSettings {
         emailToRead: mapValueOfType<String>(json, r'emailToRead'),
         subjectLineRegexes: SubjectLineRegex.listFromJson(json[r'subjectLineRegexes']),
         emailWhiteList: GroupSettingsWhiteListEmail.listFromJson(json[r'emailWhiteList']),
-        emailDefaultReceiptStatus: GroupSettingsEmailDefaultReceiptStatusEnum.fromJson(json[r'emailDefaultReceiptStatus']),
+        emailDefaultReceiptStatus: mapValueOfType<String>(json, r'emailDefaultReceiptStatus'),
         emailDefaultReceiptPaidById: mapValueOfType<int>(json, r'emailDefaultReceiptPaidById'),
         createdAt: mapValueOfType<String>(json, r'createdAt'),
         createdBy: mapValueOfType<int>(json, r'createdBy'),
@@ -249,84 +255,4 @@ class GroupSettings {
     'groupId',
   };
 }
-
-/// Default receipt status
-class GroupSettingsEmailDefaultReceiptStatusEnum {
-  /// Instantiate a new enum with the provided [value].
-  const GroupSettingsEmailDefaultReceiptStatusEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const OPEN = GroupSettingsEmailDefaultReceiptStatusEnum._(r'OPEN');
-  static const NEEDS_ATTENTION = GroupSettingsEmailDefaultReceiptStatusEnum._(r'NEEDS_ATTENTION');
-  static const RESOLVED = GroupSettingsEmailDefaultReceiptStatusEnum._(r'RESOLVED');
-  static const DRAFT = GroupSettingsEmailDefaultReceiptStatusEnum._(r'DRAFT');
-
-  /// List of all possible values in this [enum][GroupSettingsEmailDefaultReceiptStatusEnum].
-  static const values = <GroupSettingsEmailDefaultReceiptStatusEnum>[
-    OPEN,
-    NEEDS_ATTENTION,
-    RESOLVED,
-    DRAFT,
-  ];
-
-  static GroupSettingsEmailDefaultReceiptStatusEnum? fromJson(dynamic value) => GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer().decode(value);
-
-  static List<GroupSettingsEmailDefaultReceiptStatusEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <GroupSettingsEmailDefaultReceiptStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = GroupSettingsEmailDefaultReceiptStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [GroupSettingsEmailDefaultReceiptStatusEnum] to String,
-/// and [decode] dynamic data back to [GroupSettingsEmailDefaultReceiptStatusEnum].
-class GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer {
-  factory GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer() => _instance ??= const GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer._();
-
-  const GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer._();
-
-  String encode(GroupSettingsEmailDefaultReceiptStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a GroupSettingsEmailDefaultReceiptStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  GroupSettingsEmailDefaultReceiptStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'OPEN': return GroupSettingsEmailDefaultReceiptStatusEnum.OPEN;
-        case r'NEEDS_ATTENTION': return GroupSettingsEmailDefaultReceiptStatusEnum.NEEDS_ATTENTION;
-        case r'RESOLVED': return GroupSettingsEmailDefaultReceiptStatusEnum.RESOLVED;
-        case r'DRAFT': return GroupSettingsEmailDefaultReceiptStatusEnum.DRAFT;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer] instance.
-  static GroupSettingsEmailDefaultReceiptStatusEnumTypeTransformer? _instance;
-}
-
 

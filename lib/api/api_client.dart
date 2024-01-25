@@ -16,7 +16,7 @@ class ApiClient {
     this.authentication,
   });
 
-  final String basePath;
+  String basePath;
   final Authentication? authentication;
 
   var _client = Client();
@@ -229,6 +229,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AppData':
+          return AppData.fromJson(value);
         case 'BaseModel':
           return BaseModel.fromJson(value);
         case 'BulkStatusUpdateCommand':
@@ -249,32 +251,54 @@ class ApiClient {
           return FileData.fromJson(value);
         case 'FileDataView':
           return FileDataView.fromJson(value);
+        case 'FilterOperations':
+          return FilterOperationsTypeTransformer().decode(value);
         case 'Group':
           return Group.fromJson(value);
         case 'GroupMember':
           return GroupMember.fromJson(value);
+        case 'GroupRole':
+          return GroupRoleTypeTransformer().decode(value);
         case 'GroupSettings':
           return GroupSettings.fromJson(value);
         case 'GroupSettingsWhiteListEmail':
           return GroupSettingsWhiteListEmail.fromJson(value);
+        case 'GroupStatus':
+          return GroupStatusTypeTransformer().decode(value);
         case 'Item':
           return Item.fromJson(value);
+        case 'ItemStatusEnum':
+          return ItemStatusEnumTypeTransformer().decode(value);
         case 'LoginCommand':
           return LoginCommand.fromJson(value);
         case 'MagicFillCommand':
           return MagicFillCommand.fromJson(value);
         case 'Notification':
           return Notification.fromJson(value);
+        case 'PagedData':
+          return PagedData.fromJson(value);
         case 'PagedRequestCommand':
           return PagedRequestCommand.fromJson(value);
+        case 'PagedRequestField':
+          return PagedRequestField.fromJson(value);
+        case 'PagedRequestFieldValue':
+          return PagedRequestFieldValue.fromJson(value);
         case 'Receipt':
           return Receipt.fromJson(value);
+        case 'ReceiptPagedRequestCommand':
+          return ReceiptPagedRequestCommand.fromJson(value);
+        case 'ReceiptPagedRequestFilter':
+          return ReceiptPagedRequestFilter.fromJson(value);
+        case 'ReceiptStatus':
+          return ReceiptStatusTypeTransformer().decode(value);
         case 'ResetPasswordCommand':
           return ResetPasswordCommand.fromJson(value);
         case 'SearchResult':
           return SearchResult.fromJson(value);
         case 'SignUpCommand':
           return SignUpCommand.fromJson(value);
+        case 'SortDirection':
+          return SortDirectionTypeTransformer().decode(value);
         case 'SubjectLineRegex':
           return SubjectLineRegex.fromJson(value);
         case 'Tag':
@@ -295,10 +319,14 @@ class ApiClient {
           return User.fromJson(value);
         case 'UserPreferences':
           return UserPreferences.fromJson(value);
+        case 'UserRoleEnum':
+          return UserRoleEnumTypeTransformer().decode(value);
         case 'UserView':
           return UserView.fromJson(value);
         case 'Widget':
           return Widget.fromJson(value);
+        case 'WidgetType':
+          return WidgetTypeTypeTransformer().decode(value);
         default:
           dynamic match;
           if (value is List &&

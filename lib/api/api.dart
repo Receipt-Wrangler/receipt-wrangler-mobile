@@ -42,6 +42,7 @@ part 'api/tag_api.dart';
 part 'api/user_api.dart';
 part 'api/user_preferences_api.dart';
 
+part 'model/app_data.dart';
 part 'model/base_model.dart';
 part 'model/bulk_status_update_command.dart';
 part 'model/category.dart';
@@ -52,19 +53,30 @@ part 'model/encoded_image.dart';
 part 'model/feature_config.dart';
 part 'model/file_data.dart';
 part 'model/file_data_view.dart';
+part 'model/filter_operations.dart';
 part 'model/group.dart';
 part 'model/group_member.dart';
+part 'model/group_role.dart';
 part 'model/group_settings.dart';
 part 'model/group_settings_white_list_email.dart';
+part 'model/group_status.dart';
 part 'model/item.dart';
+part 'model/item_status_enum.dart';
 part 'model/login_command.dart';
 part 'model/magic_fill_command.dart';
 part 'model/notification.dart';
+part 'model/paged_data.dart';
 part 'model/paged_request_command.dart';
+part 'model/paged_request_field.dart';
+part 'model/paged_request_field_value.dart';
 part 'model/receipt.dart';
+part 'model/receipt_paged_request_command.dart';
+part 'model/receipt_paged_request_filter.dart';
+part 'model/receipt_status.dart';
 part 'model/reset_password_command.dart';
 part 'model/search_result.dart';
 part 'model/sign_up_command.dart';
+part 'model/sort_direction.dart';
 part 'model/subject_line_regex.dart';
 part 'model/tag.dart';
 part 'model/tag_view.dart';
@@ -75,8 +87,11 @@ part 'model/upsert_tag_command.dart';
 part 'model/upsert_widget_command.dart';
 part 'model/user.dart';
 part 'model/user_preferences.dart';
+part 'model/user_role_enum.dart';
 part 'model/user_view.dart';
 part 'model/widget.dart';
+part 'model/widget_type.dart';
+
 
 /// An [ApiClient] instance that uses the default values obtained from
 /// the OpenAPI specification file.
@@ -90,5 +105,4 @@ final _regList = RegExp(r'^List<(.*)>$');
 final _regSet = RegExp(r'^Set<(.*)>$');
 final _regMap = RegExp(r'^Map<String,(.*)>$');
 
-bool _isEpochMarker(String? pattern) =>
-    pattern == _dateEpochMarker || pattern == '/$_dateEpochMarker/';
+bool _isEpochMarker(String? pattern) => pattern == _dateEpochMarker || pattern == '/$_dateEpochMarker/';

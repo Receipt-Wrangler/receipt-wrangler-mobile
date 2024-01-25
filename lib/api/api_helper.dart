@@ -55,6 +55,30 @@ String parameterToString(dynamic value) {
   if (value is DateTime) {
     return value.toUtc().toIso8601String();
   }
+  if (value is FilterOperations) {
+    return FilterOperationsTypeTransformer().encode(value).toString();
+  }
+  if (value is GroupRole) {
+    return GroupRoleTypeTransformer().encode(value).toString();
+  }
+  if (value is GroupStatus) {
+    return GroupStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is ItemStatusEnum) {
+    return ItemStatusEnumTypeTransformer().encode(value).toString();
+  }
+  if (value is ReceiptStatus) {
+    return ReceiptStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is SortDirection) {
+    return SortDirectionTypeTransformer().encode(value).toString();
+  }
+  if (value is UserRoleEnum) {
+    return UserRoleEnumTypeTransformer().encode(value).toString();
+  }
+  if (value is WidgetType) {
+    return WidgetTypeTypeTransformer().encode(value).toString();
+  }
   return value.toString();
 }
 

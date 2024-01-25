@@ -79,7 +79,7 @@ class User {
   String? updatedAt;
 
   /// User's role
-  UserUserRoleEnum userRole;
+  String userRole;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is User &&
@@ -174,7 +174,7 @@ class User {
         id: mapValueOfType<int>(json, r'id')!,
         isDummyUser: mapValueOfType<bool>(json, r'isDummyUser')!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
-        userRole: UserUserRoleEnum.fromJson(json[r'userRole'])!,
+        userRole: mapValueOfType<String>(json, r'userRole')!,
       );
     }
     return null;
@@ -229,78 +229,4 @@ class User {
     'userRole',
   };
 }
-
-/// User's role
-class UserUserRoleEnum {
-  /// Instantiate a new enum with the provided [value].
-  const UserUserRoleEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const ADMIN = UserUserRoleEnum._(r'ADMIN');
-  static const USER = UserUserRoleEnum._(r'USER');
-
-  /// List of all possible values in this [enum][UserUserRoleEnum].
-  static const values = <UserUserRoleEnum>[
-    ADMIN,
-    USER,
-  ];
-
-  static UserUserRoleEnum? fromJson(dynamic value) => UserUserRoleEnumTypeTransformer().decode(value);
-
-  static List<UserUserRoleEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <UserUserRoleEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = UserUserRoleEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [UserUserRoleEnum] to String,
-/// and [decode] dynamic data back to [UserUserRoleEnum].
-class UserUserRoleEnumTypeTransformer {
-  factory UserUserRoleEnumTypeTransformer() => _instance ??= const UserUserRoleEnumTypeTransformer._();
-
-  const UserUserRoleEnumTypeTransformer._();
-
-  String encode(UserUserRoleEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a UserUserRoleEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  UserUserRoleEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'ADMIN': return UserUserRoleEnum.ADMIN;
-        case r'USER': return UserUserRoleEnum.USER;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [UserUserRoleEnumTypeTransformer] instance.
-  static UserUserRoleEnumTypeTransformer? _instance;
-}
-
 

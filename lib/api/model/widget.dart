@@ -62,7 +62,13 @@ class Widget {
   String? updatedAt;
 
   /// Type of widget
-  WidgetWidgetTypeEnum? widgetType;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? widgetType;
 
   /// Configuration of widget
   Map<String, Object> configuration;
@@ -151,7 +157,7 @@ class Widget {
         name: mapValueOfType<String>(json, r'name'),
         dashboardId: mapValueOfType<int>(json, r'dashboardId')!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
-        widgetType: WidgetWidgetTypeEnum.fromJson(json[r'widgetType']),
+        widgetType: mapValueOfType<String>(json, r'widgetType'),
         configuration: mapCastOfType<String, Object>(json, r'configuration') ?? const {},
       );
     }
@@ -204,78 +210,4 @@ class Widget {
     'dashboardId',
   };
 }
-
-/// Type of widget
-class WidgetWidgetTypeEnum {
-  /// Instantiate a new enum with the provided [value].
-  const WidgetWidgetTypeEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const GROUP_SUMMARY = WidgetWidgetTypeEnum._(r'GROUP_SUMMARY');
-  static const FILTERED_RECEIPTS = WidgetWidgetTypeEnum._(r'FILTERED_RECEIPTS');
-
-  /// List of all possible values in this [enum][WidgetWidgetTypeEnum].
-  static const values = <WidgetWidgetTypeEnum>[
-    GROUP_SUMMARY,
-    FILTERED_RECEIPTS,
-  ];
-
-  static WidgetWidgetTypeEnum? fromJson(dynamic value) => WidgetWidgetTypeEnumTypeTransformer().decode(value);
-
-  static List<WidgetWidgetTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <WidgetWidgetTypeEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = WidgetWidgetTypeEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [WidgetWidgetTypeEnum] to String,
-/// and [decode] dynamic data back to [WidgetWidgetTypeEnum].
-class WidgetWidgetTypeEnumTypeTransformer {
-  factory WidgetWidgetTypeEnumTypeTransformer() => _instance ??= const WidgetWidgetTypeEnumTypeTransformer._();
-
-  const WidgetWidgetTypeEnumTypeTransformer._();
-
-  String encode(WidgetWidgetTypeEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a WidgetWidgetTypeEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  WidgetWidgetTypeEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'GROUP_SUMMARY': return WidgetWidgetTypeEnum.GROUP_SUMMARY;
-        case r'FILTERED_RECEIPTS': return WidgetWidgetTypeEnum.FILTERED_RECEIPTS;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [WidgetWidgetTypeEnumTypeTransformer] instance.
-  static WidgetWidgetTypeEnumTypeTransformer? _instance;
-}
-
 
