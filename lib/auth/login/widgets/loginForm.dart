@@ -1,10 +1,13 @@
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/models/server_model.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -38,6 +41,14 @@ class _Login extends State<LoginForm> {
       child: Column(
         children: [
           const Text("Login"),
+          const SizedBox(
+            height: 10,
+          ),
+          Consumer<ServerModel>(
+            builder: (context, server, child) {
+              return Text('Logging into: ${server.basePath}');
+            },
+          ),
           FormBuilderTextField(
               name: "username",
               decoration: const InputDecoration(labelText: "Username"),
@@ -58,7 +69,21 @@ class _Login extends State<LoginForm> {
                 _submit();
               },
               style: TextButton.styleFrom(),
-              child: const Text("Login"))
+              child: const Text("Login")),
+          Consumer<ServerModel>(
+            builder: (context, server, child) {
+              if (server.featureConfig.enableLocalSignUp) {
+                return ElevatedButton(
+                    onPressed: () {
+                      context.go("/sign-up");
+                    },
+                    style: TextButton.styleFrom(),
+                    child: const Text("Sign Up"));
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
         ],
       ),
     );
