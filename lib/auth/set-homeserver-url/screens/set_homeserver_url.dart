@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/models/server_model.dart';
 
 class SetHomeserverUrl extends StatefulWidget {
   const SetHomeserverUrl({super.key});
@@ -21,10 +23,8 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      api.ApiClient client =
-          api.ApiClient(basePath: _formKey.currentState!.value["url"]);
-
-      api.defaultApiClient = client;
+      Provider.of<ServerModel>(context, listen: false)
+          .setBasePath(_formKey.currentState!.value["url"]);
 
       api.FeatureConfigApi()
           .getFeatureConfig()
@@ -35,11 +35,12 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
                 )),
                 context.go("/login"),
               })
-          .catchError((error) =>
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Could not connect to server"),
-                backgroundColor: Colors.red,
-              )));
+          .catchError((error) => {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Failed to connect to server"),
+                  backgroundColor: Colors.red,
+                )),
+              });
     }
   }
 

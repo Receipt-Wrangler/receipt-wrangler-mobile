@@ -6,11 +6,14 @@ import 'package:receipt_wrangler_mobile/auth/set-homeserver-url/screens/set_home
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import "package:receipt_wrangler_mobile/api/api.dart" as api;
 
 void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
+      ChangeNotifierProvider(create: (_) => ServerModel())
     ],
     child: const ReceiptWrangler(),
   ));
@@ -35,6 +38,9 @@ class ReceiptWrangler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var serverState = Provider.of<ServerModel>(context, listen: true);
+    api.defaultApiClient = api.ApiClient(basePath: serverState.basePath);
+
     return MaterialApp.router(
       title: 'Receipt Wrangler',
       theme: ThemeData(
