@@ -26,7 +26,7 @@ class _Login extends State<LoginForm> {
 
       api.AuthApi()
           .login(command)
-          .then((_) => print("good"))
+          .then((data) => print(data))
           .catchError((err) => print(err));
     }
   }
