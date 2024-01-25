@@ -9,14 +9,14 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class AuthForm extends StatefulWidget {
+  const AuthForm({super.key});
 
   @override
-  State<LoginForm> createState() => _Login();
+  State<AuthForm> createState() => _Login();
 }
 
-class _Login extends State<LoginForm> {
+class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   void _submit() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/loginScreen.dart';
-import 'package:receipt_wrangler_mobile/auth/login/widgets/loginForm.dart';
+import 'package:receipt_wrangler_mobile/auth/login/widgets/authForm.dart';
 import 'package:receipt_wrangler_mobile/auth/set-homeserver-url/screens/set_homeserver_url.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
