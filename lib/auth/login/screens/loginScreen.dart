@@ -15,10 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormBuilderState>();
-
-  void _submit() {}
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

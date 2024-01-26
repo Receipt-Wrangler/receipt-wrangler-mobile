@@ -34,13 +34,69 @@ class _Login extends State<AuthForm> {
     }
   }
 
+  bool _isSignUp() {
+    return GoRouter.of(context)
+            .routeInformationProvider!
+            .value
+            .uri
+            .toString() ==
+        "/sign-up";
+  }
+
+  Widget _getDisplaynameField() {
+    if (_isSignUp()) {
+      return FormBuilderTextField(
+          name: "displayname",
+          decoration: const InputDecoration(labelText: "Displayname"),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+          ]));
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _getHeaderText() {
+    if (_isSignUp()) {
+      return const Text("Sign Up");
+    } else {
+      return const Text("Login");
+    }
+  }
+
+  Widget _getSignUpButton() {
+    if (_isSignUp()) {
+      return ElevatedButton(
+          onPressed: () {
+            context.go("/login");
+          },
+          style: TextButton.styleFrom(),
+          child: const Text("Return to Login"));
+    } else {
+      return ElevatedButton(
+          onPressed: () {
+            context.go("/sign-up");
+          },
+          style: TextButton.styleFrom(),
+          child: const Text("Sign Up"));
+    }
+  }
+
+  Widget _getSubmitButtonText() {
+    if (_isSignUp()) {
+      return const Text("Sign Up");
+    } else {
+      return const Text("Login");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
       key: _formKey,
       child: Column(
         children: [
-          const Text("Login"),
+          _getHeaderText(),
           const SizedBox(
             height: 10,
           ),
@@ -49,6 +105,7 @@ class _Login extends State<AuthForm> {
               return Text('Logging into: ${server.basePath}');
             },
           ),
+          _getDisplaynameField(),
           FormBuilderTextField(
               name: "username",
               decoration: const InputDecoration(labelText: "Username"),
@@ -69,16 +126,11 @@ class _Login extends State<AuthForm> {
                 _submit();
               },
               style: TextButton.styleFrom(),
-              child: const Text("Login")),
+              child: _getSubmitButtonText()),
           Consumer<ServerModel>(
             builder: (context, server, child) {
               if (server.featureConfig.enableLocalSignUp) {
-                return ElevatedButton(
-                    onPressed: () {
-                      context.go("/sign-up");
-                    },
-                    style: TextButton.styleFrom(),
-                    child: const Text("Sign Up"));
+                return _getSignUpButton();
               } else {
                 return const SizedBox.shrink();
               }
