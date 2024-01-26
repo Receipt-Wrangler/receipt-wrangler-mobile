@@ -4,7 +4,11 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class AuthForm extends StatefulWidget {
@@ -45,7 +49,20 @@ class _Login extends State<AuthForm> {
     }
   }
 
-  void _storeAppData(api.AppData appData) {}
+  void _storeAppData(api.AppData appData) {
+    Provider.of<AuthModel>(context, listen: false).setClaims(appData.claims);
+    Provider.of<AuthModel>(context, listen: false)
+        .setJwt(appData.jwt as String);
+    Provider.of<AuthModel>(context, listen: false)
+        .setRefreshToken(appData.refreshToken as String);
+
+    Provider.of<GroupModel>(context, listen: false).setGroups(appData.groups);
+
+    Provider.of<UserModel>(context, listen: false).setUsers(appData.users);
+
+    Provider.of<UserPreferencesModel>(context, listen: false)
+        .setUserPreferences(appData.userPreferences);
+  }
 
   bool _isSignUp() {
     return GoRouter.of(context).routeInformationProvider.value.uri.toString() ==

@@ -16,7 +16,7 @@ class AppData {
     required this.claims,
     this.groups = const [],
     this.users = const [],
-    this.userPreferences = const [],
+    required this.userPreferences,
     this.jwt,
     this.refreshToken,
   });
@@ -30,8 +30,7 @@ class AppData {
   /// Users in the system
   List<UserView> users;
 
-  /// User preferences in the system
-  List<UserPreferences> userPreferences;
+  UserPreferences userPreferences;
 
   /// JWT token
   ///
@@ -56,7 +55,7 @@ class AppData {
     other.claims == claims &&
     _deepEquality.equals(other.groups, groups) &&
     _deepEquality.equals(other.users, users) &&
-    _deepEquality.equals(other.userPreferences, userPreferences) &&
+    other.userPreferences == userPreferences &&
     other.jwt == jwt &&
     other.refreshToken == refreshToken;
 
@@ -114,7 +113,7 @@ class AppData {
         claims: mapValueOfType<Object>(json, r'claims')!,
         groups: Group.listFromJson(json[r'groups']),
         users: UserView.listFromJson(json[r'users']),
-        userPreferences: UserPreferences.listFromJson(json[r'userPreferences']),
+        userPreferences: mapValueOfType<UserPreferences>(json, r'userPreferences')!,
         jwt: mapValueOfType<String>(json, r'jwt'),
         refreshToken: mapValueOfType<String>(json, r'refreshToken'),
       );
