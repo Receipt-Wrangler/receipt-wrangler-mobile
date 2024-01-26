@@ -3,12 +3,10 @@ import 'package:receipt_wrangler_mobile/api/api.dart';
 
 class ServerModel extends ChangeNotifier {
   String _basePath = "";
-
   String get basePath => _basePath;
 
   FeatureConfig _featureConfig =
       FeatureConfig(aiPoweredReceipts: false, enableLocalSignUp: false);
-
   FeatureConfig get featureConfig => _featureConfig;
 
   void setBasePath(String basePath) {

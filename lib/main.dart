@@ -4,14 +4,22 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/auth/login/screens/authScreen.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
+import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
-      ChangeNotifierProvider(create: (_) => ServerModel())
+      ChangeNotifierProvider(create: (_) => ServerModel()),
+      ChangeNotifierProvider(create: (_) => AuthModel()),
+      ChangeNotifierProvider(create: (_) => GroupModel()),
+      ChangeNotifierProvider(create: (_) => UserModel()),
+      ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
     ],
     child: const ReceiptWrangler(),
   ));

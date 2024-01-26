@@ -1,10 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
@@ -42,11 +39,13 @@ class _Login extends State<AuthForm> {
 
         api.AuthApi()
             .login(command)
-            .then((data) => print(data))
+            .then((data) => _storeAppData(data as api.AppData))
             .catchError((err) => showApiErrorSnackbar(context, err));
       }
     }
   }
+
+  void _storeAppData(api.AppData appData) {}
 
   bool _isSignUp() {
     return GoRouter.of(context).routeInformationProvider.value.uri.toString() ==
