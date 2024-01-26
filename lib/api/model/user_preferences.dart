@@ -15,9 +15,9 @@ class UserPreferences {
   UserPreferences({
     required this.id,
     required this.userId,
-    this.quickScanDefaultGroupId,
-    this.quickScanDefaultPaidById,
-    this.quickScanDefaultStatus,
+    this.quickScanDefaultGroupId = 0,
+    this.quickScanDefaultPaidById = 0,
+    this.quickScanDefaultStatus = 'OPEN',
   });
 
   /// User preferences id
@@ -27,31 +27,13 @@ class UserPreferences {
   int userId;
 
   /// Group foreign key
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? quickScanDefaultGroupId;
+  int quickScanDefaultGroupId;
 
   /// User foreign key
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? quickScanDefaultPaidById;
+  int quickScanDefaultPaidById;
 
   /// Default quick scan status
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? quickScanDefaultStatus;
+  String quickScanDefaultStatus;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UserPreferences &&
@@ -66,9 +48,9 @@ class UserPreferences {
     // ignore: unnecessary_parenthesis
     (id.hashCode) +
     (userId.hashCode) +
-    (quickScanDefaultGroupId == null ? 0 : quickScanDefaultGroupId!.hashCode) +
-    (quickScanDefaultPaidById == null ? 0 : quickScanDefaultPaidById!.hashCode) +
-    (quickScanDefaultStatus == null ? 0 : quickScanDefaultStatus!.hashCode);
+    (quickScanDefaultGroupId.hashCode) +
+    (quickScanDefaultPaidById.hashCode) +
+    (quickScanDefaultStatus.hashCode);
 
   @override
   String toString() => 'UserPreferences[id=$id, userId=$userId, quickScanDefaultGroupId=$quickScanDefaultGroupId, quickScanDefaultPaidById=$quickScanDefaultPaidById, quickScanDefaultStatus=$quickScanDefaultStatus]';
@@ -77,21 +59,9 @@ class UserPreferences {
     final json = <String, dynamic>{};
       json[r'id'] = this.id;
       json[r'userId'] = this.userId;
-    if (this.quickScanDefaultGroupId != null) {
       json[r'quickScanDefaultGroupId'] = this.quickScanDefaultGroupId;
-    } else {
-      json[r'quickScanDefaultGroupId'] = null;
-    }
-    if (this.quickScanDefaultPaidById != null) {
       json[r'quickScanDefaultPaidById'] = this.quickScanDefaultPaidById;
-    } else {
-      json[r'quickScanDefaultPaidById'] = null;
-    }
-    if (this.quickScanDefaultStatus != null) {
       json[r'quickScanDefaultStatus'] = this.quickScanDefaultStatus;
-    } else {
-      json[r'quickScanDefaultStatus'] = null;
-    }
     return json;
   }
 
@@ -116,9 +86,9 @@ class UserPreferences {
       return UserPreferences(
         id: mapValueOfType<int>(json, r'id')!,
         userId: mapValueOfType<int>(json, r'userId')!,
-        quickScanDefaultGroupId: mapValueOfType<int>(json, r'quickScanDefaultGroupId'),
-        quickScanDefaultPaidById: mapValueOfType<int>(json, r'quickScanDefaultPaidById'),
-        quickScanDefaultStatus: mapValueOfType<String>(json, r'quickScanDefaultStatus'),
+        quickScanDefaultGroupId: mapValueOfType<int>(json, r'quickScanDefaultGroupId') ?? 0,
+        quickScanDefaultPaidById: mapValueOfType<int>(json, r'quickScanDefaultPaidById') ?? 0,
+        quickScanDefaultStatus: mapValueOfType<String>(json, r'quickScanDefaultStatus') ?? 'OPEN',
       );
     }
     return null;
