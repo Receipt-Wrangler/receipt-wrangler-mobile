@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class SetHomeserverUrl extends StatefulWidget {
   const SetHomeserverUrl({super.key});
@@ -31,17 +32,12 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
           .then((value) => {
                 Provider.of<ServerModel>(context, listen: false)
                     .setFeatureConfig(value),
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Successfully connected to server"),
-                  backgroundColor: Colors.green,
-                )),
+                showSuccessSnackbar(
+                    context, "Successfully connected to server"),
                 context.go("/login"),
               })
           .catchError((error) => {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Failed to connect to server"),
-                  backgroundColor: Colors.red,
-                )),
+                showErrorSnackbar(context, "Failed to connect to server"),
               });
     }
   }

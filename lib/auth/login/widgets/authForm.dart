@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -20,33 +21,42 @@ class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   void _submit() {
+    _formKey.currentState!.save();
+    var form = _formKey.currentState!.value;
+
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      var form = _formKey.currentState!.value;
+      if (_isSignUp()) {
+        var command = api.SignUpCommand(
+            username: form["username"],
+            password: form["password"],
+            displayName: form["displayName"]);
 
-      var command = api.LoginCommand(
-          username: form["username"], password: form["password"]);
+        api.AuthApi()
+            .signUp(command)
+            .then((data) => showSuccessSnackbar(
+                context, "${form["username"]} successfully signed up!"))
+            .catchError((err) => showApiErrorSnackbar(context, err));
+      } else {
+        var command = api.LoginCommand(
+            username: form["username"], password: form["password"]);
 
-      api.AuthApi()
-          .login(command)
-          .then((data) => print(data))
-          .catchError((err) => print(err));
+        api.AuthApi()
+            .login(command)
+            .then((data) => print(data))
+            .catchError((err) => showApiErrorSnackbar(context, err));
+      }
     }
   }
 
   bool _isSignUp() {
-    return GoRouter.of(context)
-            .routeInformationProvider!
-            .value
-            .uri
-            .toString() ==
+    return GoRouter.of(context).routeInformationProvider.value.uri.toString() ==
         "/sign-up";
   }
 
   Widget _getDisplaynameField() {
     if (_isSignUp()) {
       return FormBuilderTextField(
-          name: "displayname",
+          name: "displayName",
           decoration: const InputDecoration(labelText: "Displayname"),
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
@@ -90,6 +100,13 @@ class _Login extends State<AuthForm> {
     }
   }
 
+  Widget _getServerInfoText(ServerModel server) {
+    if (_isSignUp()) {
+      return Text('Signing up on: ${server.basePath}');
+    }
+    return Text('Logging into: ${server.basePath}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -102,7 +119,7 @@ class _Login extends State<AuthForm> {
           ),
           Consumer<ServerModel>(
             builder: (context, server, child) {
-              return Text('Logging into: ${server.basePath}');
+              return _getServerInfoText(server);
             },
           ),
           _getDisplaynameField(),
