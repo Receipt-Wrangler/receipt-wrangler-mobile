@@ -13,10 +13,13 @@ class _ScreenWrapper extends State<ScreenWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.children,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: widget.children,
+          ),
         ),
       ),
     );
