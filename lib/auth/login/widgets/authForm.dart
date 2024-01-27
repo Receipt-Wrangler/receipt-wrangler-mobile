@@ -43,7 +43,10 @@ class _Login extends State<AuthForm> {
 
         api.AuthApi()
             .login(command)
-            .then((data) => _storeAppData(data as api.AppData))
+            .then((data) => {
+                  _storeAppData(data as api.AppData),
+                  showSuccessSnackbar(context, "Successfully logged in!")
+                })
             .catchError((err) => showApiErrorSnackbar(context, err));
       }
     }
