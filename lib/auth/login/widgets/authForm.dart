@@ -65,6 +65,10 @@ class _Login extends State<AuthForm> {
 
     Provider.of<UserPreferencesModel>(context, listen: false)
         .setUserPreferences(appData.userPreferences);
+
+    Provider.of<AuthModel>(context, listen: false)
+        .getJwt()
+        .then((value) => print(value));
   }
 
   bool _isSignUp() {
