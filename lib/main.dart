@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/auth/login/screens/authScreen.dart';
+import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
@@ -23,8 +24,6 @@ void main() {
     ],
     child: const ReceiptWrangler(),
   ));
-
-  print("loading!!");
 }
 
 // GoRouter configuration
@@ -41,6 +40,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/sign-up',
       builder: (context, state) => const AuthScreen(),
+    ),
+    GoRoute(
+      path: '/groups',
+      builder: (context, state) => const GroupSelect(),
     ),
   ],
 );
