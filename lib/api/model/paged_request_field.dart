@@ -17,8 +17,7 @@ class PagedRequestField {
     required this.value,
   });
 
-  /// Filter operation
-  PagedRequestFieldOperationEnum operation;
+  FilterOperation operation;
 
   PagedRequestFieldValue value;
 
@@ -62,7 +61,7 @@ class PagedRequestField {
       }());
 
       return PagedRequestField(
-        operation: PagedRequestFieldOperationEnum.fromJson(json[r'operation'])!,
+        operation: FilterOperation.fromJson(json[r'operation'])!,
         value: PagedRequestFieldValue.fromJson(json[r'value'])!,
       );
     }
@@ -115,84 +114,4 @@ class PagedRequestField {
     'value',
   };
 }
-
-/// Filter operation
-class PagedRequestFieldOperationEnum {
-  /// Instantiate a new enum with the provided [value].
-  const PagedRequestFieldOperationEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const CONTAINS = PagedRequestFieldOperationEnum._(r'CONTAINS');
-  static const EQUALS = PagedRequestFieldOperationEnum._(r'EQUALS');
-  static const GREATER_THAN = PagedRequestFieldOperationEnum._(r'GREATER_THAN');
-  static const LESS_THAN = PagedRequestFieldOperationEnum._(r'LESS_THAN');
-
-  /// List of all possible values in this [enum][PagedRequestFieldOperationEnum].
-  static const values = <PagedRequestFieldOperationEnum>[
-    CONTAINS,
-    EQUALS,
-    GREATER_THAN,
-    LESS_THAN,
-  ];
-
-  static PagedRequestFieldOperationEnum? fromJson(dynamic value) => PagedRequestFieldOperationEnumTypeTransformer().decode(value);
-
-  static List<PagedRequestFieldOperationEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <PagedRequestFieldOperationEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = PagedRequestFieldOperationEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [PagedRequestFieldOperationEnum] to String,
-/// and [decode] dynamic data back to [PagedRequestFieldOperationEnum].
-class PagedRequestFieldOperationEnumTypeTransformer {
-  factory PagedRequestFieldOperationEnumTypeTransformer() => _instance ??= const PagedRequestFieldOperationEnumTypeTransformer._();
-
-  const PagedRequestFieldOperationEnumTypeTransformer._();
-
-  String encode(PagedRequestFieldOperationEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a PagedRequestFieldOperationEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  PagedRequestFieldOperationEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'CONTAINS': return PagedRequestFieldOperationEnum.CONTAINS;
-        case r'EQUALS': return PagedRequestFieldOperationEnum.EQUALS;
-        case r'GREATER_THAN': return PagedRequestFieldOperationEnum.GREATER_THAN;
-        case r'LESS_THAN': return PagedRequestFieldOperationEnum.LESS_THAN;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [PagedRequestFieldOperationEnumTypeTransformer] instance.
-  static PagedRequestFieldOperationEnumTypeTransformer? _instance;
-}
-
 

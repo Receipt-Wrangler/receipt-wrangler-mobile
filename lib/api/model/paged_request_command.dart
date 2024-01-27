@@ -34,7 +34,13 @@ class PagedRequestCommand {
   ///
   String? orderBy;
 
-  PagedRequestCommandSortDirectionEnum? sortDirection;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  SortDirection? sortDirection;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PagedRequestCommand &&
@@ -93,7 +99,7 @@ class PagedRequestCommand {
         page: mapValueOfType<int>(json, r'page')!,
         pageSize: mapValueOfType<int>(json, r'pageSize')!,
         orderBy: mapValueOfType<String>(json, r'orderBy'),
-        sortDirection: PagedRequestCommandSortDirectionEnum.fromJson(json[r'sortDirection']),
+        sortDirection: SortDirection.fromJson(json[r'sortDirection']),
       );
     }
     return null;
@@ -145,81 +151,4 @@ class PagedRequestCommand {
     'pageSize',
   };
 }
-
-
-class PagedRequestCommandSortDirectionEnum {
-  /// Instantiate a new enum with the provided [value].
-  const PagedRequestCommandSortDirectionEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const asc = PagedRequestCommandSortDirectionEnum._(r'asc');
-  static const desc = PagedRequestCommandSortDirectionEnum._(r'desc');
-  static const empty = PagedRequestCommandSortDirectionEnum._(r'');
-
-  /// List of all possible values in this [enum][PagedRequestCommandSortDirectionEnum].
-  static const values = <PagedRequestCommandSortDirectionEnum>[
-    asc,
-    desc,
-    empty,
-  ];
-
-  static PagedRequestCommandSortDirectionEnum? fromJson(dynamic value) => PagedRequestCommandSortDirectionEnumTypeTransformer().decode(value);
-
-  static List<PagedRequestCommandSortDirectionEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <PagedRequestCommandSortDirectionEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = PagedRequestCommandSortDirectionEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [PagedRequestCommandSortDirectionEnum] to String,
-/// and [decode] dynamic data back to [PagedRequestCommandSortDirectionEnum].
-class PagedRequestCommandSortDirectionEnumTypeTransformer {
-  factory PagedRequestCommandSortDirectionEnumTypeTransformer() => _instance ??= const PagedRequestCommandSortDirectionEnumTypeTransformer._();
-
-  const PagedRequestCommandSortDirectionEnumTypeTransformer._();
-
-  String encode(PagedRequestCommandSortDirectionEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a PagedRequestCommandSortDirectionEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  PagedRequestCommandSortDirectionEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'asc': return PagedRequestCommandSortDirectionEnum.asc;
-        case r'desc': return PagedRequestCommandSortDirectionEnum.desc;
-        case r'': return PagedRequestCommandSortDirectionEnum.empty;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [PagedRequestCommandSortDirectionEnumTypeTransformer] instance.
-  static PagedRequestCommandSortDirectionEnumTypeTransformer? _instance;
-}
-
 

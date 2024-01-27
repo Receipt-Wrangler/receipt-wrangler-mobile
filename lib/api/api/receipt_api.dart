@@ -418,9 +418,8 @@ class ReceiptApi {
   /// * [int] paidByUserId (required):
   ///   User foreign key
   ///
-  /// * [String] status (required):
-  ///   Status of quick scanned receipt
-  Future<Response> quickScanReceiptWithHttpInfo(MultipartFile file, int groupId, int paidByUserId, String status,) async {
+  /// * [ReceiptStatus] status (required):
+  Future<Response> quickScanReceiptWithHttpInfo(MultipartFile file, int groupId, int paidByUserId, ReceiptStatus status,) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/quickScan';
 
@@ -481,9 +480,8 @@ class ReceiptApi {
   /// * [int] paidByUserId (required):
   ///   User foreign key
   ///
-  /// * [String] status (required):
-  ///   Status of quick scanned receipt
-  Future<Receipt?> quickScanReceipt(MultipartFile file, int groupId, int paidByUserId, String status,) async {
+  /// * [ReceiptStatus] status (required):
+  Future<Receipt?> quickScanReceipt(MultipartFile file, int groupId, int paidByUserId, ReceiptStatus status,) async {
     final response = await quickScanReceiptWithHttpInfo(file, groupId, paidByUserId, status,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));

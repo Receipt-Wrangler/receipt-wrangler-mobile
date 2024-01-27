@@ -44,14 +44,13 @@ class SignUpCommand {
   ///
   bool? isDummyUser;
 
-  /// User's role
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? userRole;
+  UserRole? userRole;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is SignUpCommand &&
@@ -118,7 +117,7 @@ class SignUpCommand {
         password: mapValueOfType<String>(json, r'password')!,
         displayName: mapValueOfType<String>(json, r'displayName'),
         isDummyUser: mapValueOfType<bool>(json, r'isDummyUser'),
-        userRole: mapValueOfType<bool>(json, r'userRole'),
+        userRole: UserRole.fromJson(json[r'userRole']),
       );
     }
     return null;

@@ -69,7 +69,7 @@ class Group {
   /// Is all group for user
   bool isAllGroup;
 
-  GroupStatusEnum status;
+  GroupStatus status;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -171,7 +171,7 @@ class Group {
         isDefault: mapValueOfType<bool>(json, r'isDefault'),
         name: mapValueOfType<String>(json, r'name')!,
         isAllGroup: mapValueOfType<bool>(json, r'isAllGroup')!,
-        status: GroupStatusEnum.fromJson(json[r'status'])!,
+        status: GroupStatus.fromJson(json[r'status'])!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
       );
     }
@@ -227,78 +227,4 @@ class Group {
     'status',
   };
 }
-
-
-class GroupStatusEnum {
-  /// Instantiate a new enum with the provided [value].
-  const GroupStatusEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const ACTIVE = GroupStatusEnum._(r'ACTIVE');
-  static const ARCHIVED = GroupStatusEnum._(r'ARCHIVED');
-
-  /// List of all possible values in this [enum][GroupStatusEnum].
-  static const values = <GroupStatusEnum>[
-    ACTIVE,
-    ARCHIVED,
-  ];
-
-  static GroupStatusEnum? fromJson(dynamic value) => GroupStatusEnumTypeTransformer().decode(value);
-
-  static List<GroupStatusEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <GroupStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = GroupStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [GroupStatusEnum] to String,
-/// and [decode] dynamic data back to [GroupStatusEnum].
-class GroupStatusEnumTypeTransformer {
-  factory GroupStatusEnumTypeTransformer() => _instance ??= const GroupStatusEnumTypeTransformer._();
-
-  const GroupStatusEnumTypeTransformer._();
-
-  String encode(GroupStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a GroupStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  GroupStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'ACTIVE': return GroupStatusEnum.ACTIVE;
-        case r'ARCHIVED': return GroupStatusEnum.ARCHIVED;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [GroupStatusEnumTypeTransformer] instance.
-  static GroupStatusEnumTypeTransformer? _instance;
-}
-
 

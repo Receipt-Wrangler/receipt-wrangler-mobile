@@ -22,3 +22,9 @@ void showApiErrorSnackbar(BuildContext context, ApiException error) {
     backgroundColor: Colors.red,
   ));
 }
+
+
+// TOOD: fix login issue
+// TODO: store jwt in secure storage
+// TODO: store refresh token in secure storage
+// TODO: check if user is logged in, then move them to appropriate screen

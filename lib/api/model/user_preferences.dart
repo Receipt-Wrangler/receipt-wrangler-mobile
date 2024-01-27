@@ -21,7 +21,7 @@ class UserPreferences {
     required this.userId,
     this.quickScanDefaultGroupId = 0,
     this.quickScanDefaultPaidById = 0,
-    this.quickScanDefaultStatus = const UserPreferencesQuickScanDefaultStatusEnum._('OPEN'),
+    this.quickScanDefaultStatus,
   });
 
   /// User preferences id
@@ -45,8 +45,13 @@ class UserPreferences {
   /// User foreign key
   int quickScanDefaultPaidById;
 
-  /// Default quick scan status
-  UserPreferencesQuickScanDefaultStatusEnum quickScanDefaultStatus;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ReceiptStatus? quickScanDefaultStatus;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UserPreferences &&
@@ -71,7 +76,7 @@ class UserPreferences {
     (userId.hashCode) +
     (quickScanDefaultGroupId.hashCode) +
     (quickScanDefaultPaidById.hashCode) +
-    (quickScanDefaultStatus.hashCode);
+    (quickScanDefaultStatus == null ? 0 : quickScanDefaultStatus!.hashCode);
 
   @override
   String toString() => 'UserPreferences[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, userId=$userId, quickScanDefaultGroupId=$quickScanDefaultGroupId, quickScanDefaultPaidById=$quickScanDefaultPaidById, quickScanDefaultStatus=$quickScanDefaultStatus]';
@@ -86,7 +91,11 @@ class UserPreferences {
       json[r'userId'] = this.userId;
       json[r'quickScanDefaultGroupId'] = this.quickScanDefaultGroupId;
       json[r'quickScanDefaultPaidById'] = this.quickScanDefaultPaidById;
+    if (this.quickScanDefaultStatus != null) {
       json[r'quickScanDefaultStatus'] = this.quickScanDefaultStatus;
+    } else {
+      json[r'quickScanDefaultStatus'] = null;
+    }
     return json;
   }
 
@@ -117,7 +126,7 @@ class UserPreferences {
         userId: mapValueOfType<int>(json, r'userId')!,
         quickScanDefaultGroupId: mapValueOfType<int>(json, r'quickScanDefaultGroupId') ?? 0,
         quickScanDefaultPaidById: mapValueOfType<int>(json, r'quickScanDefaultPaidById') ?? 0,
-        quickScanDefaultStatus: UserPreferencesQuickScanDefaultStatusEnum.fromJson(json[r'quickScanDefaultStatus']) ?? 'OPEN',
+        quickScanDefaultStatus: ReceiptStatus.fromJson(json[r'quickScanDefaultStatus']),
       );
     }
     return null;
@@ -170,84 +179,4 @@ class UserPreferences {
     'userId',
   };
 }
-
-/// Default quick scan status
-class UserPreferencesQuickScanDefaultStatusEnum {
-  /// Instantiate a new enum with the provided [value].
-  const UserPreferencesQuickScanDefaultStatusEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const OPEN = UserPreferencesQuickScanDefaultStatusEnum._(r'OPEN');
-  static const NEEDS_ATTENTION = UserPreferencesQuickScanDefaultStatusEnum._(r'NEEDS_ATTENTION');
-  static const RESOLVED = UserPreferencesQuickScanDefaultStatusEnum._(r'RESOLVED');
-  static const DRAFT = UserPreferencesQuickScanDefaultStatusEnum._(r'DRAFT');
-
-  /// List of all possible values in this [enum][UserPreferencesQuickScanDefaultStatusEnum].
-  static const values = <UserPreferencesQuickScanDefaultStatusEnum>[
-    OPEN,
-    NEEDS_ATTENTION,
-    RESOLVED,
-    DRAFT,
-  ];
-
-  static UserPreferencesQuickScanDefaultStatusEnum? fromJson(dynamic value) => UserPreferencesQuickScanDefaultStatusEnumTypeTransformer().decode(value);
-
-  static List<UserPreferencesQuickScanDefaultStatusEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <UserPreferencesQuickScanDefaultStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = UserPreferencesQuickScanDefaultStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [UserPreferencesQuickScanDefaultStatusEnum] to String,
-/// and [decode] dynamic data back to [UserPreferencesQuickScanDefaultStatusEnum].
-class UserPreferencesQuickScanDefaultStatusEnumTypeTransformer {
-  factory UserPreferencesQuickScanDefaultStatusEnumTypeTransformer() => _instance ??= const UserPreferencesQuickScanDefaultStatusEnumTypeTransformer._();
-
-  const UserPreferencesQuickScanDefaultStatusEnumTypeTransformer._();
-
-  String encode(UserPreferencesQuickScanDefaultStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a UserPreferencesQuickScanDefaultStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  UserPreferencesQuickScanDefaultStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data) {
-        case r'OPEN': return UserPreferencesQuickScanDefaultStatusEnum.OPEN;
-        case r'NEEDS_ATTENTION': return UserPreferencesQuickScanDefaultStatusEnum.NEEDS_ATTENTION;
-        case r'RESOLVED': return UserPreferencesQuickScanDefaultStatusEnum.RESOLVED;
-        case r'DRAFT': return UserPreferencesQuickScanDefaultStatusEnum.DRAFT;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [UserPreferencesQuickScanDefaultStatusEnumTypeTransformer] instance.
-  static UserPreferencesQuickScanDefaultStatusEnumTypeTransformer? _instance;
-}
-
 
