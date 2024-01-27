@@ -5,6 +5,7 @@ class UserPreferencesModel extends ChangeNotifier {
   UserPreferences _userPreferences = UserPreferences(
     id: 0,
     userId: 0,
+    createdAt: "",
   );
   UserPreferences get userPreferences => _userPreferences;
 
