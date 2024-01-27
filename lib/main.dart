@@ -23,6 +23,8 @@ void main() {
     ],
     child: const ReceiptWrangler(),
   ));
+
+  print("loading!!");
 }
 
 // GoRouter configuration
@@ -43,8 +45,29 @@ final _router = GoRouter(
   ],
 );
 
-class ReceiptWrangler extends StatelessWidget {
+class ReceiptWrangler extends StatefulWidget {
   const ReceiptWrangler({super.key});
+
+  @override
+  State<ReceiptWrangler> createState() => _ReceiptWrangler();
+}
+
+class _ReceiptWrangler extends State<ReceiptWrangler> {
+  late final AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,4 +83,30 @@ class ReceiptWrangler extends StatelessWidget {
       routerConfig: _router,
     );
   }
+
+  // Listen to the app lifecycle state changes
+  void _onStateChanged(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.detached:
+        _onDetached();
+      case AppLifecycleState.resumed:
+        _onResumed();
+      case AppLifecycleState.inactive:
+        _onInactive();
+      case AppLifecycleState.hidden:
+        _onHidden();
+      case AppLifecycleState.paused:
+        _onPaused();
+    }
+  }
+
+  void _onDetached() => print('detached');
+
+  void _onResumed() => print('resumed');
+
+  void _onInactive() => print('inactive');
+
+  void _onHidden() => print('hidden');
+
+  void _onPaused() => print('paused');
 }
