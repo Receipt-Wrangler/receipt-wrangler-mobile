@@ -31,7 +31,7 @@ class GroupMember {
   /// Group compound primary key
   int groupId;
 
-  String groupRole;
+  GroupMemberGroupRoleEnum groupRole;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -103,7 +103,7 @@ class GroupMember {
       return GroupMember(
         createdAt: mapValueOfType<String>(json, r'createdAt'),
         groupId: mapValueOfType<int>(json, r'groupId')!,
-        groupRole: mapValueOfType<String>(json, r'groupRole')!,
+        groupRole: GroupMemberGroupRoleEnum.fromJson(json[r'groupRole'])!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
         userId: mapValueOfType<int>(json, r'userId')!,
       );
@@ -158,4 +158,81 @@ class GroupMember {
     'userId',
   };
 }
+
+
+class GroupMemberGroupRoleEnum {
+  /// Instantiate a new enum with the provided [value].
+  const GroupMemberGroupRoleEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const OWNER = GroupMemberGroupRoleEnum._(r'OWNER');
+  static const VIEWER = GroupMemberGroupRoleEnum._(r'VIEWER');
+  static const EDITOR = GroupMemberGroupRoleEnum._(r'EDITOR');
+
+  /// List of all possible values in this [enum][GroupMemberGroupRoleEnum].
+  static const values = <GroupMemberGroupRoleEnum>[
+    OWNER,
+    VIEWER,
+    EDITOR,
+  ];
+
+  static GroupMemberGroupRoleEnum? fromJson(dynamic value) => GroupMemberGroupRoleEnumTypeTransformer().decode(value);
+
+  static List<GroupMemberGroupRoleEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <GroupMemberGroupRoleEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = GroupMemberGroupRoleEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [GroupMemberGroupRoleEnum] to String,
+/// and [decode] dynamic data back to [GroupMemberGroupRoleEnum].
+class GroupMemberGroupRoleEnumTypeTransformer {
+  factory GroupMemberGroupRoleEnumTypeTransformer() => _instance ??= const GroupMemberGroupRoleEnumTypeTransformer._();
+
+  const GroupMemberGroupRoleEnumTypeTransformer._();
+
+  String encode(GroupMemberGroupRoleEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a GroupMemberGroupRoleEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  GroupMemberGroupRoleEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'OWNER': return GroupMemberGroupRoleEnum.OWNER;
+        case r'VIEWER': return GroupMemberGroupRoleEnum.VIEWER;
+        case r'EDITOR': return GroupMemberGroupRoleEnum.EDITOR;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [GroupMemberGroupRoleEnumTypeTransformer] instance.
+  static GroupMemberGroupRoleEnumTypeTransformer? _instance;
+}
+
 

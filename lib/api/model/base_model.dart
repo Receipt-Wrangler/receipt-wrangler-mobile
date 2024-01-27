@@ -13,84 +13,51 @@ part of openapi.api;
 class BaseModel {
   /// Returns a new [BaseModel] instance.
   BaseModel({
-    this.createdAt,
-    this.createdBy,
-    this.id,
-    this.updatedAt,
+    required this.id,
+    required this.createdAt,
+    this.createdBy = 0,
+    this.createdByString = '',
+    this.updatedAt = '',
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? createdAt;
+  int id;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? createdBy;
+  String createdAt;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? id;
+  int createdBy;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? updatedAt;
+  /// Created by entity's name
+  String createdByString;
+
+  String updatedAt;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is BaseModel &&
+    other.id == id &&
     other.createdAt == createdAt &&
     other.createdBy == createdBy &&
-    other.id == id &&
+    other.createdByString == createdByString &&
     other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (createdAt == null ? 0 : createdAt!.hashCode) +
-    (createdBy == null ? 0 : createdBy!.hashCode) +
-    (id == null ? 0 : id!.hashCode) +
-    (updatedAt == null ? 0 : updatedAt!.hashCode);
+    (id.hashCode) +
+    (createdAt.hashCode) +
+    (createdBy.hashCode) +
+    (createdByString.hashCode) +
+    (updatedAt.hashCode);
 
   @override
-  String toString() => 'BaseModel[createdAt=$createdAt, createdBy=$createdBy, id=$id, updatedAt=$updatedAt]';
+  String toString() => 'BaseModel[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.createdAt != null) {
-      json[r'createdAt'] = this.createdAt;
-    } else {
-      json[r'createdAt'] = null;
-    }
-    if (this.createdBy != null) {
-      json[r'createdBy'] = this.createdBy;
-    } else {
-      json[r'createdBy'] = null;
-    }
-    if (this.id != null) {
       json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.updatedAt != null) {
+      json[r'createdAt'] = this.createdAt;
+      json[r'createdBy'] = this.createdBy;
+      json[r'createdByString'] = this.createdByString;
       json[r'updatedAt'] = this.updatedAt;
-    } else {
-      json[r'updatedAt'] = null;
-    }
     return json;
   }
 
@@ -113,10 +80,11 @@ class BaseModel {
       }());
 
       return BaseModel(
-        createdAt: mapValueOfType<String>(json, r'createdAt'),
-        createdBy: mapValueOfType<int>(json, r'createdBy'),
-        id: mapValueOfType<int>(json, r'id'),
-        updatedAt: mapValueOfType<String>(json, r'updatedAt'),
+        id: mapValueOfType<int>(json, r'id')!,
+        createdAt: mapValueOfType<String>(json, r'createdAt')!,
+        createdBy: mapValueOfType<int>(json, r'createdBy') ?? 0,
+        createdByString: mapValueOfType<String>(json, r'createdByString') ?? '',
+        updatedAt: mapValueOfType<String>(json, r'updatedAt') ?? '',
       );
     }
     return null;
@@ -164,6 +132,8 @@ class BaseModel {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'id',
+    'createdAt',
   };
 }
 

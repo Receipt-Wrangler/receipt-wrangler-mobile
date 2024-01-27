@@ -28,7 +28,7 @@ class UpsertWidgetCommand {
   String? name;
 
   /// Type of widget
-  String widgetType;
+  UpsertWidgetCommandWidgetTypeEnum widgetType;
 
   /// Configuration of widget
   Map<String, Object> configuration;
@@ -81,7 +81,7 @@ class UpsertWidgetCommand {
 
       return UpsertWidgetCommand(
         name: mapValueOfType<String>(json, r'name'),
-        widgetType: mapValueOfType<String>(json, r'widgetType')!,
+        widgetType: UpsertWidgetCommandWidgetTypeEnum.fromJson(json[r'widgetType'])!,
         configuration: mapCastOfType<String, Object>(json, r'configuration') ?? const {},
       );
     }
@@ -133,4 +133,78 @@ class UpsertWidgetCommand {
     'widgetType',
   };
 }
+
+/// Type of widget
+class UpsertWidgetCommandWidgetTypeEnum {
+  /// Instantiate a new enum with the provided [value].
+  const UpsertWidgetCommandWidgetTypeEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const GROUP_SUMMARY = UpsertWidgetCommandWidgetTypeEnum._(r'GROUP_SUMMARY');
+  static const FILTERED_RECEIPTS = UpsertWidgetCommandWidgetTypeEnum._(r'FILTERED_RECEIPTS');
+
+  /// List of all possible values in this [enum][UpsertWidgetCommandWidgetTypeEnum].
+  static const values = <UpsertWidgetCommandWidgetTypeEnum>[
+    GROUP_SUMMARY,
+    FILTERED_RECEIPTS,
+  ];
+
+  static UpsertWidgetCommandWidgetTypeEnum? fromJson(dynamic value) => UpsertWidgetCommandWidgetTypeEnumTypeTransformer().decode(value);
+
+  static List<UpsertWidgetCommandWidgetTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <UpsertWidgetCommandWidgetTypeEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = UpsertWidgetCommandWidgetTypeEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [UpsertWidgetCommandWidgetTypeEnum] to String,
+/// and [decode] dynamic data back to [UpsertWidgetCommandWidgetTypeEnum].
+class UpsertWidgetCommandWidgetTypeEnumTypeTransformer {
+  factory UpsertWidgetCommandWidgetTypeEnumTypeTransformer() => _instance ??= const UpsertWidgetCommandWidgetTypeEnumTypeTransformer._();
+
+  const UpsertWidgetCommandWidgetTypeEnumTypeTransformer._();
+
+  String encode(UpsertWidgetCommandWidgetTypeEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a UpsertWidgetCommandWidgetTypeEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  UpsertWidgetCommandWidgetTypeEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'GROUP_SUMMARY': return UpsertWidgetCommandWidgetTypeEnum.GROUP_SUMMARY;
+        case r'FILTERED_RECEIPTS': return UpsertWidgetCommandWidgetTypeEnum.FILTERED_RECEIPTS;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [UpsertWidgetCommandWidgetTypeEnumTypeTransformer] instance.
+  static UpsertWidgetCommandWidgetTypeEnumTypeTransformer? _instance;
+}
+
 

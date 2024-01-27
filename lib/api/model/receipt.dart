@@ -86,7 +86,7 @@ class Receipt {
   ///
   String? resolvedDate;
 
-  String status;
+  ReceiptStatusEnum status;
 
   /// Tags associated to receipt
   List<Tag> tags;
@@ -226,7 +226,7 @@ class Receipt {
         paidByUserId: mapValueOfType<int>(json, r'paidByUserId')!,
         receiptItems: Item.listFromJson(json[r'receiptItems']),
         resolvedDate: mapValueOfType<String>(json, r'resolvedDate'),
-        status: mapValueOfType<String>(json, r'status')!,
+        status: ReceiptStatusEnum.fromJson(json[r'status'])!,
         tags: Tag.listFromJson(json[r'tags']),
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
         createdByString: mapValueOfType<String>(json, r'createdByString'),
@@ -286,4 +286,84 @@ class Receipt {
     'status',
   };
 }
+
+
+class ReceiptStatusEnum {
+  /// Instantiate a new enum with the provided [value].
+  const ReceiptStatusEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const OPEN = ReceiptStatusEnum._(r'OPEN');
+  static const NEEDS_ATTENTION = ReceiptStatusEnum._(r'NEEDS_ATTENTION');
+  static const RESOLVED = ReceiptStatusEnum._(r'RESOLVED');
+  static const DRAFT = ReceiptStatusEnum._(r'DRAFT');
+
+  /// List of all possible values in this [enum][ReceiptStatusEnum].
+  static const values = <ReceiptStatusEnum>[
+    OPEN,
+    NEEDS_ATTENTION,
+    RESOLVED,
+    DRAFT,
+  ];
+
+  static ReceiptStatusEnum? fromJson(dynamic value) => ReceiptStatusEnumTypeTransformer().decode(value);
+
+  static List<ReceiptStatusEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <ReceiptStatusEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = ReceiptStatusEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [ReceiptStatusEnum] to String,
+/// and [decode] dynamic data back to [ReceiptStatusEnum].
+class ReceiptStatusEnumTypeTransformer {
+  factory ReceiptStatusEnumTypeTransformer() => _instance ??= const ReceiptStatusEnumTypeTransformer._();
+
+  const ReceiptStatusEnumTypeTransformer._();
+
+  String encode(ReceiptStatusEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a ReceiptStatusEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  ReceiptStatusEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'OPEN': return ReceiptStatusEnum.OPEN;
+        case r'NEEDS_ATTENTION': return ReceiptStatusEnum.NEEDS_ATTENTION;
+        case r'RESOLVED': return ReceiptStatusEnum.RESOLVED;
+        case r'DRAFT': return ReceiptStatusEnum.DRAFT;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [ReceiptStatusEnumTypeTransformer] instance.
+  static ReceiptStatusEnumTypeTransformer? _instance;
+}
+
 

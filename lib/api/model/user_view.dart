@@ -69,7 +69,7 @@ class UserView {
   String? updatedAt;
 
   /// User's role
-  String userRole;
+  UserViewUserRoleEnum userRole;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UserView &&
@@ -156,7 +156,7 @@ class UserView {
         id: mapValueOfType<int>(json, r'id')!,
         isDummyUser: mapValueOfType<bool>(json, r'isDummyUser')!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
-        userRole: mapValueOfType<String>(json, r'userRole')!,
+        userRole: UserViewUserRoleEnum.fromJson(json[r'userRole'])!,
       );
     }
     return null;
@@ -211,4 +211,78 @@ class UserView {
     'userRole',
   };
 }
+
+/// User's role
+class UserViewUserRoleEnum {
+  /// Instantiate a new enum with the provided [value].
+  const UserViewUserRoleEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const ADMIN = UserViewUserRoleEnum._(r'ADMIN');
+  static const USER = UserViewUserRoleEnum._(r'USER');
+
+  /// List of all possible values in this [enum][UserViewUserRoleEnum].
+  static const values = <UserViewUserRoleEnum>[
+    ADMIN,
+    USER,
+  ];
+
+  static UserViewUserRoleEnum? fromJson(dynamic value) => UserViewUserRoleEnumTypeTransformer().decode(value);
+
+  static List<UserViewUserRoleEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <UserViewUserRoleEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = UserViewUserRoleEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [UserViewUserRoleEnum] to String,
+/// and [decode] dynamic data back to [UserViewUserRoleEnum].
+class UserViewUserRoleEnumTypeTransformer {
+  factory UserViewUserRoleEnumTypeTransformer() => _instance ??= const UserViewUserRoleEnumTypeTransformer._();
+
+  const UserViewUserRoleEnumTypeTransformer._();
+
+  String encode(UserViewUserRoleEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a UserViewUserRoleEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  UserViewUserRoleEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'ADMIN': return UserViewUserRoleEnum.ADMIN;
+        case r'USER': return UserViewUserRoleEnum.USER;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [UserViewUserRoleEnumTypeTransformer] instance.
+  static UserViewUserRoleEnumTypeTransformer? _instance;
+}
+
 
