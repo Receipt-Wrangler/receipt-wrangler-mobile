@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/auth/login/screens/authScreen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
+import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
@@ -32,18 +33,30 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const Home(),
+      redirect: (context, state) {
+        return canNavigateTo(context, "/groups").then((value) => value);
+      },
     ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const AuthScreen(),
+      redirect: (context, state) {
+        return canNavigateTo(context, "/groups").then((value) => value);
+      },
     ),
     GoRoute(
       path: '/sign-up',
       builder: (context, state) => const AuthScreen(),
+      redirect: (context, state) {
+        return canNavigateTo(context, "/groups").then((value) => value);
+      },
     ),
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupSelect(),
+      redirect: (context, state) {
+        return canNavigateTo(context, "/groups").then((value) => value);
+      },
     ),
   ],
 );
