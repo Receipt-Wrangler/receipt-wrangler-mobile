@@ -109,7 +109,7 @@ class AppData {
       }());
 
       return AppData(
-        claims: mapValueOfType<Claims>(json, r'claims')!,
+        claims: Claims.fromJson(json[r'claims'])!,
         groups: Group.listFromJson(json[r'groups']),
         users: UserView.listFromJson(json[r'users']),
         userPreferences: UserPreferences.fromJson(json[r'userPreferences'])!,

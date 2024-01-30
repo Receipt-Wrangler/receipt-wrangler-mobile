@@ -20,8 +20,8 @@ class Claims {
     required this.username,
     required this.iss,
     this.sub,
-    this.aud,
-    this.exp,
+    this.aud = const [],
+    required this.exp,
     this.nbf,
     this.iat,
     this.jti,
@@ -54,22 +54,10 @@ class Claims {
   String? sub;
 
   /// Audience
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? aud;
+  List<String> aud;
 
   /// Expiration time
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? exp;
+  int exp;
 
   /// Not before
   ///
@@ -107,7 +95,7 @@ class Claims {
     other.username == username &&
     other.iss == iss &&
     other.sub == sub &&
-    other.aud == aud &&
+    _deepEquality.equals(other.aud, aud) &&
     other.exp == exp &&
     other.nbf == nbf &&
     other.iat == iat &&
@@ -123,8 +111,8 @@ class Claims {
     (username.hashCode) +
     (iss.hashCode) +
     (sub == null ? 0 : sub!.hashCode) +
-    (aud == null ? 0 : aud!.hashCode) +
-    (exp == null ? 0 : exp!.hashCode) +
+    (aud.hashCode) +
+    (exp.hashCode) +
     (nbf == null ? 0 : nbf!.hashCode) +
     (iat == null ? 0 : iat!.hashCode) +
     (jti == null ? 0 : jti!.hashCode);
@@ -145,16 +133,8 @@ class Claims {
     } else {
       json[r'sub'] = null;
     }
-    if (this.aud != null) {
       json[r'aud'] = this.aud;
-    } else {
-      json[r'aud'] = null;
-    }
-    if (this.exp != null) {
       json[r'exp'] = this.exp;
-    } else {
-      json[r'exp'] = null;
-    }
     if (this.nbf != null) {
       json[r'nbf'] = this.nbf;
     } else {
@@ -199,8 +179,10 @@ class Claims {
         username: mapValueOfType<String>(json, r'username')!,
         iss: mapValueOfType<String>(json, r'iss')!,
         sub: mapValueOfType<String>(json, r'sub'),
-        aud: mapValueOfType<String>(json, r'aud'),
-        exp: mapValueOfType<int>(json, r'exp'),
+        aud: json[r'aud'] is Iterable
+            ? (json[r'aud'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
+        exp: mapValueOfType<int>(json, r'exp')!,
         nbf: mapValueOfType<int>(json, r'nbf'),
         iat: mapValueOfType<int>(json, r'iat'),
         jti: mapValueOfType<String>(json, r'jti'),
@@ -257,6 +239,7 @@ class Claims {
     'defaultAvatarColor',
     'username',
     'iss',
+    'exp',
   };
 }
 
