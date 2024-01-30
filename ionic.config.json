@@ -1,7 +1,0 @@
-{
-  "name": "receipt-wrangler-mobile",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

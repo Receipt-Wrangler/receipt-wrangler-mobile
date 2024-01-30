@@ -1,0 +1,124 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '@material/density/functions' as mdc-density-functions;
+@use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
+
+@use './button-theme-private';
+@use '../core/theming/theming';
+
+$_icon-size: 24px;
+
+@mixin _ripple-color($color) {
+  --mat-mdc-button-persistent-ripple-color: #{$color};
+  --mat-mdc-button-ripple-color: #{rgba($color, 0.1)};
+}
+
+@function _variable-safe-contrast-tone($value, $is-dark) {
+  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
+    @return mdc-theme-color.contrast-tone($value);
+  }
+
+  @return if($is-dark, 'light', 'dark');
+}
+
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  $color-tokens: tokens-mdc-icon-button.get-color-tokens($config);
+  $background-palette: map.get($config, background);
+  $surface: theming.get-color-from-palette($background-palette, card);
+  $is-dark: map.get($config, is-dark);
+  $on-surface: if(_variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
+
+  .mat-mdc-icon-button {
+    @include button-theme-private.ripple-theme-styles($config, false);
+    @include mdc-icon-button-theme.theme($color-tokens);
+    @include _ripple-color($on-surface);
+
+    &.mat-primary {
+      $color: theming.get-color-from-palette(map.get($config, primary));
+      @include mdc-icon-button-theme.theme((icon-color: $color));
+      @include _ripple-color($color);
+    }
+
+    &.mat-accent {
+      $color: theming.get-color-from-palette(map.get($config, accent));
+      @include mdc-icon-button-theme.theme((icon-color: $color));
+      @include _ripple-color($color);
+    }
+
+    &.mat-warn {
+      $color: theming.get-color-from-palette(map.get($config, warn));
+      @include mdc-icon-button-theme.theme((icon-color: $color));
+      @include _ripple-color($color);
+    }
+
+    @include button-theme-private.apply-disabled-style() {
+      $disabled-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
+      @include mdc-icon-button-theme.theme((
+        icon-color: $disabled-color,
+        disabled-icon-color: $disabled-color,
+      ));
+    }
+  }
+}
+
+@mixin typography($config-or-theme) {
+}
+
+@mixin density($config-or-theme) {
+  $density-scale: theming.get-density-config($config-or-theme);
+  // Manually apply the expected density theming, and include the padding
+  // as it was applied before
+  $calculated-size: mdc-density-functions.prop-value(
+    $density-config: (
+      size: (
+        default: 48px,
+        maximum: 48px,
+        minimum: 28px,
+      ),
+    ),
+    $density-scale: $density-scale,
+    $property-name: size,
+  );
+
+  // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    // Match the styles that used to be present. This is necessary for backwards
+    // compat to match the previous implementations selector count (two classes).
+    @include mdc-icon-button-theme.theme((
+      state-layer-size: $calculated-size,
+    ));
+
+    // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
+    // Currently fails validation because the variable is "undefined"
+    // in the sass stack.
+    // TODO: Switch icon-size to "var(--mdc-icon-button-icon-size)". Currently
+    // fails validation because the variable is "undefined" in the sass stack.
+    width: var(--mdc-icon-button-state-layer-size);
+    height: var(--mdc-icon-button-state-layer-size);
+    padding: math.div($calculated-size - $_icon-size, 2);
+
+    @include button-theme-private.touch-target-density($density-scale);
+  }
+}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
+
+    @if $color != null {
+      @include color($color);
+    }
+    @if $density != null {
+      @include density($density);
+    }
+    @if $typography != null {
+      @include typography($typography);
+    }
+  }
+}
