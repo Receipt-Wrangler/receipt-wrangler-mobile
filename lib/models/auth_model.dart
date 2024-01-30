@@ -28,6 +28,13 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void purgeTokens() {
+    _storage.delete(key: _jwtKey);
+    _storage.delete(key: _refreshTokenKey);
+
+    notifyListeners();
+  }
+
   Future<String?> getJwt() async {
     return await _storage.read(key: _jwtKey);
   }
