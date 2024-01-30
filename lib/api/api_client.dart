@@ -239,6 +239,8 @@ class ApiClient {
           return Category.fromJson(value);
         case 'CategoryView':
           return CategoryView.fromJson(value);
+        case 'Claims':
+          return Claims.fromJson(value);
         case 'Comment':
           return Comment.fromJson(value);
         case 'Dashboard':
@@ -253,6 +255,8 @@ class ApiClient {
           return FileDataView.fromJson(value);
         case 'FilterOperation':
           return FilterOperationTypeTransformer().decode(value);
+        case 'GetNewRefreshToken200Response':
+          return GetNewRefreshToken200Response.fromJson(value);
         case 'Group':
           return Group.fromJson(value);
         case 'GroupMember':
@@ -305,6 +309,8 @@ class ApiClient {
           return Tag.fromJson(value);
         case 'TagView':
           return TagView.fromJson(value);
+        case 'TokenPair':
+          return TokenPair.fromJson(value);
         case 'UpdateGroupSettingsCommand':
           return UpdateGroupSettingsCommand.fromJson(value);
         case 'UpdateProfileCommand':

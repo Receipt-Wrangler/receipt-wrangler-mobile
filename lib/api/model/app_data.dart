@@ -21,8 +21,7 @@ class AppData {
     this.refreshToken,
   });
 
-  /// User's claims
-  Object claims;
+  Claims claims;
 
   /// Groups in the system
   List<Group> groups;
@@ -110,7 +109,7 @@ class AppData {
       }());
 
       return AppData(
-        claims: mapValueOfType<Object>(json, r'claims')!,
+        claims: mapValueOfType<Claims>(json, r'claims')!,
         groups: Group.listFromJson(json[r'groups']),
         users: UserView.listFromJson(json[r'users']),
         userPreferences: UserPreferences.fromJson(json[r'userPreferences'])!,
