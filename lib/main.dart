@@ -34,28 +34,32 @@ final _router = GoRouter(
       path: '/',
       builder: (context, state) => const Home(),
       redirect: (context, state) {
-        return canNavigateTo(context, "/groups").then((value) => value);
+        return protectedRouteRedirect(context, "/groups")
+            .then((value) => value);
       },
     ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const AuthScreen(),
       redirect: (context, state) {
-        return canNavigateTo(context, "/groups").then((value) => value);
+        return protectedRouteRedirect(context, "/groups")
+            .then((value) => value);
       },
     ),
     GoRoute(
       path: '/sign-up',
       builder: (context, state) => const AuthScreen(),
       redirect: (context, state) {
-        return canNavigateTo(context, "/groups").then((value) => value);
+        return protectedRouteRedirect(context, "/groups")
+            .then((value) => value);
       },
     ),
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupSelect(),
       redirect: (context, state) {
-        return canNavigateTo(context, "/groups").then((value) => value);
+        return protectedRouteRedirect(context, "/groups")
+            .then((value) => value);
       },
     ),
   ],
