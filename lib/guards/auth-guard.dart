@@ -5,6 +5,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 Future<String?> protectedRouteRedirect(
     BuildContext context, String? redirect) async {
+  // TODO: check server connection
   var authModelProvider = Provider.of<AuthModel>(context, listen: false);
   var tokensValid = await refreshTokens(authModelProvider);
   var redirectRoute = redirect ?? "/";

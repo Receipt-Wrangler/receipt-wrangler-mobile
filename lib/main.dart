@@ -12,6 +12,7 @@ import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
+import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -122,7 +123,11 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   void _onDetached() => print('detached');
 
-  void _onResumed() => print('resumed');
+  void _onResumed() async {
+    // TODO: check connection to server
+    var authModelProvider = Provider.of<AuthModel>(context, listen: false);
+    await refreshTokens(authModelProvider);
+  }
 
   void _onInactive() => print('inactive');
 
