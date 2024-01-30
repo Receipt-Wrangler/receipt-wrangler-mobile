@@ -16,3 +16,17 @@ Future<String?> protectedRouteRedirect(
     return redirectRoute;
   }
 }
+
+Future<String?> unprotectedRouteRedirect(
+    BuildContext context, String? redirect) async {
+  // TODO: check server connection
+  var authModelProvider = Provider.of<AuthModel>(context, listen: false);
+  var tokensValid = await refreshTokens(authModelProvider);
+  var redirectRoute = redirect ?? "/";
+
+  if (tokensValid) {
+    return redirectRoute;
+  } else {
+    return null;
+  }
+}
