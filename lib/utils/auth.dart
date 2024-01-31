@@ -11,6 +11,8 @@ Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
   var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
 
+  print("refreshign");
+
   // If token is valid, then continue on
   if (isTokenValid(jwt)) {
     isAuthenticated = true;

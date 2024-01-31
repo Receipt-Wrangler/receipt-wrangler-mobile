@@ -91,8 +91,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   @override
   Widget build(BuildContext context) {
-    var serverState = Provider.of<ServerModel>(context, listen: true);
-    api.defaultApiClient = api.ApiClient(basePath: serverState.basePath);
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    authModel.initializeAuth();
 
     return MaterialApp.router(
       title: 'Receipt Wrangler',
