@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/server_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -115,7 +114,7 @@ class _Login extends State<AuthForm> {
     }
   }
 
-  Widget _getServerInfoText(ServerModel server) {
+  Widget _getServerInfoText(AuthModel server) {
     if (_isSignUp()) {
       return Text('Signing up on: ${server.basePath}');
     }
@@ -132,9 +131,9 @@ class _Login extends State<AuthForm> {
           const SizedBox(
             height: 10,
           ),
-          Consumer<ServerModel>(
-            builder: (context, server, child) {
-              return _getServerInfoText(server);
+          Consumer<AuthModel>(
+            builder: (context, auth, child) {
+              return _getServerInfoText(auth);
             },
           ),
           _getDisplaynameField(),
@@ -159,9 +158,9 @@ class _Login extends State<AuthForm> {
               },
               style: TextButton.styleFrom(),
               child: _getSubmitButtonText()),
-          Consumer<ServerModel>(
-            builder: (context, server, child) {
-              if (server.featureConfig.enableLocalSignUp) {
+          Consumer<AuthModel>(
+            builder: (context, auth, child) {
+              if (auth.featureConfig.enableLocalSignUp) {
                 return _getSignUpButton();
               } else {
                 return const SizedBox.shrink();

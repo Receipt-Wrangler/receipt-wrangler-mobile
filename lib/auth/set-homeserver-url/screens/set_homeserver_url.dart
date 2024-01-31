@@ -4,7 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
-import 'package:receipt_wrangler_mobile/models/server_model.dart';
+import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class SetHomeserverUrl extends StatefulWidget {
@@ -20,15 +20,14 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      var authModel = Provider.of<AuthModel>(context, listen: false);
 
-      Provider.of<ServerModel>(context, listen: false)
-          .setBasePath(_formKey.currentState!.value["url"]);
+      authModel.setBasePath(_formKey.currentState!.value["url"]);
 
       api.FeatureConfigApi()
           .getFeatureConfig()
           .then((value) => {
-                Provider.of<ServerModel>(context, listen: false)
-                    .setFeatureConfig(value),
+                authModel.setFeatureConfig(value),
                 showSuccessSnackbar(
                     context, "Successfully connected to server"),
                 context.go("/login"),
@@ -41,7 +40,7 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
 
   @override
   Widget build(BuildContext context) {
-    var serverModel = Provider.of<ServerModel>(context);
+    var serverModel = Provider.of<AuthModel>(context);
 
     return FormBuilder(
       key: _formKey,
