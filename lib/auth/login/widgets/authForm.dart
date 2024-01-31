@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/server_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
+import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class AuthForm extends StatefulWidget {
@@ -43,29 +44,23 @@ class _Login extends State<AuthForm> {
 
         api.AuthApi()
             .login(command)
-            .then((data) => {
-                  _storeAppData(data as api.AppData),
-                  showSuccessSnackbar(context, "Successfully logged in!"),
-                  context.go("/groups")
-                })
+            .then((data) => _onLoginSuccess(data as api.AppData))
             .catchError((err) => showApiErrorSnackbar(context, err));
       }
     }
   }
 
-  void _storeAppData(api.AppData appData) {
-    Provider.of<AuthModel>(context, listen: false).setClaims(appData.claims);
-    Provider.of<AuthModel>(context, listen: false)
-        .setJwt(appData.jwt as String);
-    Provider.of<AuthModel>(context, listen: false)
-        .setRefreshToken(appData.refreshToken as String);
+  void _onLoginSuccess(api.AppData appData) {
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    var groupModel = Provider.of<GroupModel>(context, listen: false);
+    var userModel = Provider.of<UserModel>(context, listen: false);
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
 
-    Provider.of<GroupModel>(context, listen: false).setGroups(appData.groups);
-
-    Provider.of<UserModel>(context, listen: false).setUsers(appData.users);
-
-    Provider.of<UserPreferencesModel>(context, listen: false)
-        .setUserPreferences(appData.userPreferences);
+    storeAppData(
+        authModel, groupModel, userModel, userPreferencesModel, appData);
+    showSuccessSnackbar(context, "Successfully logged in!");
+    context.go("/groups");
   }
 
   bool _isSignUp() {
