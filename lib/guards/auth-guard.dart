@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 Future<String?> protectedRouteRedirect(
@@ -9,7 +11,12 @@ Future<String?> protectedRouteRedirect(
   // TODO: check server connection
   var authModelProvider = Provider.of<AuthModel>(context, listen: false);
   var groupModel = Provider.of<GroupModel>(context, listen: false);
-  var tokensValid = await refreshTokens(authModelProvider, groupModel);
+  var userModel = Provider.of<UserModel>(context, listen: false);
+  var userPreferencesModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
+
+  var tokensValid = await refreshTokens(
+      authModelProvider, groupModel, userModel, userPreferencesModel);
   var redirectRoute = redirect ?? "/";
 
   if (tokensValid) {
@@ -24,8 +31,12 @@ Future<String?> unprotectedRouteRedirect(
   // TODO: check server connection
   var authModelProvider = Provider.of<AuthModel>(context, listen: false);
   var groupModel = Provider.of<GroupModel>(context, listen: false);
+  var userModel = Provider.of<UserModel>(context, listen: false);
+  var userPreferencesModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
 
-  var tokensValid = await refreshTokens(authModelProvider, groupModel);
+  var tokensValid = await refreshTokens(
+      authModelProvider, groupModel, userModel, userPreferencesModel);
   var redirectRoute = redirect ?? "/";
 
   if (tokensValid) {

@@ -5,10 +5,10 @@ import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
-Future<bool> refreshTokens(
-    AuthModel authModelProvider, GroupModel groupModel) async {
-  var jwt = await authModelProvider.getJwt();
-  var refreshToken = await authModelProvider.getRefreshToken();
+Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
+    UserModel userModel, UserPreferencesModel userPreferencesModel) async {
+  var jwt = await authModel.getJwt();
+  var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
 
   // If token is valid, then continue on
@@ -19,23 +19,27 @@ Future<bool> refreshTokens(
     if (isTokenValid(refreshToken)) {
       try {
         var tokenPair = await AuthApi().getNewRefreshToken();
-        authModelProvider.setJwt(tokenPair!.jwt);
-        authModelProvider.setRefreshToken(tokenPair!.refreshToken);
+        authModel.setJwt(tokenPair!.jwt);
+        authModel.setRefreshToken(tokenPair!.refreshToken);
         isAuthenticated = true;
       } catch (e) {
         // If the refresh fails, redirect to redirect path and consider it a failure
-        authModelProvider.purgeTokens();
+        authModel.purgeTokens();
         isAuthenticated = false;
       }
     } else {
       // purge old tokens
-      authModelProvider.purgeTokens();
+      authModel.purgeTokens();
       isAuthenticated = false;
     }
   }
 
   // If user is authenticated, but does not exist yet
-  if (isAuthenticated && groupModel.groups.isEmpty) {}
+  if (isAuthenticated && groupModel.groups.isEmpty) {
+    var appData = await UserApi().getAppData() as AppData;
+    storeAppData(
+        authModel, groupModel, userModel, userPreferencesModel, appData);
+  }
 
   return isAuthenticated;
 }

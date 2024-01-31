@@ -125,9 +125,13 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   void _onResumed() async {
     // TODO: check connection to server
     print("resumed");
-    var authModelProvider = Provider.of<AuthModel>(context, listen: false);
-    var validTokens = await refreshTokens(authModelProvider);
-    if (validTokens) {}
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    var groupModel = Provider.of<GroupModel>(context, listen: false);
+    var userModel = Provider.of<UserModel>(context, listen: false);
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
+
+    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel);
   }
 
   void _onInactive() => print('inactive');
