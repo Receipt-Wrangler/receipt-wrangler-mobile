@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
@@ -71,7 +74,8 @@ class _Login extends State<AuthForm> {
     if (_isSignUp()) {
       return FormBuilderTextField(
           name: "displayName",
-          decoration: const InputDecoration(labelText: "Displayname"),
+          decoration: const InputDecoration(
+              labelText: "Displayname", border: OutlineInputBorder()),
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
           ]));
@@ -81,36 +85,38 @@ class _Login extends State<AuthForm> {
   }
 
   Widget _getHeaderText() {
-    if (_isSignUp()) {
-      return const Text("Sign Up");
-    } else {
-      return const Text("Login");
-    }
+    var headerText = _isSignUp() ? "Create Account" : "Login";
+
+    return Text(
+      headerText,
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
   }
 
   Widget _getSignUpButton() {
+    var route = "";
+    var buttonText = "";
+
     if (_isSignUp()) {
-      return ElevatedButton(
-          onPressed: () {
-            context.go("/login");
-          },
-          style: TextButton.styleFrom(),
-          child: const Text("Return to Login"));
+      route = "/login";
+      buttonText = "Return to Login";
     } else {
-      return ElevatedButton(
-          onPressed: () {
-            context.go("/sign-up");
-          },
-          style: TextButton.styleFrom(),
-          child: const Text("Sign Up"));
+      route = "/sign-up";
+      buttonText = "Create an Account";
     }
+
+    return CupertinoButton(
+        onPressed: () {
+          context.go(route);
+        },
+        child: Text(buttonText));
   }
 
   Widget _getSubmitButtonText() {
     if (_isSignUp()) {
-      return const Text("Sign Up");
+      return const Text("Create an Account");
     } else {
-      return const Text("Login");
+      return const Text("Log in");
     }
   }
 
@@ -136,28 +142,37 @@ class _Login extends State<AuthForm> {
               return _getServerInfoText(auth);
             },
           ),
+          headerSpacing,
           _getDisplaynameField(),
+          _isSignUp() ? textFieldSpacing : const SizedBox.shrink(),
           FormBuilderTextField(
               name: "username",
-              decoration: const InputDecoration(labelText: "Username"),
+              decoration: const InputDecoration(
+                  labelText: "Username", border: OutlineInputBorder()),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
               ])),
+          textFieldSpacing,
           FormBuilderTextField(
               name: "password",
-              decoration: const InputDecoration(labelText: "Password"),
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: "Password", border: OutlineInputBorder()),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
               ])),
-          const SizedBox(
-            height: 10,
+          lastFieldSpacing,
+          Row(
+            children: [
+              Expanded(
+                child: CupertinoButton.filled(
+                    onPressed: () {
+                      _submit();
+                    },
+                    child: _getSubmitButtonText()),
+              )
+            ],
           ),
-          ElevatedButton(
-              onPressed: () {
-                _submit();
-              },
-              style: TextButton.styleFrom(),
-              child: _getSubmitButtonText()),
           Consumer<AuthModel>(
             builder: (context, auth, child) {
               if (auth.featureConfig.enableLocalSignUp) {
