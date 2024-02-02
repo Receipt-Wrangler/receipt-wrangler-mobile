@@ -85,12 +85,17 @@ class AuthModel extends ChangeNotifier {
 
   void _updateDefaultApiClient() {
     getJwt().then((jwt) {
-      var bearer = api.HttpBearerAuth();
-      bearer.accessToken = jwt;
+      if (jwt != null) {
+        var bearer = api.HttpBearerAuth();
+        bearer.accessToken = jwt;
 
-      api.defaultApiClient =
-          ApiClient(basePath: basePath, authentication: bearer);
-      print("donezo");
+        api.defaultApiClient =
+            ApiClient(basePath: basePath, authentication: bearer);
+        return;
+      }
+
+      api.defaultApiClient = ApiClient(basePath: basePath);
+      return;
     });
   }
 }

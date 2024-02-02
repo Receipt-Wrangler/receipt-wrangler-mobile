@@ -36,11 +36,15 @@ Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
     }
   }
 
-  // If user is authenticated, but does not exist yet
+  // If user is authenticated, but data does not exist yet
   if (isAuthenticated && groupModel.groups.isEmpty) {
-    var appData = await UserApi().getAppData() as AppData;
-    storeAppData(
-        authModel, groupModel, userModel, userPreferencesModel, appData);
+    try {
+      var appData = await UserApi().getAppData() as AppData;
+      storeAppData(
+          authModel, groupModel, userModel, userPreferencesModel, appData);
+    } catch (e) {
+      isAuthenticated = false;
+    }
   }
 
   return isAuthenticated;
@@ -65,9 +69,15 @@ void storeAppData(
     UserModel userModel,
     UserPreferencesModel userPreferencesModel,
     AppData appData) {
+  if (appData!.jwt!.isNotEmpty) {
+    authModel.setJwt(appData.jwt);
+  }
+
+  if (appData.refreshToken!.isNotEmpty) {
+    authModel.setRefreshToken(appData.refreshToken);
+  }
+
   authModel.setClaims(appData.claims);
-  authModel.setJwt(appData.jwt as String);
-  authModel.setRefreshToken(appData.refreshToken as String);
   groupModel.setGroups(appData.groups);
   userModel.setUsers(appData.users);
   userPreferencesModel.setUserPreferences(appData.userPreferences);
