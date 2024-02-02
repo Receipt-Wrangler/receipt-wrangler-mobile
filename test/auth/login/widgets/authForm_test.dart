@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/auth/login/screens/authScreen.dart';
-import 'package:receipt_wrangler_mobile/auth/login/widgets/authForm.dart';
+import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/auth/login/widgets/auth_form.dart';
 
 void main() {
   testWidgets('authForm ...', (tester) async {

@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/server_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
+import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class AuthForm extends StatefulWidget {
@@ -43,29 +45,23 @@ class _Login extends State<AuthForm> {
 
         api.AuthApi()
             .login(command)
-            .then((data) => {
-                  _storeAppData(data as api.AppData),
-                  showSuccessSnackbar(context, "Successfully logged in!"),
-                  context.go("/groups")
-                })
+            .then((data) => _onLoginSuccess(data as api.AppData))
             .catchError((err) => showApiErrorSnackbar(context, err));
       }
     }
   }
 
-  void _storeAppData(api.AppData appData) {
-    Provider.of<AuthModel>(context, listen: false).setClaims(appData.claims);
-    Provider.of<AuthModel>(context, listen: false)
-        .setJwt(appData.jwt as String);
-    Provider.of<AuthModel>(context, listen: false)
-        .setRefreshToken(appData.refreshToken as String);
+  void _onLoginSuccess(api.AppData appData) {
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    var groupModel = Provider.of<GroupModel>(context, listen: false);
+    var userModel = Provider.of<UserModel>(context, listen: false);
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
 
-    Provider.of<GroupModel>(context, listen: false).setGroups(appData.groups);
-
-    Provider.of<UserModel>(context, listen: false).setUsers(appData.users);
-
-    Provider.of<UserPreferencesModel>(context, listen: false)
-        .setUserPreferences(appData.userPreferences);
+    storeAppData(
+        authModel, groupModel, userModel, userPreferencesModel, appData);
+    showSuccessSnackbar(context, "Successfully logged in!");
+    context.go("/groups");
   }
 
   bool _isSignUp() {
@@ -77,7 +73,8 @@ class _Login extends State<AuthForm> {
     if (_isSignUp()) {
       return FormBuilderTextField(
           name: "displayName",
-          decoration: const InputDecoration(labelText: "Displayname"),
+          decoration: const InputDecoration(
+              labelText: "Displayname", border: OutlineInputBorder()),
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
           ]));
@@ -87,40 +84,42 @@ class _Login extends State<AuthForm> {
   }
 
   Widget _getHeaderText() {
-    if (_isSignUp()) {
-      return const Text("Sign Up");
-    } else {
-      return const Text("Login");
-    }
+    var headerText = _isSignUp() ? "Create Account" : "Login";
+
+    return Text(
+      headerText,
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
   }
 
   Widget _getSignUpButton() {
+    var route = "";
+    var buttonText = "";
+
     if (_isSignUp()) {
-      return ElevatedButton(
-          onPressed: () {
-            context.go("/login");
-          },
-          style: TextButton.styleFrom(),
-          child: const Text("Return to Login"));
+      route = "/login";
+      buttonText = "Return to Login";
     } else {
-      return ElevatedButton(
-          onPressed: () {
-            context.go("/sign-up");
-          },
-          style: TextButton.styleFrom(),
-          child: const Text("Sign Up"));
+      route = "/sign-up";
+      buttonText = "Create an Account";
     }
+
+    return CupertinoButton(
+        onPressed: () {
+          context.go(route);
+        },
+        child: Text(buttonText));
   }
 
   Widget _getSubmitButtonText() {
     if (_isSignUp()) {
-      return const Text("Sign Up");
+      return const Text("Create an Account");
     } else {
-      return const Text("Login");
+      return const Text("Log in");
     }
   }
 
-  Widget _getServerInfoText(ServerModel server) {
+  Widget _getServerInfoText(AuthModel server) {
     if (_isSignUp()) {
       return Text('Signing up on: ${server.basePath}');
     }
@@ -137,36 +136,45 @@ class _Login extends State<AuthForm> {
           const SizedBox(
             height: 10,
           ),
-          Consumer<ServerModel>(
-            builder: (context, server, child) {
-              return _getServerInfoText(server);
+          Consumer<AuthModel>(
+            builder: (context, auth, child) {
+              return _getServerInfoText(auth);
             },
           ),
+          headerSpacing,
           _getDisplaynameField(),
+          _isSignUp() ? textFieldSpacing : const SizedBox.shrink(),
           FormBuilderTextField(
               name: "username",
-              decoration: const InputDecoration(labelText: "Username"),
+              decoration: const InputDecoration(
+                  labelText: "Username", border: OutlineInputBorder()),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
               ])),
+          textFieldSpacing,
           FormBuilderTextField(
               name: "password",
-              decoration: const InputDecoration(labelText: "Password"),
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: "Password", border: OutlineInputBorder()),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
               ])),
-          const SizedBox(
-            height: 10,
+          lastFieldSpacing,
+          Row(
+            children: [
+              Expanded(
+                child: CupertinoButton.filled(
+                    onPressed: () {
+                      _submit();
+                    },
+                    child: _getSubmitButtonText()),
+              )
+            ],
           ),
-          ElevatedButton(
-              onPressed: () {
-                _submit();
-              },
-              style: TextButton.styleFrom(),
-              child: _getSubmitButtonText()),
-          Consumer<ServerModel>(
-            builder: (context, server, child) {
-              if (server.featureConfig.enableLocalSignUp) {
+          Consumer<AuthModel>(
+            builder: (context, auth, child) {
+              if (auth.featureConfig.enableLocalSignUp) {
                 return _getSignUpButton();
               } else {
                 return const SizedBox.shrink();

@@ -1,33 +1,53 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
-Future<bool> refreshTokens(AuthModel authModelProvider) async {
-  var jwt = await authModelProvider.getJwt();
-  var refreshToken = await authModelProvider.getRefreshToken();
+Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
+    UserModel userModel, UserPreferencesModel userPreferencesModel) async {
+  var jwt = await authModel.getJwt();
+  var refreshToken = await authModel.getRefreshToken();
+  var isAuthenticated = false;
+
+  print("refreshign");
 
   // If token is valid, then continue on
   if (isTokenValid(jwt)) {
-    return true;
+    isAuthenticated = true;
   } else {
     // If token is invalid, but refresh token is valid, then get a new token pair
     if (isTokenValid(refreshToken)) {
       try {
         var tokenPair = await AuthApi().getNewRefreshToken();
-        authModelProvider.setJwt(tokenPair!.jwt);
-        authModelProvider.setRefreshToken(tokenPair!.refreshToken);
-        return true;
+        authModel.setJwt(tokenPair!.jwt);
+        authModel.setRefreshToken(tokenPair!.refreshToken);
+        isAuthenticated = true;
       } catch (e) {
         // If the refresh fails, redirect to redirect path and consider it a failure
-        authModelProvider.purgeTokens();
-        return false;
+        authModel.purgeTokens();
+        isAuthenticated = false;
       }
     } else {
       // purge old tokens
-      authModelProvider.purgeTokens();
-      return false;
+      authModel.purgeTokens();
+      isAuthenticated = false;
     }
   }
+
+  // If user is authenticated, but data does not exist yet
+  if (isAuthenticated && groupModel.groups.isEmpty) {
+    try {
+      var appData = await UserApi().getAppData() as AppData;
+      storeAppData(
+          authModel, groupModel, userModel, userPreferencesModel, appData);
+    } catch (e) {
+      isAuthenticated = false;
+    }
+  }
+
+  return isAuthenticated;
 }
 
 bool isTokenValid(String? token) {
@@ -41,4 +61,24 @@ bool isTokenValid(String? token) {
 
     return expiration.isAfter(DateTime.now());
   }
+}
+
+void storeAppData(
+    AuthModel authModel,
+    GroupModel groupModel,
+    UserModel userModel,
+    UserPreferencesModel userPreferencesModel,
+    AppData appData) {
+  if (appData!.jwt!.isNotEmpty) {
+    authModel.setJwt(appData.jwt);
+  }
+
+  if (appData.refreshToken!.isNotEmpty) {
+    authModel.setRefreshToken(appData.refreshToken);
+  }
+
+  authModel.setClaims(appData.claims);
+  groupModel.setGroups(appData.groups);
+  userModel.setUsers(appData.users);
+  userPreferencesModel.setUserPreferences(appData.userPreferences);
 }

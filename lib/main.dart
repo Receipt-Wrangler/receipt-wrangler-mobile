@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api/api.dart" as api;
-import 'package:receipt_wrangler_mobile/auth/login/screens/authScreen.dart';
+import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
-import 'package:receipt_wrangler_mobile/models/server_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
@@ -21,7 +19,6 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
-      ChangeNotifierProvider(create: (_) => ServerModel()),
       ChangeNotifierProvider(create: (_) => AuthModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
@@ -91,8 +88,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   @override
   Widget build(BuildContext context) {
-    var serverState = Provider.of<ServerModel>(context, listen: true);
-    api.defaultApiClient = api.ApiClient(basePath: serverState.basePath);
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    authModel.initializeAuth();
 
     return MaterialApp.router(
       title: 'Receipt Wrangler',
@@ -124,8 +121,14 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   void _onResumed() async {
     // TODO: check connection to server
-    var authModelProvider = Provider.of<AuthModel>(context, listen: false);
-    await refreshTokens(authModelProvider);
+    print("resumed");
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    var groupModel = Provider.of<GroupModel>(context, listen: false);
+    var userModel = Provider.of<UserModel>(context, listen: false);
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
+
+    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel);
   }
 
   void _onInactive() => print('inactive');
