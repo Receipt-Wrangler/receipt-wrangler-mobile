@@ -15,11 +15,19 @@ class _GroupList extends State<GroupList> {
   Widget build(BuildContext context) {
     var groupProvider = Provider.of<GroupModel>(context, listen: true);
 
-    return Expanded(
-        child: ListView(
-      children: groupProvider.groups
-          .map((group) => GroupListCard(group: group))
-          .toList(),
-    ));
+    List<Widget> buildGroupCards() {
+      var widgets = <Widget>[];
+      for (int i = 0; i < groupProvider.groups.length; i++) {
+        widgets.add(GroupListCard(group: groupProvider.groups[i]));
+
+        if (i < groupProvider.groups.length - 1) {
+          widgets.add(const Divider());
+        }
+      }
+
+      return widgets;
+    }
+
+    return Expanded(child: ListView(children: buildGroupCards()));
   }
 }

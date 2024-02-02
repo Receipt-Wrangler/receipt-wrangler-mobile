@@ -13,12 +13,8 @@ class GroupListCard extends StatefulWidget {
 class _GroupListCard extends State<GroupListCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      child: Text(
-        widget.group.name,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
+    return ListTile(
+      title: Text(widget.group.name),
     );
   }
 }
