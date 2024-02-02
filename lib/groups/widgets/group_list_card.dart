@@ -15,7 +15,10 @@ class _GroupListCard extends State<GroupListCard> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      child: Text(widget.group.name),
+      child: Text(
+        widget.group.name,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
