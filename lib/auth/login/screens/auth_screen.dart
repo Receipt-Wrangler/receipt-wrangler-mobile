@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:receipt_wrangler_mobile/auth/login/widgets/auth_form.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/screenWrapper.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
