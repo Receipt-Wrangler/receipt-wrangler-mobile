@@ -5,9 +5,9 @@ import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.da
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 
 class AuthModel extends ChangeNotifier {
-  dynamic _claims = {};
+  api.Claims? _claims;
 
-  dynamic get claims => _claims;
+  api.Claims? get claims => _claims;
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -29,7 +29,7 @@ class AuthModel extends ChangeNotifier {
     _updateDefaultApiClient();
   }
 
-  void setClaims(dynamic claims) {
+  void setClaims(Claims claims) {
     _claims = claims;
 
     notifyListeners();
