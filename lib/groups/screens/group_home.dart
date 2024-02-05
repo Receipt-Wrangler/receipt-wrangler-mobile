@@ -18,15 +18,12 @@ class _GroupHome extends State<GroupHome> {
   Widget build(BuildContext context) {
     var segments = GoRouterState.of(context).uri.pathSegments;
     var groupId = segments[1];
-    var group = Provider.of<GroupModel>(context, listen: false)
-        .groups
-        .firstWhere((element) => element.id == int.tryParse(groupId));
-
-    print(group);
+    var group =
+        Provider.of<GroupModel>(context, listen: false).getGroupById(groupId);
 
     return ScreenWrapper(
       appBarWidget: GroupAppBar(
-          titleText: group.name,
+          titleText: group!.name,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {

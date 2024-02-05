@@ -10,4 +10,8 @@ class GroupModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Group? getGroupById(String id) {
+    return _groups.firstWhere((group) => group.id == int.tryParse(id));
+  }
 }
