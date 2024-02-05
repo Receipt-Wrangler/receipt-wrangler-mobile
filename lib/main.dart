@@ -64,7 +64,7 @@ final _router = GoRouter(
       path: '/groups/:groupId',
       builder: (context, state) => const GroupHome(),
       redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups");
+        return protectedRouteRedirect(context, "/groups/:groupId");
       },
     ),
   ],

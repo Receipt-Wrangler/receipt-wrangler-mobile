@@ -15,7 +15,9 @@ class _GroupSelect extends State<GroupSelect> {
   @override
   Widget build(BuildContext context) {
     return const ScreenWrapper(
-      appBarWidget: GroupAppBar(),
+      appBarWidget: GroupAppBar(
+        titleText: "Groups",
+      ),
       bottomNavigationBarWidget: GroupsBottomNav(),
       children: [GroupList()],
     );
