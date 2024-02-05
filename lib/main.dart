@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
+import 'package:receipt_wrangler_mobile/groups/screens/group_home.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
@@ -55,6 +56,13 @@ final _router = GoRouter(
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupSelect(),
+      redirect: (context, state) {
+        return protectedRouteRedirect(context, "/groups");
+      },
+    ),
+    GoRoute(
+      path: '/groups/:groupId',
+      builder: (context, state) => const GroupHome(),
       redirect: (context, state) {
         return protectedRouteRedirect(context, "/groups");
       },
