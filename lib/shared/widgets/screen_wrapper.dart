@@ -21,17 +21,17 @@ class _ScreenWrapper extends State<ScreenWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBarWidget,
-      bottomNavigationBar: widget.bottomNavigationBarWidget,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.children,
+        appBar: widget.appBarWidget,
+        bottomNavigationBar: widget.bottomNavigationBarWidget,
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: widget.children,
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
