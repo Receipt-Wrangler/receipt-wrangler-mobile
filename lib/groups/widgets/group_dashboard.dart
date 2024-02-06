@@ -37,8 +37,7 @@ class _GroupDashboard extends State<GroupDashboard> {
       ));
     }
 
-    return Container(
-        width: 1000,
+    return SizedBox(
         height: 50,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -46,20 +45,52 @@ class _GroupDashboard extends State<GroupDashboard> {
         ));
   }
 
+  List<Widget> buildDashboardWidgets(api.Dashboard? dashboard) {
+    var widgets = <Widget>[];
+    if (dashboard != null) {
+      for (var widget in dashboard.widgets) {
+        switch (widget.widgetType) {
+          case api.WidgetType.FILTERED_RECEIPTS:
+            widgets.add(Text(widget.name ?? ""));
+            break;
+          case api.WidgetType.GROUP_SUMMARY:
+            widgets.add(Text("summary"));
+            break;
+        }
+      }
+    }
+
+    return widgets;
+  }
+
+  api.Dashboard? getSelectedDashboard(List<api.Dashboard>? dashboards) {
+    if (selectedDashboardIndex == null) {
+      return null;
+    } else {
+      return dashboards![selectedDashboardIndex!];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var groupProvider = Provider.of<GroupModel>(context, listen: true);
+    // var groupProvider = Provider.of<GroupModel>(context, listen: true);
     var groupId = GoRouterState.of(context).uri.pathSegments[1];
     var dashboardFuture =
         api.DashboardApi().getDashboardsForUserByGroupId(groupId);
+    api.Dashboard? selectedDashboard;
 
     return FutureBuilder<List<api.Dashboard>?>(
       future: dashboardFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          selectedDashboard = getSelectedDashboard(snapshot.data!);
+
           return Expanded(
               child: Column(
-            children: [buildDashboardPillList(snapshot.data!)],
+            children: [
+              buildDashboardPillList(snapshot.data!),
+              ...buildDashboardWidgets(selectedDashboard)
+            ],
           ));
         }
 
