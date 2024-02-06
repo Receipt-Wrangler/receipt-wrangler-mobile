@@ -12,6 +12,8 @@ class GroupDashboard extends StatefulWidget {
 }
 
 class _GroupDashboard extends State<GroupDashboard> {
+  int? selectedDashboardIndex;
+
   void onGroupTap(api.Group group) {
     context.go("/groups/${group.id}");
   }
@@ -20,11 +22,18 @@ class _GroupDashboard extends State<GroupDashboard> {
     var widgets = <Widget>[];
     for (int i = 0; i < dashboards.length; i++) {
       var dashboard = dashboards[i];
+      var defaultSelected = i == 0 && selectedDashboardIndex == null;
+      var selected = i == selectedDashboardIndex || defaultSelected;
+
       widgets.add(ChoiceChip(
         key: Key(dashboard.id.toString()),
         label: Text(dashboards[i].name),
-        selected: i == 0,
-        onSelected: (value) {},
+        selected: selected,
+        onSelected: (value) {
+          setState(() {
+            selectedDashboardIndex = i;
+          });
+        },
       ));
     }
 
@@ -39,8 +48,6 @@ class _GroupDashboard extends State<GroupDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedDashboardIndex = 0;
-
     var groupProvider = Provider.of<GroupModel>(context, listen: true);
     var groupId = GoRouterState.of(context).uri.pathSegments[1];
     var dashboardFuture =
