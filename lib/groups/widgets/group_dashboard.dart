@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 
 class GroupDashboard extends StatefulWidget {
@@ -54,7 +55,7 @@ class _GroupDashboard extends State<GroupDashboard> {
             widgets.add(Text(widget.name ?? ""));
             break;
           case api.WidgetType.GROUP_SUMMARY:
-            widgets.add(Text("summary"));
+            widgets.add(GroupSummary());
             break;
         }
       }
