@@ -16,7 +16,7 @@ class PagedRequestFieldValue {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is PagedRequestFieldValue && true;
+      identical(this, other) || other is PagedRequestFieldValue && false;
 
   @override
   int get hashCode => 0;
