@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 
 class GroupAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GroupAppBar({super.key, required this.titleText, this.leading});
@@ -29,7 +30,7 @@ class _GroupAppBar extends State<GroupAppBar> {
     return AppBar(
       leading: widget.leading,
       title: Text(widget.titleText),
-      actions: [avatarIcon()],
+      actions: const [UserAvatar()],
       centerTitle: false,
     );
   }
