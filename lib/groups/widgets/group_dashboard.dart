@@ -6,10 +6,12 @@ import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_s
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 
 class GroupDashboard extends StatefulWidget {
-  const GroupDashboard({super.key});
+  GroupDashboard({super.key, required this.dashboards});
 
   @override
   State<GroupDashboard> createState() => _GroupDashboard();
+
+  List<api.Dashboard> dashboards = [];
 }
 
 class _GroupDashboard extends State<GroupDashboard> {
@@ -73,30 +75,16 @@ class _GroupDashboard extends State<GroupDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    var groupId = GoRouterState.of(context).uri.pathSegments[1];
-    var dashboardFuture =
-        api.DashboardApi().getDashboardsForUserByGroupId(groupId);
-    api.Dashboard? selectedDashboard;
+    api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
 
-    return FutureBuilder<List<api.Dashboard>?>(
-      future: dashboardFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          selectedDashboard = getSelectedDashboard(snapshot.data!);
-
-          return Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildDashboardPillList(snapshot.data!),
-              ...buildDashboardWidgets(selectedDashboard)
-            ],
-          ));
-        }
-
-        return const CircularProgressIndicator();
-      },
-    );
+    return Expanded(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildDashboardPillList(widget.dashboards!),
+        ...buildDashboardWidgets(selectedDashboard)
+      ],
+    ));
   }
 }
