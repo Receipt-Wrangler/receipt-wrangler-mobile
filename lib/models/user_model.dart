@@ -10,4 +10,8 @@ class UserModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  UserView? getUserById(String id) {
+    return _users.firstWhere((user) => user.id.toString() == id);
+  }
 }

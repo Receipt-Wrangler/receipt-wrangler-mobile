@@ -55,7 +55,7 @@ class _GroupDashboard extends State<GroupDashboard> {
             widgets.add(Text(widget.name ?? ""));
             break;
           case api.WidgetType.GROUP_SUMMARY:
-            widgets.add(GroupSummary());
+            widgets.add(const GroupSummary());
             break;
         }
       }
@@ -88,6 +88,8 @@ class _GroupDashboard extends State<GroupDashboard> {
 
           return Expanded(
               child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildDashboardPillList(snapshot.data!),
               ...buildDashboardWidgets(selectedDashboard)
