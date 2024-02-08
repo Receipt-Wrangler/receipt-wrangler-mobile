@@ -52,7 +52,6 @@ class _GroupDashboard extends State<GroupDashboard> {
       for (var widget in dashboard.widgets) {
         switch (widget.widgetType) {
           case api.WidgetType.FILTERED_RECEIPTS:
-            widgets.add(Text(widget.name ?? ""));
             break;
           case api.WidgetType.GROUP_SUMMARY:
             widgets.add(const GroupSummary());
@@ -74,7 +73,6 @@ class _GroupDashboard extends State<GroupDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    // var groupProvider = Provider.of<GroupModel>(context, listen: true);
     var groupId = GoRouterState.of(context).uri.pathSegments[1];
     var dashboardFuture =
         api.DashboardApi().getDashboardsForUserByGroupId(groupId);

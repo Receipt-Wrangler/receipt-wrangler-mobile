@@ -67,7 +67,7 @@ class _GroupSummary extends State<GroupSummary> {
               ],
             );
           }
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         });
   }
 }
