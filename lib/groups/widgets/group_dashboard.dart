@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
-import 'package:receipt_wrangler_mobile/models/group_model.dart';
 
 class GroupDashboard extends StatefulWidget {
   GroupDashboard({super.key, required this.dashboards});
@@ -21,7 +19,13 @@ class _GroupDashboard extends State<GroupDashboard> {
     context.go("/groups/${group.id}");
   }
 
-  Widget buildDashboardPillList(List<api.Dashboard> dashboards) {
+  void onChoiceChipTap(int index) {
+    setState(() {
+      selectedDashboardIndex = index;
+    });
+  }
+
+  Widget buildChoiceChipList(List<api.Dashboard> dashboards) {
     var widgets = <Widget>[];
     for (int i = 0; i < dashboards.length; i++) {
       var dashboard = dashboards[i];
@@ -32,12 +36,9 @@ class _GroupDashboard extends State<GroupDashboard> {
         key: Key(dashboard.id.toString()),
         label: Text(dashboards[i].name),
         selected: selected,
-        onSelected: (value) {
-          setState(() {
-            selectedDashboardIndex = i;
-          });
-        },
+        onSelected: (value) => onChoiceChipTap(i),
       ));
+      widgets.add(const SizedBox(width: 10));
     }
 
     return SizedBox(
@@ -82,7 +83,7 @@ class _GroupDashboard extends State<GroupDashboard> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildDashboardPillList(widget.dashboards!),
+        buildChoiceChipList(widget.dashboards),
         ...buildDashboardWidgets(selectedDashboard)
       ],
     ));
