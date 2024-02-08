@@ -17,7 +17,7 @@ class PagedData {
     required this.totalCount,
   });
 
-  List<Map<String, Object>> data;
+  List<Object> data;
 
   int totalCount;
 
@@ -64,7 +64,7 @@ class PagedData {
       }());
 
       return PagedData(
-        data: listFromJson(json[r'data']) as dynamic,
+        data: listFromJson(json[r'data']),
         totalCount: mapValueOfType<int>(json, r'totalCount')!,
       );
     }

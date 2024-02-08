@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
+
+class GroupDashboard extends StatefulWidget {
+  GroupDashboard({super.key, required this.dashboards});
+
+  @override
+  State<GroupDashboard> createState() => _GroupDashboard();
+
+  List<api.Dashboard> dashboards = [];
+}
+
+class _GroupDashboard extends State<GroupDashboard> {
+  int? selectedDashboardIndex;
+
+  void onGroupTap(api.Group group) {
+    context.go("/groups/${group.id}");
+  }
+
+  void onChoiceChipTap(int index) {
+    setState(() {
+      selectedDashboardIndex = index;
+    });
+  }
+
+  Widget buildChoiceChipList(List<api.Dashboard> dashboards) {
+    var widgets = <Widget>[];
+    for (int i = 0; i < dashboards.length; i++) {
+      var dashboard = dashboards[i];
+      var defaultSelected = i == 0 && selectedDashboardIndex == null;
+      var selected = i == selectedDashboardIndex || defaultSelected;
+
+      widgets.add(ChoiceChip(
+        key: Key(dashboard.id.toString()),
+        label: Text(dashboards[i].name),
+        selected: selected,
+        onSelected: (value) => onChoiceChipTap(i),
+      ));
+      widgets.add(const SizedBox(width: 10));
+    }
+
+    return SizedBox(
+        height: 50,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: widgets,
+        ));
+  }
+
+  List<Widget> buildDashboardWidgets(api.Dashboard? dashboard) {
+    var widgets = <Widget>[];
+    if (dashboard != null) {
+      for (var widget in dashboard.widgets) {
+        switch (widget.widgetType) {
+          case api.WidgetType.FILTERED_RECEIPTS:
+            break;
+          case api.WidgetType.GROUP_SUMMARY:
+            widgets.add(const GroupSummary());
+            break;
+        }
+      }
+    }
+
+    return widgets;
+  }
+
+  api.Dashboard? getSelectedDashboard(List<api.Dashboard>? dashboards) {
+    if (selectedDashboardIndex == null) {
+      return null;
+    } else {
+      return dashboards![selectedDashboardIndex!];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
+
+    return Expanded(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildChoiceChipList(widget.dashboards),
+        ...buildDashboardWidgets(selectedDashboard)
+      ],
+    ));
+  }
+}

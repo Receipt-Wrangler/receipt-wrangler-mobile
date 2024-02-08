@@ -17,6 +17,7 @@ class AppData {
     this.groups = const [],
     this.users = const [],
     required this.userPreferences,
+    required this.featureConfig,
     this.jwt,
     this.refreshToken,
   });
@@ -30,6 +31,8 @@ class AppData {
   List<UserView> users;
 
   UserPreferences userPreferences;
+
+  FeatureConfig featureConfig;
 
   /// JWT token
   ///
@@ -55,6 +58,7 @@ class AppData {
     _deepEquality.equals(other.groups, groups) &&
     _deepEquality.equals(other.users, users) &&
     other.userPreferences == userPreferences &&
+    other.featureConfig == featureConfig &&
     other.jwt == jwt &&
     other.refreshToken == refreshToken;
 
@@ -65,11 +69,12 @@ class AppData {
     (groups.hashCode) +
     (users.hashCode) +
     (userPreferences.hashCode) +
+    (featureConfig.hashCode) +
     (jwt == null ? 0 : jwt!.hashCode) +
     (refreshToken == null ? 0 : refreshToken!.hashCode);
 
   @override
-  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, jwt=$jwt, refreshToken=$refreshToken]';
+  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, featureConfig=$featureConfig, jwt=$jwt, refreshToken=$refreshToken]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -77,6 +82,7 @@ class AppData {
       json[r'groups'] = this.groups;
       json[r'users'] = this.users;
       json[r'userPreferences'] = this.userPreferences;
+      json[r'featureConfig'] = this.featureConfig;
     if (this.jwt != null) {
       json[r'jwt'] = this.jwt;
     } else {
@@ -113,6 +119,7 @@ class AppData {
         groups: Group.listFromJson(json[r'groups']),
         users: UserView.listFromJson(json[r'users']),
         userPreferences: UserPreferences.fromJson(json[r'userPreferences'])!,
+        featureConfig: FeatureConfig.fromJson(json[r'featureConfig'])!,
         jwt: mapValueOfType<String>(json, r'jwt'),
         refreshToken: mapValueOfType<String>(json, r'refreshToken'),
       );
@@ -166,6 +173,7 @@ class AppData {
     'groups',
     'users',
     'userPreferences',
+    'featureConfig',
   };
 }
 

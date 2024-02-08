@@ -230,11 +230,19 @@ class UserApi {
   ///
   /// * [List<int>] receiptIds:
   ///   The Id of the receipts to get amount owed for
-  Future<void> getAmountOwedForUser({ int? groupId, List<int>? receiptIds, }) async {
+  Future<Map<String, String>?> getAmountOwedForUser({ int? groupId, List<int>? receiptIds, }) async {
     final response = await getAmountOwedForUserWithHttpInfo( groupId: groupId, receiptIds: receiptIds, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return Map<String, String>.from(await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Map<String, String>'),);
+
+    }
+    return null;
   }
 
   /// Get app data
