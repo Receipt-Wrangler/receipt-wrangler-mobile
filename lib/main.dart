@@ -61,10 +61,10 @@ final _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/groups/:groupId',
+      path: '/groups/:groupId/dashboards',
       builder: (context, state) => const GroupHome(),
       redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups/:groupId");
+        return protectedRouteRedirect(context, "/groups/:groupId/dashboards");
       },
     ),
   ],

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/utils/group.dart';
 
-class GroupsBottomNav extends StatefulWidget {
-  const GroupsBottomNav({super.key});
+class GroupDashboardBottomNav extends StatefulWidget {
+  const GroupDashboardBottomNav({super.key});
 
   @override
-  State<GroupsBottomNav> createState() => _GroupsBottomNav();
+  State<GroupDashboardBottomNav> createState() => _GroupDashboardBottomNav();
 }
 
-class _GroupsBottomNav extends State<GroupsBottomNav> {
+class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
   var indexSelected = 0;
 
   void _onDestinationSelected(int indexSelected) {
@@ -31,9 +32,10 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
   int _setIndexSelected() {
     var uri =
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
+    var groupId = getGroupId(context);
     var index = 0;
 
-    if (uri.contains("/groups")) {
+    if (uri == "/groups/$groupId/dashboards") {
       index = 0;
     } else if (uri.contains("/add")) {
       index = 1;
@@ -54,8 +56,8 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
     return BottomNav(
       destinations: const [
         NavigationDestination(
-          icon: Icon(Icons.group),
-          label: "Groups",
+          icon: Icon(Icons.dashboard),
+          label: "Dashboards",
         ),
         NavigationDestination(
           icon: Icon(Icons.add),
@@ -64,6 +66,10 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
         NavigationDestination(
           icon: Icon(Icons.search),
           label: "Search",
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.receipt),
+          label: "Receipts",
         ),
       ],
       onDestinationSelected: _onDestinationSelected,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/group-dashboard-bottom-nav.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/group_app_bar.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard_wrapper.dart';
-import 'package:receipt_wrangler_mobile/groups/widgets/groups_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 
@@ -31,7 +31,7 @@ class _GroupHome extends State<GroupHome> {
               context.go("/groups");
             },
           )),
-      bottomNavigationBarWidget: const GroupsBottomNav(),
+      bottomNavigationBarWidget: const GroupDashboardBottomNav(),
       children: const [GroupDashboardWrapper()],
     );
   }
