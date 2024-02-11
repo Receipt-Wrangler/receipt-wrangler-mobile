@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard.dart';
+import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupDashboardWrapper extends StatefulWidget {
   const GroupDashboardWrapper({super.key});
@@ -13,9 +13,9 @@ class GroupDashboardWrapper extends StatefulWidget {
 class _GroupDashboardWrapper extends State<GroupDashboardWrapper> {
   @override
   Widget build(BuildContext context) {
-    var groupId = GoRouterState.of(context).uri.pathSegments[1];
+    var groupId = getGroupId(context);
     var dashboardFuture =
-        api.DashboardApi().getDashboardsForUserByGroupId(groupId);
+        api.DashboardApi().getDashboardsForUserByGroupId(groupId ?? "");
 
     return FutureBuilder(
         future: dashboardFuture,
