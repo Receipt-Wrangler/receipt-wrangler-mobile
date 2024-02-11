@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
 class GroupsBottomNav extends StatefulWidget {
   const GroupsBottomNav({super.key});
@@ -11,7 +12,7 @@ class GroupsBottomNav extends StatefulWidget {
 class _GroupsBottomNav extends State<GroupsBottomNav> {
   var indexSelected = 0;
 
-  void _navigateToGroupSelect(int indexSelected) {
+  void _onDestinationSelected(int indexSelected) {
     switch (indexSelected) {
       case 0:
         context.go("/groups");
@@ -27,12 +28,10 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
     }
   }
 
-  void _setIndexSelected() {
+  int _setIndexSelected() {
     var uri =
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
     var index = 0;
-
-    print(uri);
 
     if (uri.contains("/groups")) {
       index = 0;
@@ -42,9 +41,7 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
       index = 2;
     }
 
-    setState(() {
-      indexSelected = index;
-    });
+    return index;
   }
 
   @override
@@ -56,8 +53,7 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: indexSelected,
+    return BottomNav(
       destinations: const [
         NavigationDestination(
           icon: Icon(Icons.group),
@@ -72,7 +68,8 @@ class _GroupsBottomNav extends State<GroupsBottomNav> {
           label: "Search",
         ),
       ],
-      onDestinationSelected: (index) => _navigateToGroupSelect(index),
+      onDestinationSelected: _onDestinationSelected,
+      getInitialSelectedIndex: _setIndexSelected,
     );
   }
 }
