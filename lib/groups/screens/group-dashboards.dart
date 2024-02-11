@@ -7,14 +7,14 @@ import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard_wrapper.d
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 
-class GroupHome extends StatefulWidget {
-  const GroupHome({super.key});
+class GroupDashboards extends StatefulWidget {
+  const GroupDashboards({super.key});
 
   @override
-  State<GroupHome> createState() => _GroupHome();
+  State<GroupDashboards> createState() => _GroupDashboards();
 }
 
-class _GroupHome extends State<GroupHome> {
+class _GroupDashboards extends State<GroupDashboards> {
   @override
   Widget build(BuildContext context) {
     var segments = GoRouterState.of(context).uri.pathSegments;
