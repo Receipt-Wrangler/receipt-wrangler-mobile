@@ -36,15 +36,16 @@ class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
   int _setIndexSelected() {
     var uri =
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
-    var groupId = getGroupId(context);
     var index = 0;
 
-    if (uri == "/groups/$groupId/dashboards") {
+    if (uri.contains("receipts")) {
       index = 0;
     } else if (uri.contains("/add")) {
       index = 1;
     } else if (uri.contains("/search")) {
       index = 2;
+    } else if (uri.contains("receipts")) {
+      index = 3;
     }
 
     return index;
