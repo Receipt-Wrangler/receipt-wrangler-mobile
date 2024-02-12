@@ -21,7 +21,10 @@ class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
     var group = groupModel.getGroupById(groupId ?? "");
 
     return ScreenWrapper(
-        appBarWidget: TopAppBar(titleText: "${group?.name} Receipts"),
+        appBarWidget: TopAppBar(
+          titleText: "${group?.name} Receipts",
+          leadingArrowRedirect: "/groups/${group?.id}/dashboards",
+        ),
         bottomNavigationBarWidget: const GroupDashboardBottomNav(),
         children: [Text("Hello")]);
   }
