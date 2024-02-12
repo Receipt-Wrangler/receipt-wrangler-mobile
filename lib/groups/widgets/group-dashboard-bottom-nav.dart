@@ -14,6 +14,7 @@ class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
   var indexSelected = 0;
 
   void _onDestinationSelected(int indexSelected) {
+    var groupId = getGroupId(context);
     switch (indexSelected) {
       case 0:
         context.go("/groups");
@@ -23,6 +24,9 @@ class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
         break;
       case 2:
         context.go("/search");
+        break;
+      case 3:
+        context.go("/groups/$groupId/receipts");
         break;
       default:
         context.go("/groups");
