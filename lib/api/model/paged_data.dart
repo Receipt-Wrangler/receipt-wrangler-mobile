@@ -17,29 +17,28 @@ class PagedData {
     required this.totalCount,
   });
 
-  List<Object> data;
+  List<PagedDataDataInner> data;
 
   int totalCount;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PagedData &&
-          _deepEquality.equals(other.data, data) &&
-          other.totalCount == totalCount;
+  bool operator ==(Object other) => identical(this, other) || other is PagedData &&
+    _deepEquality.equals(other.data, data) &&
+    other.totalCount == totalCount;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (data.hashCode) + (totalCount.hashCode);
+    // ignore: unnecessary_parenthesis
+    (data.hashCode) +
+    (totalCount.hashCode);
 
   @override
   String toString() => 'PagedData[data=$data, totalCount=$totalCount]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'data'] = this.data;
-    json[r'totalCount'] = this.totalCount;
+      json[r'data'] = this.data;
+      json[r'totalCount'] = this.totalCount;
     return json;
   }
 
@@ -55,26 +54,21 @@ class PagedData {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "PagedData[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "PagedData[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "PagedData[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "PagedData[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return PagedData(
-        data: listFromJson(json[r'data']),
+        data: PagedDataDataInner.listFromJson(json[r'data']),
         totalCount: mapValueOfType<int>(json, r'totalCount')!,
       );
     }
     return null;
   }
 
-  static List<PagedData> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<PagedData> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <PagedData>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -102,19 +96,13 @@ class PagedData {
   }
 
   // maps a json object with a list of PagedData-objects as value to a dart map
-  static Map<String, List<PagedData>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<PagedData>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<PagedData>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = PagedData.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = PagedData.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -126,3 +114,4 @@ class PagedData {
     'totalCount',
   };
 }
+
