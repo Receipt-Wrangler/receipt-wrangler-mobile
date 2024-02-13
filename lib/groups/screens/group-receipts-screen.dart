@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/group-dashboard-bottom-nav.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/group-receipts-list.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
@@ -26,6 +27,6 @@ class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
           leadingArrowRedirect: "/groups/${group?.id}/dashboards",
         ),
         bottomNavigationBarWidget: const GroupDashboardBottomNav(),
-        children: [Text("Hello")]);
+        children: const [GroupReceiptsList()]);
   }
 }
