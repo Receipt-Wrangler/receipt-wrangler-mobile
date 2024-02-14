@@ -68,6 +68,7 @@ part 'model/login_command.dart';
 part 'model/magic_fill_command.dart';
 part 'model/notification.dart';
 part 'model/paged_data.dart';
+part 'model/paged_data_data_inner.dart';
 part 'model/paged_request_command.dart';
 part 'model/paged_request_field.dart';
 part 'model/paged_request_field_value.dart';

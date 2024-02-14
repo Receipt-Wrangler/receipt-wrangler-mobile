@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
-import 'package:receipt_wrangler_mobile/groups/screens/group_home.dart';
+import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
+import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
@@ -24,6 +26,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => GroupModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptListModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -61,10 +64,17 @@ final _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/groups/:groupId',
-      builder: (context, state) => const GroupHome(),
+      path: '/groups/:groupId/dashboards',
+      builder: (context, state) => const GroupDashboards(),
       redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups/:groupId");
+        return protectedRouteRedirect(context, "/groups/:groupId/dashboards");
+      },
+    ),
+    GoRoute(
+      path: '/groups/:groupId/receipts',
+      builder: (context, state) => const GroupReceiptsScreen(),
+      redirect: (context, state) {
+        return protectedRouteRedirect(context, "/groups/:groupId/receipts");
       },
     ),
   ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
+import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 class GroupSummary extends StatefulWidget {
   const GroupSummary({super.key});
@@ -17,8 +17,7 @@ class _GroupSummary extends State<GroupSummary> {
       MapEntry<String, String> mapEntry, UserModel userModel) {
     var user = userModel.getUserById(mapEntry.key);
     var amount = double.parse(mapEntry.value);
-    var formattedAmount =
-        NumberFormat.currency(decimalDigits: 2, name: "\$").format(amount);
+    var formattedAmount = formatCurrency(amount);
 
     if (mapEntry.value.contains("-") || mapEntry.value == "0") {
       return "You owe ${user!.displayName}: $formattedAmount";

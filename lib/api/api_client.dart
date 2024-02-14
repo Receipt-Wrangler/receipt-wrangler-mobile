@@ -234,6 +234,8 @@ class ApiClient {
           return Notification.fromJson(value);
         case 'PagedData':
           return PagedData.fromJson(value);
+        case 'PagedDataDataInner':
+          return PagedDataDataInner.fromJson(value);
         case 'PagedRequestCommand':
           return PagedRequestCommand.fromJson(value);
         case 'PagedRequestField':
