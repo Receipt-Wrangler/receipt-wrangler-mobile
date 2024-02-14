@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem({super.key, required this.data});
@@ -13,20 +16,21 @@ class ReceiptListItem extends StatefulWidget {
 
 class _ReceiptListItem extends State<ReceiptListItem> {
   Widget getStatusText() {
+    var text = "";
     switch (widget.data.status) {
       case api.ReceiptStatus.DRAFT:
-        return const Text("Draft", style: TextStyle(color: Colors.grey));
+        text = "Draft";
       case api.ReceiptStatus.NEEDS_ATTENTION:
-        return const Text("Needs Attention",
-            style: TextStyle(color: Colors.red));
+        text = "Needs Attention";
       case api.ReceiptStatus.OPEN:
-        return const Text("Open");
+        text = "Open";
       case api.ReceiptStatus.RESOLVED:
-        return const Text("Resolved",
-            style: TextStyle(color: Color.fromRGBO(144, 238, 144, 1)));
+        text = "Resolved";
       default:
         throw Exception("Unknown status: ${widget.data.status}");
     }
+
+    return Text(text, style: TextStyle(color: getStatusColor()));
   }
 
   Widget getLeadingWidget() {
@@ -38,13 +42,28 @@ class _ReceiptListItem extends State<ReceiptListItem> {
           Container(
             width: 10,
             height: 50,
-            color: Colors.red,
+            color: getStatusColor(),
           ),
           const SizedBox(width: 10),
           getDateText(),
         ],
       ),
     );
+  }
+
+  Color getStatusColor() {
+    switch (widget.data.status) {
+      case api.ReceiptStatus.DRAFT:
+        return Colors.grey;
+      case api.ReceiptStatus.NEEDS_ATTENTION:
+        return Colors.red;
+      case api.ReceiptStatus.OPEN:
+        return Colors.blue;
+      case api.ReceiptStatus.RESOLVED:
+        return Color.fromRGBO(144, 238, 144, 1);
+      default:
+        throw Exception("Unknown status: ${widget.data.status}");
+    }
   }
 
   Widget getDateText() {
@@ -68,11 +87,23 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     );
   }
 
+  Widget getSubtitleText() {
+    var userNotFoundText = "User not found!";
+    var userModel = Provider.of<UserModel>(context, listen: false);
+
+    var user = userModel.getUserById(widget.data.paidByUserId.toString());
+    var amount = double.parse(widget.data.amount);
+    var formattedAmount = formatCurrency(amount);
+
+    return Text(
+        "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.data.name),
-      subtitle: Text(widget.data.date),
+      subtitle: getSubtitleText(),
       leading: getLeadingWidget(),
       trailing: getStatusText(),
       contentPadding: EdgeInsets.zero,
