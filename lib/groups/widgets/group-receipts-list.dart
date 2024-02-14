@@ -3,6 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupReceiptsList extends StatefulWidget {
@@ -14,7 +15,7 @@ class GroupReceiptsList extends StatefulWidget {
 
 class _GroupReceiptsList extends State<GroupReceiptsList> {
   final PagingController<int, api.PagedDataDataInner> _pagingController =
-      PagingController(firstPageKey: 0);
+      PagingController(firstPageKey: 1);
 
   @override
   void initState() {
@@ -26,19 +27,27 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
+      var model = Provider.of<ReceiptListModel>(context, listen: false);
+      var command = model.receiptPagedRequestCommand;
+      command.page = pageKey;
+      model.setReceiptPagedRequestCommand(command, false);
+
       var groupId = int.parse(getGroupId(context) ?? "");
-      var command = api.ReceiptPagedRequestCommand(
-          page: 1,
-          pageSize: 10,
-          orderBy: "date",
-          sortDirection: api.SortDirection.desc,
-          filter: api.ReceiptPagedRequestFilter());
       final receipts =
           await api.ReceiptApi().getReceiptsForGroup(groupId, command);
 
       if (receipts?.data != null) {
-        _pagingController.appendPage(receipts?.data ?? [], 0);
-        print(receipts?.data);
+        var length = _pagingController.itemList?.length ?? 0;
+        var newReceipts = receipts?.data ?? [];
+
+        print(_pagingController?.itemList?.map((e) => e.name));
+        if (length == receipts?.totalCount) {
+          print("hit last page");
+          _pagingController.appendLastPage(newReceipts);
+        } else {
+          print("continuing");
+          _pagingController.appendPage(newReceipts, pageKey + 1);
+        }
       }
     } catch (error) {
       _pagingController.error = error;
@@ -47,10 +56,6 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
 
   @override
   Widget build(BuildContext context) {
-    var groupId = getGroupId(context);
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-    var group = groupModel.getGroupById(groupId ?? "");
-
     return Expanded(
         child: PagedListView<int, api.PagedDataDataInner>(
             pagingController: _pagingController,
