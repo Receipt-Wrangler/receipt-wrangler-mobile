@@ -28,12 +28,20 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     }
   }
 
+  Widget getLeadingWidget() {
+    return SizedBox(
+      width: 50,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.start, children: [Text("hey")]),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.data.name),
       subtitle: Text(widget.data.date),
-      leading: Text("leading"),
+      leading: Text("hey"),
       trailing: getStatusText(),
     );
   }
