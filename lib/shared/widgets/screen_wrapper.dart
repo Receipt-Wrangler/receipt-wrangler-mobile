@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
 class ScreenWrapper extends StatefulWidget {
-  const ScreenWrapper(
-      {super.key,
-      required this.children,
-      this.bottomNavigationBarWidget,
-      this.appBarWidget});
+  const ScreenWrapper({
+    super.key,
+    required this.children,
+    this.bottomNavigationBarWidget,
+    this.appBarWidget,
+    this.bodyPadding,
+  });
 
   final List<Widget> children;
 
   final Widget? bottomNavigationBarWidget;
 
   final PreferredSizeWidget? appBarWidget;
+
+  final EdgeInsets? bodyPadding;
 
   @override
   State<ScreenWrapper> createState() => _ScreenWrapper();
@@ -25,7 +29,7 @@ class _ScreenWrapper extends State<ScreenWrapper> {
         bottomNavigationBar: widget.bottomNavigationBarWidget,
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: widget.bodyPadding ?? const EdgeInsets.all(16),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(

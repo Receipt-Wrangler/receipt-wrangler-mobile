@@ -26,6 +26,7 @@ class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
           titleText: "${group?.name} Receipts",
           leadingArrowRedirect: "/groups/${group?.id}/dashboards",
         ),
+        bodyPadding: EdgeInsets.zero,
         bottomNavigationBarWidget: const GroupDashboardBottomNav(),
         children: const [GroupReceiptsList()]);
   }
