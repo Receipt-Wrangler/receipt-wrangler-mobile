@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/groups/widgets/receipt-list-item.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
@@ -15,7 +16,7 @@ class GroupReceiptsList extends StatefulWidget {
 
 class _GroupReceiptsList extends State<GroupReceiptsList> {
   final PagingController<int, api.PagedDataDataInner> _pagingController =
-      PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
   @override
   void initState() {
@@ -40,12 +41,9 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
         var length = _pagingController.itemList?.length ?? 0;
         var newReceipts = receipts?.data ?? [];
 
-        print(_pagingController?.itemList?.map((e) => e.name));
         if (length == receipts?.totalCount) {
-          print("hit last page");
           _pagingController.appendLastPage(newReceipts);
         } else {
-          print("continuing");
           _pagingController.appendPage(newReceipts, pageKey + 1);
         }
       }
@@ -61,10 +59,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
             pagingController: _pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
               itemBuilder: (context, item, index) {
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.date.toString()),
-                );
+                return ReceiptListItem(data: item);
               },
             )));
   }
