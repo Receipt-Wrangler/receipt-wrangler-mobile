@@ -30,17 +30,17 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         throw Exception("Unknown status: ${widget.data.status}");
     }
 
-    return SizedBox(
-      width: 150,
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Chip(
-          label: Text(text),
-          backgroundColor: getStatusColor(),
-          visualDensity: VisualDensity.compact,
-          side: BorderSide.none,
-          padding: EdgeInsets.zero,
-        )
-      ]),
+    return Container(
+      width: 100,
+      height: 50,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [Colors.white, getStatusColor()],
+      )),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]),
     );
   }
 
