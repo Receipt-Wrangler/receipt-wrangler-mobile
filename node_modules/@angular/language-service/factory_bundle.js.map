@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../packages/language-service/plugin-factory.ts"],
-  "sourcesContent": ["/**\n * @license\n * Copyright Google LLC All Rights Reserved.\n *\n * Use of this source code is governed by an MIT-style license that can be\n * found in the LICENSE file at https://angular.io/license\n */\n\nimport ts from 'typescript/lib/tsserverlibrary';\n\nimport {NgLanguageService, PluginConfig} from './api';\n\ninterface PluginModule extends ts.server.PluginModule {\n  create(createInfo: ts.server.PluginCreateInfo): NgLanguageService;\n  onConfigurationChanged?(config: PluginConfig): void;\n}\n\nexport const factory: ts.server.PluginModuleFactory = (tsModule): PluginModule => {\n  let plugin: PluginModule;\n\n  return {\n    create(info: ts.server.PluginCreateInfo): NgLanguageService {\n      plugin = require(`./bundles/language-service.js`)(tsModule);\n      return plugin.create(info);\n    },\n    getExternalFiles(project: ts.server.Project): string[] {\n      return plugin?.getExternalFiles?.(project) ?? [];\n    },\n    onConfigurationChanged(config: PluginConfig): void {\n      plugin?.onConfigurationChanged?.(config);\n    },\n  };\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;;;;;AAiBO,IAAM,UAAyC,CAAC,aAA0B;AAC/E,MAAI;AAEJ,SAAO;IACL,OAAO,MAAgC;AACrC,eAAS,QAAQ,iCAAiC,QAAQ;AAC1D,aAAO,OAAO,OAAO,IAAI;IAC3B;IACA,iBAAiB,SAA0B;AAzB/C;AA0BM,cAAO,4CAAQ,qBAAR,gCAA2B,aAA3B,YAAuC,CAAA;IAChD;IACA,uBAAuB,QAAoB;AA5B/C;AA6BM,6CAAQ,2BAAR,gCAAiC;IACnC;;AAEJ;",
-  "names": []
-}

@@ -1,4 +1,0 @@
-/*!
- * (C) Ionic http://ionicframework.com - MIT License
- */
-var watchForOptions=function(t,e,n){if(typeof MutationObserver==="undefined"){return}var r=new MutationObserver((function(t){n(getSelectedOption(t,e))}));r.observe(t,{childList:true,subtree:true});return r};var getSelectedOption=function(t,e){var n;t.forEach((function(t){for(var r=0;r<t.addedNodes.length;r++){n=findCheckedOption(t.addedNodes[r],e)||n}}));return n};var findCheckedOption=function(t,e){if(t.nodeType!==1){return undefined}var n=t;var r=n.tagName===e.toUpperCase()?[n]:Array.from(n.querySelectorAll(e));return r.find((function(t){return t.value===n.value}))};export{watchForOptions as w};
