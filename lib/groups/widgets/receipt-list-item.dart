@@ -11,10 +11,30 @@ class ReceiptListItem extends StatefulWidget {
 }
 
 class _ReceiptListItem extends State<ReceiptListItem> {
+  Widget getStatusText() {
+    switch (widget.data.status) {
+      case api.ReceiptStatus.DRAFT:
+        return const Text("Draft", style: TextStyle(color: Colors.grey));
+      case api.ReceiptStatus.NEEDS_ATTENTION:
+        return const Text("Needs Attention",
+            style: TextStyle(color: Colors.red));
+      case api.ReceiptStatus.OPEN:
+        return const Text("Open");
+      case api.ReceiptStatus.RESOLVED:
+        return const Text("Resolved",
+            style: TextStyle(color: Color.fromRGBO(144, 238, 144, 1)));
+      default:
+        throw Exception("Unknown status: ${widget.data.status}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.data.name),
+      subtitle: Text(widget.data.date),
+      leading: Text("leading"),
+      trailing: getStatusText(),
     );
   }
 }
