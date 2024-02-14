@@ -30,7 +30,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         throw Exception("Unknown status: ${widget.data.status}");
     }
 
-    return Text(text, style: TextStyle(color: getStatusColor()));
+    return SizedBox(
+      width: 100,
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(text, style: TextStyle(color: getStatusColor())),
+      ]),
+    );
   }
 
   Widget getLeadingWidget() {
