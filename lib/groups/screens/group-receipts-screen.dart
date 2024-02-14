@@ -24,7 +24,7 @@ class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
     return ScreenWrapper(
         appBarWidget: TopAppBar(
           titleText: "${group?.name} Receipts",
-          leadingArrowRedirect: "/groups/${group?.id}/dashboards",
+          leadingArrowRedirect: "/groups",
         ),
         bodyPadding: EdgeInsets.zero,
         bottomNavigationBarWidget: const GroupDashboardBottomNav(),
