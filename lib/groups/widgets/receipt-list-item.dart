@@ -31,9 +31,15 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     }
 
     return SizedBox(
-      width: 100,
+      width: 150,
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(text, style: TextStyle(color: getStatusColor())),
+        Chip(
+          label: Text(text),
+          backgroundColor: getStatusColor(),
+          visualDensity: VisualDensity.compact,
+          side: BorderSide.none,
+          padding: EdgeInsets.zero,
+        )
       ]),
     );
   }
@@ -59,13 +65,13 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   Color getStatusColor() {
     switch (widget.data.status) {
       case api.ReceiptStatus.DRAFT:
-        return Colors.grey;
+        return const Color.fromRGBO(224, 224, 224, 1);
       case api.ReceiptStatus.NEEDS_ATTENTION:
-        return Colors.red;
+        return const Color.fromRGBO(242, 191, 191, 1);
       case api.ReceiptStatus.OPEN:
-        return Colors.blue;
+        return const Color.fromRGBO(255, 250, 205, 1);
       case api.ReceiptStatus.RESOLVED:
-        return Color.fromRGBO(144, 238, 144, 1);
+        return const Color.fromRGBO(144, 238, 144, 1);
       default:
         throw Exception("Unknown status: ${widget.data.status}");
     }
