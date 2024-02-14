@@ -30,6 +30,8 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         throw Exception("Unknown status: ${widget.data.status}");
     }
 
+    Color backgroundColor = Theme.of(context).colorScheme.background;
+
     return Container(
       width: 100,
       height: 50,
@@ -37,7 +39,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
           gradient: LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        colors: [Colors.white, getStatusColor()],
+        colors: [backgroundColor, getStatusColor()],
       )),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]),
