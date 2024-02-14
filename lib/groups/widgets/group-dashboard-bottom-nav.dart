@@ -17,7 +17,7 @@ class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
     var groupId = getGroupId(context);
     switch (indexSelected) {
       case 0:
-        context.go("/groups");
+        context.go("/groups/$groupId/dashboards");
         break;
       case 1:
         context.go("/add");
