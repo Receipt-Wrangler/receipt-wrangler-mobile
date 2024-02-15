@@ -27,7 +27,8 @@ class _TopAppBar extends State<TopAppBar> {
           context.go(widget.leadingArrowRedirect ?? "/");
         },
       ),
-      title: Text(widget.titleText),
+      title: Text(widget.titleText,
+          style: const TextStyle(fontWeight: FontWeight.w800)),
       actions: const [UserAvatar()],
       centerTitle: false,
     );
