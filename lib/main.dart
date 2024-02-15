@@ -59,23 +59,14 @@ final _router = GoRouter(
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupSelect(),
-      redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups");
-      },
     ),
     GoRoute(
       path: '/groups/:groupId/dashboards',
       builder: (context, state) => const GroupDashboards(),
-      redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups/:groupId/dashboards");
-      },
     ),
     GoRoute(
       path: '/groups/:groupId/receipts',
       builder: (context, state) => const GroupReceiptsScreen(),
-      redirect: (context, state) {
-        return protectedRouteRedirect(context, "/groups/:groupId/receipts");
-      },
     ),
   ],
 );
@@ -112,7 +103,20 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     return MaterialApp.router(
       title: 'Receipt Wrangler',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: "Raleway",
+        colorScheme: const ColorScheme(
+          primary: Color(0xFF27B1FF),
+          secondary: Color(0xFF8EA1AC),
+          surface: Color(0xFFFFFFFF),
+          background: Color(0xFFFFFFFF),
+          error: Color(0xFFd63333),
+          onPrimary: Color(0xFFFFFFFF),
+          onSecondary: Color(0xFF000000),
+          onSurface: Color(0xFF000000),
+          onBackground: Color(0xFF000000),
+          onError: Color(0xFFFFFFFF),
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       routerConfig: _router,

@@ -4,6 +4,7 @@ import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
+import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupSummary extends StatefulWidget {
   const GroupSummary({super.key});
@@ -50,7 +51,9 @@ class _GroupSummary extends State<GroupSummary> {
 
   @override
   Widget build(BuildContext context) {
-    var groupSummaryFuture = api.UserApi().getAmountOwedForUser(groupId: 1);
+    var groupId = int.tryParse(getGroupId(context) ?? "");
+    var groupSummaryFuture =
+        api.UserApi().getAmountOwedForUser(groupId: groupId);
 
     return FutureBuilder(
         future: groupSummaryFuture,
@@ -66,7 +69,7 @@ class _GroupSummary extends State<GroupSummary> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
-                ...buildSummaryLineWidgets(snapshot.data!),
+                ...buildSummaryLineWidgets(snapshot.data),
               ],
             );
           }

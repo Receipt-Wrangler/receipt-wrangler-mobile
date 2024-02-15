@@ -32,6 +32,7 @@ class _ScreenWrapper extends State<ScreenWrapper> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: widget.children,
         ),
       ),

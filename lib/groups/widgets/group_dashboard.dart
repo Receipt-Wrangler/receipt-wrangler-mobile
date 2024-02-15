@@ -19,7 +19,7 @@ class _GroupDashboard extends State<GroupDashboard> {
     context.go("/groups/${group.id}");
   }
 
-  void onChoiceChipTap(int index) {
+  void setSelectedDashboardIndex(int index) {
     setState(() {
       selectedDashboardIndex = index;
     });
@@ -31,14 +31,20 @@ class _GroupDashboard extends State<GroupDashboard> {
       var dashboard = dashboards[i];
       var defaultSelected = i == 0 && selectedDashboardIndex == null;
       var selected = i == selectedDashboardIndex || defaultSelected;
+      var theme = Theme.of(context);
 
       widgets.add(ChoiceChip(
         key: Key(dashboard.id.toString()),
         label: Text(dashboards[i].name),
         selected: selected,
-        onSelected: (value) => onChoiceChipTap(i),
+        selectedColor: theme.primaryColor,
+        onSelected: (value) => setSelectedDashboardIndex(i),
       ));
       widgets.add(const SizedBox(width: 10));
+
+      if (selected) {
+        selectedDashboardIndex = i;
+      }
     }
 
     return SizedBox(
@@ -51,6 +57,7 @@ class _GroupDashboard extends State<GroupDashboard> {
 
   List<Widget> buildDashboardWidgets(api.Dashboard? dashboard) {
     var widgets = <Widget>[];
+
     if (dashboard != null) {
       for (var widget in dashboard.widgets) {
         switch (widget.widgetType) {
@@ -76,16 +83,21 @@ class _GroupDashboard extends State<GroupDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    var chipList = buildChoiceChipList(widget.dashboards);
     api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
+
+    List<Widget> children = [];
+
+    if (widget.dashboards.isEmpty) {
+      children.add(const Text("No dashboards to display"));
+    } else {
+      children = [chipList, ...buildDashboardWidgets(selectedDashboard)];
+    }
 
     return Expanded(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        buildChoiceChipList(widget.dashboards),
-        ...buildDashboardWidgets(selectedDashboard)
-      ],
-    ));
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children));
   }
 }

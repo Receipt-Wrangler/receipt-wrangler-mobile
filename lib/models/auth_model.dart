@@ -9,7 +9,11 @@ class AuthModel extends ChangeNotifier {
 
   api.Claims? get claims => _claims;
 
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(
+      aOptions: AndroidOptions(
+        encryptedSharedPreferences: true,
+      ),
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock));
 
   final String _refreshTokenKey = "refreshToken";
 
@@ -36,6 +40,7 @@ class AuthModel extends ChangeNotifier {
   }
 
   void setJwt(String? jwt) {
+    print("setting jwt: $jwt");
     _storage.write(key: _jwtKey, value: jwt ?? null);
 
     _updateDefaultApiClient();

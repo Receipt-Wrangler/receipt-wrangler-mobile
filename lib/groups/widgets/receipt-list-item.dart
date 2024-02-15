@@ -90,6 +90,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         e,
         style: const TextStyle(
           fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
       );
     });
@@ -115,7 +116,10 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.data.name),
+      title: Text(
+        widget.data.name,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       subtitle: getSubtitleText(),
       leading: getLeadingWidget(),
       trailing: getStatusText(),
