@@ -112,6 +112,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     return MaterialApp.router(
       title: 'Receipt Wrangler',
       theme: ThemeData(
+        fontFamily: "Raleway",
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),
           secondary: Color(0xFF8EA1AC),
