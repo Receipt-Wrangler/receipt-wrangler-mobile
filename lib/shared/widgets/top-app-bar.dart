@@ -18,15 +18,23 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _TopAppBar extends State<TopAppBar> {
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
+  Widget? getIconButton() {
+    if (widget.leadingArrowRedirect != null) {
+      return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           context.go(widget.leadingArrowRedirect ?? "/");
         },
-      ),
+      );
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: getIconButton(),
       title: Text(
         widget.titleText,
       ),
