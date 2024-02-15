@@ -86,11 +86,18 @@ class _GroupDashboard extends State<GroupDashboard> {
     var chipList = buildChoiceChipList(widget.dashboards);
     api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
 
+    List<Widget> children = [];
+
+    if (widget.dashboards.isEmpty) {
+      children.add(const Text("No dashboards to display"));
+    } else {
+      children = [chipList, ...buildDashboardWidgets(selectedDashboard)];
+    }
+
     return Expanded(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [chipList, ...buildDashboardWidgets(selectedDashboard)],
-    ));
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children));
   }
 }
