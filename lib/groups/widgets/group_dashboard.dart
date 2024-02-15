@@ -31,11 +31,13 @@ class _GroupDashboard extends State<GroupDashboard> {
       var dashboard = dashboards[i];
       var defaultSelected = i == 0 && selectedDashboardIndex == null;
       var selected = i == selectedDashboardIndex || defaultSelected;
+      var theme = Theme.of(context);
 
       widgets.add(ChoiceChip(
         key: Key(dashboard.id.toString()),
         label: Text(dashboards[i].name),
         selected: selected,
+        selectedColor: theme.primaryColor,
         onSelected: (value) => onChoiceChipTap(i),
       ));
       widgets.add(const SizedBox(width: 10));
