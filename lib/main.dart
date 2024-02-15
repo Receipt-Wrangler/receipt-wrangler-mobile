@@ -59,23 +59,14 @@ final _router = GoRouter(
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupSelect(),
-      redirect: (context, state) {
-        //  return protectedRouteRedirect(context, "/groups");
-      },
     ),
     GoRoute(
       path: '/groups/:groupId/dashboards',
       builder: (context, state) => const GroupDashboards(),
-      redirect: (context, state) {
-        // return protectedRouteRedirect(context, "/groups/:groupId/dashboards");
-      },
     ),
     GoRoute(
       path: '/groups/:groupId/receipts',
       builder: (context, state) => const GroupReceiptsScreen(),
-      redirect: (context, state) {
-        // return protectedRouteRedirect(context, "/groups/:groupId/receipts");
-      },
     ),
   ],
 );
