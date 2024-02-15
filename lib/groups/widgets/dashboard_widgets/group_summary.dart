@@ -66,7 +66,7 @@ class _GroupSummary extends State<GroupSummary> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
-                ...buildSummaryLineWidgets(snapshot.data!),
+                ...buildSummaryLineWidgets(snapshot.data),
               ],
             );
           }
