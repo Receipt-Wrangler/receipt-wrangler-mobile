@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/group-dashboard-bottom-nav.dart';
-import 'package:receipt_wrangler_mobile/groups/widgets/group_app_bar.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard_wrapper.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 
 class GroupDashboards extends StatefulWidget {
   const GroupDashboards({super.key});
@@ -23,14 +23,10 @@ class _GroupDashboards extends State<GroupDashboards> {
         Provider.of<GroupModel>(context, listen: false).getGroupById(groupId);
 
     return ScreenWrapper(
-      appBarWidget: GroupAppBar(
-          titleText: group!.name,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              context.go("/groups");
-            },
-          )),
+      appBarWidget: TopAppBar(
+        titleText: group!.name,
+        leadingArrowRedirect: "/groups",
+      ),
       bottomNavigationBarWidget: const GroupDashboardBottomNav(),
       children: const [GroupDashboardWrapper()],
     );
