@@ -126,6 +126,14 @@ class _Login extends State<AuthForm> {
     return Text('Logging into: ${server.basePath}');
   }
 
+  Widget _getChangeServerButton() {
+    return CupertinoButton(
+        onPressed: () {
+          context.go("/");
+        },
+        child: const Text("Change Server"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -181,6 +189,7 @@ class _Login extends State<AuthForm> {
               }
             },
           ),
+          _getChangeServerButton(),
         ],
       ),
     );
