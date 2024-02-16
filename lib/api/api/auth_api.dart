@@ -127,18 +127,23 @@ class AuthApi {
   /// This will log a user out of the system and revoke their token [SYSTEM USER]
   ///
   /// Note: This method returns the HTTP [Response].
-  Future<Response> logoutWithHttpInfo() async {
+  ///
+  /// Parameters:
+  ///
+  /// * [LogoutCommand] logoutCommand:
+  ///   Refresh token
+  Future<Response> logoutWithHttpInfo({ LogoutCommand? logoutCommand, }) async {
     // ignore: prefer_const_declarations
     final path = r'/logout/';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = logoutCommand;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[];
+    const contentTypes = <String>['application/json'];
 
 
     return apiClient.invokeAPI(
@@ -155,8 +160,13 @@ class AuthApi {
   /// Logout
   ///
   /// This will log a user out of the system and revoke their token [SYSTEM USER]
-  Future<void> logout() async {
-    final response = await logoutWithHttpInfo();
+  ///
+  /// Parameters:
+  ///
+  /// * [LogoutCommand] logoutCommand:
+  ///   Refresh token
+  Future<void> logout({ LogoutCommand? logoutCommand, }) async {
+    final response = await logoutWithHttpInfo( logoutCommand: logoutCommand, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
