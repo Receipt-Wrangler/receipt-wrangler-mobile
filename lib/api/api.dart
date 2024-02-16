@@ -65,6 +65,7 @@ part 'model/group_status.dart';
 part 'model/item.dart';
 part 'model/item_status.dart';
 part 'model/login_command.dart';
+part 'model/logout_command.dart';
 part 'model/magic_fill_command.dart';
 part 'model/notification.dart';
 part 'model/paged_data.dart';

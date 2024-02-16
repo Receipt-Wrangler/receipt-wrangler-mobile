@@ -21,7 +21,8 @@ class _GroupSummary extends State<GroupSummary> {
     var formattedAmount = formatCurrency(amount);
 
     if (mapEntry.value.contains("-") || mapEntry.value == "0") {
-      return "You owe ${user!.displayName}: $formattedAmount";
+      var value = formattedAmount.replaceAll("-", "");
+      return "You owe ${user!.displayName}: $value";
     } else {
       return "${user!.displayName} owes you: $formattedAmount";
     }

@@ -228,6 +228,8 @@ class ApiClient {
           return ItemStatusTypeTransformer().decode(value);
         case 'LoginCommand':
           return LoginCommand.fromJson(value);
+        case 'LogoutCommand':
+          return LogoutCommand.fromJson(value);
         case 'MagicFillCommand':
           return MagicFillCommand.fromJson(value);
         case 'Notification':
