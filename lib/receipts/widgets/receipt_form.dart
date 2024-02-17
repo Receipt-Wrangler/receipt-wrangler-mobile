@@ -21,6 +21,7 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.receipt);
     return FormBuilder(
       key: _formKey,
       child: Column(
