@@ -1,1 +1,1 @@
-enum FormState { view, edit, create }
+enum WranglerFormState { view, edit, create }

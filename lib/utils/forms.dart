@@ -1,22 +1,22 @@
 import '../enums/form_state.dart';
 
-FormState getFormState(String uri) {
+WranglerFormState getFormState(String uri) {
   if (uri.contains("create")) {
-    return FormState.create;
+    return WranglerFormState.create;
   } else if (uri.contains("edit")) {
-    return FormState.edit;
+    return WranglerFormState.edit;
   } else {
-    return FormState.view;
+    return WranglerFormState.view;
   }
 }
 
-String getFormStateHeader(FormState formState) {
+String getFormStateHeader(WranglerFormState formState) {
   switch (formState) {
-    case FormState.create:
+    case WranglerFormState.create:
       return "Create";
-    case FormState.edit:
+    case WranglerFormState.edit:
       return "Edit";
-    case FormState.view:
+    case WranglerFormState.view:
       return "View";
     default:
       return "View";
