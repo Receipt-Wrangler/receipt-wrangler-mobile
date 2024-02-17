@@ -14,6 +14,7 @@ import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt-screen.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() async {
@@ -67,6 +68,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/groups/:groupId/receipts',
       builder: (context, state) => const GroupReceiptsScreen(),
+    ),
+    GoRoute(
+      path: '/receipts/:receiptId/view',
+      builder: (context, state) => const ReceiptScreen(),
     ),
   ],
 );
