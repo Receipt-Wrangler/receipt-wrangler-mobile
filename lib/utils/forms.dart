@@ -22,3 +22,7 @@ String getFormStateHeader(WranglerFormState formState) {
       return "View";
   }
 }
+
+bool isFieldReadOnly(WranglerFormState formState) {
+  return formState == WranglerFormState.view;
+}
