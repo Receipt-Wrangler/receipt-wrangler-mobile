@@ -5,7 +5,7 @@ class TagModel extends ChangeNotifier {
   List<Tag> _tags = [];
   List<Tag> get tags => _tags;
 
-  void setUsers(List<Tag> tags) {
+  void setTags(List<Tag> tags) {
     _tags = tags;
 
     notifyListeners();

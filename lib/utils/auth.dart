@@ -1,12 +1,19 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
-Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
-    UserModel userModel, UserPreferencesModel userPreferencesModel) async {
+Future<bool> refreshTokens(
+    AuthModel authModel,
+    GroupModel groupModel,
+    UserModel userModel,
+    UserPreferencesModel userPreferencesModel,
+    CategoryModel categoryModel,
+    TagModel tagModel) async {
   var jwt = await authModel.getJwt();
   var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
@@ -40,8 +47,8 @@ Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
   if (isAuthenticated && groupModel.groups.isEmpty) {
     try {
       var appData = await UserApi().getAppData() as AppData;
-      storeAppData(
-          authModel, groupModel, userModel, userPreferencesModel, appData);
+      storeAppData(authModel, groupModel, userModel, userPreferencesModel,
+          categoryModel, tagModel, appData);
     } catch (e) {
       isAuthenticated = false;
     }
@@ -68,6 +75,8 @@ void storeAppData(
     GroupModel groupModel,
     UserModel userModel,
     UserPreferencesModel userPreferencesModel,
+    CategoryModel categoryModel,
+    TagModel tagModel,
     AppData appData) {
   if (appData!.jwt!.isNotEmpty) {
     authModel.setJwt(appData.jwt);
@@ -81,4 +90,6 @@ void storeAppData(
   groupModel.setGroups(appData.groups);
   userModel.setUsers(appData.users);
   userPreferencesModel.setUserPreferences(appData.userPreferences);
+  categoryModel.setCategories(appData.categories);
+  tagModel.setTags(appData.tags);
 }

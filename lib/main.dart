@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -106,8 +108,13 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   @override
   Widget build(BuildContext context) {
+    print("building");
     var authModel = Provider.of<AuthModel>(context, listen: false);
     authModel.initializeAuth();
+
+    var timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      print("run");
+    });
 
     return MaterialApp.router(
       title: 'Receipt Wrangler',
@@ -158,8 +165,11 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
+    var categoryModel = Provider.of<CategoryModel>(context, listen: false);
+    var tagModel = Provider.of<TagModel>(context, listen: false);
 
-    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel);
+    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel,
+        categoryModel, tagModel);
   }
 
   void _onInactive() => print('inactive');
