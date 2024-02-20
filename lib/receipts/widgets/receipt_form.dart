@@ -105,6 +105,7 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildGroupField(),
           textFieldSpacing,
           buildPaidByField(),
+          textFieldSpacing,
         ],
       ),
     );
