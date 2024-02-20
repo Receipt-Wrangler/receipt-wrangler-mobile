@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
@@ -26,10 +27,13 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   Widget buildDateField() {
     if (widget.formState == WranglerFormState.view) {
+      var dateFormatter = DateFormat("yyyy-MM-dd");
+      var formattedDate =
+          dateFormatter.format(DateTime.parse(widget.receipt.date));
       return FormBuilderTextField(
           name: "date",
           decoration: const InputDecoration(labelText: "Date"),
-          initialValue: DateTime.parse(widget.receipt.date).toString(),
+          initialValue: formattedDate,
           readOnly: true);
     } else {
       return FormBuilderDateTimePicker(
