@@ -36,9 +36,11 @@ class _ReceiptScreen extends State<ReceiptScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
-                  return ReceiptForm(
-                      receipt: snapshot.data as api.Receipt,
-                      formState: formState);
+                  return SingleChildScrollView(
+                    child: ReceiptForm(
+                        receipt: snapshot.data as api.Receipt,
+                        formState: formState),
+                  );
                 }
 
                 return const CircularProgressIndicator();
