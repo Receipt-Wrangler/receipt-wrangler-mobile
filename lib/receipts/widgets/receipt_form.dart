@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -9,6 +10,7 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
@@ -107,7 +109,27 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  final _formKey = GlobalKey<FormState>();
+  Widget buildCategoryField() {
+    return MultiSelectField<api.Category>(
+      name: "categories",
+      label: "Categories",
+      initialValue: widget.receipt.categories,
+      itemDisplayName: (category) => category.name ?? "",
+      itemName: "Categories",
+    );
+  }
+
+  Widget buildTagField() {
+    return MultiSelectField<api.Tag>(
+      name: "tags",
+      label: "Tags",
+      initialValue: widget.receipt.tags,
+      itemDisplayName: (tag) => tag.name ?? "",
+      itemName: "Tags",
+    );
+  }
+
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +163,15 @@ class _ReceiptForm extends State<ReceiptForm> {
           textFieldSpacing,
           buildStatusField(),
           textFieldSpacing,
+          buildCategoryField(),
+          textFieldSpacing,
+          buildTagField(),
+          ElevatedButton(
+              onPressed: () => {
+                    if (_formKey.currentState!.saveAndValidate())
+                      {print(_formKey.currentState!.value)}
+                  },
+              child: Text("Check form value"))
         ],
       ),
     );
