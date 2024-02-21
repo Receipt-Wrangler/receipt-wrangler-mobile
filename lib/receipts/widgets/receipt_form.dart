@@ -27,7 +27,7 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   Widget buildDateField() {
     if (widget.formState == WranglerFormState.view) {
-      var dateFormatter = DateFormat("yyyy-MM-dd");
+      var dateFormatter = DateFormat("MM/dd/yyyy");
       var formattedDate =
           dateFormatter.format(DateTime.parse(widget.receipt.date));
       return FormBuilderTextField(
