@@ -54,6 +54,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         ));
     return FormBuilderDropdown(
       name: "groupId",
+      decoration: const InputDecoration(labelText: "Group"),
       items: items.toList(),
       initialValue: widget.receipt.groupId,
       enabled: !isFieldReadOnly(widget.formState),
@@ -72,8 +73,36 @@ class _ReceiptForm extends State<ReceiptForm> {
             ));
     return FormBuilderDropdown(
       name: "paidByUserId",
+      decoration: const InputDecoration(labelText: "Paid By"),
       items: items.toList(),
       initialValue: widget.receipt.paidByUserId,
+      enabled: !isFieldReadOnly(widget.formState),
+    );
+  }
+
+  Widget buildStatusField() {
+    return FormBuilderDropdown(
+      name: "status",
+      decoration: const InputDecoration(labelText: "Status"),
+      items: const [
+        DropdownMenuItem(
+          value: api.ReceiptStatus.OPEN,
+          child: Text("Open"),
+        ),
+        DropdownMenuItem(
+          value: api.ReceiptStatus.NEEDS_ATTENTION,
+          child: Text("Needs Attention"),
+        ),
+        DropdownMenuItem(
+          value: api.ReceiptStatus.RESOLVED,
+          child: Text("Resolved"),
+        ),
+        DropdownMenuItem(
+          value: api.ReceiptStatus.DRAFT,
+          child: Text("Draft"),
+        ),
+      ],
+      initialValue: widget.receipt.status,
       enabled: !isFieldReadOnly(widget.formState),
     );
   }
@@ -109,6 +138,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildGroupField(),
           textFieldSpacing,
           buildPaidByField(),
+          textFieldSpacing,
+          buildStatusField(),
           textFieldSpacing,
         ],
       ),
