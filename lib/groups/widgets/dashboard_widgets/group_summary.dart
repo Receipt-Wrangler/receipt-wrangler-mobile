@@ -19,12 +19,12 @@ class _GroupSummary extends State<GroupSummary> {
     var user = userModel.getUserById(mapEntry.key);
     var amount = double.parse(mapEntry.value);
     var formattedAmount = formatCurrency(amount);
+    var value = formattedAmount.replaceAll("-", "");
 
     if (mapEntry.value.contains("-") || mapEntry.value == "0") {
-      var value = formattedAmount.replaceAll("-", "");
-      return "You owe ${user!.displayName}: $value";
-    } else {
       return "${user!.displayName} owes you: $formattedAmount";
+    } else {
+      return "You owe ${user!.displayName}: $value";
     }
   }
 
