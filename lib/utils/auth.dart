@@ -13,33 +13,44 @@ Future<bool> refreshTokens(
     UserModel userModel,
     UserPreferencesModel userPreferencesModel,
     CategoryModel categoryModel,
-    TagModel tagModel) async {
+    TagModel tagModel,
+    {bool force = false}) async {
   var jwt = await authModel.getJwt();
   var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
 
   print("refreshign");
 
-  // If token is valid, then continue on
-  if (isTokenValid(jwt)) {
-    isAuthenticated = true;
-  } else {
-    // If token is invalid, but refresh token is valid, then get a new token pair
-    if (isTokenValid(refreshToken)) {
-      try {
-        var tokenPair = await AuthApi().getNewRefreshToken();
-        authModel.setJwt(tokenPair!.jwt);
-        authModel.setRefreshToken(tokenPair!.refreshToken);
-        isAuthenticated = true;
-      } catch (e) {
-        // If the refresh fails, redirect to redirect path and consider it a failure
+  // TODO: refactor and clean up if it works
+  if (force == true) {
+    try {
+      await getAndSetTokens(authModel);
+    } catch (e) {
+      authModel.purgeTokens();
+      return false;
+    }
+  }
+
+  if (!force) {
+    // If token is valid, then continue on
+    if (isTokenValid(jwt)) {
+      isAuthenticated = true;
+    } else {
+      // If token is invalid, but refresh token is valid, then get a new token pair
+      if (isTokenValid(refreshToken)) {
+        try {
+          await getAndSetTokens(authModel);
+          isAuthenticated = true;
+        } catch (e) {
+          // If the refresh fails, redirect to redirect path and consider it a failure
+          authModel.purgeTokens();
+          isAuthenticated = false;
+        }
+      } else {
+        // purge old tokens
         authModel.purgeTokens();
         isAuthenticated = false;
       }
-    } else {
-      // purge old tokens
-      authModel.purgeTokens();
-      isAuthenticated = false;
     }
   }
 
@@ -55,6 +66,13 @@ Future<bool> refreshTokens(
   }
 
   return isAuthenticated;
+}
+
+Future<void> getAndSetTokens(AuthModel authModel) async {
+  var tokenPair = await AuthApi().getNewRefreshToken();
+  authModel.setJwt(tokenPair!.jwt);
+  authModel.setRefreshToken(tokenPair!.refreshToken);
+  return;
 }
 
 bool isTokenValid(String? token) {
