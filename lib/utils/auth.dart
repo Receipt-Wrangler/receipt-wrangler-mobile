@@ -19,12 +19,10 @@ Future<bool> refreshTokens(
   var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
 
-  print("refreshign");
-
-  // TODO: refactor and clean up if it works
   if (force == true) {
     try {
       await getAndSetTokens(authModel);
+      return true;
     } catch (e) {
       authModel.purgeTokens();
       return false;
@@ -61,6 +59,8 @@ Future<bool> refreshTokens(
       storeAppData(authModel, groupModel, userModel, userPreferencesModel,
           categoryModel, tagModel, appData);
     } catch (e) {
+      print(e);
+      print("failed to set token");
       isAuthenticated = false;
     }
   }
@@ -69,9 +69,15 @@ Future<bool> refreshTokens(
 }
 
 Future<void> getAndSetTokens(AuthModel authModel) async {
-  var tokenPair = await AuthApi().getNewRefreshToken();
-  authModel.setJwt(tokenPair!.jwt);
-  authModel.setRefreshToken(tokenPair!.refreshToken);
+  var refreshToken = await authModel.getRefreshToken() ?? "";
+  if (refreshToken.isNotEmpty) {
+    var logoutCommand = LogoutCommand(refreshToken: refreshToken);
+    var tokenPair =
+        await AuthApi().getNewRefreshToken(logoutCommand: logoutCommand);
+    authModel.setJwt(tokenPair!.jwt);
+    authModel.setRefreshToken(tokenPair!.refreshToken);
+  }
+
   return;
 }
 

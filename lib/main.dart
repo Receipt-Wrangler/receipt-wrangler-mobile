@@ -112,14 +112,32 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     var authModel = Provider.of<AuthModel>(context, listen: false);
     authModel.initializeAuth();
 
-    var timer = Timer.periodic(Duration(seconds: 5), (timer) async {
-      print("run");
+    Timer.periodic(const Duration(minutes: 1), (timer) async {
+      var authModel = Provider.of<AuthModel>(context, listen: false);
+      var groupModel = Provider.of<GroupModel>(context, listen: false);
+      var userModel = Provider.of<UserModel>(context, listen: false);
+      var userPreferencesModel =
+          Provider.of<UserPreferencesModel>(context, listen: false);
+      var categoryModel = Provider.of<CategoryModel>(context, listen: false);
+      var tagModel = Provider.of<TagModel>(context, listen: false);
+
+      await refreshTokens(authModel, groupModel, userModel,
+          userPreferencesModel, categoryModel, tagModel,
+          force: true);
     });
 
     return MaterialApp.router(
       title: 'Receipt Wrangler',
       theme: ThemeData(
         fontFamily: "Raleway",
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+        ),
+        chipTheme: ChipThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+        ),
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),
           secondary: Color(0xFF8EA1AC),
