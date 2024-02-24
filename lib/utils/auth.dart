@@ -24,6 +24,8 @@ Future<bool> refreshTokens(
       await getAndSetTokens(authModel);
       return true;
     } catch (e) {
+      print(e);
+      print("failed");
       authModel.purgeTokens();
       return false;
     }

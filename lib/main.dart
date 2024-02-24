@@ -107,11 +107,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print("building");
-    var authModel = Provider.of<AuthModel>(context, listen: false);
-    authModel.initializeAuth();
-
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     Timer.periodic(const Duration(minutes: 1), (timer) async {
       var authModel = Provider.of<AuthModel>(context, listen: false);
       var groupModel = Provider.of<GroupModel>(context, listen: false);
@@ -125,6 +122,13 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           userPreferencesModel, categoryModel, tagModel,
           force: true);
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("building");
+    var authModel = Provider.of<AuthModel>(context, listen: false);
+    authModel.initializeAuth();
 
     return MaterialApp.router(
       title: 'Receipt Wrangler',
