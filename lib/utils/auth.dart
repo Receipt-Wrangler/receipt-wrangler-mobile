@@ -70,13 +70,11 @@ Future<bool> refreshTokens(
 
 Future<void> getAndSetTokens(AuthModel authModel) async {
   var refreshToken = await authModel.getRefreshToken() ?? "";
-  if (refreshToken.isNotEmpty) {
-    var logoutCommand = LogoutCommand(refreshToken: refreshToken);
-    var tokenPair =
-        await AuthApi().getNewRefreshToken(logoutCommand: logoutCommand);
-    authModel.setJwt(tokenPair!.jwt);
-    authModel.setRefreshToken(tokenPair!.refreshToken);
-  }
+  var logoutCommand = LogoutCommand(refreshToken: refreshToken);
+  var tokenPair =
+      await AuthApi().getNewRefreshToken(logoutCommand: logoutCommand);
+  authModel.setJwt(tokenPair!.jwt);
+  authModel.setRefreshToken(tokenPair!.refreshToken);
 
   return;
 }
