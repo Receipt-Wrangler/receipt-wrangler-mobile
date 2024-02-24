@@ -10,6 +10,7 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
@@ -129,11 +130,17 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
+  Widget buildReceiptItemList() {
+    return ReceiptItemField(
+        name: "receiptItems",
+        label: "Shared With",
+        initialValue: widget.receipt.receiptItems);
+  }
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    print(widget.receipt.date);
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -166,6 +173,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildCategoryField(),
           textFieldSpacing,
           buildTagField(),
+          textFieldSpacing,
+          buildReceiptItemList(),
           ElevatedButton(
               onPressed: () => {
                     if (_formKey.currentState!.saveAndValidate())
