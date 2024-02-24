@@ -94,7 +94,7 @@ class _GroupDashboard extends State<GroupDashboard> {
       children = [chipList, ...buildDashboardWidgets(selectedDashboard)];
     }
 
-    return Expanded(
+    return SizedBox(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

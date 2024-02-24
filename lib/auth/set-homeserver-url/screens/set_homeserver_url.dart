@@ -46,7 +46,7 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
 
     return FormBuilder(
         key: _formKey,
-        child: Expanded(
+        child: SizedBox(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

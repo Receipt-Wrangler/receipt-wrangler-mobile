@@ -53,7 +53,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
         child: PagedListView<int, api.PagedDataDataInner>(
             pagingController: _pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(

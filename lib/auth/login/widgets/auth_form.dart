@@ -143,6 +143,7 @@ class _Login extends State<AuthForm> {
     return FormBuilder(
       key: _formKey,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getHeaderText(),
           const SizedBox(
