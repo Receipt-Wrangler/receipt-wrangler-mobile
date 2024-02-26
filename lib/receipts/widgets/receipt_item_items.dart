@@ -58,6 +58,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   @override
   Widget build(BuildContext context) {
     var userItemMap = getUserItemMap();
+
+    if (userItemMap.isEmpty) {
+      return const Text("No shares found");
+    }
+
     return Column(
       children: buildSummaryTiles(userItemMap),
     );
