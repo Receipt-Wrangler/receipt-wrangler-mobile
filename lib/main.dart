@@ -109,7 +109,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Timer.periodic(const Duration(minutes: 1), (timer) async {
+
+    Timer.periodic(const Duration(minutes: 15), (timer) async {
       var authModel = Provider.of<AuthModel>(context, listen: false);
       var groupModel = Provider.of<GroupModel>(context, listen: false);
       var userModel = Provider.of<UserModel>(context, listen: false);
@@ -126,7 +127,6 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   @override
   Widget build(BuildContext context) {
-    print("building");
     var authModel = Provider.of<AuthModel>(context, listen: false);
     authModel.initializeAuth();
 
