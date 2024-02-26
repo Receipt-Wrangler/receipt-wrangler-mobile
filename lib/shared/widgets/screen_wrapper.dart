@@ -28,14 +28,10 @@ class _ScreenWrapper extends State<ScreenWrapper> {
       appBar: widget.appBarWidget,
       bottomNavigationBar: widget.bottomNavigationBarWidget,
       body: Container(
-        padding: widget.bodyPadding ?? const EdgeInsets.all(16),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.children,
-        ),
-      ),
+          padding: widget.bodyPadding ?? const EdgeInsets.all(16),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: widget.children[0]),
     );
   }
 }

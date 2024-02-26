@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -57,9 +59,11 @@ class _Login extends State<AuthForm> {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
+    var categoryModel = Provider.of<CategoryModel>(context, listen: false);
+    var tagModel = Provider.of<TagModel>(context, listen: false);
 
-    storeAppData(
-        authModel, groupModel, userModel, userPreferencesModel, appData);
+    storeAppData(authModel, groupModel, userModel, userPreferencesModel,
+        categoryModel, tagModel, appData);
     showSuccessSnackbar(context, "Successfully logged in!");
     context.go("/groups");
   }
@@ -139,6 +143,7 @@ class _Login extends State<AuthForm> {
     return FormBuilder(
       key: _formKey,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getHeaderText(),
           const SizedBox(

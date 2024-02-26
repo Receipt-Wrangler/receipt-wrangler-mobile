@@ -1,38 +1,56 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
-Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
-    UserModel userModel, UserPreferencesModel userPreferencesModel) async {
+Future<bool> refreshTokens(
+    AuthModel authModel,
+    GroupModel groupModel,
+    UserModel userModel,
+    UserPreferencesModel userPreferencesModel,
+    CategoryModel categoryModel,
+    TagModel tagModel,
+    {bool force = false}) async {
   var jwt = await authModel.getJwt();
   var refreshToken = await authModel.getRefreshToken();
   var isAuthenticated = false;
 
-  print("refreshign");
+  if (force == true) {
+    try {
+      await getAndSetTokens(authModel);
+      return true;
+    } catch (e) {
+      print(e);
+      print("failed");
+      authModel.purgeTokens();
+      return false;
+    }
+  }
 
-  // If token is valid, then continue on
-  if (isTokenValid(jwt)) {
-    isAuthenticated = true;
-  } else {
-    // If token is invalid, but refresh token is valid, then get a new token pair
-    if (isTokenValid(refreshToken)) {
-      try {
-        var tokenPair = await AuthApi().getNewRefreshToken();
-        authModel.setJwt(tokenPair!.jwt);
-        authModel.setRefreshToken(tokenPair!.refreshToken);
-        isAuthenticated = true;
-      } catch (e) {
-        // If the refresh fails, redirect to redirect path and consider it a failure
+  if (!force) {
+    // If token is valid, then continue on
+    if (isTokenValid(jwt)) {
+      isAuthenticated = true;
+    } else {
+      // If token is invalid, but refresh token is valid, then get a new token pair
+      if (isTokenValid(refreshToken)) {
+        try {
+          await getAndSetTokens(authModel);
+          isAuthenticated = true;
+        } catch (e) {
+          // If the refresh fails, redirect to redirect path and consider it a failure
+          authModel.purgeTokens();
+          isAuthenticated = false;
+        }
+      } else {
+        // purge old tokens
         authModel.purgeTokens();
         isAuthenticated = false;
       }
-    } else {
-      // purge old tokens
-      authModel.purgeTokens();
-      isAuthenticated = false;
     }
   }
 
@@ -40,14 +58,27 @@ Future<bool> refreshTokens(AuthModel authModel, GroupModel groupModel,
   if (isAuthenticated && groupModel.groups.isEmpty) {
     try {
       var appData = await UserApi().getAppData() as AppData;
-      storeAppData(
-          authModel, groupModel, userModel, userPreferencesModel, appData);
+      storeAppData(authModel, groupModel, userModel, userPreferencesModel,
+          categoryModel, tagModel, appData);
     } catch (e) {
+      print(e);
+      print("failed to set token");
       isAuthenticated = false;
     }
   }
 
   return isAuthenticated;
+}
+
+Future<void> getAndSetTokens(AuthModel authModel) async {
+  var refreshToken = await authModel.getRefreshToken() ?? "";
+  var logoutCommand = LogoutCommand(refreshToken: refreshToken);
+  var tokenPair =
+      await AuthApi().getNewRefreshToken(logoutCommand: logoutCommand);
+  authModel.setJwt(tokenPair!.jwt);
+  authModel.setRefreshToken(tokenPair!.refreshToken);
+
+  return;
 }
 
 bool isTokenValid(String? token) {
@@ -68,6 +99,8 @@ void storeAppData(
     GroupModel groupModel,
     UserModel userModel,
     UserPreferencesModel userPreferencesModel,
+    CategoryModel categoryModel,
+    TagModel tagModel,
     AppData appData) {
   if (appData!.jwt!.isNotEmpty) {
     authModel.setJwt(appData.jwt);
@@ -81,4 +114,6 @@ void storeAppData(
   groupModel.setGroups(appData.groups);
   userModel.setUsers(appData.users);
   userPreferencesModel.setUserPreferences(appData.userPreferences);
+  categoryModel.setCategories(appData.categories);
+  tagModel.setTags(appData.tags);
 }

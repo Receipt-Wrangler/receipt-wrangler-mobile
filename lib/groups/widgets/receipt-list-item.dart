@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 class ReceiptListItem extends StatefulWidget {
@@ -113,6 +115,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText}");
   }
 
+  void onTap() {
+    context.go("/receipts/${widget.data.id}/view",
+        extra: ReceiptNavigationExtras(
+            name: widget.data.name, groupId: widget.data.groupId.toString()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -124,6 +132,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       leading: getLeadingWidget(),
       trailing: getStatusText(),
       contentPadding: EdgeInsets.zero,
+      onTap: () => onTap(),
     );
   }
 }

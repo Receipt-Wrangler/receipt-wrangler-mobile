@@ -18,6 +18,8 @@ class AppData {
     this.users = const [],
     required this.userPreferences,
     required this.featureConfig,
+    this.categories = const [],
+    this.tags = const [],
     this.jwt,
     this.refreshToken,
   });
@@ -33,6 +35,12 @@ class AppData {
   UserPreferences userPreferences;
 
   FeatureConfig featureConfig;
+
+  /// Categories in the system
+  List<Category> categories;
+
+  /// Tags in the system
+  List<Tag> tags;
 
   /// JWT token
   ///
@@ -59,6 +67,8 @@ class AppData {
     _deepEquality.equals(other.users, users) &&
     other.userPreferences == userPreferences &&
     other.featureConfig == featureConfig &&
+    _deepEquality.equals(other.categories, categories) &&
+    _deepEquality.equals(other.tags, tags) &&
     other.jwt == jwt &&
     other.refreshToken == refreshToken;
 
@@ -70,11 +80,13 @@ class AppData {
     (users.hashCode) +
     (userPreferences.hashCode) +
     (featureConfig.hashCode) +
+    (categories.hashCode) +
+    (tags.hashCode) +
     (jwt == null ? 0 : jwt!.hashCode) +
     (refreshToken == null ? 0 : refreshToken!.hashCode);
 
   @override
-  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, featureConfig=$featureConfig, jwt=$jwt, refreshToken=$refreshToken]';
+  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, featureConfig=$featureConfig, categories=$categories, tags=$tags, jwt=$jwt, refreshToken=$refreshToken]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -83,6 +95,8 @@ class AppData {
       json[r'users'] = this.users;
       json[r'userPreferences'] = this.userPreferences;
       json[r'featureConfig'] = this.featureConfig;
+      json[r'categories'] = this.categories;
+      json[r'tags'] = this.tags;
     if (this.jwt != null) {
       json[r'jwt'] = this.jwt;
     } else {
@@ -120,6 +134,8 @@ class AppData {
         users: UserView.listFromJson(json[r'users']),
         userPreferences: UserPreferences.fromJson(json[r'userPreferences'])!,
         featureConfig: FeatureConfig.fromJson(json[r'featureConfig'])!,
+        categories: Category.listFromJson(json[r'categories']),
+        tags: Tag.listFromJson(json[r'tags']),
         jwt: mapValueOfType<String>(json, r'jwt'),
         refreshToken: mapValueOfType<String>(json, r'refreshToken'),
       );
@@ -174,6 +190,8 @@ class AppData {
     'users',
     'userPreferences',
     'featureConfig',
+    'categories',
+    'tags',
   };
 }
 

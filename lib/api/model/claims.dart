@@ -13,18 +13,18 @@ part of openapi.api;
 class Claims {
   /// Returns a new [Claims] instance.
   Claims({
-    required this.userId,
+    this.userId = 0,
     required this.userRole,
-    required this.displayName,
-    required this.defaultAvatarColor,
-    required this.username,
-    required this.iss,
-    this.sub,
+    this.displayName = '',
+    this.defaultAvatarColor = '',
+    this.username = '',
+    this.iss = '',
+    this.sub = '',
     this.aud = const [],
-    required this.exp,
-    this.nbf,
-    this.iat,
-    this.jti,
+    this.exp = 0,
+    this.nbf = 0,
+    this.iat = 0,
+    this.jti = '',
   });
 
   /// User foreign key
@@ -45,13 +45,7 @@ class Claims {
   String iss;
 
   /// Subject
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? sub;
+  String sub;
 
   /// Audience
   List<String> aud;
@@ -60,31 +54,13 @@ class Claims {
   int exp;
 
   /// Not before
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? nbf;
+  int nbf;
 
   /// Issued at
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? iat;
+  int iat;
 
   /// JWT ID
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? jti;
+  String jti;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is Claims &&
@@ -110,12 +86,12 @@ class Claims {
     (defaultAvatarColor.hashCode) +
     (username.hashCode) +
     (iss.hashCode) +
-    (sub == null ? 0 : sub!.hashCode) +
+    (sub.hashCode) +
     (aud.hashCode) +
     (exp.hashCode) +
-    (nbf == null ? 0 : nbf!.hashCode) +
-    (iat == null ? 0 : iat!.hashCode) +
-    (jti == null ? 0 : jti!.hashCode);
+    (nbf.hashCode) +
+    (iat.hashCode) +
+    (jti.hashCode);
 
   @override
   String toString() => 'Claims[userId=$userId, userRole=$userRole, displayName=$displayName, defaultAvatarColor=$defaultAvatarColor, username=$username, iss=$iss, sub=$sub, aud=$aud, exp=$exp, nbf=$nbf, iat=$iat, jti=$jti]';
@@ -128,28 +104,12 @@ class Claims {
       json[r'defaultAvatarColor'] = this.defaultAvatarColor;
       json[r'username'] = this.username;
       json[r'iss'] = this.iss;
-    if (this.sub != null) {
       json[r'sub'] = this.sub;
-    } else {
-      json[r'sub'] = null;
-    }
       json[r'aud'] = this.aud;
       json[r'exp'] = this.exp;
-    if (this.nbf != null) {
       json[r'nbf'] = this.nbf;
-    } else {
-      json[r'nbf'] = null;
-    }
-    if (this.iat != null) {
       json[r'iat'] = this.iat;
-    } else {
-      json[r'iat'] = null;
-    }
-    if (this.jti != null) {
       json[r'jti'] = this.jti;
-    } else {
-      json[r'jti'] = null;
-    }
     return json;
   }
 
@@ -178,14 +138,14 @@ class Claims {
         defaultAvatarColor: mapValueOfType<String>(json, r'defaultAvatarColor')!,
         username: mapValueOfType<String>(json, r'username')!,
         iss: mapValueOfType<String>(json, r'iss')!,
-        sub: mapValueOfType<String>(json, r'sub'),
+        sub: mapValueOfType<String>(json, r'sub') ?? '',
         aud: json[r'aud'] is Iterable
             ? (json[r'aud'] as Iterable).cast<String>().toList(growable: false)
             : const [],
         exp: mapValueOfType<int>(json, r'exp')!,
-        nbf: mapValueOfType<int>(json, r'nbf'),
-        iat: mapValueOfType<int>(json, r'iat'),
-        jti: mapValueOfType<String>(json, r'jti'),
+        nbf: mapValueOfType<int>(json, r'nbf') ?? 0,
+        iat: mapValueOfType<int>(json, r'iat') ?? 0,
+        jti: mapValueOfType<String>(json, r'jti') ?? '',
       );
     }
     return null;

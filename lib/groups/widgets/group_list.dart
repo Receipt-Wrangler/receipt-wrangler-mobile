@@ -35,6 +35,6 @@ class _GroupList extends State<GroupList> {
       return widgets;
     }
 
-    return Expanded(child: ListView(children: buildGroupCards()));
+    return SizedBox(child: ListView(children: buildGroupCards()));
   }
 }

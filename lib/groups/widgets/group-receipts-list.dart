@@ -3,7 +3,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/receipt-list-item.dart';
-import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
@@ -54,7 +53,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
         child: PagedListView<int, api.PagedDataDataInner>(
             pagingController: _pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(

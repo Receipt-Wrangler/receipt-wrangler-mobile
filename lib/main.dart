@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +10,15 @@ import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
+import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() async {
@@ -27,6 +32,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
+      ChangeNotifierProvider(create: (_) => CategoryModel()),
+      ChangeNotifierProvider(create: (_) => TagModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -68,6 +75,10 @@ final _router = GoRouter(
       path: '/groups/:groupId/receipts',
       builder: (context, state) => const GroupReceiptsScreen(),
     ),
+    GoRoute(
+      path: '/receipts/:receiptId/view',
+      builder: (context, state) => const ReceiptScreen(),
+    ),
   ],
 );
 
@@ -96,6 +107,25 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Timer.periodic(const Duration(minutes: 15), (timer) async {
+      var authModel = Provider.of<AuthModel>(context, listen: false);
+      var groupModel = Provider.of<GroupModel>(context, listen: false);
+      var userModel = Provider.of<UserModel>(context, listen: false);
+      var userPreferencesModel =
+          Provider.of<UserPreferencesModel>(context, listen: false);
+      var categoryModel = Provider.of<CategoryModel>(context, listen: false);
+      var tagModel = Provider.of<TagModel>(context, listen: false);
+
+      await refreshTokens(authModel, groupModel, userModel,
+          userPreferencesModel, categoryModel, tagModel,
+          force: true);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var authModel = Provider.of<AuthModel>(context, listen: false);
     authModel.initializeAuth();
@@ -104,6 +134,14 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
       title: 'Receipt Wrangler',
       theme: ThemeData(
         fontFamily: "Raleway",
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+        ),
+        chipTheme: ChipThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+        ),
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),
           secondary: Color(0xFF8EA1AC),
@@ -149,8 +187,11 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
+    var categoryModel = Provider.of<CategoryModel>(context, listen: false);
+    var tagModel = Provider.of<TagModel>(context, listen: false);
 
-    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel);
+    await refreshTokens(authModel, groupModel, userModel, userPreferencesModel,
+        categoryModel, tagModel);
   }
 
   void _onInactive() => print('inactive');

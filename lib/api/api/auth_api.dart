@@ -21,18 +21,23 @@ class AuthApi {
   /// This will get a fresh token pair for the user
   ///
   /// Note: This method returns the HTTP [Response].
-  Future<Response> getNewRefreshTokenWithHttpInfo() async {
+  ///
+  /// Parameters:
+  ///
+  /// * [LogoutCommand] logoutCommand:
+  ///   Refresh token body for clients that don't use cookies
+  Future<Response> getNewRefreshTokenWithHttpInfo({ LogoutCommand? logoutCommand, }) async {
     // ignore: prefer_const_declarations
     final path = r'/token/';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = logoutCommand;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[];
+    const contentTypes = <String>['application/json'];
 
 
     return apiClient.invokeAPI(
@@ -49,8 +54,13 @@ class AuthApi {
   /// Get fresh tokens
   ///
   /// This will get a fresh token pair for the user
-  Future<GetNewRefreshToken200Response?> getNewRefreshToken() async {
-    final response = await getNewRefreshTokenWithHttpInfo();
+  ///
+  /// Parameters:
+  ///
+  /// * [LogoutCommand] logoutCommand:
+  ///   Refresh token body for clients that don't use cookies
+  Future<GetNewRefreshToken200Response?> getNewRefreshToken({ LogoutCommand? logoutCommand, }) async {
+    final response = await getNewRefreshTokenWithHttpInfo( logoutCommand: logoutCommand, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
