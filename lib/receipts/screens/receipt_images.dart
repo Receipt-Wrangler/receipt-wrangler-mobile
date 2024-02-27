@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
+import 'package:receipt_wrangler_mobile/utils/forms.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptImagesScreen extends StatefulWidget {
   const ReceiptImagesScreen({
@@ -12,6 +17,15 @@ class ReceiptImagesScreen extends StatefulWidget {
 class _ReceiptImagesScreen extends State<ReceiptImagesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    var uri = GoRouterState.of(context).uri;
+    var formState = getFormState(uri.toString());
+    var receipt = GoRouterState.of(context).extra as api.Receipt;
+
+    return Scaffold(
+      appBar: TopAppBar(
+        titleText: getTitleText(formState, receipt.name),
+      ),
+      body: const Text("Hello world"),
+    );
   }
 }
