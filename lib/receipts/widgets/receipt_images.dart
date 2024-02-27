@@ -12,9 +12,9 @@ class ReceiptImages extends StatefulWidget {
 class _ReceiptImages extends State<ReceiptImages> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const Text("Hello world"),
+        Text("Hello world"),
       ],
     );
   }
