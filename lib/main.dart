@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
-import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
-import 'package:receipt_wrangler_mobile/groups/widgets/group-dashboard-bottom-nav.dart';
-import 'package:receipt_wrangler_mobile/groups/widgets/groups_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
@@ -20,6 +18,7 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
@@ -88,6 +87,12 @@ final _router = GoRouter(
           GoRoute(
             path: '/receipts/:receiptId/view',
             builder: (context, state) => const ReceiptScreen(),
+            routes: [
+              GoRoute(
+                path: 'images',
+                builder: (context, state) => const ReceiptImagesScreen(),
+              ),
+            ],
           ),
         ]),
   ],

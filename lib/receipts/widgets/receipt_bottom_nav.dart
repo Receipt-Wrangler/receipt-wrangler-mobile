@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
-  const ReceiptBottomNav({super.key});
+  ReceiptBottomNav({super.key, required this.receipt});
+
+  api.Receipt receipt = getDefaultReceipt();
 
   @override
   State<ReceiptBottomNav> createState() => _ReceiptBottomNav();
@@ -15,10 +19,11 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   void _onDestinationSelected(int indexSelected) {
     switch (indexSelected) {
       case 0:
-        context.go("/groups");
+        context.go("/receipts/${widget?.receipt?.id}/view");
         break;
       case 1:
-        context.go("/add");
+        context.go("/receipts/${widget?.receipt?.id}/view/images",
+            extra: widget.receipt);
         break;
       case 2:
         context.go("/search");
@@ -33,9 +38,9 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
     var index = 0;
 
-    if (uri.contains("/groups")) {
+    if (uri.contains("/receipts/${widget?.receipt?.id}/view")) {
       index = 0;
-    } else if (uri.contains("/add")) {
+    } else if (uri.contains("images")) {
       index = 1;
     } else if (uri.contains("/search")) {
       index = 2;

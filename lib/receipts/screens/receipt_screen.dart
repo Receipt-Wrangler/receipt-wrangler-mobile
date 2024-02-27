@@ -7,6 +7,7 @@ import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptScreen extends StatefulWidget {
   const ReceiptScreen({super.key});
@@ -24,19 +25,21 @@ class _ReceiptScreen extends State<ReceiptScreen> {
         GoRouterState.of(context).pathParameters['receiptId'] as String);
     var future = api.ReceiptApi().getReceiptById(receiptId);
     var formState = getFormState(uri.toString());
+    var apiReceipt = getDefaultReceipt();
 
     return ScreenWrapper(
         appBarWidget: TopAppBar(
           titleText: "${getFormStateHeader(formState)} ${extra.name} Receipt",
           leadingArrowRedirect: "/groups/${extra.groupId}/receipts",
         ),
-        bottomNavigationBarWidget: const ReceiptBottomNav(),
+        bottomNavigationBarWidget: ReceiptBottomNav(receipt: apiReceipt),
         children: [
           FutureBuilder(
               future: future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
+                  apiReceipt = snapshot.data as api.Receipt;
                   return SingleChildScrollView(
                     child: ReceiptForm(
                         receipt: snapshot.data as api.Receipt,
