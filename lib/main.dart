@@ -7,6 +7,8 @@ import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/group-dashboard-bottom-nav.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/groups_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
@@ -42,43 +44,52 @@ void main() async {
 // GoRouter configuration
 final _router = GoRouter(
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Home(),
-      redirect: (context, state) {
-        return unprotectedRouteRedirect(context, "/groups");
-      },
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const AuthScreen(),
-      redirect: (context, state) {
-        return unprotectedRouteRedirect(context, "/groups");
-      },
-    ),
-    GoRoute(
-      path: '/sign-up',
-      builder: (context, state) => const AuthScreen(),
-      redirect: (context, state) {
-        return unprotectedRouteRedirect(context, "/groups");
-      },
-    ),
-    GoRoute(
-      path: '/groups',
-      builder: (context, state) => const GroupSelect(),
-    ),
-    GoRoute(
-      path: '/groups/:groupId/dashboards',
-      builder: (context, state) => const GroupDashboards(),
-    ),
-    GoRoute(
-      path: '/groups/:groupId/receipts',
-      builder: (context, state) => const GroupReceiptsScreen(),
-    ),
-    GoRoute(
-      path: '/receipts/:receiptId/view',
-      builder: (context, state) => const ReceiptScreen(),
-    ),
+    ShellRoute(
+        navigatorKey: GlobalKey<NavigatorState>(),
+        builder: (context, state, child) {
+          return Scaffold(
+            body: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const Home(),
+            redirect: (context, state) {
+              return unprotectedRouteRedirect(context, "/groups");
+            },
+          ),
+          GoRoute(
+            path: '/login',
+            builder: (context, state) => const AuthScreen(),
+            redirect: (context, state) {
+              return unprotectedRouteRedirect(context, "/groups");
+            },
+          ),
+          GoRoute(
+            path: '/sign-up',
+            builder: (context, state) => const AuthScreen(),
+            redirect: (context, state) {
+              return unprotectedRouteRedirect(context, "/groups");
+            },
+          ),
+          GoRoute(
+            path: '/groups',
+            builder: (context, state) => const GroupSelect(),
+          ),
+          GoRoute(
+            path: '/groups/:groupId/dashboards',
+            builder: (context, state) => const GroupDashboards(),
+          ),
+          GoRoute(
+            path: '/groups/:groupId/receipts',
+            builder: (context, state) => const GroupReceiptsScreen(),
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/view',
+            builder: (context, state) => const ReceiptScreen(),
+          ),
+        ]),
   ],
 );
 
