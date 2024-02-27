@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
-  ReceiptBottomNav({super.key, required this.receipt});
+  ReceiptBottomNav({super.key});
 
-  api.Receipt receipt = getDefaultReceipt();
+  late api.Receipt receipt = getDefaultReceipt();
 
   @override
   State<ReceiptBottomNav> createState() => _ReceiptBottomNav();
@@ -19,11 +21,12 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   void _onDestinationSelected(int indexSelected) {
     switch (indexSelected) {
       case 0:
-        context.go("/receipts/${widget?.receipt?.id}/view");
+        context.go("/receipts/${widget.receipt.id}/view");
         break;
       case 1:
-        context.go("/receipts/${widget?.receipt?.id}/view/images",
-            extra: widget.receipt);
+        context.go(
+          "/receipts/${widget.receipt.id}/view/images",
+        );
         break;
       case 2:
         context.go("/search");
@@ -38,7 +41,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
     var index = 0;
 
-    if (uri.contains("/receipts/${widget?.receipt?.id}/view")) {
+    if (uri.contains("/receipts/${widget.receipt.id}/view")) {
       index = 0;
     } else if (uri.contains("images")) {
       index = 1;
@@ -46,7 +49,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       index = 2;
     }
 
-    return 0;
+    return index;
   }
 
   @override
@@ -56,6 +59,9 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+    widget.receipt = receiptModel.receipt;
+
     return BottomNav(
       destinations: const [
         NavigationDestination(

@@ -14,11 +14,12 @@ import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
@@ -35,6 +36,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
       ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -87,12 +89,10 @@ final _router = GoRouter(
           GoRoute(
             path: '/receipts/:receiptId/view',
             builder: (context, state) => const ReceiptScreen(),
-            routes: [
-              GoRoute(
-                path: 'images',
-                builder: (context, state) => const ReceiptImagesScreen(),
-              ),
-            ],
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/view/images',
+            builder: (context, state) => const ReceiptImagesScreen(),
           ),
         ]),
   ],

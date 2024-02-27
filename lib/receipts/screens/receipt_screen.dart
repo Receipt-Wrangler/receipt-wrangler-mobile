@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
@@ -25,21 +27,21 @@ class _ReceiptScreen extends State<ReceiptScreen> {
         GoRouterState.of(context).pathParameters['receiptId'] as String);
     var future = api.ReceiptApi().getReceiptById(receiptId);
     var formState = getFormState(uri.toString());
-    var apiReceipt = getDefaultReceipt();
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
     return ScreenWrapper(
         appBarWidget: TopAppBar(
           titleText: getTitleText(formState, extra.name),
           leadingArrowRedirect: "/groups/${extra.groupId}/receipts",
         ),
-        bottomNavigationBarWidget: ReceiptBottomNav(receipt: apiReceipt),
+        bottomNavigationBarWidget: ReceiptBottomNav(),
         children: [
           FutureBuilder(
               future: future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
-                  apiReceipt = snapshot.data as api.Receipt;
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
                   return SingleChildScrollView(
                     child: ReceiptForm(
                         receipt: snapshot.data as api.Receipt,
