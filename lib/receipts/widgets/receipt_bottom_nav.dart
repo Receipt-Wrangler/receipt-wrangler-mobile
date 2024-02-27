@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
@@ -21,7 +22,10 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   void _onDestinationSelected(int indexSelected) {
     switch (indexSelected) {
       case 0:
-        context.go("/receipts/${widget.receipt.id}/view");
+        context.go("/receipts/${widget.receipt.id}/view",
+            extra: ReceiptNavigationExtras(
+                name: widget.receipt.name,
+                groupId: widget.receipt.groupId.toString()));
         break;
       case 1:
         context.go(
@@ -41,12 +45,10 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
     var index = 0;
 
-    if (uri.contains("/receipts/${widget.receipt.id}/view")) {
-      index = 0;
-    } else if (uri.contains("images")) {
+    if (uri.contains("/receipts/${widget.receipt.id}/view/images")) {
       index = 1;
-    } else if (uri.contains("/search")) {
-      index = 2;
+    } else if (uri.contains("/receipts/${widget.receipt.id}/view/images")) {
+      index = 0;
     }
 
     return index;
