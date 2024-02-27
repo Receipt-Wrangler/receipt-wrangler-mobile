@@ -23,3 +23,7 @@ Receipt getDefaultReceipt() {
 String getTitleText(WranglerFormState formState, String receiptName) {
   return "${getFormStateHeader(formState)} $receiptName Receipt";
 }
+
+String getLeadingArrowRedirect(String groupId) {
+  return "/groups/$groupId/receipts";
+}

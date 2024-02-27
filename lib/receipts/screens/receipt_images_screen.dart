@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
@@ -29,11 +30,13 @@ class _ReceiptImagesScreen extends State<ReceiptImagesScreen> {
     return Scaffold(
       appBar: TopAppBar(
           titleText: getTitleText(formState, receipt.name),
-          leadingArrowRedirect: "/receipts/${receipt.id}/view",
+          leadingArrowRedirect:
+              getLeadingArrowRedirect(receipt.groupId.toString()),
           leadingArrowExtra: ReceiptNavigationExtras(
             groupId: receipt.groupId.toString(),
             name: receipt.name,
           )),
+      bottomNavigationBar: ReceiptBottomNav(),
       body: const ReceiptImages(),
     );
   }

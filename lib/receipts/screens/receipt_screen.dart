@@ -32,7 +32,7 @@ class _ReceiptScreen extends State<ReceiptScreen> {
     return ScreenWrapper(
         appBarWidget: TopAppBar(
           titleText: getTitleText(formState, extra.name),
-          leadingArrowRedirect: "/groups/${extra.groupId}/receipts",
+          leadingArrowRedirect: getLeadingArrowRedirect(extra.groupId),
         ),
         bottomNavigationBarWidget: ReceiptBottomNav(),
         children: [
