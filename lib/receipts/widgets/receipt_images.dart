@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 
 class ReceiptImages extends StatefulWidget {
   const ReceiptImages({
@@ -10,12 +13,33 @@ class ReceiptImages extends StatefulWidget {
 }
 
 class _ReceiptImages extends State<ReceiptImages> {
+  Future<List<api.FileDataView?>> getReceiptImageFutures() {
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+    List<Future<api.FileDataView?>> imageFutures = [];
+
+    for (var image in receiptModel.receipt.imageFiles) {
+      imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
+    }
+
+    return Future.wait(imageFutures);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text("Hello world"),
-      ],
-    );
+    var future = getReceiptImageFutures();
+    return FutureBuilder(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            }
+
+            print(snapshot.data);
+            return const Text("oh baby we made it");
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }
