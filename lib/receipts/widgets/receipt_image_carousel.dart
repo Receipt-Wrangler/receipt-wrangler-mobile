@@ -42,13 +42,13 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
 
     return InfiniteCarousel.builder(
       itemCount: widget.images.length,
-      itemExtent: 120,
-      center: false,
+      itemExtent: MediaQuery.of(context).size.width,
+      center: true,
       anchor: 0.0,
       velocityFactor: 0.2,
       onIndexChanged: (index) {},
       controller: controller,
-      axisDirection: Axis.vertical,
+      axisDirection: Axis.horizontal,
       loop: false,
       itemBuilder: (context, itemIndex, realIndex) {
         return getDecodedImage(itemIndex);
