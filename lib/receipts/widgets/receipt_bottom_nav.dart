@@ -43,15 +43,14 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   int _setIndexSelected() {
     var uri =
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
-    var index = 0;
 
     if (uri.contains("/receipts/${widget.receipt.id}/view/images")) {
-      index = 1;
-    } else if (uri.contains("/receipts/${widget.receipt.id}/view/images")) {
-      index = 0;
+      return 1;
+    } else if (uri.contains("/receipts/${widget.receipt.id}/view")) {
+      return 0;
     }
 
-    return index;
+    return 0;
   }
 
   @override
