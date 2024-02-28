@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_carousel.dart';
 
 class ReceiptImages extends StatefulWidget {
   const ReceiptImages({
@@ -35,8 +36,9 @@ class _ReceiptImages extends State<ReceiptImages> {
               return Text("Error: ${snapshot.error}");
             }
 
-            print(snapshot.data);
-            return const Text("oh baby we made it");
+            return ReceiptImageCarousel(
+              images: snapshot.data ?? [],
+            );
           } else {
             return const CircularProgressIndicator();
           }
