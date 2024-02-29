@@ -51,7 +51,11 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       axisDirection: Axis.horizontal,
       loop: false,
       itemBuilder: (context, itemIndex, realIndex) {
-        return getDecodedImage(itemIndex);
+        return InteractiveViewer(
+          minScale: 0.1,
+          maxScale: 50.0,
+          child: getDecodedImage(realIndex),
+        );
       },
     );
   }
