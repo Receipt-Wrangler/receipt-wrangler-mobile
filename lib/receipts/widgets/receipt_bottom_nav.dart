@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
@@ -28,9 +30,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
                 groupId: widget.receipt.groupId.toString()));
         break;
       case 1:
-        context.go(
-          "/receipts/${widget.receipt.id}/view/images",
-        );
+        showFullscreenBottomSheet(context, const ReceiptImages());
         break;
       case 2:
         context.go("/search");
