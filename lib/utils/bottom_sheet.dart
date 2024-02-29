@@ -9,7 +9,6 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label) {
     useSafeArea: true,
     isScrollControlled: true,
     showDragHandle: true,
-    barrierLabel: "hello",
     constraints: BoxConstraints(
       minHeight: MediaQuery.of(context).size.height,
       minWidth: MediaQuery.of(context).size.width,
