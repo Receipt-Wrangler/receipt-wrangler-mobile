@@ -14,15 +14,24 @@ class BottomSheetContainer extends StatefulWidget {
 
 class _BottomSheetContainer extends State<BottomSheetContainer> {
   Widget getHeaderText() {
-    return Text(widget.header,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+    return Text(widget.header, style: const TextStyle(fontSize: 24));
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: [widget.child],
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 16),
+                child: Row(children: [getHeaderText()]),
+              )
+            ],
+          ),
+          widget.child
+        ],
       ),
     );
   }
