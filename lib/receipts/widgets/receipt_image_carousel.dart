@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 class ReceiptImageCarousel extends StatefulWidget {
   const ReceiptImageCarousel({
@@ -41,6 +43,18 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       );
     }
 
+    Widget buildDateAddedField(int index) {
+      var formattedDate = formatDate(defaultDateFormat,
+          DateTime.parse(receipt.imageFiles[index].createdAt ?? ""));
+      return TextFormField(
+        decoration: const InputDecoration(
+          labelText: "Date Added",
+        ),
+        initialValue: formattedDate,
+        readOnly: true,
+      );
+    }
+
     Image getDecodedImage(int index) {
       var image = widget.images[index];
       if (image?.encodedImage == null) {
@@ -65,7 +79,21 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       loop: false,
       itemBuilder: (context, itemIndex, realIndex) {
         return Column(
-          children: [getDecodedImage(realIndex), buildNameField(realIndex)],
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              color: Colors.grey[200],
+              child: getDecodedImage(realIndex),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(26),
+              child: Column(children: [
+                buildNameField(realIndex),
+                textFieldSpacing,
+                buildDateAddedField(realIndex),
+              ]),
+            ),
+          ],
         );
       },
     );
