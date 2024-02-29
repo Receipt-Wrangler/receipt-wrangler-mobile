@@ -68,6 +68,17 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       }
     }
 
+    Widget getImageWidget(int index) {
+      var bottomPosition = MediaQuery.of(context).size.height * .0001;
+      return Stack(children: [
+        Center(child: getDecodedImage(index)),
+        Positioned(
+            bottom: bottomPosition,
+            left: 4,
+            child: IconButton(icon: const Icon(Icons.delete), onPressed: () {}))
+      ]);
+    }
+
     return InfiniteCarousel.builder(
       itemCount: widget.images.length,
       itemExtent: MediaQuery.of(context).size.width,
@@ -84,7 +95,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(color: Colors.grey),
-              child: getDecodedImage(realIndex),
+              child: getImageWidget(realIndex),
             ),
             Padding(
               padding: const EdgeInsets.all(26),
