@@ -19,7 +19,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label) {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: BottomSheetContainer(
-            label: label,
+            header: label,
             child: child,
           ));
     },
