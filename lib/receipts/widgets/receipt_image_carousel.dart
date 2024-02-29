@@ -44,7 +44,6 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       itemCount: widget.images.length,
       itemExtent: MediaQuery.of(context).size.width,
       center: true,
-      anchor: 0.0,
       velocityFactor: 0.2,
       onIndexChanged: (index) {},
       controller: controller,

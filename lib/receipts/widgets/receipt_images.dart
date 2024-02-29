@@ -37,8 +37,16 @@ class _ReceiptImages extends State<ReceiptImages> {
               return Text("Error: ${snapshot.error}");
             }
 
-            return ReceiptImageCarousel(
-              images: snapshot.data ?? [],
+            return Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: ReceiptImageCarousel(
+                    images: snapshot.data ?? [],
+                  ),
+                ),
+              ],
             );
           } else {
             return const CircularLoadingProgress();
