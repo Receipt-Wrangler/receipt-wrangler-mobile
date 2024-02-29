@@ -158,6 +158,9 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             borderRadius: BorderRadius.circular(50),
           ),
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+        ),
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),
           secondary: Color(0xFF8EA1AC),

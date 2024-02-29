@@ -82,7 +82,8 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.5,
-              color: Colors.grey[200],
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(color: Colors.grey),
               child: getDecodedImage(realIndex),
             ),
             Padding(
