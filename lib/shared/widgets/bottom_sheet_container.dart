@@ -20,10 +20,6 @@ class _BottomSheetContainer extends State<BottomSheetContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [getHeaderText(), widget.child],
-      ),
-    );
+    return SingleChildScrollView(child: widget.child);
   }
 }

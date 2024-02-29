@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 
 class ReceiptImageCarousel extends StatefulWidget {
   const ReceiptImageCarousel({
@@ -27,6 +29,18 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+
+    Widget buildNameField(int index) {
+      return TextFormField(
+        decoration: const InputDecoration(
+          labelText: "Name",
+        ),
+        initialValue: receipt.imageFiles[index].name,
+        readOnly: true,
+      );
+    }
+
     Image getDecodedImage(int index) {
       var image = widget.images[index];
       if (image?.encodedImage == null) {
@@ -50,10 +64,8 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       axisDirection: Axis.horizontal,
       loop: false,
       itemBuilder: (context, itemIndex, realIndex) {
-        return InteractiveViewer(
-          minScale: 0.1,
-          maxScale: 50.0,
-          child: getDecodedImage(realIndex),
+        return Column(
+          children: [getDecodedImage(realIndex), buildNameField(realIndex)],
         );
       },
     );
