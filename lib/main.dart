@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_dashboard_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
@@ -24,6 +25,7 @@ import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.da
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() async {
@@ -52,9 +54,9 @@ final _router = GoRouter(
     ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),
         builder: (context, state, child) {
-          return Scaffold(
-            body: child,
-            bottomNavigationBar: const BottomNav(),
+          return ScreenWrapper(
+            bottomNavigationBarWidget: const BottomNav(),
+            children: [child],
           );
         },
         routes: [
@@ -120,9 +122,11 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
     _router.routerDelegate.addListener(() {
       var path = _router.routerDelegate.currentConfiguration.uri.toString();
-      print(path);
+
       if (path == "/groups") {
         GroupSelectUIShellBuilder.setupBottomNav(context, _router);
+      } else if (path.contains("dashboard")) {
+        GroupDashboardUIShellBuilder.setupBottomNav(context, _router);
       }
     });
   }

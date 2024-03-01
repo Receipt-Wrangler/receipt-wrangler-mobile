@@ -21,13 +21,14 @@ class _GroupDashboards extends State<GroupDashboards> {
     var group =
         Provider.of<GroupModel>(context, listen: false).getGroupById(groupId);
 
-    return ScreenWrapper(
-      appBarWidget: TopAppBar(
-        titleText: group!.name,
-        leadingArrowRedirect: "/groups",
-      ),
-      bottomNavigationBarWidget: const GroupDashboardBottomNav(),
-      children: const [GroupDashboardWrapper()],
-    );
+    return const GroupDashboardWrapper();
+    // return ScreenWrapper(
+    //   appBarWidget: TopAppBar(
+    //     titleText: group!.name,
+    //     leadingArrowRedirect: "/groups",
+    //   ),
+    //   bottomNavigationBarWidget: const GroupDashboardBottomNav(),
+    //   children: const [GroupDashboardWrapper()],
+    // );
   }
 }
