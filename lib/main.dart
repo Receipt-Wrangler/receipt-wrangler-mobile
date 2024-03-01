@@ -121,7 +121,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     _router.routerDelegate.addListener(() {
       var path = _router.routerDelegate.currentConfiguration?.fullPath;
       if (path == "/groups") {
-        setupGroupSelectBottomNav(context);
+        setupGroupSelectBottomNav(context, _router);
       }
     });
   }
