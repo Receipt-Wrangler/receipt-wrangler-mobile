@@ -46,6 +46,7 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   infinite_carousel: ^1.1.1
   photo_view: ^0.14.0
+  flutter_native_splash: ^2.3.10
 
 dev_dependencies:
   flutter_test:
