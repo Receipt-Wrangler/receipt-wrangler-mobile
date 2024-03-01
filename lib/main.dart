@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
-import 'package:receipt_wrangler_mobile/groups/nav/group_select_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
@@ -119,9 +119,10 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
     _router.routerDelegate.addListener(() {
-      var path = _router.routerDelegate.currentConfiguration?.fullPath;
+      var path = _router.routerDelegate.currentConfiguration.uri.toString();
+      print(path);
       if (path == "/groups") {
-        setupGroupSelectBottomNav(context, _router);
+        GroupSelectUIShellBuilder.setupBottomNav(context, _router);
       }
     });
   }
