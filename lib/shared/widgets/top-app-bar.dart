@@ -8,11 +8,16 @@ import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TopAppBar(
-      {super.key, required this.titleText, this.leadingArrowRedirect});
+      {super.key,
+      required this.titleText,
+      this.leadingArrowRedirect,
+      this.leadingArrowExtra});
 
   final String titleText;
 
   final String? leadingArrowRedirect;
+
+  final dynamic leadingArrowExtra;
 
   @override
   State<TopAppBar> createState() => _TopAppBar();
@@ -43,7 +48,8 @@ class _TopAppBar extends State<TopAppBar> {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          context.go(widget.leadingArrowRedirect ?? "/");
+          context.go(widget.leadingArrowRedirect ?? "/",
+              extra: widget.leadingArrowExtra);
         },
       );
     } else {

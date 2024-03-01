@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptScreen extends StatefulWidget {
   const ReceiptScreen({super.key});
@@ -23,19 +28,21 @@ class _ReceiptScreen extends State<ReceiptScreen> {
         GoRouterState.of(context).pathParameters['receiptId'] as String);
     var future = api.ReceiptApi().getReceiptById(receiptId);
     var formState = getFormState(uri.toString());
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
     return ScreenWrapper(
         appBarWidget: TopAppBar(
-          titleText: "${getFormStateHeader(formState)} ${extra.name} Receipt",
-          leadingArrowRedirect: "/groups/${extra.groupId}/receipts",
+          titleText: getTitleText(formState, extra.name),
+          leadingArrowRedirect: getLeadingArrowRedirect(extra.groupId),
         ),
-        //bottomNavigationBarWidget: const GroupDashboardBottomNav(),
+        bottomNavigationBarWidget: ReceiptBottomNav(),
         children: [
           FutureBuilder(
               future: future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
                   return SingleChildScrollView(
                     child: ReceiptForm(
                         receipt: snapshot.data as api.Receipt,
@@ -43,7 +50,7 @@ class _ReceiptScreen extends State<ReceiptScreen> {
                   );
                 }
 
-                return const CircularProgressIndicator();
+                return const CircularLoadingProgress();
               }),
         ]);
   }
