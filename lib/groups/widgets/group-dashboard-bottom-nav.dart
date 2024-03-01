@@ -59,26 +59,26 @@ class _GroupDashboardBottomNav extends State<GroupDashboardBottomNav> {
   @override
   Widget build(BuildContext context) {
     return BottomNav(
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.dashboard),
-          label: "Dashboards",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.add),
-          label: "Add",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.search),
-          label: "Search",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.receipt),
-          label: "Receipts",
-        ),
-      ],
-      onDestinationSelected: _onDestinationSelected,
-      getInitialSelectedIndex: _setIndexSelected,
-    );
+        // destinations: const [
+        //   NavigationDestination(
+        //     icon: Icon(Icons.dashboard),
+        //     label: "Dashboards",
+        //   ),
+        //   NavigationDestination(
+        //     icon: Icon(Icons.add),
+        //     label: "Add",
+        //   ),
+        //   NavigationDestination(
+        //     icon: Icon(Icons.search),
+        //     label: "Search",
+        //   ),
+        //   NavigationDestination(
+        //     icon: Icon(Icons.receipt),
+        //     label: "Receipts",
+        //   ),
+        // ],
+        // onDestinationSelected: _onDestinationSelected,
+        // getInitialSelectedIndex: _setIndexSelected,
+        );
   }
 }

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/layout_model.dart';
@@ -21,6 +23,7 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() async {
@@ -37,6 +40,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => BottomNavModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -50,6 +54,7 @@ final _router = GoRouter(
         builder: (context, state, child) {
           return Scaffold(
             body: child,
+            bottomNavigationBar: const BottomNav(),
           );
         },
         routes: [
@@ -113,6 +118,12 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     super.initState();
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
+    _router.routerDelegate.addListener(() {
+      var path = _router.routerDelegate.currentConfiguration?.fullPath;
+      if (path == "/groups") {
+        setupGroupSelectBottomNav(context);
+      }
+    });
   }
 
   @override

@@ -66,18 +66,18 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
     widget.receipt = receiptModel.receipt;
 
     return BottomNav(
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.receipt),
-          label: "Receipt",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.image),
-          label: "Images",
-        ),
-      ],
-      onDestinationSelected: _onDestinationSelected,
-      getInitialSelectedIndex: _setIndexSelected,
-    );
+        // destinations: const [
+        //   NavigationDestination(
+        //     icon: Icon(Icons.receipt),
+        //     label: "Receipt",
+        //   ),
+        //   NavigationDestination(
+        //     icon: Icon(Icons.image),
+        //     label: "Images",
+        //   ),
+        // ],
+        // onDestinationSelected: _onDestinationSelected,
+        // getInitialSelectedIndex: _setIndexSelected,
+        );
   }
 }
