@@ -79,36 +79,44 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       ]);
     }
 
-    return InfiniteCarousel.builder(
-      itemCount: widget.images.length,
-      itemExtent: MediaQuery.of(context).size.width,
-      center: true,
-      velocityFactor: 0.2,
-      onIndexChanged: (index) {},
-      controller: controller,
-      axisDirection: Axis.horizontal,
-      loop: false,
-      itemBuilder: (context, itemIndex, realIndex) {
-        return Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(color: Colors.grey),
-              child: getImageWidget(realIndex),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(26),
-              child: Column(children: [
-                buildNameField(realIndex),
-                textFieldSpacing,
-                buildDateAddedField(realIndex),
-              ]),
-            ),
-          ],
+    Widget buildInfiniteCarousel() {
+      if (widget.images.isEmpty) {
+        return const Center(child: Text("No images found"));
+      } else {
+        return InfiniteCarousel.builder(
+          itemCount: widget.images.length,
+          itemExtent: MediaQuery.of(context).size.width,
+          center: true,
+          velocityFactor: 0.2,
+          onIndexChanged: (index) {},
+          controller: controller,
+          axisDirection: Axis.horizontal,
+          loop: false,
+          itemBuilder: (context, itemIndex, realIndex) {
+            return Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(color: Colors.grey),
+                  child: getImageWidget(realIndex),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(26),
+                  child: Column(children: [
+                    buildNameField(realIndex),
+                    textFieldSpacing,
+                    buildDateAddedField(realIndex),
+                  ]),
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
+      }
+    }
+
+    return buildInfiniteCarousel();
   }
 
   @override
