@@ -75,7 +75,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
         Positioned(
             bottom: bottomPosition,
             left: 4,
-            child: IconButton(icon: const Icon(Icons.delete), onPressed: () {}))
+            child: IconButton(icon: const Icon(Icons.more), onPressed: () {}))
       ]);
     }
 

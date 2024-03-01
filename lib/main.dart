@@ -147,6 +147,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     authModel.initializeAuth();
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Receipt Wrangler',
       theme: ThemeData(
         fontFamily: "Raleway",

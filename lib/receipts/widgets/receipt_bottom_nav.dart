@@ -30,7 +30,9 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
                 groupId: widget.receipt.groupId.toString()));
         break;
       case 1:
-        showFullscreenBottomSheet(context, const ReceiptImages(), "Images");
+        var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+        showFullscreenBottomSheet(
+            context, const ReceiptImages(), "${receipt.name} Images");
         break;
       case 2:
         context.go("/search");
