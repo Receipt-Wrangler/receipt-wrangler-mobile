@@ -21,6 +21,8 @@ class GroupSelectUIShellBuilder implements BaseUIShellBuilder {
         default:
           router.go("/groups");
       }
+
+      provider.setIndexSelected(indexSelected);
     }
 
     setIndexSelected() {

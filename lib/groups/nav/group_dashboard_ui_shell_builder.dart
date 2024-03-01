@@ -28,6 +28,8 @@ class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
         default:
           router.go("/groups");
       }
+
+      provider.setIndexSelected(indexSelected);
     }
 
     setIndexSelected() {
