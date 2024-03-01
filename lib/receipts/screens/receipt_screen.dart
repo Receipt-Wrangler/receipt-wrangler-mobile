@@ -6,6 +6,7 @@ import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -49,7 +50,7 @@ class _ReceiptScreen extends State<ReceiptScreen> {
                   );
                 }
 
-                return const CircularProgressIndicator();
+                return const CircularLoadingProgress();
               }),
         ]);
   }
