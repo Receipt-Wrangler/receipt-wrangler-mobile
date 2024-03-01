@@ -143,6 +143,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          textFieldSpacing,
           FormBuilderTextField(
             name: "name",
             decoration: const InputDecoration(labelText: "Name"),

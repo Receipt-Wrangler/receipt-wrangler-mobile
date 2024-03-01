@@ -30,6 +30,21 @@ class _ReceiptScreen extends State<ReceiptScreen> {
     var formState = getFormState(uri.toString());
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
+    return FutureBuilder(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+            return SingleChildScrollView(
+              child: ReceiptForm(
+                  receipt: snapshot.data as api.Receipt, formState: formState),
+            );
+          }
+
+          return const CircularLoadingProgress();
+        });
+
     return ScreenWrapper(
         appBarWidget: TopAppBar(
           titleText: getTitleText(formState, extra.name),
