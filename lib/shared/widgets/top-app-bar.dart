@@ -76,7 +76,7 @@ class _TopAppBar extends State<TopAppBar> {
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.only(right: 16.0),
               child: getUserAvatar(),
             )
           ],
