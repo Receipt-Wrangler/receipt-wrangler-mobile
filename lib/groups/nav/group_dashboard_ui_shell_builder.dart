@@ -6,27 +6,28 @@ import 'package:receipt_wrangler_mobile/shared/classes/base_ui_shell_builder.dar
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
-  static void setupBottomNav(BuildContext context, GoRouter router) {
+  static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
+    var router = GoRouter.of(context);
 
     onDestinationSelected(int indexSelected) {
       var groupId = getGroupByIdWithRouter(router);
 
       switch (indexSelected) {
         case 0:
-          router.go("/groups/$groupId/dashboards");
+          context.go("/groups/$groupId/dashboards");
           break;
         case 1:
-          router.go("/add");
+          context.go("/add");
           break;
         case 2:
-          router.go("/search");
+          context.go("/search");
           break;
         case 3:
-          router.go("/groups/$groupId/receipts");
+          context.go("/groups/$groupId/receipts");
           break;
         default:
-          router.go("/groups");
+          context.go("/groups");
       }
 
       provider.setIndexSelected(indexSelected);

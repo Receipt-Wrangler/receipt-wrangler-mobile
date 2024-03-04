@@ -5,21 +5,21 @@ import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/base_ui_shell_builder.dart';
 
 class GroupSelectUIShellBuilder implements BaseUIShellBuilder {
-  static void setupBottomNav(BuildContext context, GoRouter router) {
+  static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
     onDestinationSelected(int indexSelected) {
       switch (indexSelected) {
         case 0:
-          router.go("/groups");
+          context.go("/groups");
           break;
         case 1:
-          router.go("/add");
+          context.go("/add");
           break;
         case 2:
-          router.go("/search");
+          context.go("/search");
           break;
         default:
-          router.go("/groups");
+          context.go("/groups");
       }
 
       provider.setIndexSelected(indexSelected);

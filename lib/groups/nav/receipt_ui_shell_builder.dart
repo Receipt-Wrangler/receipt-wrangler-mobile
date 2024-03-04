@@ -9,7 +9,7 @@ import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras
 import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 
 class ReceiptUIShellBuilder implements BaseUIShellBuilder {
-  static void setupBottomNav(BuildContext context, GoRouter router) {
+  static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
     provider.setIndexSelected(0);
 

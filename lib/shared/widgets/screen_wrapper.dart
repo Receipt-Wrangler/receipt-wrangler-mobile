@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_dashboard_ui_shell_builder.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/receipt_ui_shell_builder.dart';
 
 class ScreenWrapper extends StatefulWidget {
   const ScreenWrapper({
@@ -22,6 +26,24 @@ class ScreenWrapper extends StatefulWidget {
 }
 
 class _ScreenWrapper extends State<ScreenWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    var router = GoRouter.of(context);
+
+    router.routerDelegate.addListener(() {
+      var fullPath = router.routerDelegate.currentConfiguration.fullPath;
+
+      if (fullPath == "/groups") {
+        GroupSelectUIShellBuilder.setupBottomNav(context);
+      } else if (fullPath == "/groups/:groupId/dashboards") {
+        GroupDashboardUIShellBuilder.setupBottomNav(context);
+      } else if (fullPath == "/receipts/:receiptId/view") {
+        ReceiptUIShellBuilder.setupBottomNav(context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

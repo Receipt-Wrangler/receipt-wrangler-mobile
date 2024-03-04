@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class BaseUIShellBuilder {
-  static setupBottomNav(BuildContext context, GoRouter router) {
+  static setupBottomNav(BuildContext context) {
     throw UnimplementedError();
   }
 }
