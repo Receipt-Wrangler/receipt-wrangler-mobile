@@ -14,10 +14,6 @@ class GroupReceiptsScreen extends StatefulWidget {
 class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
   @override
   Widget build(BuildContext context) {
-    var groupId = getGroupId(context);
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-    var group = groupModel.getGroupById(groupId ?? "");
-
     return const GroupReceiptsList();
   }
 

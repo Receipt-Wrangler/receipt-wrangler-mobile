@@ -74,7 +74,12 @@ class _TopAppBar extends State<TopAppBar> {
           title: Text(
             appBarModel.titleText,
           ),
-          actions: [getUserAvatar()],
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: getUserAvatar(),
+            )
+          ],
           centerTitle: false,
         );
       },
