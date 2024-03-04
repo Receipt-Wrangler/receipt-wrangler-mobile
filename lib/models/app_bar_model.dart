@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
 class AppBarModel extends ChangeNotifier {
-  final String titleText = "";
+  String titleText = "";
 
-  final String? leadingArrowRedirect = "";
+  String? leadingArrowRedirect = "";
 
-  final dynamic leadingArrowExtra = {};
+  dynamic leadingArrowExtra = {};
+
+  void setAppBarData({
+    required String titleText,
+    String? leadingArrowRedirect,
+    dynamic leadingArrowExtra,
+  }) {
+    this.titleText = titleText;
+    this.leadingArrowRedirect = leadingArrowRedirect;
+    this.leadingArrowExtra = leadingArrowExtra;
+
+    notifyListeners();
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
+import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
@@ -44,6 +46,9 @@ Future<String?> unprotectedRouteRedirect(
   var tokensValid = await refreshTokens(authModelProvider, groupModel,
       userModel, userPreferencesModel, categoryModel, tagModel);
   var redirectRoute = redirect ?? "/";
+  GroupSelectUIShellBuilder.setupBottomNav(context);
+  Provider.of<AppBarModel>(context, listen: false)
+      .setAppBarData(titleText: "Groups");
 
   if (tokensValid) {
     return redirectRoute;

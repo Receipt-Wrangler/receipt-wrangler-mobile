@@ -7,6 +7,8 @@ import 'package:receipt_wrangler_mobile/shared/classes/base_ui_shell_builder.dar
 class GroupSelectUIShellBuilder implements BaseUIShellBuilder {
   static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
+    provider.setIndexSelected(0);
+
     onDestinationSelected(int indexSelected) {
       switch (indexSelected) {
         case 0:

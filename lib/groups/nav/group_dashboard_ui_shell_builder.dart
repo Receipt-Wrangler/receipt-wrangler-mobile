@@ -8,6 +8,7 @@ import 'package:receipt_wrangler_mobile/utils/group.dart';
 class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
   static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
+    provider.setIndexSelected(0);
     var router = GoRouter.of(context);
 
     onDestinationSelected(int indexSelected) {
