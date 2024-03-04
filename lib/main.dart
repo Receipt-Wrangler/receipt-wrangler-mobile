@@ -99,10 +99,6 @@ final _router = GoRouter(
             path: '/receipts/:receiptId/view',
             builder: (context, state) => const ReceiptScreen(),
           ),
-          GoRoute(
-            path: '/receipts/:receiptId/view/images',
-            builder: (context, state) => const ReceiptImagesScreen(),
-          ),
         ]),
   ],
 );
