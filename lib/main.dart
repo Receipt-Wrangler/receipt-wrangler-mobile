@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dar
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
+import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
@@ -24,6 +25,7 @@ import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.d
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 void main() async {
@@ -41,6 +43,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
       ChangeNotifierProvider(create: (_) => BottomNavModel()),
+      ChangeNotifierProvider(create: (_) => AppBarModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -53,6 +56,7 @@ final _router = GoRouter(
         navigatorKey: GlobalKey<NavigatorState>(),
         builder: (context, state, child) {
           return ScreenWrapper(
+            appBarWidget: const TopAppBar(),
             bottomNavigationBarWidget: const BottomNav(),
             children: [child],
           );

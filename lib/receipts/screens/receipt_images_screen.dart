@@ -27,17 +27,18 @@ class _ReceiptImagesScreen extends State<ReceiptImagesScreen> {
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     var receipt = receiptModel.receipt;
 
-    return Scaffold(
-      appBar: TopAppBar(
-          titleText: getTitleText(formState, receipt.name),
-          leadingArrowRedirect:
-              getLeadingArrowRedirect(receipt.groupId.toString()),
-          leadingArrowExtra: ReceiptNavigationExtras(
-            groupId: receipt.groupId.toString(),
-            name: receipt.name,
-          )),
-      bottomNavigationBar: ReceiptBottomNav(),
-      body: const ReceiptImages(),
-    );
+    return const ReceiptImages();
+    // return Scaffold
+    //   appBar: TopAppBar(
+    //       titleText: getTitleText(formState, receipt.name),
+    //       leadingArrowRedirect:
+    //           getLeadingArrowRedirect(receipt.groupId.toString()),
+    //       leadingArrowExtra: ReceiptNavigationExtras(
+    //         groupId: receipt.groupId.toString(),
+    //         name: receipt.name,
+    //       )),
+    //   bottomNavigationBar: ReceiptBottomNav(),
+    //   body: const ReceiptImages(),
+    // );
   }
 }
