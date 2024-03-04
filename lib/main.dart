@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_dashboard_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/receipt_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
@@ -121,12 +122,15 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
     _router.routerDelegate.addListener(() {
-      var path = _router.routerDelegate.currentConfiguration.uri.toString();
+      var fullPath = _router.routerDelegate.currentConfiguration.fullPath;
+      print(fullPath);
 
-      if (path == "/groups") {
+      if (fullPath == "/groups") {
         GroupSelectUIShellBuilder.setupBottomNav(context, _router);
-      } else if (path.contains("dashboard")) {
+      } else if (fullPath == "/groups/:groupId/dashboards") {
         GroupDashboardUIShellBuilder.setupBottomNav(context, _router);
+      } else if (fullPath == "/receipts/:receiptId/view") {
+        ReceiptUIShellBuilder.setupBottomNav(context, _router);
       }
     });
   }
