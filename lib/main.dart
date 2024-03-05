@@ -21,7 +21,6 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
