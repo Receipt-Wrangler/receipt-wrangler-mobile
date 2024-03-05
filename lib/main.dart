@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
@@ -31,6 +30,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GlobalSharedPreferences.initialize();
+  await Permission.camera.request();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
