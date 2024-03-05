@@ -5,7 +5,6 @@ import 'package:receipt_wrangler_mobile/groups/nav/group_dashboard_ui_shell_buil
 import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/shared/classes/base_ui_shell_builder.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupUIShellBuilder {

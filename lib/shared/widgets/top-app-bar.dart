@@ -50,7 +50,10 @@ class _TopAppBar extends State<TopAppBar> {
     }
   }
 
-  Widget getUserAvatar() {
+  Widget getUserAvatar(AppBarModel appBarModel) {
+    if (appBarModel.titleText.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return PopupMenuButton(
         child: const UserAvatar(),
         itemBuilder: (BuildContext context) {
@@ -77,7 +80,7 @@ class _TopAppBar extends State<TopAppBar> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: getUserAvatar(),
+              child: getUserAvatar(appBarModel),
             )
           ],
           centerTitle: false,
