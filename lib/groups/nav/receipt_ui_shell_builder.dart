@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/image_scan.dart';
 import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
@@ -27,7 +28,15 @@ class ReceiptUIShellBuilder implements BaseUIShellBuilder {
               Provider.of<ReceiptModel>(context, listen: false).receipt;
           showFullscreenBottomSheet(
               context, const ReceiptImages(), "${receipt.name} Images",
-              actions: [const Text("yo")]);
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ImageScan()));
+                  },
+                )
+              ]);
           break;
         case 2:
           context.go("/search");
