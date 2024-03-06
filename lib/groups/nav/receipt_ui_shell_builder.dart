@@ -26,7 +26,8 @@ class ReceiptUIShellBuilder implements BaseUIShellBuilder {
           var receipt =
               Provider.of<ReceiptModel>(context, listen: false).receipt;
           showFullscreenBottomSheet(
-              context, const ReceiptImages(), "${receipt.name} Images");
+              context, const ReceiptImages(), "${receipt.name} Images",
+              actions: [const Text("yo")]);
           break;
         case 2:
           context.go("/search");

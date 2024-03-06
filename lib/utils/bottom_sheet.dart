@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_sheet_container.dart';
 
-showFullscreenBottomSheet(BuildContext context, Widget child, String label) {
+showFullscreenBottomSheet(BuildContext context, Widget child, String label,
+    {List<Widget>? actions}) {
   showModalBottomSheet(
     context: context,
     enableDrag: true,
@@ -19,6 +20,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label) {
           width: MediaQuery.of(context).size.width,
           child: BottomSheetContainer(
             header: label,
+            actions: actions,
             child: child,
           ));
     },
