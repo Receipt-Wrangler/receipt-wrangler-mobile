@@ -40,37 +40,37 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
     var serverModel = Provider.of<AuthModel>(context);
 
     return FormBuilder(
-        key: _formKey,
-        child: SizedBox(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            "Connect to Server",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          headerSpacing,
+          FormBuilderTextField(
+              name: "url",
+              decoration: const InputDecoration(
+                  labelText: "Server URL", border: OutlineInputBorder()),
+              initialValue: serverModel.basePath,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+              ])),
+          lastFieldSpacing,
+          Row(
             children: [
-              const Text(
-                "Connect to Server",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              headerSpacing,
-              FormBuilderTextField(
-                  name: "url",
-                  decoration: const InputDecoration(
-                      labelText: "Server URL", border: OutlineInputBorder()),
-                  initialValue: serverModel.basePath,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                  ])),
-              lastFieldSpacing,
-              Row(
-                children: [
-                  Expanded(
-                      child: CupertinoButton.filled(
-                          onPressed: () async {
-                            await _submit();
-                          },
-                          child: const Text("Connect")))
-                ],
-              ),
+              Expanded(
+                  child: CupertinoButton.filled(
+                      onPressed: () async {
+                        await _submit();
+                      },
+                      child: const Text("Connect")))
             ],
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

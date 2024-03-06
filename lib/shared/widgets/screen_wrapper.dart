@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/groups/nav/group_dashboard_ui_shell_builder.dart';
-import 'package:receipt_wrangler_mobile/groups/nav/group_select_ui_shell_builder.dart';
-import 'package:receipt_wrangler_mobile/groups/nav/receipt_ui_shell_builder.dart';
-import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
-import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/utils/group.dart';
 import 'package:receipt_wrangler_mobile/utils/shell.dart';
 
 class ScreenWrapper extends StatefulWidget {

@@ -72,6 +72,10 @@ class _TopAppBar extends State<TopAppBar> {
   Widget build(BuildContext context) {
     return Consumer<AppBarModel>(
       builder: (context, appBarModel, child) {
+        if (appBarModel.titleText.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
         return AppBar(
           leading: getIconButton(appBarModel),
           title: Text(
