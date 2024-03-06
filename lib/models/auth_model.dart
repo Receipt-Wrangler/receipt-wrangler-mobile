@@ -71,10 +71,10 @@ class AuthModel extends ChangeNotifier {
     return await _storage.read(key: _refreshTokenKey);
   }
 
-  void setBasePath(String basePath) {
+  Future<void> setBasePath(String basePath) async {
     GlobalSharedPreferences.instance.setString(_basePathKey, basePath);
 
-    _updateDefaultApiClient();
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }
@@ -88,19 +88,18 @@ class AuthModel extends ChangeNotifier {
     }
   }
 
-  void _updateDefaultApiClient() {
-    getJwt().then((jwt) {
-      if (jwt != null) {
-        var bearer = api.HttpBearerAuth();
-        bearer.accessToken = jwt;
+  Future<void> _updateDefaultApiClient() async {
+    var jwt = await getJwt();
+    if (jwt != null) {
+      var bearer = api.HttpBearerAuth();
+      bearer.accessToken = jwt;
 
-        api.defaultApiClient =
-            ApiClient(basePath: basePath, authentication: bearer);
-        return;
-      }
-
-      api.defaultApiClient = ApiClient(basePath: basePath);
+      api.defaultApiClient =
+          ApiClient(basePath: basePath, authentication: bearer);
       return;
-    });
+    }
+
+    api.defaultApiClient = ApiClient(basePath: basePath);
+    return;
   }
 }
