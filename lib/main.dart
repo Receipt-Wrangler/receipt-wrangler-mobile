@@ -26,11 +26,12 @@ import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
+import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GlobalSharedPreferences.initialize();
-  await Permission.camera.request();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
@@ -114,10 +115,11 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   late final AppLifecycleListener _lifecycleListener;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
+    await requestPermissions();
   }
 
   @override
