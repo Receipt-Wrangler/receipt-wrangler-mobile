@@ -11,11 +11,30 @@ import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class ReceiptUIShellBuilder implements BaseUIShellBuilder {
+  static Widget getImageUploadIcon(context, ReceiptModel receiptModel) {
+    return IconButton(
+      icon: const Icon(Icons.close),
+      onPressed: () async {
+        try {
+          var filesUploaded =
+              await uploadImagesToReceipt(receiptModel.receipt.id.toString());
+          showSuccessSnackbar(
+              context, "Successfully uploaded $filesUploaded images");
+          receiptModel.imagesUploaded();
+        } catch (e) {
+          print(e);
+          return;
+        }
+      },
+    );
+  }
+
   static void setupBottomNav(BuildContext context) {
     var provider = Provider.of<BottomNavModel>(context, listen: false);
     provider.setIndexSelected(0);
 
-    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+    var receipt = receiptModel.receipt;
 
     onDestinationSelected(int indexSelected) {
       switch (indexSelected) {
@@ -29,22 +48,7 @@ class ReceiptUIShellBuilder implements BaseUIShellBuilder {
               Provider.of<ReceiptModel>(context, listen: false).receipt;
           showFullscreenBottomSheet(
               context, const ReceiptImages(), "${receipt.name} Images",
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () async {
-                    try {
-                      var filesUploaded =
-                          await uploadImagesToReceipt(receipt.id.toString());
-                      showSuccessSnackbar(context,
-                          "successfully uploaded $filesUploaded images");
-                    } catch (e) {
-                      print(e);
-                      return;
-                    }
-                  },
-                )
-              ]);
+              actions: [getImageUploadIcon(context, receiptModel)]);
           break;
         case 2:
           context.go("/search");

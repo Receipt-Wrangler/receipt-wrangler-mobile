@@ -9,12 +9,12 @@ import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 class ReceiptImageCarousel extends StatefulWidget {
-  const ReceiptImageCarousel({
+  ReceiptImageCarousel({
     super.key,
     required this.images,
   });
 
-  final List<api.FileDataView?> images;
+  List<api.FileDataView?> images = [];
 
   @override
   State<ReceiptImageCarousel> createState() => _ReceiptImageCarousel();
