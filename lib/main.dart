@@ -115,11 +115,12 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   late final AppLifecycleListener _lifecycleListener;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
-    await requestPermissions();
+
+    requestPermissions();
   }
 
   @override
