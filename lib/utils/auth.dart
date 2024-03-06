@@ -58,7 +58,7 @@ Future<bool> refreshTokens(
   if (isAuthenticated && groupModel.groups.isEmpty) {
     try {
       var appData = await UserApi().getAppData() as AppData;
-      storeAppData(authModel, groupModel, userModel, userPreferencesModel,
+      await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
           categoryModel, tagModel, appData);
     } catch (e) {
       print(e);
@@ -94,20 +94,20 @@ bool isTokenValid(String? token) {
   }
 }
 
-void storeAppData(
+Future<void> storeAppData(
     AuthModel authModel,
     GroupModel groupModel,
     UserModel userModel,
     UserPreferencesModel userPreferencesModel,
     CategoryModel categoryModel,
     TagModel tagModel,
-    AppData appData) {
+    AppData appData) async {
   if (appData!.jwt!.isNotEmpty) {
-    authModel.setJwt(appData.jwt);
+    await authModel.setJwt(appData.jwt);
   }
 
   if (appData.refreshToken!.isNotEmpty) {
-    authModel.setRefreshToken(appData.refreshToken);
+    await authModel.setRefreshToken(appData.refreshToken);
   }
 
   authModel.setClaims(appData.claims);

@@ -39,19 +39,17 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setJwt(String? jwt) {
-    print("setting jwt: $jwt");
-    _storage.write(key: _jwtKey, value: jwt ?? null);
-
-    _updateDefaultApiClient();
+  Future<void> setJwt(String? jwt) async {
+    await _storage.write(key: _jwtKey, value: jwt ?? null);
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }
 
-  void setRefreshToken(String? refreshToken) {
-    _storage.write(key: _refreshTokenKey, value: refreshToken ?? null);
+  Future<void> setRefreshToken(String? refreshToken) async {
+    await _storage.write(key: _refreshTokenKey, value: refreshToken ?? null);
 
-    _updateDefaultApiClient();
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }

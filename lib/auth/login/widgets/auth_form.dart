@@ -25,7 +25,7 @@ class AuthForm extends StatefulWidget {
 class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
-  void _submit() {
+  Future<void> _submit() async {
     _formKey.currentState!.save();
     var form = _formKey.currentState!.value;
 
@@ -44,16 +44,17 @@ class _Login extends State<AuthForm> {
       } else {
         var command = api.LoginCommand(
             username: form["username"], password: form["password"]);
-
-        api.AuthApi()
-            .login(command)
-            .then((data) => _onLoginSuccess(data as api.AppData))
-            .catchError((err) => showApiErrorSnackbar(context, err));
+        try {
+          var appData = await api.AuthApi().login(command);
+          await _onLoginSuccess(appData as api.AppData);
+        } catch (e) {
+          showApiErrorSnackbar(context, e as dynamic);
+        }
       }
     }
   }
 
-  void _onLoginSuccess(api.AppData appData) {
+  Future<void> _onLoginSuccess(api.AppData appData) async {
     var authModel = Provider.of<AuthModel>(context, listen: false);
     var groupModel = Provider.of<GroupModel>(context, listen: false);
     var userModel = Provider.of<UserModel>(context, listen: false);
@@ -62,7 +63,7 @@ class _Login extends State<AuthForm> {
     var categoryModel = Provider.of<CategoryModel>(context, listen: false);
     var tagModel = Provider.of<TagModel>(context, listen: false);
 
-    storeAppData(authModel, groupModel, userModel, userPreferencesModel,
+    await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
         categoryModel, tagModel, appData);
     showSuccessSnackbar(context, "Successfully logged in!");
     context.go("/groups");
