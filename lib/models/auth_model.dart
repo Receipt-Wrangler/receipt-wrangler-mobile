@@ -54,9 +54,9 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void purgeTokens() {
-    _storage.delete(key: _jwtKey);
-    _storage.delete(key: _refreshTokenKey);
+  Future<void> purgeTokens() async {
+    await _storage.delete(key: _jwtKey);
+    await _storage.delete(key: _refreshTokenKey);
 
     notifyListeners();
   }
