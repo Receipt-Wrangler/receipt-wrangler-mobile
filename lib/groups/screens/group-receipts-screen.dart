@@ -16,14 +16,4 @@ class _GroupReceiptsScreen extends State<GroupReceiptsScreen> {
   Widget build(BuildContext context) {
     return const GroupReceiptsList();
   }
-
-  //   return ScreenWrapper(
-  //       appBarWidget: TopAppBar(
-  //         titleText: "${group?.name} Receipts",
-  //         leadingArrowRedirect: "/groups",
-  //       ),
-  //       bodyPadding: EdgeInsets.zero,
-  //       bottomNavigationBarWidget: const GroupDashboardBottomNav(),
-  //       children: const [GroupReceiptsList()]);
-  // }
 }
