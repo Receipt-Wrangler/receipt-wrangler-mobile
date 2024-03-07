@@ -18,8 +18,10 @@ class ReceiptUIShellBuilder implements BaseUIShellBuilder {
         try {
           var filesUploaded =
               await uploadImagesToReceipt(receiptModel.receipt.id.toString());
-          showSuccessSnackbar(
-              context, "Successfully uploaded $filesUploaded images");
+          if (filesUploaded > 0) {
+            showSuccessSnackbar(
+                context, "Successfully uploaded $filesUploaded images");
+          }
           receiptModel.imagesUploaded();
         } catch (e) {
           print(e);
