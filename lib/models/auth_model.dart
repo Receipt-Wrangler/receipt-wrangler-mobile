@@ -39,26 +39,24 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setJwt(String? jwt) {
-    print("setting jwt: $jwt");
-    _storage.write(key: _jwtKey, value: jwt ?? null);
-
-    _updateDefaultApiClient();
+  Future<void> setJwt(String? jwt) async {
+    await _storage.write(key: _jwtKey, value: jwt ?? null);
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }
 
-  void setRefreshToken(String? refreshToken) {
-    _storage.write(key: _refreshTokenKey, value: refreshToken ?? null);
+  Future<void> setRefreshToken(String? refreshToken) async {
+    await _storage.write(key: _refreshTokenKey, value: refreshToken ?? null);
 
-    _updateDefaultApiClient();
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }
 
-  void purgeTokens() {
-    _storage.delete(key: _jwtKey);
-    _storage.delete(key: _refreshTokenKey);
+  Future<void> purgeTokens() async {
+    await _storage.delete(key: _jwtKey);
+    await _storage.delete(key: _refreshTokenKey);
 
     notifyListeners();
   }
@@ -71,10 +69,10 @@ class AuthModel extends ChangeNotifier {
     return await _storage.read(key: _refreshTokenKey);
   }
 
-  void setBasePath(String basePath) {
+  Future<void> setBasePath(String basePath) async {
     GlobalSharedPreferences.instance.setString(_basePathKey, basePath);
 
-    _updateDefaultApiClient();
+    await _updateDefaultApiClient();
 
     notifyListeners();
   }
@@ -88,19 +86,18 @@ class AuthModel extends ChangeNotifier {
     }
   }
 
-  void _updateDefaultApiClient() {
-    getJwt().then((jwt) {
-      if (jwt != null) {
-        var bearer = api.HttpBearerAuth();
-        bearer.accessToken = jwt;
+  Future<void> _updateDefaultApiClient() async {
+    var jwt = await getJwt();
+    if (jwt != null) {
+      var bearer = api.HttpBearerAuth();
+      bearer.accessToken = jwt;
 
-        api.defaultApiClient =
-            ApiClient(basePath: basePath, authentication: bearer);
-        return;
-      }
-
-      api.defaultApiClient = ApiClient(basePath: basePath);
+      api.defaultApiClient =
+          ApiClient(basePath: basePath, authentication: bearer);
       return;
-    });
+    }
+
+    api.defaultApiClient = ApiClient(basePath: basePath);
+    return;
   }
 }

@@ -19,17 +19,24 @@ class _ReceiptImages extends State<ReceiptImages> {
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     List<Future<api.FileDataView?>> imageFutures = [];
 
-    for (var image in receiptModel.receipt.imageFiles) {
-      imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
-    }
+    return api.ReceiptApi()
+        .getReceiptById(receiptModel.receipt.id)
+        .then((receipt) {
+      receiptModel.setReceipt(receipt as api.Receipt, false);
+      for (var image in receipt?.imageFiles ?? []) {
+        imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
+      }
 
-    return Future.wait(imageFutures);
+      return Future.wait(imageFutures);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ReceiptModel>(context, listen: true);
     var future = getReceiptImageFutures();
     return FutureBuilder(
+        key: UniqueKey(),
         future: future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -41,6 +48,7 @@ class _ReceiptImages extends State<ReceiptImages> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: ReceiptImageCarousel(
+                key: UniqueKey(),
                 images: snapshot.data ?? [],
               ),
             );

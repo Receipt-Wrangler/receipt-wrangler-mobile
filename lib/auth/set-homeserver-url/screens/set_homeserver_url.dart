@@ -19,24 +19,19 @@ class SetHomeserverUrl extends StatefulWidget {
 class _SetHomeserverUrl extends State<SetHomeserverUrl> {
   final _formKey = GlobalKey<FormBuilderState>();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       var authModel = Provider.of<AuthModel>(context, listen: false);
 
-      authModel.setBasePath(_formKey.currentState!.value["url"]);
-
-      api.FeatureConfigApi()
-          .getFeatureConfig()
-          .then((value) => {
-                authModel.setFeatureConfig(value),
-                showSuccessSnackbar(
-                    context, "Successfully connected to server"),
-                context.go("/login"),
-              })
-          .catchError((error) => {
-                showErrorSnackbar(context, "Failed to connect to server"),
-              });
+      await authModel.setBasePath(_formKey.currentState!.value["url"]);
+      try {
+        await api.FeatureConfigApi().getFeatureConfig();
+        showSuccessSnackbar(context, "Successfully connected to server");
+        context.go("/login");
+      } catch (e) {
+        showErrorSnackbar(context, "Failed to connect to server");
+      }
     }
   }
 
@@ -45,37 +40,37 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
     var serverModel = Provider.of<AuthModel>(context);
 
     return FormBuilder(
-        key: _formKey,
-        child: SizedBox(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            "Connect to Server",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          headerSpacing,
+          FormBuilderTextField(
+              name: "url",
+              decoration: const InputDecoration(
+                  labelText: "Server URL", border: OutlineInputBorder()),
+              initialValue: serverModel.basePath,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+              ])),
+          lastFieldSpacing,
+          Row(
             children: [
-              const Text(
-                "Connect to Server",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              headerSpacing,
-              FormBuilderTextField(
-                  name: "url",
-                  decoration: const InputDecoration(
-                      labelText: "Server URL", border: OutlineInputBorder()),
-                  initialValue: serverModel.basePath,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                  ])),
-              lastFieldSpacing,
-              Row(
-                children: [
-                  Expanded(
-                      child: CupertinoButton.filled(
-                          onPressed: () {
-                            _submit();
-                          },
-                          child: const Text("Connect")))
-                ],
-              ),
+              Expanded(
+                  child: CupertinoButton.filled(
+                      onPressed: () async {
+                        await _submit();
+                      },
+                      child: const Text("Connect")))
             ],
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

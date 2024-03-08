@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class BottomSheetContainer extends StatefulWidget {
   const BottomSheetContainer(
-      {super.key, required this.child, required this.header});
+      {super.key, required this.child, required this.header, this.actions});
 
   final Widget child;
 
   final String header;
+
+  final List<Widget>? actions;
 
   @override
   State<BottomSheetContainer> createState() => _BottomSheetContainer();
@@ -26,7 +28,9 @@ class _BottomSheetContainer extends State<BottomSheetContainer> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Row(children: [getHeaderText()]),
+                child: Row(
+                  children: [getHeaderText(), ...widget.actions ?? []],
+                ),
               )
             ],
           ),

@@ -13,4 +13,8 @@ class ReceiptModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void imagesUploaded() {
+    notifyListeners();
+  }
 }

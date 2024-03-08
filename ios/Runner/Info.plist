@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Used for scanning images</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used for uploading images</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used for uploading images</string>
 </dict>
 </plist>

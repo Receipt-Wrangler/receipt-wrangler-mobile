@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
@@ -21,16 +21,17 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_images_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
+import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GlobalSharedPreferences.initialize();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LayoutModel()),
@@ -118,6 +119,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     super.initState();
 
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
+
+    requestPermissions();
   }
 
   @override

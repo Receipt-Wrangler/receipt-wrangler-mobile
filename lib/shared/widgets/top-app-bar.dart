@@ -20,20 +20,18 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _TopAppBar extends State<TopAppBar> {
-  void _logout() {
+  Future<void> _logout() async {
     AuthModel authModel = Provider.of<AuthModel>(context, listen: false);
-    authModel
-        .getRefreshToken()
-        .then((refreshToken) {
-          return refreshToken;
-        })
-        .then((refreshToken) => api.AuthApi().logout(
-            logoutCommand: api.LogoutCommand(refreshToken: refreshToken ?? "")))
-        .then((value) {
-          authModel.purgeTokens();
-          showSuccessSnackbar(context, "Successfully logged out!");
-          context.go('/login');
-        });
+    try {
+      var refreshToken = await authModel.getRefreshToken();
+      await api.AuthApi().logout(
+          logoutCommand: api.LogoutCommand(refreshToken: refreshToken ?? ""));
+      await authModel.purgeTokens();
+      showSuccessSnackbar(context, "Successfully logged out");
+      context.go("/login");
+    } catch (e) {
+      showErrorSnackbar(context, e as dynamic);
+    }
   }
 
   Widget? getIconButton(AppBarModel appBarModel) {
@@ -72,6 +70,10 @@ class _TopAppBar extends State<TopAppBar> {
   Widget build(BuildContext context) {
     return Consumer<AppBarModel>(
       builder: (context, appBarModel, child) {
+        if (appBarModel.titleText.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
         return AppBar(
           leading: getIconButton(appBarModel),
           title: Text(
