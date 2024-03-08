@@ -22,6 +22,8 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
@@ -52,37 +54,52 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const Home(),
+      builder: (context, state) => const Scaffold(
+        body: Home(),
+      ),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
     GoRoute(
       path: '/login',
-      builder: (context, state) => const AuthScreen(),
+      builder: (context, state) => const Scaffold(
+        body: AuthScreen(),
+      ),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
     GoRoute(
       path: '/sign-up',
-      builder: (context, state) => const AuthScreen(),
+      builder: (context, state) => const Scaffold(
+        body: AuthScreen(),
+      ),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
-    GoRoute(
-      path: '/groups',
-      builder: (context, state) => const GroupSelect(),
-    ),
-    GoRoute(
-      path: '/groups/:groupId/dashboards',
-      builder: (context, state) => const GroupDashboards(),
-    ),
-    GoRoute(
-      path: '/groups/:groupId/receipts',
-      builder: (context, state) => const GroupReceiptsScreen(),
-    ),
+    ShellRoute(
+        builder: (context, state, child) {
+          return Scaffold(
+            appBar: const TopAppBar(),
+            body: child,
+            bottomNavigationBar: const BottomNav(),
+          );
+        },
+        routes: [
+          GoRoute(
+              path: "/groups",
+              builder: (context, state) => const GroupSelect()),
+          GoRoute(
+            path: '/groups/:groupId/dashboards',
+            builder: (context, state) => const GroupDashboards(),
+          ),
+          GoRoute(
+            path: '/groups/:groupId/receipts',
+            builder: (context, state) => const GroupReceiptsScreen(),
+          ),
+        ]),
     GoRoute(
       path: '/receipts/:receiptId/view',
       builder: (context, state) => const ReceiptScreen(),
