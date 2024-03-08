@@ -8,9 +8,14 @@ import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const TopAppBar({
-    super.key,
-  });
+  const TopAppBar(
+      {super.key, required titleText, leadingArrowRedirect, leadingArrowExtra});
+
+  final String titleText = "";
+
+  final String? leadingArrowRedirect = "";
+
+  final dynamic leadingArrowExtra = "";
 
   @override
   State<TopAppBar> createState() => _TopAppBar();
@@ -34,13 +39,13 @@ class _TopAppBar extends State<TopAppBar> {
     }
   }
 
-  Widget? getIconButton(AppBarModel appBarModel) {
-    if (appBarModel.leadingArrowRedirect != null) {
+  Widget? getIconButton() {
+    if (widget.leadingArrowRedirect != null) {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          context.go(appBarModel.leadingArrowRedirect ?? "/",
-              extra: appBarModel.leadingArrowExtra);
+          context.go(widget.leadingArrowRedirect ?? "/",
+              extra: widget.leadingArrowExtra);
         },
       );
     } else {
@@ -48,10 +53,7 @@ class _TopAppBar extends State<TopAppBar> {
     }
   }
 
-  Widget getUserAvatar(AppBarModel appBarModel) {
-    if (appBarModel.titleText.isEmpty) {
-      return const SizedBox.shrink();
-    }
+  Widget getUserAvatar() {
     return PopupMenuButton(
         child: const UserAvatar(),
         itemBuilder: (BuildContext context) {
@@ -70,19 +72,15 @@ class _TopAppBar extends State<TopAppBar> {
   Widget build(BuildContext context) {
     return Consumer<AppBarModel>(
       builder: (context, appBarModel, child) {
-        if (appBarModel.titleText.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
         return AppBar(
-          leading: getIconButton(appBarModel),
+          leading: getIconButton(),
           title: Text(
             appBarModel.titleText,
           ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: getUserAvatar(appBarModel),
+              child: getUserAvatar(),
             )
           ],
           centerTitle: false,

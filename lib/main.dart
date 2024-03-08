@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_app_bar.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
@@ -23,7 +24,6 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
@@ -82,9 +82,9 @@ final _router = GoRouter(
     ShellRoute(
         builder: (context, state, child) {
           return Scaffold(
-            appBar: const TopAppBar(),
-            body: child,
+            appBar: const GroupSelectAppBar(),
             bottomNavigationBar: const GroupSelectBottomNav(),
+            body: child,
           );
         },
         routes: [
