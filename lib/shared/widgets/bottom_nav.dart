@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
+  const BottomNav(
+      {super.key,
+      required this.destinations,
+      required this.getInitialSelectedIndex,
+      required this.onDestinationSelected});
+
+  final List<NavigationDestination> destinations;
+
+  final void Function(int) onDestinationSelected;
+
+  final int Function() getInitialSelectedIndex;
 
   @override
   State<BottomNav> createState() => _BottomNav();
@@ -15,24 +23,19 @@ class _BottomNav extends State<BottomNav> {
   @override
   void initState() {
     super.initState();
+    indexSelected = widget.getInitialSelectedIndex();
   }
 
-  Widget buildNavigationBar(BottomNavModel bottomNavModel) {
-    if (bottomNavModel.destinations.length < 2) {
-      return const SizedBox.shrink();
-    }
+  Widget buildNavigationBar() {
     return NavigationBar(
-        destinations: bottomNavModel.destinations,
-        selectedIndex: bottomNavModel.indexSelected,
-        onDestinationSelected: bottomNavModel.onDestinationSelected);
+      destinations: widget.destinations,
+      onDestinationSelected: widget.onDestinationSelected,
+      selectedIndex: indexSelected,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BottomNavModel>(
-      builder: (context, bottomNavModel, child) {
-        return buildNavigationBar(bottomNavModel);
-      },
-    );
+    return buildNavigationBar();
   }
 }
