@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -5,13 +7,16 @@ class BottomNav extends StatefulWidget {
       {super.key,
       required this.destinations,
       required this.getInitialSelectedIndex,
-      required this.onDestinationSelected});
+      required this.onDestinationSelected,
+      required this.indexSelectedController});
 
   final List<NavigationDestination> destinations;
 
   final void Function(int) onDestinationSelected;
 
   final int Function() getInitialSelectedIndex;
+
+  final StreamController<int> indexSelectedController;
 
   @override
   State<BottomNav> createState() => _BottomNav();
@@ -23,7 +28,12 @@ class _BottomNav extends State<BottomNav> {
   @override
   void initState() {
     super.initState();
-    indexSelected = widget.getInitialSelectedIndex();
+
+    widget.indexSelectedController.stream.listen((index) {
+      setState(() {
+        indexSelected = index;
+      });
+    });
   }
 
   Widget buildNavigationBar() {

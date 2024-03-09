@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
@@ -10,6 +12,8 @@ class GroupSelectBottomNav extends StatefulWidget {
 }
 
 class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
+  var indexSelectedController = StreamController<int>();
+
   @override
   Widget build(BuildContext context) {
     onDestinationSelected(int indexSelected) {
@@ -26,6 +30,8 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
         default:
           context.go("/groups");
       }
+
+      indexSelectedController.add(indexSelected);
     }
 
     setIndexSelected() {
@@ -44,23 +50,26 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
       return index;
     }
 
+    var destinations = const [
+      NavigationDestination(
+        icon: Icon(Icons.group),
+        label: "Groups",
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.add),
+        label: "Add",
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.search),
+        label: "Search",
+      ),
+    ];
+
     return BottomNav(
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.group),
-          label: "Groups",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.add),
-          label: "Add",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.search),
-          label: "Search",
-        ),
-      ],
+      destinations: destinations,
       onDestinationSelected: onDestinationSelected,
       getInitialSelectedIndex: setIndexSelected,
+      indexSelectedController: indexSelectedController,
     );
   }
 }

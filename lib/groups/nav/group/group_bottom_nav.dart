@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
@@ -11,6 +13,8 @@ class GroupBottomNav extends StatefulWidget {
 }
 
 class _GroupBottomNav extends State<GroupBottomNav> {
+  var indexSelectedController = StreamController<int>();
+
   @override
   Widget build(BuildContext context) {
     onDestinationSelected(int indexSelected) {
@@ -32,6 +36,8 @@ class _GroupBottomNav extends State<GroupBottomNav> {
         default:
           context.go("/groups");
       }
+
+      indexSelectedController.add(indexSelected);
     }
 
     setIndexSelected() {
@@ -75,6 +81,7 @@ class _GroupBottomNav extends State<GroupBottomNav> {
       destinations: destinations,
       onDestinationSelected: onDestinationSelected,
       getInitialSelectedIndex: setIndexSelected,
+      indexSelectedController: indexSelectedController,
     );
   }
 }
