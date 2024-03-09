@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group/group_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_app_bar.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
@@ -91,6 +93,17 @@ final _router = GoRouter(
           GoRoute(
               path: "/groups",
               builder: (context, state) => const GroupSelect()),
+        ]),
+    ShellRoute(
+        builder: (context, state, child) {
+          return Scaffold(
+            appBar: const GroupAppBar(),
+            bottomNavigationBar:
+                const GroupBottomNav(), // TODO: implement new bottom nav
+            body: child,
+          );
+        },
+        routes: [
           GoRoute(
             path: '/groups/:groupId/dashboards',
             builder: (context, state) => const GroupDashboards(),
