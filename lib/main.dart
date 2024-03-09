@@ -25,6 +25,7 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
@@ -98,8 +99,7 @@ final _router = GoRouter(
         builder: (context, state, child) {
           return Scaffold(
             appBar: const GroupAppBar(),
-            bottomNavigationBar:
-                const GroupBottomNav(), // TODO: implement new bottom nav
+            bottomNavigationBar: const GroupBottomNav(),
             body: child,
           );
         },
@@ -113,10 +113,20 @@ final _router = GoRouter(
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
         ]),
-    GoRoute(
-      path: '/receipts/:receiptId/view',
-      builder: (context, state) => const ReceiptScreen(),
-    ),
+    ShellRoute(
+        builder: (context, state, child) {
+          return Scaffold(
+            appBar: const ReceiptAppBar(),
+            bottomNavigationBar: const GroupBottomNav(),
+            body: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: '/receipts/:receiptId/view',
+            builder: (context, state) => const ReceiptScreen(),
+          ),
+        ]),
   ],
 );
 
