@@ -38,10 +38,9 @@ class _BottomNav extends State<BottomNav> {
 
   Widget buildNavigationBar() {
     return NavigationBar(
-      destinations: widget.destinations,
-      onDestinationSelected: widget.onDestinationSelected,
-      selectedIndex: indexSelected,
-    );
+        destinations: widget.destinations,
+        onDestinationSelected: widget.onDestinationSelected,
+        selectedIndex: widget.getInitialSelectedIndex());
   }
 
   @override
