@@ -46,6 +46,7 @@ class _ReceiptImages extends State<ReceiptImages> {
               child: ReceiptImageCarousel(
                 key: UniqueKey(),
                 images: snapshot.data ?? [],
+                receipt: widget.receipt,
               ),
             );
           } else {

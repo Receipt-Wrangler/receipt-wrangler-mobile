@@ -2,19 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
-import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
-import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 class ReceiptImageCarousel extends StatefulWidget {
-  ReceiptImageCarousel({
-    super.key,
-    required this.images,
-  });
+  const ReceiptImageCarousel(
+      {super.key, required this.images, required this.receipt});
 
-  List<api.FileDataView?> images = [];
+  final List<api.FileDataView?> images;
+
+  final api.Receipt receipt;
 
   @override
   State<ReceiptImageCarousel> createState() => _ReceiptImageCarousel();
@@ -31,21 +29,19 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
-
     Widget buildNameField(int index) {
       return TextFormField(
         decoration: const InputDecoration(
           labelText: "Name",
         ),
-        initialValue: receipt.imageFiles[index].name,
+        initialValue: widget.receipt.imageFiles[index].name,
         readOnly: true,
       );
     }
 
     Widget buildDateAddedField(int index) {
       var formattedDate = formatDate(defaultDateFormat,
-          DateTime.parse(receipt.imageFiles[index].createdAt ?? ""));
+          DateTime.parse(widget.receipt.imageFiles[index].createdAt ?? ""));
       return TextFormField(
         decoration: const InputDecoration(
           labelText: "Date Added",
