@@ -27,8 +27,13 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
+import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+
+import 'api/api.dart' as api;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -115,11 +120,27 @@ final _router = GoRouter(
         ]),
     ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            appBar: const ReceiptAppBar(),
-            bottomNavigationBar: const GroupBottomNav(),
-            body: child,
-          );
+          var future = api.ReceiptApi().getReceiptById(
+              int.parse(state.pathParameters['receiptId'] as String));
+
+          return FutureBuilder(
+              future: future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  return Scaffold(
+                      appBar:
+                          ReceiptAppBar(receipt: snapshot.data as api.Receipt),
+                      bottomNavigationBar: const GroupBottomNav(),
+                      body: SingleChildScrollView(
+                          child: ReceiptForm(
+                        receipt: snapshot.data as api.Receipt,
+                        formState: getFormState(state.uri.toString()),
+                      )));
+                }
+
+                return const CircularLoadingProgress();
+              });
         },
         routes: [
           GoRoute(

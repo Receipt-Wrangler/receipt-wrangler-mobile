@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
-import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 
 import '../../utils/forms.dart';
 import '../../utils/receipts.dart';
 
 class ReceiptAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const ReceiptAppBar({super.key});
+  const ReceiptAppBar({super.key, required this.receipt});
+
+  final api.Receipt receipt;
 
   @override
   State<ReceiptAppBar> createState() => _ReceiptAppBar();
@@ -29,17 +29,12 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ReceiptModel>(
-      builder: (context, receiptModel, child) {
-        var uri = GoRouter.of(context).routeInformationProvider.value.uri;
-        var formState = getFormState(uri.toString());
+    var uri = GoRouter.of(context).routeInformationProvider.value.uri;
+    var formState = getFormState(uri.toString());
 
-        return TopAppBar(
-          titleText: getTitleText(formState, receiptModel.receipt.name),
-          leadingArrowRedirect:
-              "/groups/${receiptModel.receipt.groupId}/receipts",
-        );
-      },
+    return TopAppBar(
+      titleText: getTitleText(formState, widget.receipt.name),
+      leadingArrowRedirect: "/groups/${widget.receipt.groupId}/receipts",
     );
   }
 }
