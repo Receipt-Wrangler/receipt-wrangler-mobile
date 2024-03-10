@@ -6,9 +6,9 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_carousel.
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 
 class ReceiptImages extends StatefulWidget {
-  const ReceiptImages({
-    super.key,
-  });
+  const ReceiptImages({super.key, required this.receipt});
+
+  final api.Receipt receipt;
 
   @override
   State<ReceiptImages> createState() => _ReceiptImages();
@@ -16,13 +16,9 @@ class ReceiptImages extends StatefulWidget {
 
 class _ReceiptImages extends State<ReceiptImages> {
   Future<List<api.FileDataView?>> getReceiptImageFutures() {
-    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     List<Future<api.FileDataView?>> imageFutures = [];
 
-    return api.ReceiptApi()
-        .getReceiptById(receiptModel.receipt.id)
-        .then((receipt) {
-      receiptModel.setReceipt(receipt as api.Receipt, false);
+    return api.ReceiptApi().getReceiptById(widget.receipt.id).then((receipt) {
       for (var image in receipt?.imageFiles ?? []) {
         imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
       }
