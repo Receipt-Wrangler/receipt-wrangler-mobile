@@ -21,6 +21,7 @@ class ReceiptBottomNav extends StatefulWidget {
 
 class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   var indexSelectedController = StreamController<int>();
+  var imagesAddedController = StreamController<api.FileDataView>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +32,13 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           try {
             var filesUploaded =
                 await uploadImagesToReceipt(widget.receipt.id.toString());
-            if (filesUploaded > 0) {
-              showSuccessSnackbar(
-                  context, "Successfully uploaded $filesUploaded images");
+            if (filesUploaded.isNotEmpty) {
+              showSuccessSnackbar(context,
+                  "Successfully uploaded ${filesUploaded.length} images");
+              for (var file in filesUploaded) {
+                imagesAddedController.add(file);
+              }
             }
-            //receiptModel.imagesUploaded();
           } catch (e) {
             print(e);
             return;
@@ -52,7 +55,10 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         case 1:
           showFullscreenBottomSheet(
               context,
-              ReceiptImages(receipt: widget.receipt),
+              ReceiptImages(
+                  receipt: widget.receipt,
+                  imagesAddedStream:
+                      imagesAddedController.stream.asBroadcastStream()),
               "${widget.receipt.name} Images",
               actions: [getImageUploadIcon(context)]);
           break;
@@ -85,5 +91,12 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       getInitialSelectedIndex: setIndexSelected,
       indexSelectedController: indexSelectedController,
     );
+  }
+
+  @override
+  void dispose() {
+    indexSelectedController.close();
+    imagesAddedController.close();
+    super.dispose();
   }
 }

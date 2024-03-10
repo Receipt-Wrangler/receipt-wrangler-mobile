@@ -27,7 +27,6 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
@@ -147,7 +146,7 @@ final _router = GoRouter(
         routes: [
           GoRoute(
             path: '/receipts/:receiptId/view',
-            builder: (context, state) => const ReceiptScreen(),
+            builder: (context, state) => const SizedBox.shrink(),
           ),
         ]),
   ],

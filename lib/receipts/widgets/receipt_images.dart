@@ -6,9 +6,12 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_carousel.
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 
 class ReceiptImages extends StatefulWidget {
-  const ReceiptImages({super.key, required this.receipt});
+  const ReceiptImages(
+      {super.key, required this.receipt, required this.imagesAddedStream});
 
   final api.Receipt receipt;
+
+  final Stream<api.FileDataView> imagesAddedStream;
 
   @override
   State<ReceiptImages> createState() => _ReceiptImages();
@@ -47,6 +50,7 @@ class _ReceiptImages extends State<ReceiptImages> {
                 key: UniqueKey(),
                 images: snapshot.data ?? [],
                 receipt: widget.receipt,
+                imagesAddedStream: widget.imagesAddedStream,
               ),
             );
           } else {
