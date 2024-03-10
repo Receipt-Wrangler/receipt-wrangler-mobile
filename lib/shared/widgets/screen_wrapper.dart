@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/utils/shell.dart';
 
 class ScreenWrapper extends StatefulWidget {
   const ScreenWrapper({
@@ -27,11 +25,6 @@ class _ScreenWrapper extends State<ScreenWrapper> {
   @override
   void initState() {
     super.initState();
-    var router = GoRouter.of(context);
-
-    router.routerDelegate.addListener(() {
-      handleShellUIUpdate(context);
-    });
   }
 
   @override
