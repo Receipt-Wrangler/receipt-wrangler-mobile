@@ -30,6 +30,7 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
@@ -63,37 +64,31 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const Scaffold(
-        body: Home(),
-      ),
+      builder: (context, state) => const ScreenWrapper(child: Home()),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
     GoRoute(
       path: '/login',
-      builder: (context, state) => const Scaffold(
-        body: AuthScreen(),
-      ),
+      builder: (context, state) => const ScreenWrapper(child: AuthScreen()),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
     GoRoute(
       path: '/sign-up',
-      builder: (context, state) => const Scaffold(
-        body: AuthScreen(),
-      ),
+      builder: (context, state) => const ScreenWrapper(child: AuthScreen()),
       redirect: (context, state) {
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
     ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            appBar: const GroupSelectAppBar(),
-            bottomNavigationBar: const GroupSelectBottomNav(),
-            body: child,
+          return ScreenWrapper(
+            appBarWidget: const GroupSelectAppBar(),
+            bottomNavigationBarWidget: const GroupSelectBottomNav(),
+            child: child,
           );
         },
         routes: [
@@ -103,10 +98,15 @@ final _router = GoRouter(
         ]),
     ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            appBar: const GroupAppBar(),
-            bottomNavigationBar: const GroupBottomNav(),
-            body: child,
+          EdgeInsets? padding;
+          if (state.fullPath == '/groups/:groupId/receipts') {
+            padding = const EdgeInsets.all(0);
+          }
+          return ScreenWrapper(
+            appBarWidget: const GroupAppBar(),
+            bottomNavigationBarWidget: const GroupBottomNav(),
+            bodyPadding: padding,
+            child: child,
           );
         },
         routes: [
@@ -129,12 +129,12 @@ final _router = GoRouter(
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
-                  return Scaffold(
-                      appBar:
+                  return ScreenWrapper(
+                      appBarWidget:
                           ReceiptAppBar(receipt: snapshot.data as api.Receipt),
-                      bottomNavigationBar: ReceiptBottomNav(
+                      bottomNavigationBarWidget: ReceiptBottomNav(
                           receipt: snapshot.data as api.Receipt),
-                      body: SingleChildScrollView(
+                      child: SingleChildScrollView(
                           child: ReceiptForm(
                         receipt: snapshot.data as api.Receipt,
                         formState: getFormState(state.uri.toString()),
