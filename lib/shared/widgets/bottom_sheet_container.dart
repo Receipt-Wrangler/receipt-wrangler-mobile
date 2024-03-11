@@ -5,48 +5,45 @@ class BottomSheetContainer extends StatefulWidget {
       {super.key, required this.child, required this.header, this.actions});
 
   final Widget child;
-
   final String header;
-
   final List<Widget>? actions;
 
   @override
-  State<BottomSheetContainer> createState() => _BottomSheetContainer();
+  State<BottomSheetContainer> createState() => _BottomSheetContainerState();
 }
 
-class _BottomSheetContainer extends State<BottomSheetContainer> {
-  Widget getHeaderText() {
-    return Text(widget.header, style: const TextStyle(fontSize: 24));
-  }
-
+class _BottomSheetContainerState extends State<BottomSheetContainer> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    getHeaderText(),
-                    Row(
-                      children: [...widget.actions ?? []],
-                    ),
-                  ],
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          //
+          automaticallyImplyLeading: false,
+          // This is what makes the header sticky
+          floating: false,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.all(16), // Adjust padding if needed
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child:
+                      Text(widget.header, style: const TextStyle(fontSize: 24)),
                 ),
-              ))
-            ],
+                Row(children: [...widget.actions ?? []]),
+              ],
+            ),
           ),
-          widget.child
-        ],
-      ),
+        ),
+        SliverToBoxAdapter(
+          child: widget.child, // Your main content widget
+        ),
+      ],
     );
   }
 }
