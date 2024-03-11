@@ -13,12 +13,9 @@ import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dar
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
-import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
-import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
@@ -42,17 +39,14 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => LayoutModel()),
       ChangeNotifierProvider(create: (_) => AuthModel()),
+      ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptListModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
-      ChangeNotifierProvider(create: (_) => ReceiptListModel()),
-      ChangeNotifierProvider(create: (_) => CategoryModel()),
-      ChangeNotifierProvider(create: (_) => TagModel()),
-      ChangeNotifierProvider(create: (_) => ReceiptModel()),
-      ChangeNotifierProvider(create: (_) => BottomNavModel()),
-      ChangeNotifierProvider(create: (_) => AppBarModel()),
     ],
     child: const ReceiptWrangler(),
   ));
