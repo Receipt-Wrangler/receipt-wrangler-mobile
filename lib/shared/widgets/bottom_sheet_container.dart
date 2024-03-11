@@ -19,29 +19,14 @@ class _BottomSheetContainerState extends State<BottomSheetContainer> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          //
           automaticallyImplyLeading: false,
-          // This is what makes the header sticky
-          floating: false,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.all(16), // Adjust padding if needed
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child:
-                      Text(widget.header, style: const TextStyle(fontSize: 24)),
-                ),
-                Row(children: [...widget.actions ?? []]),
-              ],
-            ),
-          ),
+          floating: false,
+          actions: widget.actions,
+          title: Text(widget.header),
         ),
         SliverToBoxAdapter(
-          child: widget.child, // Your main content widget
+          child: widget.child,
         ),
       ],
     );
