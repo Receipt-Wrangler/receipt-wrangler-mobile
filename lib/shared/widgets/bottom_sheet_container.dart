@@ -25,13 +25,23 @@ class _BottomSheetContainer extends State<BottomSheetContainer> {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 16),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 child: Row(
-                  children: [getHeaderText(), ...widget.actions ?? []],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getHeaderText(),
+                    Row(
+                      children: [...widget.actions ?? []],
+                    ),
+                  ],
                 ),
-              )
+              ))
             ],
           ),
           widget.child

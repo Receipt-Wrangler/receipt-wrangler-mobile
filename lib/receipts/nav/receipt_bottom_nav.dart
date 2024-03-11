@@ -27,7 +27,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   Widget build(BuildContext context) {
     Widget getImageUploadIcon(context) {
       return IconButton(
-        icon: const Icon(Icons.close),
+        icon: const Icon(Icons.add_a_photo),
         onPressed: () async {
           try {
             var filesUploaded =
