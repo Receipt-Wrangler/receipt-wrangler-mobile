@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/utils/shell.dart';
 
 class ScreenWrapper extends StatefulWidget {
   const ScreenWrapper({
     super.key,
-    required this.children,
+    required this.child,
     this.bottomNavigationBarWidget,
     this.appBarWidget,
     this.bodyPadding,
   });
 
-  final List<Widget> children;
+  final Widget child;
 
   final Widget? bottomNavigationBarWidget;
 
@@ -27,11 +25,6 @@ class _ScreenWrapper extends State<ScreenWrapper> {
   @override
   void initState() {
     super.initState();
-    var router = GoRouter.of(context);
-
-    router.routerDelegate.addListener(() {
-      handleShellUIUpdate(context);
-    });
   }
 
   @override
@@ -44,7 +37,7 @@ class _ScreenWrapper extends State<ScreenWrapper> {
               widget.bodyPadding ?? const EdgeInsets.only(left: 16, right: 16),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: widget.children[0]),
+          child: widget.child),
     );
   }
 }

@@ -5,38 +5,31 @@ class BottomSheetContainer extends StatefulWidget {
       {super.key, required this.child, required this.header, this.actions});
 
   final Widget child;
-
   final String header;
-
   final List<Widget>? actions;
 
   @override
-  State<BottomSheetContainer> createState() => _BottomSheetContainer();
+  State<BottomSheetContainer> createState() => _BottomSheetContainerState();
 }
 
-class _BottomSheetContainer extends State<BottomSheetContainer> {
-  Widget getHeaderText() {
-    return Text(widget.header, style: const TextStyle(fontSize: 24));
-  }
-
+class _BottomSheetContainerState extends State<BottomSheetContainer> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Row(
-                  children: [getHeaderText(), ...widget.actions ?? []],
-                ),
-              )
-            ],
-          ),
-          widget.child
-        ],
-      ),
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          surfaceTintColor: Colors.white,
+          floating: false,
+          actions: widget.actions,
+          title: Text(widget.header),
+        ),
+        SliverToBoxAdapter(
+          child: widget.child,
+        ),
+      ],
     );
   }
 }

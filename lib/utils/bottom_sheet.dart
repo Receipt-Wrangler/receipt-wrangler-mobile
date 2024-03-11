@@ -15,14 +15,18 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
       minWidth: MediaQuery.of(context).size.width,
     ),
     builder: (BuildContext context) {
-      return SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: BottomSheetContainer(
-            header: label,
-            actions: actions,
-            child: child,
-          ));
+      return StatefulBuilder(builder:
+          (BuildContext context, void Function(void Function()) setState) {
+        return Scaffold(
+            body: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: BottomSheetContainer(
+                  header: label,
+                  actions: actions,
+                  child: child,
+                )));
+      });
     },
   );
 }

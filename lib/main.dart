@@ -1,32 +1,37 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group/group_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_app_bar.dart';
+import 'package:receipt_wrangler_mobile/groups/nav/group_select/group_select_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-dashboards.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-receipts-screen.dart';
 import 'package:receipt_wrangler_mobile/groups/screens/group-select.dart';
 import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
-import 'package:receipt_wrangler_mobile/models/app_bar_model.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
-import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/layout_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_screen.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
+import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+
+import 'api/api.dart' as api;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,17 +39,14 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => LayoutModel()),
       ChangeNotifierProvider(create: (_) => AuthModel()),
+      ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptListModel()),
+      ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
-      ChangeNotifierProvider(create: (_) => ReceiptListModel()),
-      ChangeNotifierProvider(create: (_) => CategoryModel()),
-      ChangeNotifierProvider(create: (_) => TagModel()),
-      ChangeNotifierProvider(create: (_) => ReceiptModel()),
-      ChangeNotifierProvider(create: (_) => BottomNavModel()),
-      ChangeNotifierProvider(create: (_) => AppBarModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -53,41 +55,54 @@ void main() async {
 // GoRouter configuration
 final _router = GoRouter(
   routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const ScreenWrapper(child: Home()),
+      redirect: (context, state) {
+        return unprotectedRouteRedirect(context, "/groups");
+      },
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const ScreenWrapper(child: AuthScreen()),
+      redirect: (context, state) {
+        return unprotectedRouteRedirect(context, "/groups");
+      },
+    ),
+    GoRoute(
+      path: '/sign-up',
+      builder: (context, state) => const ScreenWrapper(child: AuthScreen()),
+      redirect: (context, state) {
+        return unprotectedRouteRedirect(context, "/groups");
+      },
+    ),
     ShellRoute(
-        navigatorKey: GlobalKey<NavigatorState>(),
         builder: (context, state, child) {
           return ScreenWrapper(
-            appBarWidget: const TopAppBar(),
-            bottomNavigationBarWidget: const BottomNav(),
-            children: [child],
+            appBarWidget: const GroupSelectAppBar(),
+            bottomNavigationBarWidget: const GroupSelectBottomNav(),
+            child: child,
           );
         },
         routes: [
           GoRoute(
-            path: '/',
-            builder: (context, state) => const Home(),
-            redirect: (context, state) {
-              return unprotectedRouteRedirect(context, "/groups");
-            },
-          ),
-          GoRoute(
-            path: '/login',
-            builder: (context, state) => const AuthScreen(),
-            redirect: (context, state) {
-              return unprotectedRouteRedirect(context, "/groups");
-            },
-          ),
-          GoRoute(
-            path: '/sign-up',
-            builder: (context, state) => const AuthScreen(),
-            redirect: (context, state) {
-              return unprotectedRouteRedirect(context, "/groups");
-            },
-          ),
-          GoRoute(
-            path: '/groups',
-            builder: (context, state) => const GroupSelect(),
-          ),
+              path: "/groups",
+              builder: (context, state) => const GroupSelect()),
+        ]),
+    ShellRoute(
+        builder: (context, state, child) {
+          EdgeInsets? padding;
+          if (state.fullPath == '/groups/:groupId/receipts') {
+            padding = const EdgeInsets.all(0);
+          }
+          return ScreenWrapper(
+            appBarWidget: const GroupAppBar(),
+            bottomNavigationBarWidget: const GroupBottomNav(),
+            bodyPadding: padding,
+            child: child,
+          );
+        },
+        routes: [
           GoRoute(
             path: '/groups/:groupId/dashboards',
             builder: (context, state) => const GroupDashboards(),
@@ -96,9 +111,36 @@ final _router = GoRouter(
             path: '/groups/:groupId/receipts',
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
+        ]),
+    ShellRoute(
+        builder: (context, state, child) {
+          var future = api.ReceiptApi().getReceiptById(
+              int.parse(state.pathParameters['receiptId'] as String));
+
+          return FutureBuilder(
+              future: future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  return ScreenWrapper(
+                      appBarWidget:
+                          ReceiptAppBar(receipt: snapshot.data as api.Receipt),
+                      bottomNavigationBarWidget: ReceiptBottomNav(
+                          receipt: snapshot.data as api.Receipt),
+                      child: SingleChildScrollView(
+                          child: ReceiptForm(
+                        receipt: snapshot.data as api.Receipt,
+                        formState: getFormState(state.uri.toString()),
+                      )));
+                }
+
+                return const CircularLoadingProgress();
+              });
+        },
+        routes: [
           GoRoute(
             path: '/receipts/:receiptId/view',
-            builder: (context, state) => const ReceiptScreen(),
+            builder: (context, state) => const SizedBox.shrink(),
           ),
         ]),
   ],
@@ -169,6 +211,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.white,
+          modalBackgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),

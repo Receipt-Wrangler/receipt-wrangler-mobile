@@ -1,18 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/models/bottom_nav_model.dart';
-import 'package:receipt_wrangler_mobile/shared/classes/base_ui_shell_builder.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
-class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
-  static void setupBottomNav(BuildContext context) {
-    var provider = Provider.of<BottomNavModel>(context, listen: false);
-    provider.setIndexSelected(0);
-    var router = GoRouter.of(context);
+class GroupBottomNav extends StatefulWidget {
+  const GroupBottomNav({super.key});
 
+  @override
+  State<GroupBottomNav> createState() => _GroupBottomNav();
+}
+
+class _GroupBottomNav extends State<GroupBottomNav> {
+  var indexSelectedController = StreamController<int>();
+
+  @override
+  Widget build(BuildContext context) {
     onDestinationSelected(int indexSelected) {
-      var groupId = getGroupByIdWithRouter(router);
+      var groupId = getGroupId(context);
 
       switch (indexSelected) {
         case 0:
@@ -31,7 +37,7 @@ class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
           context.go("/groups");
       }
 
-      provider.setIndexSelected(indexSelected);
+      indexSelectedController.add(indexSelected);
     }
 
     setIndexSelected() {
@@ -71,7 +77,11 @@ class GroupDashboardUIShellBuilder implements BaseUIShellBuilder {
       ),
     ];
 
-    provider.setBottomNavData(
-        destinations, onDestinationSelected, setIndexSelected);
+    return BottomNav(
+      destinations: destinations,
+      onDestinationSelected: onDestinationSelected,
+      getInitialSelectedIndex: setIndexSelected,
+      indexSelectedController: indexSelectedController,
+    );
   }
 }
