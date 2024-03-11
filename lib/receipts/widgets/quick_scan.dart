@@ -35,6 +35,33 @@ class _QuickScan extends State<QuickScan> {
     );
   }
 
+  Widget _buildUserDropDown(String? groupId) {
+    List<DropdownMenuItem> items = [];
+    int? initialValue;
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
+
+    if (groupId != null &&
+        userPreferencesModel.userPreferences.quickScanDefaultPaidById > 0) {
+      items = buildGroupMemberDropDownMenuItems(
+          context,
+          userPreferencesModel.userPreferences.quickScanDefaultGroupId
+              .toString());
+    }
+
+    if (userPreferencesModel.userPreferences.userId > 0) {
+      initialValue =
+          userPreferencesModel.userPreferences.quickScanDefaultPaidById;
+    }
+
+    return FormBuilderDropdown(
+      name: "paidByUserId",
+      decoration: const InputDecoration(labelText: "User"),
+      items: items,
+      initialValue: initialValue,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -42,6 +69,7 @@ class _QuickScan extends State<QuickScan> {
         child: Column(
           children: [
             _buildGroupField(),
+            _buildUserDropDown(""),
           ],
         ));
   }
