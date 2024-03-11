@@ -217,6 +217,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.white,
+          modalBackgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
         colorScheme: const ColorScheme(
           primary: Color(0xFF27B1FF),
