@@ -14,33 +14,64 @@ class FileDataView {
   /// Returns a new [FileDataView] instance.
   FileDataView({
     required this.id,
+    required this.createdAt,
+    this.createdBy = 0,
+    this.createdByString = '',
+    this.updatedAt = '',
     required this.encodedImage,
+    required this.name,
   });
 
-  /// File data id
   int id;
+
+  String createdAt;
+
+  int createdBy;
+
+  /// Created by entity's name
+  String createdByString;
+
+  String updatedAt;
 
   /// Base64 encoded image
   String encodedImage;
 
+  /// File name
+  String name;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is FileDataView &&
     other.id == id &&
-    other.encodedImage == encodedImage;
+    other.createdAt == createdAt &&
+    other.createdBy == createdBy &&
+    other.createdByString == createdByString &&
+    other.updatedAt == updatedAt &&
+    other.encodedImage == encodedImage &&
+    other.name == name;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id.hashCode) +
-    (encodedImage.hashCode);
+    (createdAt.hashCode) +
+    (createdBy.hashCode) +
+    (createdByString.hashCode) +
+    (updatedAt.hashCode) +
+    (encodedImage.hashCode) +
+    (name.hashCode);
 
   @override
-  String toString() => 'FileDataView[id=$id, encodedImage=$encodedImage]';
+  String toString() => 'FileDataView[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, encodedImage=$encodedImage, name=$name]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'id'] = this.id;
+      json[r'createdAt'] = this.createdAt;
+      json[r'createdBy'] = this.createdBy;
+      json[r'createdByString'] = this.createdByString;
+      json[r'updatedAt'] = this.updatedAt;
       json[r'encodedImage'] = this.encodedImage;
+      json[r'name'] = this.name;
     return json;
   }
 
@@ -64,7 +95,12 @@ class FileDataView {
 
       return FileDataView(
         id: mapValueOfType<int>(json, r'id')!,
+        createdAt: mapValueOfType<String>(json, r'createdAt')!,
+        createdBy: mapValueOfType<int>(json, r'createdBy') ?? 0,
+        createdByString: mapValueOfType<String>(json, r'createdByString') ?? '',
+        updatedAt: mapValueOfType<String>(json, r'updatedAt') ?? '',
         encodedImage: mapValueOfType<String>(json, r'encodedImage')!,
+        name: mapValueOfType<String>(json, r'name')!,
       );
     }
     return null;
@@ -113,7 +149,9 @@ class FileDataView {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'id',
+    'createdAt',
     'encodedImage',
+    'name',
   };
 }
 
