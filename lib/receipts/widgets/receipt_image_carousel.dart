@@ -37,6 +37,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     streamListener = widget.imagesAddedStream.listen((event) {
       setState(() {
         _images = [..._images, event];
+        controller = InfiniteScrollController();
       });
     });
   }
@@ -48,14 +49,14 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
         decoration: const InputDecoration(
           labelText: "Name",
         ),
-        initialValue: widget.receipt.imageFiles[index].name,
+        initialValue: _images[index]?.name ?? "",
         readOnly: true,
       );
     }
 
     Widget buildDateAddedField(int index) {
-      var formattedDate = formatDate(defaultDateFormat,
-          DateTime.parse(widget.receipt.imageFiles[index].createdAt ?? ""));
+      var formattedDate = formatDate(
+          defaultDateFormat, DateTime.parse(_images[index]?.createdAt ?? ""));
       return TextFormField(
         decoration: const InputDecoration(
           labelText: "Date Added",
