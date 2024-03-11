@@ -19,6 +19,7 @@ class _BottomSheetContainerState extends State<BottomSheetContainer> {
       slivers: [
         SliverAppBar(
           pinned: true,
+          centerTitle: false,
           automaticallyImplyLeading: false,
           surfaceTintColor: Colors.white,
           floating: false,
