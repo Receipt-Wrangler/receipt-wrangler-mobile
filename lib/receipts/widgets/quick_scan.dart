@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/user_preferences_model.dart';
@@ -62,6 +63,24 @@ class _QuickScan extends State<QuickScan> {
     );
   }
 
+  Widget _buildStatusDropdown() {
+    api.ReceiptStatus? initialValue;
+    var userPreferencesModel =
+        Provider.of<UserPreferencesModel>(context, listen: false);
+
+    if (userPreferencesModel.userPreferences.quickScanDefaultStatus != null) {
+      initialValue =
+          userPreferencesModel.userPreferences.quickScanDefaultStatus;
+    }
+
+    return FormBuilderDropdown(
+      name: "status",
+      decoration: const InputDecoration(labelText: "Status"),
+      items: buildStatusDropDownMenuItems(),
+      initialValue: initialValue,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -70,6 +89,7 @@ class _QuickScan extends State<QuickScan> {
           children: [
             _buildGroupField(),
             _buildUserDropDown(""),
+            _buildStatusDropdown(),
           ],
         ));
   }
