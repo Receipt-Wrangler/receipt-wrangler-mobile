@@ -106,20 +106,17 @@ class _QuickScan extends State<QuickScan> {
 
   Widget _buildImagePreview() {
     if (image != null) {
-      print(image);
       var byteFuture = image!.finalize().toBytes();
       return FutureBuilder(
           future: byteFuture,
           builder: (context, snapshot) {
-            print("data");
-            print(snapshot.data);
             if (snapshot.hasData) {
               return Image.memory(snapshot.data as Uint8List);
             }
             return const CircularProgressIndicator();
           });
     }
-    return const Text("No Image");
+    return const Text("Select an image to scan.");
   }
 
   @override
