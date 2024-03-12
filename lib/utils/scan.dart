@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:http/http.dart';
 
@@ -20,7 +18,6 @@ Future<List<MultipartFile>> scanImagesMultiPart(int numberOfPages) async {
   for (var filePath in filePaths) {
     var multipartFile = await MultipartFile.fromPath("file", filePath);
     files.add(multipartFile);
-    File(filePath).delete();
   }
 
   return files;
