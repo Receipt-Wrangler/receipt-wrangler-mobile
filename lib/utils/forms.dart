@@ -37,6 +37,7 @@ bool isFieldReadOnly(WranglerFormState formState) {
 List<DropdownMenuItem> buildGroupDropDownMenuItems(BuildContext context) {
   var groups = Provider.of<GroupModel>(context, listen: false).groups;
   return groups
+      .where((group) => !group.isAllGroup)
       .map((group) => DropdownMenuItem(
             value: group.id,
             child: Text(group.name),

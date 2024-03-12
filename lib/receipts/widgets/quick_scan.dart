@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/user_preferences_model.dart';
@@ -17,15 +19,22 @@ class QuickScan extends StatefulWidget {
 
 class _QuickScan extends State<QuickScan> {
   final _formKey = GlobalKey<FormBuilderState>();
+  int groupId = 0;
 
-  Widget _buildGroupField() {
-    int? initialValue;
+  @override
+  initState() {
+    super.initState();
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
 
-    if (userPreferencesModel.userPreferences.quickScanDefaultGroupId > 0) {
-      initialValue =
-          userPreferencesModel.userPreferences.quickScanDefaultGroupId;
+    groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId;
+  }
+
+  Widget _buildGroupField(api.UserPreferences userPreferences) {
+    int? initialValue;
+
+    if (userPreferences.quickScanDefaultGroupId > 0) {
+      initialValue = userPreferences.quickScanDefaultGroupId;
     }
 
     return FormBuilderDropdown(
@@ -33,37 +42,39 @@ class _QuickScan extends State<QuickScan> {
       decoration: const InputDecoration(labelText: "Group"),
       initialValue: initialValue,
       items: buildGroupDropDownMenuItems(context),
+      validator: FormBuilderValidators.required(),
+      onChanged: (value) {
+        setState(() {
+          _formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          groupId = value as int;
+        });
+      },
     );
   }
 
-  Widget _buildUserDropDown(String? groupId) {
+  Widget _buildUserDropDown(api.UserPreferences userPreferences) {
     List<DropdownMenuItem> items = [];
     int? initialValue;
-    var userPreferencesModel =
-        Provider.of<UserPreferencesModel>(context, listen: false);
 
-    if (groupId != null &&
-        userPreferencesModel.userPreferences.quickScanDefaultPaidById > 0) {
-      items = buildGroupMemberDropDownMenuItems(
-          context,
-          userPreferencesModel.userPreferences.quickScanDefaultGroupId
-              .toString());
+    if (groupId > 0) {
+      items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
     }
 
-    if (userPreferencesModel.userPreferences.userId > 0) {
-      initialValue =
-          userPreferencesModel.userPreferences.quickScanDefaultPaidById;
+    if (groupId == userPreferences.quickScanDefaultGroupId &&
+        userPreferences.userId > 0) {
+      initialValue = userPreferences.quickScanDefaultPaidById;
     }
 
     return FormBuilderDropdown(
       name: "paidByUserId",
       decoration: const InputDecoration(labelText: "User"),
       items: items,
+      validator: FormBuilderValidators.required(),
       initialValue: initialValue,
     );
   }
 
-  Widget _buildStatusDropdown() {
+  Widget _buildStatusDropdown(api.UserPreferences userPreferences) {
     api.ReceiptStatus? initialValue;
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
@@ -77,19 +88,26 @@ class _QuickScan extends State<QuickScan> {
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
       items: buildStatusDropDownMenuItems(),
+      validator: FormBuilderValidators.required(),
       initialValue: initialValue,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    var userPreferences =
+        Provider.of<UserPreferencesModel>(context, listen: false)
+            .userPreferences;
     return FormBuilder(
         key: _formKey,
         child: Column(
           children: [
-            _buildGroupField(),
-            _buildUserDropDown(""),
-            _buildStatusDropdown(),
+            textFieldSpacing,
+            _buildGroupField(userPreferences),
+            textFieldSpacing,
+            _buildUserDropDown(userPreferences),
+            textFieldSpacing,
+            _buildStatusDropdown(userPreferences),
           ],
         ));
   }
