@@ -67,7 +67,7 @@ class _QuickScan extends State<QuickScan> {
 
     return FormBuilderDropdown(
       name: "paidByUserId",
-      decoration: const InputDecoration(labelText: "User"),
+      decoration: const InputDecoration(labelText: "Paid By"),
       items: items,
       validator: FormBuilderValidators.required(),
       initialValue: initialValue,

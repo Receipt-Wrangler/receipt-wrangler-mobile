@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
-import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 
 class GroupSelectBottomNav extends StatefulWidget {
   const GroupSelectBottomNav({super.key});
@@ -24,7 +23,7 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
           context.go("/groups");
           break;
         case 1:
-          showFullscreenBottomSheet(context, const QuickScan(), "Quick Scan");
+          showQuickScanBottomSheet(context);
           break;
         case 2:
           context.go("/search");
