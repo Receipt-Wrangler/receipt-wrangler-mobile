@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/bottom_sheet_container.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 
 showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     {List<Widget>? actions}) {
@@ -17,15 +18,14 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     builder: (BuildContext context) {
       return StatefulBuilder(builder:
           (BuildContext context, void Function(void Function()) setState) {
-        return Scaffold(
-            body: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: BottomSheetContainer(
-                  header: label,
-                  actions: actions,
-                  child: child,
-                )));
+        return ScreenWrapper(
+          appBarWidget: TopAppBar(
+            titleText: 'Quick Scan',
+            actions: actions,
+            hideAvatar: true,
+          ),
+          child: child,
+        );
       });
     },
   );
