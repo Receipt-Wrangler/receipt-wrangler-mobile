@@ -19,13 +19,15 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
       return StatefulBuilder(builder:
           (BuildContext context, void Function(void Function()) setState) {
         return ScreenWrapper(
-          appBarWidget: TopAppBar(
-            titleText: 'Quick Scan',
-            actions: actions,
-            hideAvatar: true,
-          ),
-          child: child,
-        );
+            appBarWidget: TopAppBar(
+              titleText: 'Quick Scan',
+              actions: actions,
+              hideAvatar: true,
+              surfaceTintColor: Colors.white,
+            ),
+            child: SingleChildScrollView(
+              child: child,
+            ));
       });
     },
   );

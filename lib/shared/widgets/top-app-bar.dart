@@ -13,7 +13,8 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.leadingArrowRedirect,
       this.leadingArrowExtra,
       this.actions,
-      this.hideAvatar});
+      this.hideAvatar,
+      this.surfaceTintColor});
 
   final String titleText;
 
@@ -24,6 +25,8 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
 
   final bool? hideAvatar;
+
+  final Color? surfaceTintColor;
 
   @override
   State<TopAppBar> createState() => _TopAppBar();
@@ -85,6 +88,7 @@ class _TopAppBar extends State<TopAppBar> {
     return AppBar(
       leading: getIconButton(),
       title: Text(widget.titleText),
+      surfaceTintColor: widget.surfaceTintColor,
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
