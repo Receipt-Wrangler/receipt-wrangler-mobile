@@ -28,25 +28,27 @@ Widget _getSubmitButton(
     BuildContext context,
     GlobalKey<FormBuilderState> formKey,
     StreamController<MultipartFile?> streamController) {
+  MultipartFile? image;
+  streamController.stream.listen((event) {
+    image = event;
+  });
   return BottomSubmitButton(
     onPressed: () async {
-      await _submitQuickScan(context, formKey, streamController);
+      await _submitQuickScan(context, formKey, image);
     },
   );
 }
 
-Future<void> _submitQuickScan(
-    BuildContext context,
-    GlobalKey<FormBuilderState> formKey,
-    StreamController<MultipartFile?> streamController) async {
-  var file = await streamController.stream.first;
-  if (file != null && formKey.currentState!.saveAndValidate()) {
+Future<void> _submitQuickScan(BuildContext context,
+    GlobalKey<FormBuilderState> formKey, MultipartFile? image) async {
+  if (image != null && formKey.currentState!.saveAndValidate()) {
     var form = formKey.currentState!.value;
     try {
       await api.ReceiptApi().quickScanReceipt(
-          file, form["groupId"], form["paidByUserId"], form["status"]);
+          image, form["groupId"], form["paidByUserId"], form["status"]);
       showSuccessSnackbar(context, "Quick scan successfully uploaded");
     } catch (e) {
+      print(e);
       showApiErrorSnackbar(context, e as dynamic);
       return;
     }
@@ -56,8 +58,10 @@ Future<void> _submitQuickScan(
 }
 
 showQuickScanBottomSheet(context) {
+  MultipartFile? image;
   StreamController<MultipartFile?> streamController =
       StreamController.broadcast();
+
   List<Widget> actions = [_getUploadIcon(context, streamController)];
   var formKey = GlobalKey<FormBuilderState>();
 
