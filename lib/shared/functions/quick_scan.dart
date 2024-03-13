@@ -8,7 +8,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
-import '../../receipts/widgets/quick_scan.dart';
+import '../../receipts/widgets/quick_scan_form.dart';
 import '../../utils/bottom_sheet.dart';
 
 Widget _getUploadIcon(
@@ -67,7 +67,7 @@ showQuickScanBottomSheet(context) {
 
   showFullscreenBottomSheet(
       context,
-      QuickScan(
+      QuickScanForm(
         formKey: formKey,
         imageStream: streamController.stream,
       ),

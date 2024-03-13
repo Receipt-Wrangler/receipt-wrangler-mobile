@@ -12,8 +12,8 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/user_preferences_model.dart';
 
-class QuickScan extends StatefulWidget {
-  const QuickScan(
+class QuickScanForm extends StatefulWidget {
+  const QuickScanForm(
       {super.key, required this.imageStream, required this.formKey});
 
   final GlobalKey<FormBuilderState> formKey;
@@ -21,10 +21,10 @@ class QuickScan extends StatefulWidget {
   final Stream<MultipartFile?> imageStream;
 
   @override
-  State<QuickScan> createState() => _QuickScan();
+  State<QuickScanForm> createState() => _QuickScanForm();
 }
 
-class _QuickScan extends State<QuickScan> {
+class _QuickScanForm extends State<QuickScanForm> {
   MultipartFile? image;
   Uint8List? bytes;
   int groupId = 0;
