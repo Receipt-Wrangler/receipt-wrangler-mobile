@@ -3,7 +3,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 
 showFullscreenBottomSheet(BuildContext context, Widget child, String label,
-    {List<Widget>? actions}) {
+    {List<Widget>? actions, Widget? bottomSheetWidget}) {
   showModalBottomSheet(
     context: context,
     enableDrag: true,
@@ -25,6 +25,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
               hideAvatar: true,
               surfaceTintColor: Colors.white,
             ),
+            bottomSheetWidget: bottomSheetWidget,
             child: SingleChildScrollView(
               child: child,
             ));

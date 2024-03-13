@@ -13,7 +13,10 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../models/user_preferences_model.dart';
 
 class QuickScan extends StatefulWidget {
-  const QuickScan({super.key, required this.imageStream});
+  const QuickScan(
+      {super.key, required this.imageStream, required this.formKey});
+
+  final GlobalKey<FormBuilderState> formKey;
 
   final Stream<MultipartFile?> imageStream;
 
@@ -22,8 +25,8 @@ class QuickScan extends StatefulWidget {
 }
 
 class _QuickScan extends State<QuickScan> {
-  final _formKey = GlobalKey<FormBuilderState>();
   MultipartFile? image;
+  Uint8List? bytes;
   int groupId = 0;
 
   @override
@@ -36,7 +39,10 @@ class _QuickScan extends State<QuickScan> {
 
     widget.imageStream.listen((event) {
       setState(() {
-        image = event;
+        if (event != image) {
+          bytes = null;
+          image = event;
+        }
       });
     });
   }
@@ -56,7 +62,7 @@ class _QuickScan extends State<QuickScan> {
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
-          _formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
       },
@@ -105,12 +111,17 @@ class _QuickScan extends State<QuickScan> {
   }
 
   Widget _buildImagePreview() {
+    if (bytes != null) {
+      return Image.memory(bytes as Uint8List);
+    }
+
     if (image != null) {
       var byteFuture = image!.finalize().toBytes();
       return FutureBuilder(
           future: byteFuture,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              bytes = snapshot.data;
               return Image.memory(snapshot.data as Uint8List);
             }
             return const CircularProgressIndicator();
@@ -125,7 +136,7 @@ class _QuickScan extends State<QuickScan> {
         Provider.of<UserPreferencesModel>(context, listen: false)
             .userPreferences;
     return FormBuilder(
-        key: _formKey,
+        key: widget.formKey,
         child: Column(
           children: [
             _buildImagePreview(),
