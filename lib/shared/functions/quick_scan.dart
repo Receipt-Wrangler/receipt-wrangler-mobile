@@ -44,8 +44,8 @@ Future<void> _submitQuickScan(BuildContext context,
   if (image != null && formKey.currentState!.saveAndValidate()) {
     var form = formKey.currentState!.value;
     try {
-      await api.ReceiptApi().quickScanReceipt(
-          image.file, form["groupId"], form["paidByUserId"], form["status"]);
+      await api.ReceiptApi().quickScanReceipt(image.multipartFile,
+          form["groupId"], form["paidByUserId"], form["status"]);
       showSuccessSnackbar(context, "Quick scan successfully uploaded");
     } catch (e) {
       print(e);

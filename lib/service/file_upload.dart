@@ -8,7 +8,7 @@ Future<List<FileDataView>> uploadImagesToReceipt(String receiptId) async {
     var multiPartFileUploadData = await scanImagesMultiPart(5) ?? [];
     for (var file in multiPartFileUploadData) {
       var fileDataView = await ReceiptImageApi()
-          .uploadReceiptImage(file.file, int.parse(receiptId));
+          .uploadReceiptImage(file.multipartFile, int.parse(receiptId));
       filesUploaded.add(fileDataView as FileDataView);
     }
     return filesUploaded;

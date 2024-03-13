@@ -23,7 +23,8 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
     var multipartFile = await MultipartFile.fromPath("file", filePath);
     var bytes = await File(filePath).readAsBytes();
 
-    files.add(UploadMultipartFileData(file: multipartFile, bytes: bytes));
+    files.add(
+        UploadMultipartFileData(multipartFile: multipartFile, bytes: bytes));
   }
 
   return files;
