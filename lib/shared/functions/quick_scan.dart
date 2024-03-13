@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart';
+import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import '../../receipts/widgets/quick_scan.dart';
 import '../../utils/bottom_sheet.dart';
@@ -22,20 +24,32 @@ Widget _getUploadIcon(
   );
 }
 
-Widget _getSubmitButton(GlobalKey<FormBuilderState> formKey,
+Widget _getSubmitButton(
+    BuildContext context,
+    GlobalKey<FormBuilderState> formKey,
     StreamController<MultipartFile?> streamController) {
   return BottomSubmitButton(
     onPressed: () async {
-      await _submitQuickScan(formKey, streamController);
+      await _submitQuickScan(context, formKey, streamController);
     },
   );
 }
 
-Future<void> _submitQuickScan(GlobalKey<FormBuilderState> formKey,
+Future<void> _submitQuickScan(
+    BuildContext context,
+    GlobalKey<FormBuilderState> formKey,
     StreamController<MultipartFile?> streamController) async {
-  if (await streamController.stream.first != null &&
-      formKey.currentState!.saveAndValidate()) {
-    print(formKey.currentState?.value);
+  var file = await streamController.stream.first;
+  if (file != null && formKey.currentState!.saveAndValidate()) {
+    var form = formKey.currentState!.value;
+    try {
+      await api.ReceiptApi().quickScanReceipt(
+          file, form["groupId"], form["paidByUserId"], form["status"]);
+      showSuccessSnackbar(context, "Quick scan successfully uploaded");
+    } catch (e) {
+      showApiErrorSnackbar(context, e as dynamic);
+      return;
+    }
   }
 
   return;
@@ -55,5 +69,5 @@ showQuickScanBottomSheet(context) {
       ),
       "Quick Scan",
       actions: actions,
-      bottomSheetWidget: _getSubmitButton(formKey, streamController));
+      bottomSheetWidget: _getSubmitButton(context, formKey, streamController));
 }
