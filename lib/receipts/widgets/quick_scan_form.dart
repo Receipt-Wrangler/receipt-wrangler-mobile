@@ -1,10 +1,6 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
@@ -13,20 +9,15 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
-  const QuickScanForm(
-      {super.key, required this.imageStream, required this.formKey});
+  const QuickScanForm({super.key, required this.formKey});
 
   final GlobalKey<FormBuilderState> formKey;
-
-  final Stream<MultipartFile?> imageStream;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
 }
 
 class _QuickScanForm extends State<QuickScanForm> {
-  MultipartFile? image;
-  Uint8List? bytes;
   int groupId = 0;
 
   @override
@@ -36,15 +27,6 @@ class _QuickScanForm extends State<QuickScanForm> {
         Provider.of<UserPreferencesModel>(context, listen: false);
 
     groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId;
-
-    widget.imageStream.listen((event) {
-      setState(() {
-        if (event != image) {
-          bytes = null;
-          image = event;
-        }
-      });
-    });
   }
 
   Widget _buildGroupField(api.UserPreferences userPreferences) {
@@ -110,26 +92,6 @@ class _QuickScanForm extends State<QuickScanForm> {
     );
   }
 
-  Widget _buildImagePreview() {
-    if (bytes != null) {
-      return Image.memory(bytes as Uint8List);
-    }
-
-    if (image != null) {
-      var byteFuture = image!.finalize().toBytes();
-      return FutureBuilder(
-          future: byteFuture,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              bytes = snapshot.data;
-              return Image.memory(snapshot.data as Uint8List);
-            }
-            return const CircularProgressIndicator();
-          });
-    }
-    return const Text("Select an image to scan.");
-  }
-
   @override
   Widget build(BuildContext context) {
     var userPreferences =
@@ -139,7 +101,6 @@ class _QuickScanForm extends State<QuickScanForm> {
         key: widget.formKey,
         child: Column(
           children: [
-            _buildImagePreview(),
             textFieldSpacing,
             _buildGroupField(userPreferences),
             textFieldSpacing,
