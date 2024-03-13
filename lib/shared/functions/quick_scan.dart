@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:http/http.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
+import '../../interfaces/upload_multipart_file_data.dart';
 import '../../utils/bottom_sheet.dart';
 
 Widget _getUploadIcon(
-    context, StreamController<MultipartFile?> streamController) {
+    context, StreamController<UploadMultipartFileData?> streamController) {
   return IconButton(
     icon: const Icon(Icons.add_a_photo),
     onPressed: () async {
@@ -27,8 +27,8 @@ Widget _getUploadIcon(
 Widget _getSubmitButton(
     BuildContext context,
     GlobalKey<FormBuilderState> formKey,
-    StreamController<MultipartFile?> streamController) {
-  MultipartFile? image;
+    StreamController<UploadMultipartFileData?> streamController) {
+  UploadMultipartFileData? image;
   streamController.stream.listen((event) {
     image = event;
   });
@@ -40,12 +40,12 @@ Widget _getSubmitButton(
 }
 
 Future<void> _submitQuickScan(BuildContext context,
-    GlobalKey<FormBuilderState> formKey, MultipartFile? image) async {
+    GlobalKey<FormBuilderState> formKey, UploadMultipartFileData? image) async {
   if (image != null && formKey.currentState!.saveAndValidate()) {
     var form = formKey.currentState!.value;
     try {
       await api.ReceiptApi().quickScanReceipt(
-          image, form["groupId"], form["paidByUserId"], form["status"]);
+          image.file, form["groupId"], form["paidByUserId"], form["status"]);
       showSuccessSnackbar(context, "Quick scan successfully uploaded");
     } catch (e) {
       print(e);
@@ -58,8 +58,7 @@ Future<void> _submitQuickScan(BuildContext context,
 }
 
 showQuickScanBottomSheet(context) {
-  MultipartFile? image;
-  StreamController<MultipartFile?> streamController =
+  StreamController<UploadMultipartFileData?> streamController =
       StreamController.broadcast();
 
   List<Widget> actions = [_getUploadIcon(context, streamController)];

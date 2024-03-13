@@ -1,13 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:http/http.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan_form.dart';
+
+import '../../interfaces/upload_multipart_file_data.dart';
 
 class QuickScan extends StatefulWidget {
   const QuickScan(
       {super.key, required this.formKey, required this.imageStream});
 
-  final Stream<MultipartFile?> imageStream;
+  final Stream<UploadMultipartFileData?> imageStream;
 
   final GlobalKey<FormBuilderState> formKey;
 
@@ -17,23 +20,16 @@ class QuickScan extends StatefulWidget {
 
 class _QuickScan extends State<QuickScan> {
   Widget _buildImagePreview() {
-    if (bytes != null) {
-      return Image.memory(bytes as Uint8List);
-    }
-
-    if (image != null) {
-      var byteFuture = image!.finalize().toBytes();
-      return FutureBuilder(
-          future: byteFuture,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              bytes = snapshot.data;
-              return Image.memory(snapshot.data as Uint8List);
-            }
-            return const CircularProgressIndicator();
-          });
-    }
-    return const Text("Select an image to scan.");
+    return StreamBuilder<UploadMultipartFileData?>(
+      stream: widget.imageStream,
+      builder: (BuildContext context,
+          AsyncSnapshot<UploadMultipartFileData?> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return Image.memory(snapshot.data?.bytes as Uint8List);
+        }
+        return const Text("Select an image to scan.");
+      },
+    );
   }
 
   @override
@@ -43,7 +39,6 @@ class _QuickScan extends State<QuickScan> {
         _buildImagePreview(),
         QuickScanForm(
           formKey: widget.formKey,
-          imageStream: Stream<MultipartFile?>.empty(),
         ),
       ],
     );

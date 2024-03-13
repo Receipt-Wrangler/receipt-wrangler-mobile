@@ -5,10 +5,10 @@ Future<List<FileDataView>> uploadImagesToReceipt(String receiptId) async {
   try {
     // TODO: pass back the file data views, then add them to receipt via receipt provider. We can use an images array stream, then set up a listener in the carousel
     List<FileDataView> filesUploaded = [];
-    var multiPartFiles = await scanImagesMultiPart(5) ?? [];
-    for (var file in multiPartFiles) {
+    var multiPartFileUploadData = await scanImagesMultiPart(5) ?? [];
+    for (var file in multiPartFileUploadData) {
       var fileDataView = await ReceiptImageApi()
-          .uploadReceiptImage(file, int.parse(receiptId));
+          .uploadReceiptImage(file.file, int.parse(receiptId));
       filesUploaded.add(fileDataView as FileDataView);
     }
     return filesUploaded;
