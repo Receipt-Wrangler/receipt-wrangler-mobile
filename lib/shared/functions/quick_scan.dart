@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
@@ -44,9 +45,10 @@ Future<void> _submitQuickScan(BuildContext context,
   if (image != null && formKey.currentState!.saveAndValidate()) {
     var form = formKey.currentState!.value;
     try {
-      await api.ReceiptApi().quickScanReceipt(image.multipartFile,
-          form["groupId"], form["paidByUserId"], form["status"]);
-      showSuccessSnackbar(context, "Quick scan successfully uploaded");
+      var receipt = await api.ReceiptApi().quickScanReceipt(image.multipartFile,
+          form["groupId"], form["paidByUserId"], form["status"]) as api.Receipt;
+      showSuccessSnackbar(context, "Quick scan successfully uploaded",
+          action: _getSuccessSnackBarActionWidget(context, receipt));
     } catch (e) {
       print(e);
       showApiErrorSnackbar(context, e as dynamic);
@@ -55,6 +57,15 @@ Future<void> _submitQuickScan(BuildContext context,
   }
 
   return;
+}
+
+_getSuccessSnackBarActionWidget(BuildContext context, api.Receipt receipt) {
+  return SnackBarAction(
+    label: "View Receipt",
+    onPressed: () {
+      context.go("/receipts/${receipt.id}/view");
+    },
+  );
 }
 
 showQuickScanBottomSheet(context) {
