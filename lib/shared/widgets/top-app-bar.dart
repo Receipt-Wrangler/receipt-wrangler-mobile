@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
@@ -85,11 +86,23 @@ class _TopAppBar extends State<TopAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    PreferredSizeWidget? getLoadingIndicator(context) {
+      var isLoading =
+          Provider.of<LoadingModel>(context, listen: true).isLoading;
+      if (isLoading) {
+        return const PreferredSize(
+            preferredSize: Size.square(4), child: LinearProgressIndicator());
+      } else {
+        return null;
+      }
+    }
+
     return AppBar(
       automaticallyImplyLeading: false,
       leading: getIconButton(),
       title: Text(widget.titleText),
       surfaceTintColor: widget.surfaceTintColor,
+      bottom: getLoadingIndicator(context),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),

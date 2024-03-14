@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
@@ -45,13 +47,16 @@ Future<void> _submitQuickScan(BuildContext context,
   if (image != null && formKey.currentState!.saveAndValidate()) {
     var form = formKey.currentState!.value;
     try {
+      Provider.of<LoadingModel>(context, listen: false).setIsLoading(true);
       var receipt = await api.ReceiptApi().quickScanReceipt(image.multipartFile,
           form["groupId"], form["paidByUserId"], form["status"]) as api.Receipt;
+      Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
       showSuccessSnackbar(context, "Quick scan successfully uploaded",
           action: _getSuccessSnackBarActionWidget(context, receipt));
     } catch (e) {
       print(e);
       showApiErrorSnackbar(context, e as dynamic);
+      Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
       return;
     }
   }
