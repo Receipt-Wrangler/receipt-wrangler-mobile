@@ -86,6 +86,7 @@ class _TopAppBar extends State<TopAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       leading: getIconButton(),
       title: Text(widget.titleText),
       surfaceTintColor: widget.surfaceTintColor,
