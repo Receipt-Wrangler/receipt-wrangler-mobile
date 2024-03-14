@@ -6,22 +6,17 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_carousel.
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 
 class ReceiptImages extends StatefulWidget {
-  const ReceiptImages(
-      {super.key, required this.receipt, required this.imagesAddedStream});
-
-  final api.Receipt receipt;
-
-  final Stream<api.FileDataView> imagesAddedStream;
+  const ReceiptImages({super.key});
 
   @override
   State<ReceiptImages> createState() => _ReceiptImages();
 }
 
 class _ReceiptImages extends State<ReceiptImages> {
-  Future<List<api.FileDataView?>> getReceiptImageFutures() {
+  Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
     List<Future<api.FileDataView?>> imageFutures = [];
 
-    return api.ReceiptApi().getReceiptById(widget.receipt.id).then((receipt) {
+    return api.ReceiptApi().getReceiptById(receipt.id).then((receipt) {
       for (var image in receipt?.imageFiles ?? []) {
         imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
       }
@@ -32,8 +27,8 @@ class _ReceiptImages extends State<ReceiptImages> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ReceiptModel>(context, listen: true);
-    var future = getReceiptImageFutures();
+    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+    var future = getReceiptImageFutures(receipt);
     return FutureBuilder(
         key: UniqueKey(),
         future: future,
@@ -49,8 +44,7 @@ class _ReceiptImages extends State<ReceiptImages> {
               child: ReceiptImageCarousel(
                 key: UniqueKey(),
                 images: snapshot.data ?? [],
-                receipt: widget.receipt,
-                imagesAddedStream: widget.imagesAddedStream,
+                receipt: receipt,
               ),
             );
           } else {

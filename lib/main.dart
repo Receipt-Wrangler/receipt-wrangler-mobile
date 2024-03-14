@@ -16,6 +16,7 @@ import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
@@ -25,10 +26,10 @@ import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.da
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
-import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 import 'api/api.dart' as api;
@@ -42,6 +43,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => AuthModel()),
       ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
+      ChangeNotifierProvider(create: (_) => LoadingModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
@@ -116,22 +118,25 @@ final _router = GoRouter(
         builder: (context, state, child) {
           var future = api.ReceiptApi().getReceiptById(
               int.parse(state.pathParameters['receiptId'] as String));
-
           return FutureBuilder(
               future: future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
+                  var receiptModel =
+                      Provider.of<ReceiptModel>(context, listen: false);
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+
+                  EdgeInsets? customPadding;
+                  if (state.fullPath == '/receipts/:receiptId/images/view') {
+                    customPadding = const EdgeInsets.all(0);
+                  }
+
                   return ScreenWrapper(
-                      appBarWidget:
-                          ReceiptAppBar(receipt: snapshot.data as api.Receipt),
-                      bottomNavigationBarWidget: ReceiptBottomNav(
-                          receipt: snapshot.data as api.Receipt),
-                      child: SingleChildScrollView(
-                          child: ReceiptForm(
-                        receipt: snapshot.data as api.Receipt,
-                        formState: getFormState(state.uri.toString()),
-                      )));
+                      appBarWidget: const ReceiptAppBar(),
+                      bottomNavigationBarWidget: const ReceiptBottomNav(),
+                      bodyPadding: customPadding,
+                      child: child);
                 }
 
                 return const CircularLoadingProgress();
@@ -140,7 +145,14 @@ final _router = GoRouter(
         routes: [
           GoRoute(
             path: '/receipts/:receiptId/view',
-            builder: (context, state) => const SizedBox.shrink(),
+            builder: (context, state) =>
+                const SingleChildScrollView(child: ReceiptForm()),
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/images/view',
+            builder: (context, state) => const SingleChildScrollView(
+              child: ReceiptImages(),
+            ),
           ),
         ]),
   ],

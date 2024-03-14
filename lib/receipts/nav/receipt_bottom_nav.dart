@@ -2,18 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
 import '../../api/api.dart' as api;
-import '../../service/file_upload.dart';
-import '../../utils/bottom_sheet.dart';
-import '../../utils/snackbar.dart';
-import '../widgets/receipt_images.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
-  const ReceiptBottomNav({super.key, required this.receipt});
-
-  final api.Receipt receipt;
+  const ReceiptBottomNav({super.key});
 
   @override
   State<ReceiptBottomNav> createState() => _ReceiptBottomNav();
@@ -25,42 +21,14 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    Widget getImageUploadIcon(context) {
-      return IconButton(
-        icon: const Icon(Icons.add_a_photo),
-        onPressed: () async {
-          try {
-            var filesUploaded =
-                await uploadImagesToReceipt(widget.receipt.id.toString());
-            if (filesUploaded.isNotEmpty) {
-              showSuccessSnackbar(context,
-                  "Successfully uploaded ${filesUploaded.length} images");
-              for (var file in filesUploaded) {
-                imagesAddedController.add(file);
-              }
-            }
-          } catch (e) {
-            print(e);
-            return;
-          }
-        },
-      );
-    }
-
     onDestinationSelected(int indexSelected) {
+      var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
       switch (indexSelected) {
         case 0:
-          context.go("/receipts/${widget.receipt.id}/view");
+          context.go("/receipts/${receipt.id}/view");
           break;
         case 1:
-          showFullscreenBottomSheet(
-              context,
-              ReceiptImages(
-                  receipt: widget.receipt,
-                  imagesAddedStream:
-                      imagesAddedController.stream.asBroadcastStream()),
-              "${widget.receipt.name} Images",
-              actions: [getImageUploadIcon(context)]);
+          context.go("/receipts/${receipt.id}/images/view");
           break;
         case 2:
           context.go("/search");
@@ -71,6 +39,14 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
     }
 
     setIndexSelected() {
+      var fullPath = GoRouterState.of(context).fullPath ?? "";
+      if (fullPath == "/receipts/:receiptId/view") {
+        return 0;
+      }
+
+      if (fullPath == "/receipts/:receiptId/images/view") {
+        return 1;
+      }
       return 0;
     }
 
