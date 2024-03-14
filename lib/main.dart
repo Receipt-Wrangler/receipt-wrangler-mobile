@@ -124,9 +124,16 @@ final _router = GoRouter(
                   var receiptModel =
                       Provider.of<ReceiptModel>(context, listen: false);
                   receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+
+                  EdgeInsets? customPadding;
+                  if (state.fullPath == '/receipts/:receiptId/images/view') {
+                    customPadding = const EdgeInsets.all(0);
+                  }
+
                   return ScreenWrapper(
                       appBarWidget: const ReceiptAppBar(),
                       bottomNavigationBarWidget: const ReceiptBottomNav(),
+                      bodyPadding: customPadding,
                       child: child);
                 }
 

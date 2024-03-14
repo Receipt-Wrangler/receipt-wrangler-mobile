@@ -33,7 +33,6 @@ class _ScreenWrapper extends State<ScreenWrapper> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.appBarWidget,
-      persistentFooterAlignment: AlignmentDirectional.bottomCenter,
       bottomSheet: widget.bottomSheetWidget,
       bottomNavigationBar: widget.bottomNavigationBarWidget,
       body: Container(
