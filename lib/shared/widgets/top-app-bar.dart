@@ -11,13 +11,22 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
       {super.key,
       required this.titleText,
       this.leadingArrowRedirect,
-      this.leadingArrowExtra});
+      this.leadingArrowExtra,
+      this.actions,
+      this.hideAvatar,
+      this.surfaceTintColor});
 
   final String titleText;
 
   final String? leadingArrowRedirect;
 
   final dynamic leadingArrowExtra;
+
+  final List<Widget>? actions;
+
+  final bool? hideAvatar;
+
+  final Color? surfaceTintColor;
 
   @override
   State<TopAppBar> createState() => _TopAppBar();
@@ -56,6 +65,10 @@ class _TopAppBar extends State<TopAppBar> {
   }
 
   Widget getUserAvatar() {
+    if (widget.hideAvatar == true) {
+      return const SizedBox.shrink();
+    }
+
     return PopupMenuButton(
         child: const UserAvatar(),
         itemBuilder: (BuildContext context) {
@@ -73,13 +86,16 @@ class _TopAppBar extends State<TopAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       leading: getIconButton(),
       title: Text(widget.titleText),
+      surfaceTintColor: widget.surfaceTintColor,
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: getUserAvatar(),
-        )
+        ),
+        ...widget.actions ?? [],
       ],
       centerTitle: false,
     );
