@@ -8,9 +8,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
 import '../../api/api.dart' as api;
 import '../../service/file_upload.dart';
-import '../../utils/bottom_sheet.dart';
 import '../../utils/snackbar.dart';
-import '../widgets/receipt_images.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
   const ReceiptBottomNav({super.key});
@@ -55,15 +53,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           break;
         case 1:
           context.go("/receipts/${receipt.id}/images/view");
-          return;
-          showFullscreenBottomSheet(
-              context,
-              ReceiptImages(
-                  receipt: receipt,
-                  imagesAddedStream:
-                      imagesAddedController.stream.asBroadcastStream()),
-              "${receipt.name} Images",
-              actions: [getImageUploadIcon(context, receipt)]);
           break;
         case 2:
           context.go("/search");

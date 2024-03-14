@@ -3,22 +3,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
+import '../../models/receipt_model.dart';
+
 class ReceiptImageCarousel extends StatefulWidget {
   const ReceiptImageCarousel(
-      {super.key,
-      required this.images,
-      required this.receipt,
-      required this.imagesAddedStream});
+      {super.key, required this.images, required this.receipt});
 
   final List<api.FileDataView?> images;
 
   final api.Receipt receipt;
-
-  final Stream<api.FileDataView> imagesAddedStream;
 
   @override
   State<ReceiptImageCarousel> createState() => _ReceiptImageCarousel();
@@ -34,7 +32,9 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     super.initState();
     controller = InfiniteScrollController();
     _images = [...widget.images];
-    streamListener = widget.imagesAddedStream.listen((event) {
+    var receiptImageStream =
+        Provider.of<ReceiptModel>(context, listen: false).imagesStream;
+    streamListener = receiptImageStream.listen((event) {
       setState(() {
         _images = [..._images, event];
         controller = InfiniteScrollController();
