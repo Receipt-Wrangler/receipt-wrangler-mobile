@@ -107,6 +107,7 @@ class _QuickScanForm extends State<QuickScanForm> {
             _buildUserDropDown(userPreferences),
             textFieldSpacing,
             _buildStatusDropdown(userPreferences),
+            submitButtonSpacing
           ],
         ));
   }
