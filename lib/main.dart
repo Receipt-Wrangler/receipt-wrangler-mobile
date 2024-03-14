@@ -122,11 +122,12 @@ final _router = GoRouter(
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
+                  var receiptModel =
+                      Provider.of<ReceiptModel>(context, listen: false);
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, true);
                   return ScreenWrapper(
-                      appBarWidget:
-                          ReceiptAppBar(receipt: snapshot.data as api.Receipt),
-                      bottomNavigationBarWidget: ReceiptBottomNav(
-                          receipt: snapshot.data as api.Receipt),
+                      appBarWidget: const ReceiptAppBar(),
+                      bottomNavigationBarWidget: const ReceiptBottomNav(),
                       child: SingleChildScrollView(
                           child: ReceiptForm(
                         receipt: snapshot.data as api.Receipt,
@@ -141,6 +142,10 @@ final _router = GoRouter(
           GoRoute(
             path: '/receipts/:receiptId/view',
             builder: (context, state) => const SizedBox.shrink(),
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/images/view',
+            builder: (context, state) => const Text("hey"),
           ),
         ]),
   ],

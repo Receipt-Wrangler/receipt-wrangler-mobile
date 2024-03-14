@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
 import '../../api/api.dart' as api;
@@ -11,9 +13,7 @@ import '../../utils/snackbar.dart';
 import '../widgets/receipt_images.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
-  const ReceiptBottomNav({super.key, required this.receipt});
-
-  final api.Receipt receipt;
+  const ReceiptBottomNav({super.key});
 
   @override
   State<ReceiptBottomNav> createState() => _ReceiptBottomNav();
@@ -25,13 +25,13 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    Widget getImageUploadIcon(context) {
+    Widget getImageUploadIcon(context, api.Receipt receipt) {
       return IconButton(
         icon: const Icon(Icons.add_a_photo),
         onPressed: () async {
           try {
             var filesUploaded =
-                await uploadImagesToReceipt(widget.receipt.id.toString());
+                await uploadImagesToReceipt(receipt.id.toString());
             if (filesUploaded.isNotEmpty) {
               showSuccessSnackbar(context,
                   "Successfully uploaded ${filesUploaded.length} images");
@@ -48,19 +48,20 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
     }
 
     onDestinationSelected(int indexSelected) {
+      var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
       switch (indexSelected) {
         case 0:
-          context.go("/receipts/${widget.receipt.id}/view");
+          context.go("/receipts/${receipt.id}/view");
           break;
         case 1:
           showFullscreenBottomSheet(
               context,
               ReceiptImages(
-                  receipt: widget.receipt,
+                  receipt: receipt,
                   imagesAddedStream:
                       imagesAddedController.stream.asBroadcastStream()),
-              "${widget.receipt.name} Images",
-              actions: [getImageUploadIcon(context)]);
+              "${receipt.name} Images",
+              actions: [getImageUploadIcon(context, receipt)]);
           break;
         case 2:
           context.go("/search");
