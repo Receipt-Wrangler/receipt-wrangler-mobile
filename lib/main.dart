@@ -28,7 +28,6 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
-import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 import 'api/api.dart' as api;
@@ -128,11 +127,7 @@ final _router = GoRouter(
                   return ScreenWrapper(
                       appBarWidget: const ReceiptAppBar(),
                       bottomNavigationBarWidget: const ReceiptBottomNav(),
-                      child: SingleChildScrollView(
-                          child: ReceiptForm(
-                        receipt: snapshot.data as api.Receipt,
-                        formState: getFormState(state.uri.toString()),
-                      )));
+                      child: child);
                 }
 
                 return const CircularLoadingProgress();
@@ -141,7 +136,8 @@ final _router = GoRouter(
         routes: [
           GoRoute(
             path: '/receipts/:receiptId/view',
-            builder: (context, state) => const SizedBox.shrink(),
+            builder: (context, state) =>
+                const SingleChildScrollView(child: ReceiptForm()),
           ),
           GoRoute(
             path: '/receipts/:receiptId/images/view',
