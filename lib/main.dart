@@ -115,7 +115,6 @@ final _router = GoRouter(
         builder: (context, state, child) {
           var future = api.ReceiptApi().getReceiptById(
               int.parse(state.pathParameters['receiptId'] as String));
-
           return FutureBuilder(
               future: future,
               builder: (context, snapshot) {
@@ -123,7 +122,7 @@ final _router = GoRouter(
                     snapshot.hasData) {
                   var receiptModel =
                       Provider.of<ReceiptModel>(context, listen: false);
-                  receiptModel.setReceipt(snapshot.data as api.Receipt, true);
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
                   return ScreenWrapper(
                       appBarWidget: const ReceiptAppBar(),
                       bottomNavigationBarWidget: const ReceiptBottomNav(),

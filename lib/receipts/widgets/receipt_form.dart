@@ -24,6 +24,12 @@ class ReceiptForm extends StatefulWidget {
 }
 
 class _ReceiptForm extends State<ReceiptForm> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ReceiptModel>(context, listen: false);
+  }
+
   Widget buildDateField(api.Receipt receipt, WranglerFormState formState) {
     if (formState == WranglerFormState.view) {
       var formattedDate =

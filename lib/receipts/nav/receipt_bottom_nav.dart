@@ -54,6 +54,8 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           context.go("/receipts/${receipt.id}/view");
           break;
         case 1:
+          context.go("/receipts/${receipt.id}/images/view");
+          return;
           showFullscreenBottomSheet(
               context,
               ReceiptImages(
