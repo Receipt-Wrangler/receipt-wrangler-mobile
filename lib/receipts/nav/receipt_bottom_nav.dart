@@ -63,6 +63,14 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
     }
 
     setIndexSelected() {
+      var fullPath = GoRouterState.of(context).fullPath ?? "";
+      if (fullPath == "/receipts/:receiptId/view") {
+        return 0;
+      }
+
+      if (fullPath == "/receipts/:receiptId/images/view") {
+        return 1;
+      }
       return 0;
     }
 
