@@ -7,8 +7,6 @@ import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
 import '../../api/api.dart' as api;
-import '../../service/file_upload.dart';
-import '../../utils/snackbar.dart';
 
 class ReceiptBottomNav extends StatefulWidget {
   const ReceiptBottomNav({super.key});
@@ -23,28 +21,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    Widget getImageUploadIcon(context, api.Receipt receipt) {
-      return IconButton(
-        icon: const Icon(Icons.add_a_photo),
-        onPressed: () async {
-          try {
-            var filesUploaded =
-                await uploadImagesToReceipt(receipt.id.toString());
-            if (filesUploaded.isNotEmpty) {
-              showSuccessSnackbar(context,
-                  "Successfully uploaded ${filesUploaded.length} images");
-              for (var file in filesUploaded) {
-                imagesAddedController.add(file);
-              }
-            }
-          } catch (e) {
-            print(e);
-            return;
-          }
-        },
-      );
-    }
-
     onDestinationSelected(int indexSelected) {
       var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
       switch (indexSelected) {
