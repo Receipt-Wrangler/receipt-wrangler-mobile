@@ -1,5 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';

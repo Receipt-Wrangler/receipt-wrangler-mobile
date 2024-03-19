@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 

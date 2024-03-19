@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 

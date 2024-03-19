@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart' as api;
+import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
 
 class GroupDashboard extends StatefulWidget {

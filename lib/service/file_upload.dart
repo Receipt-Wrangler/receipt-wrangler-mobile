@@ -1,4 +1,4 @@
-import 'package:receipt_wrangler_mobile/api/api.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 
 Future<List<FileDataView>> uploadImagesToReceipt(String receiptId) async {

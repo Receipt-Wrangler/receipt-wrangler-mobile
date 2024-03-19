@@ -19,6 +19,6 @@ class _ReceiptScreen extends State<ReceiptScreen> {
     var formState = getFormState(uri.toString());
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
-    return ReceiptForm(receipt: receiptModel.receipt, formState: formState);
+    return ReceiptForm();
   }
 }

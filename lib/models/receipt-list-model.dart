@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 
 class ReceiptListModel extends ChangeNotifier {
   ReceiptPagedRequestCommand _receiptPagedRequestCommand =
@@ -10,6 +10,7 @@ class ReceiptListModel extends ChangeNotifier {
     sortDirection: SortDirection.desc,
     filter: ReceiptPagedRequestFilter(),
   );
+
   ReceiptPagedRequestCommand get receiptPagedRequestCommand =>
       _receiptPagedRequestCommand;
 

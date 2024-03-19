@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api/api.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 
 void showSuccessSnackbar(BuildContext context, String message,
     {SnackBarAction? action}) {
