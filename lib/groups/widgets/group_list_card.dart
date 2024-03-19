@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:receipt_wrangler_mobile/api/api.dart" as api;
+import "package:receipt_wrangler_mobile/api.dart" as api;
 
 class GroupListCard extends StatefulWidget {
   const GroupListCard(

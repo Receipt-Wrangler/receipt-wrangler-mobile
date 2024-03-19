@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
-import '../api/api.dart';
 import '../enums/form_state.dart';
 import '../models/group_model.dart';
 import '../models/user_model.dart';
