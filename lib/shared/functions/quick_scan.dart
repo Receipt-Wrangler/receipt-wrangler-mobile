@@ -27,6 +27,21 @@ Widget _getUploadIcon(
   );
 }
 
+Widget _getGalleryUploadImage(
+    context, StreamController<UploadMultipartFileData?> streamController) {
+  return IconButton(
+    icon: const Icon(Icons.upload_file),
+    onPressed: () async {
+      var uploadedImages = await getGalleryImages();
+      if (uploadedImages.isNotEmpty) {
+        for (var image in uploadedImages) {
+          streamController.add(image);
+        }
+      }
+    },
+  );
+}
+
 Widget _getSubmitButton(
     BuildContext context,
     GlobalKey<FormBuilderState> formKey,
@@ -80,7 +95,10 @@ showQuickScanBottomSheet(context) {
   StreamController<UploadMultipartFileData?> streamController =
       StreamController.broadcast();
 
-  List<Widget> actions = [_getUploadIcon(context, streamController)];
+  List<Widget> actions = [
+    _getUploadIcon(context, streamController),
+    _getGalleryUploadImage(context, streamController)
+  ];
   var formKey = GlobalKey<FormBuilderState>();
 
   showFullscreenBottomSheet(
