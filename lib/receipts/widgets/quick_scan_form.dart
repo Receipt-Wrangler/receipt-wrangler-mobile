@@ -41,13 +41,14 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "groupIds_${widget.index}",
+      name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
       initialValue: initialValue,
       items: buildGroupDropDownMenuItems(context),
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
+          print(widget.formKey.currentState);
           widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
@@ -69,7 +70,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "paidByUserIds_${widget.index}",
+      name: "paidByUserId",
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items,
       validator: FormBuilderValidators.required(),
@@ -88,7 +89,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "statuses_${widget.index}",
+      name: "status",
       decoration: const InputDecoration(labelText: "Status"),
       items: buildStatusDropDownMenuItems(),
       validator: FormBuilderValidators.required(),
