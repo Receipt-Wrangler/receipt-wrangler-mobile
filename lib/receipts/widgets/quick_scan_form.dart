@@ -6,12 +6,15 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
+import '../../interfaces/upload_multipart_file_data.dart';
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
-  const QuickScanForm({super.key, required this.formKey});
+  const QuickScanForm({super.key, required this.formKey, required this.index});
 
   final GlobalKey<FormBuilderState> formKey;
+
+  final int index;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -19,6 +22,7 @@ class QuickScanForm extends StatefulWidget {
 
 class _QuickScanForm extends State<QuickScanForm> {
   int groupId = 0;
+  List<UploadMultipartFileData> _images = [];
 
   @override
   initState() {
@@ -37,7 +41,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "groupId",
+      name: "groupIds_${widget.index}",
       decoration: const InputDecoration(labelText: "Group"),
       initialValue: initialValue,
       items: buildGroupDropDownMenuItems(context),
@@ -65,7 +69,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "paidByUserId",
+      name: "paidByUserIds_${widget.index}",
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items,
       validator: FormBuilderValidators.required(),
@@ -84,7 +88,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     }
 
     return FormBuilderDropdown(
-      name: "status",
+      name: "statuses_${widget.index}",
       decoration: const InputDecoration(labelText: "Status"),
       items: buildStatusDropDownMenuItems(),
       validator: FormBuilderValidators.required(),
@@ -94,6 +98,7 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Get form working and get working in modal.
     var userPreferences =
         Provider.of<UserPreferencesModel>(context, listen: false)
             .userPreferences;

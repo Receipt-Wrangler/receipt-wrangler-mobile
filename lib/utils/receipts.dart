@@ -27,3 +27,15 @@ String getTitleText(WranglerFormState formState, String receiptName) {
 String getLeadingArrowRedirect(String groupId) {
   return "/groups/$groupId/receipts";
 }
+
+double getImagePreviewWidth(BuildContext context) {
+  return MediaQuery.of(context).size.width;
+}
+
+double getImagePreviewHeight(BuildContext context) {
+  return MediaQuery.of(context).size.height * .5;
+}
+
+EdgeInsets getImageDataPadding() {
+  return const EdgeInsets.all(26);
+}

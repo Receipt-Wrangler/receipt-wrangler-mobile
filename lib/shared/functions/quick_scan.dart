@@ -109,5 +109,6 @@ showQuickScanBottomSheet(context) {
       ),
       "Quick Scan",
       actions: actions,
+      bodyPadding: EdgeInsets.zero,
       bottomSheetWidget: _getSubmitButton(context, formKey, streamController));
 }
