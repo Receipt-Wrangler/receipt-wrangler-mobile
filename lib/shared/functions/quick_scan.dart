@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
@@ -19,9 +20,13 @@ Widget _getUploadIcon(
   return IconButton(
     icon: const Icon(Icons.add_a_photo),
     onPressed: () async {
-      var uploadedImages = await scanImagesMultiPart(1);
+      var uploadedImages = await scanImagesMultiPart(100);
       if (uploadedImages.isNotEmpty) {
-        streamController.add(uploadedImages.first);
+        for (var image in uploadedImages) {
+          var quickScanImage =
+              QuickScanImage.fromUploadMultipartFileData(image);
+          streamController.add(quickScanImage);
+        }
       }
     },
   );
@@ -35,7 +40,9 @@ Widget _getGalleryUploadImage(
       var uploadedImages = await getGalleryImages();
       if (uploadedImages.isNotEmpty) {
         for (var image in uploadedImages) {
-          streamController.add(image);
+          var quickScanImage =
+              QuickScanImage.fromUploadMultipartFileData(image);
+          streamController.add(quickScanImage);
         }
       }
     },
@@ -92,7 +99,7 @@ _getSuccessSnackBarActionWidget(BuildContext context, api.Receipt receipt) {
 }
 
 showQuickScanBottomSheet(context) {
-  StreamController<UploadMultipartFileData?> streamController =
+  StreamController<QuickScanImage> streamController =
       StreamController.broadcast();
 
   List<Widget> actions = [
@@ -104,7 +111,6 @@ showQuickScanBottomSheet(context) {
   showFullscreenBottomSheet(
       context,
       QuickScan(
-        formKey: formKey,
         imageStream: streamController.stream,
       ),
       "Quick Scan",

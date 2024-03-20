@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan_form.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
-import '../../interfaces/upload_multipart_file_data.dart';
-
 class QuickScan extends StatefulWidget {
-  const QuickScan(
-      {super.key, required this.formKey, required this.imageStream});
+  const QuickScan({super.key, required this.imageStream});
 
-  final Stream<UploadMultipartFileData?> imageStream;
-
-  final GlobalKey<FormBuilderState> formKey;
+  final Stream<QuickScanImage> imageStream;
 
   @override
   State<QuickScan> createState() => _QuickScan();
@@ -20,7 +15,7 @@ class QuickScan extends StatefulWidget {
 
 class _QuickScan extends State<QuickScan> {
   late InfiniteScrollController controller;
-  List<UploadMultipartFileData> images = [];
+  List<QuickScanImage> images = [];
 
   @override
   void initState() {
@@ -61,7 +56,7 @@ class _QuickScan extends State<QuickScan> {
             Padding(
               padding: getImageDataPadding(),
               child: QuickScanForm(
-                formKey: widget.formKey,
+                formKey: images[realIndex].formKey,
                 index: realIndex,
               ),
             )
