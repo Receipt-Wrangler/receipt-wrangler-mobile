@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 class GroupDashboardWrapper extends StatefulWidget {
@@ -26,7 +27,7 @@ class _GroupDashboardWrapper extends State<GroupDashboardWrapper> {
             );
           }
 
-          return const CircularProgressIndicator();
+          return const CircularLoadingProgress();
         });
   }
 }
