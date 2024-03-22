@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../enums/form_state.dart';
@@ -81,4 +82,8 @@ List<DropdownMenuItem> buildStatusDropDownMenuItems() {
       child: Text("Draft"),
     ),
   ];
+}
+
+setLoadingBarState(BuildContext context, bool isLoading) {
+  Provider.of<LoadingModel>(context, listen: false).setIsLoading(isLoading);
 }

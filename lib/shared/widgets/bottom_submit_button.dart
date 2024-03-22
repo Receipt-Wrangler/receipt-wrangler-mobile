@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 
 class BottomSubmitButton extends StatefulWidget {
   const BottomSubmitButton({super.key, required this.onPressed});
@@ -15,13 +17,17 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
     return SizedBox(
       width: double.infinity,
       height: 50,
-      child: MaterialButton(
-        onPressed: widget.onPressed,
-        color: Theme.of(context).primaryColor,
-        child: const Text(
-          'Submit',
-          style: TextStyle(color: Colors.white),
-        ),
+      child: Consumer<LoadingModel>(
+        builder: (context, loadingModel, child) {
+          return MaterialButton(
+            onPressed: loadingModel.isLoading ? null : widget.onPressed,
+            color: Theme.of(context).primaryColor,
+            child: const Text(
+              'Submit',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        },
       ),
     );
   }
