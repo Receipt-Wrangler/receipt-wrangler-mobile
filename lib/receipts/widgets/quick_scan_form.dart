@@ -6,7 +6,6 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
-import '../../interfaces/upload_multipart_file_data.dart';
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
@@ -22,7 +21,6 @@ class QuickScanForm extends StatefulWidget {
 
 class _QuickScanForm extends State<QuickScanForm> {
   int groupId = 0;
-  List<UploadMultipartFileData> _images = [];
 
   @override
   initState() {

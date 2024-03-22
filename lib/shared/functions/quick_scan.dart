@@ -146,10 +146,3 @@ showQuickScanBottomSheet(context) {
       bodyPadding: EdgeInsets.zero,
       bottomSheetWidget: _getSubmitButton(context, imageSubject));
 }
-
-// TODO: Now we have all of the forms using different keys, we have the carasoul rendering right
-// We need to submit the forms by taking each key, saving, validating and then smashing all the data together in the correct format
-// Then finally submitting all of this data.
-// Then we need to disable the submit button while the form is submitting
-// Lastly, we need to double check scanner to make sure it will support multiple files
-// Then we need to show error messages upon validation errors!
