@@ -33,7 +33,7 @@ Widget _getUploadIcon(
 Widget _getGalleryUploadImage(
     context, StreamController<UploadMultipartFileData?> streamController) {
   return IconButton(
-    icon: const Icon(Icons.upload_file),
+    icon: const Icon(Icons.upload_file_rounded),
     onPressed: () async {
       var uploadedImages = await getGalleryImages();
       if (uploadedImages.isNotEmpty) {
