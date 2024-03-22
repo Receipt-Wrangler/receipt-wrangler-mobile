@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
@@ -9,53 +10,54 @@ import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../interfaces/upload_multipart_file_data.dart';
 import '../../utils/bottom_sheet.dart';
 
 Widget _getUploadIcon(
-    context, StreamController<UploadMultipartFileData?> streamController) {
+    context, BehaviorSubject<List<QuickScanImage>> imageSubject) {
   return IconButton(
     icon: const Icon(Icons.add_a_photo),
     onPressed: () async {
       var uploadedImages = await scanImagesMultiPart(100);
       if (uploadedImages.isNotEmpty) {
+        List<QuickScanImage> uploadedImages = [];
         for (var image in uploadedImages) {
           var quickScanImage =
               QuickScanImage.fromUploadMultipartFileData(image);
-          streamController.add(quickScanImage);
+          uploadedImages.add(quickScanImage);
         }
+        imageSubject.add(imageSubject.value + uploadedImages);
       }
     },
   );
 }
 
 Widget _getGalleryUploadImage(
-    context, StreamController<UploadMultipartFileData?> streamController) {
+    context, BehaviorSubject<List<QuickScanImage>> imageSubject) {
   return IconButton(
     icon: const Icon(Icons.upload_file_rounded),
     onPressed: () async {
       var uploadedImages = await getGalleryImages();
       if (uploadedImages.isNotEmpty) {
+        List<QuickScanImage> quickScanImages = [];
         for (var image in uploadedImages) {
           var quickScanImage =
               QuickScanImage.fromUploadMultipartFileData(image);
-          streamController.add(quickScanImage);
+          quickScanImages.add(quickScanImage);
         }
+
+        imageSubject.add(imageSubject.value + quickScanImages);
       }
     },
   );
 }
 
 Widget _getSubmitButton(
-    BuildContext context, StreamController<QuickScanImage> streamController) {
-  List<QuickScanImage>? images = [];
-  streamController.stream.listen((event) {
-    images.add(event);
-  });
+    BuildContext context, BehaviorSubject<List<QuickScanImage>> imageSubject) {
   return BottomSubmitButton(
     onPressed: () async {
-      await _submitQuickScan(context, images);
+      await _submitQuickScan(context, imageSubject.value);
     },
   );
 }
@@ -101,24 +103,48 @@ Future<void> _submitQuickScan(
   return;
 }
 
+Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
+    BehaviorSubject<List<QuickScanImage>> imageSubject) {
+  return StreamBuilder<List<QuickScanImage>>(
+    stream: imageSubject.stream,
+    builder: (context, snapshot) {
+      if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+        return IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            var images = imageSubject.value;
+            images.removeAt(infiniteScrollController.selectedItem);
+            imageSubject.add(images);
+          },
+        );
+      } else {
+        return const SizedBox();
+      }
+    },
+  );
+}
+
 showQuickScanBottomSheet(context) {
-  StreamController<QuickScanImage> streamController =
-      StreamController.broadcast();
+  var infiniteScrollController = InfiniteScrollController();
+  BehaviorSubject<List<QuickScanImage>> imageSubject =
+      BehaviorSubject<List<QuickScanImage>>.seeded([]);
 
   List<Widget> actions = [
-    _getUploadIcon(context, streamController),
-    _getGalleryUploadImage(context, streamController)
+    _getUploadIcon(context, imageSubject),
+    _getGalleryUploadImage(context, imageSubject),
+    _getDeleteIcon(infiniteScrollController, imageSubject),
   ];
 
   showFullscreenBottomSheet(
       context,
       QuickScan(
-        imageStream: streamController.stream,
+        imageSubject: imageSubject,
+        infiniteScrollController: infiniteScrollController,
       ),
       "Quick Scan",
       actions: actions,
       bodyPadding: EdgeInsets.zero,
-      bottomSheetWidget: _getSubmitButton(context, streamController));
+      bottomSheetWidget: _getSubmitButton(context, imageSubject));
 }
 
 // TODO: Now we have all of the forms using different keys, we have the carasoul rendering right

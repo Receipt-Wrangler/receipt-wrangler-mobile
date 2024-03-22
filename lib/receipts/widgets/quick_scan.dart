@@ -3,50 +3,39 @@ import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan_form.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
+import 'package:rxdart/rxdart.dart';
 
 class QuickScan extends StatefulWidget {
-  const QuickScan({super.key, required this.imageStream});
+  const QuickScan(
+      {super.key,
+      required this.imageSubject,
+      required this.infiniteScrollController});
 
-  final Stream<QuickScanImage> imageStream;
+  final BehaviorSubject<List<QuickScanImage>> imageSubject;
+
+  final InfiniteScrollController infiniteScrollController;
 
   @override
   State<QuickScan> createState() => _QuickScan();
 }
 
 class _QuickScan extends State<QuickScan> {
-  late InfiniteScrollController controller;
-  List<QuickScanImage> images = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = InfiniteScrollController();
-    widget.imageStream.listen((event) {
-      setState(() {
-        if (event != null) {
-          images = [...images, event];
-        }
-      });
-    });
-  }
-
   Widget _buildImagePreview(int index) {
     return SizedBox(
       height: getImagePreviewHeight(context),
       width: getImagePreviewWidth(context),
-      child: Image.memory(images[index].bytes),
+      child: Image.memory(widget.imageSubject.value[index].bytes),
     );
   }
 
   Widget _buildCarousel() {
     return InfiniteCarousel.builder(
-      itemCount: images.length,
+      itemCount: widget.imageSubject.value.length,
       itemExtent: MediaQuery.of(context).size.width,
       center: false,
       velocityFactor: 0.2,
       onIndexChanged: (index) {},
-      controller: controller,
+      controller: widget.infiniteScrollController,
       axisDirection: Axis.horizontal,
       loop: false,
       itemBuilder: (BuildContext context, int itemIndex, int realIndex) {
@@ -56,7 +45,7 @@ class _QuickScan extends State<QuickScan> {
             Padding(
               padding: getImageDataPadding(),
               child: QuickScanForm(
-                formKey: images[realIndex].formKey,
+                formKey: widget.imageSubject.value[realIndex].formKey,
                 index: realIndex,
               ),
             )
@@ -68,16 +57,24 @@ class _QuickScan extends State<QuickScan> {
 
   @override
   Widget build(BuildContext context) {
-    if (images.length == 0) {
-      return const Center(
-        child: Text("No images to display"),
-      );
-    }
+    return StreamBuilder(
+        stream: widget.imageSubject.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text("Scan or upload an image to get started"),
+            );
+          }
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: _buildCarousel(),
-    );
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: _buildCarousel(),
+            );
+          }
+
+          return SizedBox.shrink();
+        });
   }
 }
