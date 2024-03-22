@@ -53,7 +53,9 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
           FormBuilderTextField(
               name: "url",
               decoration: const InputDecoration(
-                  labelText: "Server URL", border: OutlineInputBorder()),
+                  hintText: "https://demo.receiptwrangler.io/api",
+                  labelText: "Server URL",
+                  border: OutlineInputBorder()),
               initialValue: serverModel.basePath,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
