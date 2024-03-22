@@ -7,6 +7,7 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/delete_button.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
@@ -21,13 +22,13 @@ Widget _getUploadIcon(
     onPressed: () async {
       var uploadedImages = await scanImagesMultiPart(100);
       if (uploadedImages.isNotEmpty) {
-        List<QuickScanImage> uploadedImages = [];
+        List<QuickScanImage> quickScanImages = [];
         for (var image in uploadedImages) {
           var quickScanImage =
               QuickScanImage.fromUploadMultipartFileData(image);
-          uploadedImages.add(quickScanImage);
+          quickScanImages.add(quickScanImage);
         }
-        imageSubject.add(imageSubject.value + uploadedImages);
+        imageSubject.add(imageSubject.value + quickScanImages);
       }
     },
   );
@@ -109,8 +110,7 @@ Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
     stream: imageSubject.stream,
     builder: (context, snapshot) {
       if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-        return IconButton(
-          icon: const Icon(Icons.delete),
+        return DeleteButton(
           onPressed: () {
             var images = imageSubject.value;
             images.removeAt(infiniteScrollController.selectedItem);
