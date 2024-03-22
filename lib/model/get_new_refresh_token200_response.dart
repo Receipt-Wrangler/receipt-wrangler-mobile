@@ -126,12 +126,5 @@ class GetNewRefreshToken200Response {
   static const requiredKeys = <String>{
     'jwt',
     'refreshToken',
-    'userId',
-    'userRole',
-    'displayName',
-    'defaultAvatarColor',
-    'username',
-    'iss',
-    'exp',
   };
 }
