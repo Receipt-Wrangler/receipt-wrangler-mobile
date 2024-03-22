@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import '../../models/receipt_model.dart';
 
@@ -109,13 +110,13 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  width: MediaQuery.of(context).size.width,
+                  height: getImagePreviewHeight(context),
+                  width: getImagePreviewWidth(context),
                   decoration: const BoxDecoration(color: Colors.grey),
                   child: getImageWidget(realIndex),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(26),
+                  padding: getImageDataPadding(),
                   child: Column(children: [
                     buildNameField(realIndex),
                     textFieldSpacing,

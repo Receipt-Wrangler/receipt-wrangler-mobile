@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 
@@ -17,9 +19,9 @@ void showErrorSnackbar(BuildContext context, String message,
 }
 
 void showApiErrorSnackbar(BuildContext context, ApiException error) {
-  // TODO: fix
+  var errorObject = jsonDecode(error.message ?? "{}");
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(error.message ?? 'An error occured'),
+    content: Text(errorObject["errorMsg"] ?? 'An error occured'),
     backgroundColor: Colors.red,
   ));
 }

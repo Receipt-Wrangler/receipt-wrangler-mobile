@@ -26,7 +26,8 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
 
       await authModel.setBasePath(_formKey.currentState!.value["url"]);
       try {
-        await api.FeatureConfigApi().getFeatureConfig();
+        var featureConfig = await api.FeatureConfigApi().getFeatureConfig();
+        authModel.setFeatureConfig(featureConfig);
         showSuccessSnackbar(context, "Successfully connected to server");
         context.go("/login");
       } catch (e) {
@@ -53,7 +54,9 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
           FormBuilderTextField(
               name: "url",
               decoration: const InputDecoration(
-                  labelText: "Server URL", border: OutlineInputBorder()),
+                  hintText: "https://demo.receiptwrangler.io/api",
+                  labelText: "Server URL",
+                  border: OutlineInputBorder()),
               initialValue: serverModel.basePath,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),

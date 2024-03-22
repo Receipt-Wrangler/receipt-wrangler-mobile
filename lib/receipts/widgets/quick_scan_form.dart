@@ -9,9 +9,11 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
-  const QuickScanForm({super.key, required this.formKey});
+  const QuickScanForm({super.key, required this.formKey, required this.index});
 
   final GlobalKey<FormBuilderState> formKey;
+
+  final int index;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -44,6 +46,7 @@ class _QuickScanForm extends State<QuickScanForm> {
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
+          print(widget.formKey.currentState);
           widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
@@ -94,6 +97,7 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Get form working and get working in modal.
     var userPreferences =
         Provider.of<UserPreferencesModel>(context, listen: false)
             .userPreferences;

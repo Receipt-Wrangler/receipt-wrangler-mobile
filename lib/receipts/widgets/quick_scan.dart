@@ -1,46 +1,80 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan_form.dart';
-
-import '../../interfaces/upload_multipart_file_data.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
+import 'package:rxdart/rxdart.dart';
 
 class QuickScan extends StatefulWidget {
   const QuickScan(
-      {super.key, required this.formKey, required this.imageStream});
+      {super.key,
+      required this.imageSubject,
+      required this.infiniteScrollController});
 
-  final Stream<UploadMultipartFileData?> imageStream;
+  final BehaviorSubject<List<QuickScanImage>> imageSubject;
 
-  final GlobalKey<FormBuilderState> formKey;
+  final InfiniteScrollController infiniteScrollController;
 
   @override
   State<QuickScan> createState() => _QuickScan();
 }
 
 class _QuickScan extends State<QuickScan> {
-  Widget _buildImagePreview() {
-    return StreamBuilder<UploadMultipartFileData?>(
-      stream: widget.imageStream,
-      builder: (BuildContext context,
-          AsyncSnapshot<UploadMultipartFileData?> snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          return Image.memory(snapshot.data?.bytes as Uint8List);
-        }
-        return const Text("Select an image to scan.");
+  Widget _buildImagePreview(int index) {
+    return SizedBox(
+      height: getImagePreviewHeight(context),
+      width: getImagePreviewWidth(context),
+      child: Image.memory(widget.imageSubject.value[index].bytes),
+    );
+  }
+
+  Widget _buildCarousel() {
+    return InfiniteCarousel.builder(
+      itemCount: widget.imageSubject.value.length,
+      itemExtent: MediaQuery.of(context).size.width,
+      center: false,
+      velocityFactor: 0.2,
+      onIndexChanged: (index) {},
+      controller: widget.infiniteScrollController,
+      axisDirection: Axis.horizontal,
+      loop: false,
+      itemBuilder: (BuildContext context, int itemIndex, int realIndex) {
+        return Column(
+          children: [
+            _buildImagePreview(realIndex),
+            Padding(
+              padding: getImageDataPadding(),
+              child: QuickScanForm(
+                formKey: widget.imageSubject.value[realIndex].formKey,
+                index: realIndex,
+              ),
+            )
+          ],
+        );
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildImagePreview(),
-        QuickScanForm(
-          formKey: widget.formKey,
-        ),
-      ],
-    );
+    return StreamBuilder(
+        stream: widget.imageSubject.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text("Scan or upload an image to get started"),
+            );
+          }
+
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: _buildCarousel(),
+            );
+          }
+
+          return SizedBox.shrink();
+        });
   }
 }
