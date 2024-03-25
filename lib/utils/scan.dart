@@ -21,7 +21,7 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
   }
 
   for (var filePath in filePaths) {
-    var multipartFile = await MultipartFile.fromPath("file", filePath);
+    var multipartFile = await MultipartFile.fromPath("files", filePath);
     var bytes = await File(filePath).readAsBytes();
 
     files.add(
@@ -42,7 +42,7 @@ Future<List<UploadMultipartFileData>> getGalleryImages() async {
   ]);
 
   for (var file in openedFiles) {
-    var multipartFile = await MultipartFile.fromPath("file", file.path);
+    var multipartFile = await MultipartFile.fromPath("files", file.path);
     var bytes = await File(file.path).readAsBytes();
     files.add(
         UploadMultipartFileData(multipartFile: multipartFile, bytes: bytes));
