@@ -96,8 +96,8 @@ Future<void> _submitQuickScan(
     );
   } catch (e) {
     print(e);
-    showApiErrorSnackbar(context, e as dynamic);
     setLoadingBarState(context, false);
+    showApiErrorSnackbar(context, e as dynamic);
     return;
   }
 

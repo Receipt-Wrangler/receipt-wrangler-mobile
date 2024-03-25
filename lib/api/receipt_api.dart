@@ -495,7 +495,7 @@ class ReceiptApi {
     final mp = MultipartRequest('POST', Uri.parse(path));
     if (files != null) {
       hasFields = true;
-      for (var file in files) {
+      for (final file in files) {
         mp.files.add(file);
       }
     }
