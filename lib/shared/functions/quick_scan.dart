@@ -82,6 +82,8 @@ Future<void> _submitQuickScan(
       groupIds.add(form["groupId"]);
       paidByUserIds.add(form["paidByUserId"]);
       statuses.add(form["status"]);
+    } else {
+      return;
     }
   }
 
