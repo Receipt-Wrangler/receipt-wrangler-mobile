@@ -9,7 +9,7 @@ import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/delete_button.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
-import 'package:receipt_wrangler_mobile/utils/has-feature.dart';
+import 'package:receipt_wrangler_mobile/utils/has_feature.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:rxdart/rxdart.dart';
