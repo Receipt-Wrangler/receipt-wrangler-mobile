@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/delete_button.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
+import 'package:receipt_wrangler_mobile/utils/has-feature.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:rxdart/rxdart.dart';
@@ -127,6 +128,12 @@ Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
 }
 
 showQuickScanBottomSheet(context) {
+  if (hasAiPoweredReceipts(context)) {
+    showErrorSnackbar(context,
+        "AI Powered Receipts required to use Quick Scan. Currently this is the only way to add receipts. Contact your administrator for more information.");
+    return;
+  }
+
   var infiniteScrollController = InfiniteScrollController();
   BehaviorSubject<List<QuickScanImage>> imageSubject =
       BehaviorSubject<List<QuickScanImage>>.seeded([]);
