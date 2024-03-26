@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -181,12 +182,14 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildTagField(receipt),
           textFieldSpacing,
           buildReceiptItemList(receipt),
-          ElevatedButton(
-              onPressed: () => {
-                    if (_formKey.currentState!.saveAndValidate())
-                      {print(_formKey.currentState!.value)}
-                  },
-              child: Text("Check form value"))
+          kDebugMode
+              ? ElevatedButton(
+                  onPressed: () => {
+                        if (_formKey.currentState!.saveAndValidate())
+                          {print(_formKey.currentState!.value)}
+                      },
+                  child: Text("Check form value"))
+              : SizedBox.shrink()
         ],
       ),
     );

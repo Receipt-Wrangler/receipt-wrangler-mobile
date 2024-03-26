@@ -63,6 +63,7 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
       NavigationDestination(
         icon: Icon(Icons.search),
         label: "Search",
+        enabled: false,
       ),
     ];
 

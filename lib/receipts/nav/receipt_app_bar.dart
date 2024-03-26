@@ -34,7 +34,7 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     Widget getImageUploadIcon(context, api.Receipt receipt) {
       var fullPath = GoRouterState.of(context).fullPath;
 
-      if (fullPath == "/receipts/:receiptId/images/view") {
+      if (fullPath == "/receipts/:receiptId/images/edit") {
         return IconButton(
           icon: const Icon(Icons.add_a_photo),
           onPressed: () async {

@@ -29,10 +29,10 @@ class _GroupBottomNav extends State<GroupBottomNav> {
           showQuickScanBottomSheet(context);
           break;
         case 2:
-          context.go("/search");
+          context.go("/groups/$groupId/receipts");
           break;
         case 3:
-          context.go("/groups/$groupId/receipts");
+          context.go("/search");
           break;
         default:
           context.go("/groups");
@@ -69,12 +69,13 @@ class _GroupBottomNav extends State<GroupBottomNav> {
         label: "Add",
       ),
       NavigationDestination(
-        icon: Icon(Icons.search),
-        label: "Search",
-      ),
-      NavigationDestination(
         icon: Icon(Icons.receipt),
         label: "Receipts",
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.search),
+        label: "Search",
+        enabled: false,
       ),
     ];
 

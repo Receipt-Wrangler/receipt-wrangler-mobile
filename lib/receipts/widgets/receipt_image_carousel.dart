@@ -84,10 +84,10 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       var bottomPosition = MediaQuery.of(context).size.height * .0001;
       return Stack(children: [
         Center(child: getDecodedImage(index)),
-        Positioned(
+/*        Positioned(
             bottom: bottomPosition,
             left: 4,
-            child: IconButton(icon: const Icon(Icons.more), onPressed: () {}))
+            child: IconButton(icon: const Icon(Icons.more), onPressed: () {}))*/
       ]);
     }
 
