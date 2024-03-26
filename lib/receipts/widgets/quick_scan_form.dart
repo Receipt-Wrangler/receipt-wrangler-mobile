@@ -32,7 +32,7 @@ class _QuickScanForm extends State<QuickScanForm> {
   }
 
   Widget _buildGroupField(api.UserPreferences userPreferences) {
-    int? initialValue;
+    int? initialValue = null;
 
     if (userPreferences.quickScanDefaultGroupId > 0) {
       initialValue = userPreferences.quickScanDefaultGroupId;
@@ -41,9 +41,9 @@ class _QuickScanForm extends State<QuickScanForm> {
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      initialValue: initialValue,
       items: buildGroupDropDownMenuItems(context),
       validator: FormBuilderValidators.required(),
+      initialValue: initialValue,
       onChanged: (value) {
         setState(() {
           print(widget.formKey.currentState);
@@ -56,13 +56,14 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   Widget _buildUserDropDown(api.UserPreferences userPreferences) {
     List<DropdownMenuItem> items = [];
-    int? initialValue;
+    int? initialValue = null;
 
     if (groupId > 0) {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
     }
 
-    if (groupId == userPreferences.quickScanDefaultGroupId &&
+    if (groupId != 0 &&
+        groupId == userPreferences.quickScanDefaultGroupId &&
         userPreferences.userId > 0) {
       initialValue = userPreferences.quickScanDefaultPaidById;
     }
@@ -77,7 +78,7 @@ class _QuickScanForm extends State<QuickScanForm> {
   }
 
   Widget _buildStatusDropdown(api.UserPreferences userPreferences) {
-    api.ReceiptStatus? initialValue;
+    api.ReceiptStatus? initialValue = null;
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
 
@@ -97,7 +98,6 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get form working and get working in modal.
     var userPreferences =
         Provider.of<UserPreferencesModel>(context, listen: false)
             .userPreferences;
