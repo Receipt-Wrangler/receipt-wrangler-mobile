@@ -35,16 +35,16 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
 
 Future<List<UploadMultipartFileData>> getGalleryImages() async {
   var files = <UploadMultipartFileData>[];
-  //TODO: restrict types
+
   const XTypeGroup typeGroup = XTypeGroup();
   List<XFile> openedFiles = [];
 
   switch (Platform.operatingSystem) {
     case "android":
-      openedFiles = await openAndroidGallery(typeGroup);
+      openedFiles = await openAndroidGallery();
       break;
     case "ios":
-      openedFiles = await openIOSGallery(typeGroup);
+      openedFiles = await openIOSGallery();
       break;
     default:
       throw Exception("Unsupported platform");
@@ -61,13 +61,18 @@ Future<List<UploadMultipartFileData>> getGalleryImages() async {
   return files;
 }
 
-Future<List<XFile>> openIOSGallery(XTypeGroup typeGroup) async {
-  return await openFiles(acceptedTypeGroups: <XTypeGroup>[
-    typeGroup,
-    //pngTypeGroup,
-  ]);
+Future<List<XFile>> openIOSGallery() async {
+  const typeGroup = XTypeGroup(
+    uniformTypeIdentifiers: ["public.image", "com.adobe.pdf"],
+  );
+  return await openFiles(acceptedTypeGroups: [typeGroup]);
 }
 
-Future<List<XFile>> openAndroidGallery(XTypeGroup typeGroup) async {
-  return await openFiles();
+Future<List<XFile>> openAndroidGallery() async {
+  const typeGroup = XTypeGroup(
+    mimeTypes: ["image/*", "application/pdf"],
+  );
+  return await openFiles(
+    acceptedTypeGroups: [typeGroup],
+  );
 }
