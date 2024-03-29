@@ -46,10 +46,10 @@ Future<String?> unprotectedRouteRedirect(
       userModel, userPreferencesModel, categoryModel, tagModel);
   var redirectRoute = redirect ?? "/";
 
-  // TODO: find a better way to handle this
   if (tokensValid) {
     return redirectRoute;
   } else {
+    await authModelProvider.purgeTokens();
     return null;
   }
 }

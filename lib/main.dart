@@ -166,6 +166,14 @@ class ReceiptWrangler extends StatefulWidget {
 
 class _ReceiptWrangler extends State<ReceiptWrangler> {
   late final AppLifecycleListener _lifecycleListener;
+  late final authModel = Provider.of<AuthModel>(context, listen: false);
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
+  late final userModel = Provider.of<UserModel>(context, listen: false);
+  late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
+  late final tagModel = Provider.of<TagModel>(context, listen: false);
+  late final userPreferencesModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
+
 
   @override
   void initState() {
@@ -202,11 +210,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var authModel = Provider.of<AuthModel>(context, listen: false);
-    authModel.initializeAuth();
-
+  Widget _buildRouter() {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Receipt Wrangler',
@@ -244,6 +248,24 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    authModel.initializeAuth();
+    var future = refreshTokens(authModel, groupModel, userModel,
+        userPreferencesModel, categoryModel, tagModel);
+
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _buildRouter();
+        }
+
+        return const CircularLoadingProgress();
+      },
+    );
+  }
+
   // Listen to the app lifecycle state changes
   void _onStateChanged(AppLifecycleState state) {
     switch (state) {
@@ -263,16 +285,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   void _onDetached() => print('detached');
 
   void _onResumed() async {
-    // TODO: check connection to server
     print("resumed");
-    var authModel = Provider.of<AuthModel>(context, listen: false);
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    var userPreferencesModel =
-        Provider.of<UserPreferencesModel>(context, listen: false);
-    var categoryModel = Provider.of<CategoryModel>(context, listen: false);
-    var tagModel = Provider.of<TagModel>(context, listen: false);
-
     await refreshTokens(authModel, groupModel, userModel, userPreferencesModel,
         categoryModel, tagModel);
   }
