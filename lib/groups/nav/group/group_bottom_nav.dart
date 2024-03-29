@@ -50,9 +50,9 @@ class _GroupBottomNav extends State<GroupBottomNav> {
         index = 0;
       } else if (uri.contains("/add")) {
         index = 1;
-      } else if (uri.contains("/search")) {
-        index = 2;
       } else if (uri.contains("receipts")) {
+        index = 2;
+      } else if (uri.contains("/search")) {
         index = 3;
       }
 
