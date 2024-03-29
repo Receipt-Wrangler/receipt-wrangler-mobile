@@ -111,6 +111,7 @@ Future<void> storeAppData(
   }
 
   authModel.setClaims(appData.claims);
+  authModel.setFeatureConfig(appData.featureConfig);
   groupModel.setGroups(appData.groups);
   userModel.setUsers(appData.users);
   userPreferencesModel.setUserPreferences(appData.userPreferences);
