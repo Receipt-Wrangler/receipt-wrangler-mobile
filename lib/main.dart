@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
@@ -34,7 +35,8 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await GlobalSharedPreferences.initialize();
 
   runApp(MultiProvider(
@@ -51,6 +53,7 @@ void main() async {
     ],
     child: const ReceiptWrangler(),
   ));
+  FlutterNativeSplash.remove();
 }
 
 // GoRouter configuration
@@ -174,7 +177,6 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   late final userPreferencesModel =
       Provider.of<UserPreferencesModel>(context, listen: false);
 
-
   @override
   void initState() {
     super.initState();
@@ -212,6 +214,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   Widget _buildRouter() {
     return MaterialApp.router(
+      color: Colors.white,
       debugShowCheckedModeBanner: false,
       title: 'Receipt Wrangler',
       theme: ThemeData(
