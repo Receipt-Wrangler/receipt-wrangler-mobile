@@ -214,6 +214,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
   Widget _buildRouter() {
     return MaterialApp.router(
+      color: Colors.white,
       debugShowCheckedModeBanner: false,
       title: 'Receipt Wrangler',
       theme: ThemeData(
