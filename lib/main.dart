@@ -27,6 +27,7 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_comments.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
@@ -154,6 +155,12 @@ final _router = GoRouter(
             path: '/receipts/:receiptId/images/view',
             builder: (context, state) => const SingleChildScrollView(
               child: ReceiptImages(),
+            ),
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/comments/view',
+            builder: (context, state) => const SingleChildScrollView(
+              child: ReceiptComments(),
             ),
           ),
         ]),
