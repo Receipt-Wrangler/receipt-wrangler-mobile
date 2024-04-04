@@ -30,7 +30,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           context.go("/receipts/${receipt.id}/images/view");
           break;
         case 2:
-          context.go("/search");
+          context.go("/receipts/${receipt.id}/comments/view");
           break;
         default:
           context.go("/groups");
@@ -46,6 +46,11 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       if (fullPath == "/receipts/:receiptId/images/view") {
         return 1;
       }
+
+      if (fullPath.contains("comments")) {
+        return 2;
+      }
+
       return 0;
     }
 
@@ -57,6 +62,10 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       NavigationDestination(
         icon: Icon(Icons.image),
         label: "Images",
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.chat_bubble),
+        label: "Comments",
       ),
     ];
 
