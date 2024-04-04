@@ -84,7 +84,7 @@ class _ReceiptComments extends State<ReceiptComments> {
                   ? SizedBox.shrink()
                   : Text(user?.displayName ?? "",
                       style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 5),
+              lastCommentHasSameUser ? SizedBox.shrink() : SizedBox(height: 5),
               Text(comment.comment.trim()),
             ],
           ),
@@ -93,12 +93,21 @@ class _ReceiptComments extends State<ReceiptComments> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print(receipt.comments);
+  Widget buildCommentWidgets(bool hasComments ) {
     return SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: buildWidgetList());
+        child: hasComments
+            ? buildWidgetList()
+            : Center(child: Text("No comments found.")));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var hasComments = receipt.comments.length > 0;
+    if (hasComments) {
+      return SingleChildScrollView(child: buildCommentWidgets(hasComments));
+    } else {
+      return buildCommentWidgets(hasComments);
   }
 }

@@ -159,9 +159,7 @@ final _router = GoRouter(
           ),
           GoRoute(
             path: '/receipts/:receiptId/comments/view',
-            builder: (context, state) => const SingleChildScrollView(
-              child: ReceiptComments(),
-            ),
+            builder: (context, state) => ReceiptComments(),
           ),
         ]),
   ],
