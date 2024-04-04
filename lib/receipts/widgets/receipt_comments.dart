@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 
 import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
@@ -23,7 +24,7 @@ class _ReceiptComments extends State<ReceiptComments> {
       itemBuilder: (context, index) {
         return Column(
           children: [
-            buildCommentRow(receipt.comments[index]),
+            buildCommentRow(receipt.comments[index], index),
             SizedBox(height: 10),
           ],
         );
@@ -31,26 +32,62 @@ class _ReceiptComments extends State<ReceiptComments> {
     );
   }
 
-  Widget buildCommentRow(api.Comment comment) {
+  Widget buildCommentRow(api.Comment comment, int index) {
+    var lastCommentHasSameUser = false;
+    var spacerWidget = SizedBox.shrink();
     var user = Provider.of<UserModel>(context, listen: false)
         .getUserById(comment.userId.toString());
 
+    var isLoggedInUsersComment = user?.id ==
+        Provider.of<AuthModel>(context, listen: false).claims?.userId;
+
+    if (index > 0 && receipt.comments[index - 1].userId == comment.userId) {
+      lastCommentHasSameUser = true;
+    }
+
+    if (lastCommentHasSameUser && !isLoggedInUsersComment) {
+      spacerWidget = SizedBox(width: 55);
+    }
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: isLoggedInUsersComment
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        UserAvatar(
-          userId: user?.id.toString(),
-        ),
+        lastCommentHasSameUser || isLoggedInUsersComment
+            ? spacerWidget
+            : Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: UserAvatar(
+                      userId: user?.id.toString(),
+                    ),
+                  ),
+                ),
+              ),
         SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(user?.displayName ?? "",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            Text(comment.comment.trim()),
-          ],
+        Container(
+          width: MediaQuery.of(context).size.width * 0.50,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: isLoggedInUsersComment
+                ? Theme.of(context).primaryColorLight
+                : Colors.grey[200],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              lastCommentHasSameUser
+                  ? SizedBox.shrink()
+                  : Text(user?.displayName ?? "",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 5),
+              Text(comment.comment.trim()),
+            ],
+          ),
         ),
       ],
     );
