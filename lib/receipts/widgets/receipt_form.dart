@@ -8,11 +8,13 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/receipt_model.dart';
+import '../../utils/snackbar.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -168,6 +170,33 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.receiptItems);
   }
 
+  // TODO: update to command
+  Widget buildSubmitButton() {
+    if (formState == WranglerFormState.edit) {
+      return BottomSubmitButton(onPressed: () async => _submitReceipt());
+    }
+
+    return SizedBox.shrink();
+  }
+
+  _submitReceipt() async {
+    if (_formKey.currentState!.saveAndValidate()) {
+      var form = {..._formKey.currentState!.value};
+
+      try {
+        form["id"] = receipt.id;
+        print(form);
+        var receiptToUpdate = api.Receipt.fromJson(form) as api.Receipt;
+
+        await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
+        showSuccessSnackbar(context, "Receipt updated successfully");
+      } catch (e) {
+        handleApiError(context, e);
+        print(e);
+      }
+    }
+  }
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -202,7 +231,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                           {print(_formKey.currentState!.value)}
                       },
                   child: Text("Check form value"))
-              : SizedBox.shrink()
+              : SizedBox.shrink(),
+          buildSubmitButton(),
         ],
       ),
     );
