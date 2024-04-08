@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
@@ -16,6 +17,11 @@ WranglerFormState getFormState(String uri) {
   } else {
     return WranglerFormState.view;
   }
+}
+
+WranglerFormState getFormStateFromContext(BuildContext context) {
+  var uri = GoRouterState.of(context).uri;
+  return getFormState(uri.toString());
 }
 
 String getFormStateHeader(WranglerFormState formState) {
