@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -115,6 +116,27 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText}");
   }
 
+  Widget buildListTile() {
+    return ListTile(
+        title: Text(
+          widget.data.name,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: getSubtitleText(),
+        leading: getLeadingWidget(),
+        trailing: getStatusText(),
+        contentPadding: EdgeInsets.zero,
+        onTap: () => onTap());
+  }
+
+  Widget buildEditButton() {
+    return SlidableAction(
+      icon: Icons.edit,
+      label: "Edit",
+      onPressed: (BuildContext context) {},
+    );
+  }
+
   void onTap() {
     context.go("/receipts/${widget.data.id}/view",
         extra: ReceiptNavigationExtras(
@@ -123,16 +145,11 @@ class _ReceiptListItem extends State<ReceiptListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        widget.data.name,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: getSubtitleText(),
-      leading: getLeadingWidget(),
-      trailing: getStatusText(),
-      contentPadding: EdgeInsets.zero,
-      onTap: () => onTap(),
-    );
+    return Slidable(
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          children: [buildEditButton()],
+        ),
+        child: buildListTile());
   }
 }
