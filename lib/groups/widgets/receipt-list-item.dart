@@ -133,7 +133,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     return SlidableAction(
       icon: Icons.edit,
       label: "Edit",
-      onPressed: (BuildContext context) {},
+      onPressed: (BuildContext context) {
+        context.go("/receipts/${widget.data.id}/edit",
+            extra: ReceiptNavigationExtras(
+                name: widget.data.name,
+                groupId: widget.data.groupId.toString()));
+      },
     );
   }
 

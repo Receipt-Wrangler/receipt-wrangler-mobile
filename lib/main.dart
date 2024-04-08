@@ -131,7 +131,7 @@ final _router = GoRouter(
                   receiptModel.setReceipt(snapshot.data as api.Receipt, false);
 
                   EdgeInsets? customPadding;
-                  if (state.fullPath == '/receipts/:receiptId/images/view') {
+                  if ((state.fullPath ?? "").contains("images")) {
                     customPadding = const EdgeInsets.all(0);
                   }
 
@@ -147,9 +147,20 @@ final _router = GoRouter(
         },
         routes: [
           GoRoute(
-            path: '/receipts/:receiptId/view',
-            builder: (context, state) =>
-                const SingleChildScrollView(child: ReceiptForm()),
+            path: '/receipts/:receiptId',
+            builder: (context, state) => SizedBox.shrink(),
+            routes: [
+              GoRoute(
+                path: 'edit',
+                builder: (context, state) =>
+                    const SingleChildScrollView(child: ReceiptForm()),
+              ),
+              GoRoute(
+                path: 'view',
+                builder: (context, state) =>
+                    const SingleChildScrollView(child: ReceiptForm()),
+              ),
+            ],
           ),
           GoRoute(
             path: '/receipts/:receiptId/images/view',
