@@ -1,3 +1,4 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -29,6 +30,20 @@ class _ReceiptForm extends State<ReceiptForm> {
   void initState() {
     super.initState();
     Provider.of<ReceiptModel>(context, listen: false);
+  }
+
+  Widget buildAmountField(api.Receipt receipt, WranglerFormState formState) {
+    var amountMask = new CurrencyTextInputFormatter(
+        decimalDigits: 2, enableNegative: false, symbol: "");
+    return FormBuilderTextField(
+      name: "amount",
+      decoration: const InputDecoration(labelText: "Amount", prefixText: "\$ "),
+      keyboardType: TextInputType.number,
+      initialValue: receipt.amount.toString(),
+      validator: FormBuilderValidators.required(),
+      readOnly: isFieldReadOnly(formState),
+      inputFormatters: [amountMask],
+    );
   }
 
   Widget buildDateField(api.Receipt receipt, WranglerFormState formState) {
@@ -161,13 +176,7 @@ class _ReceiptForm extends State<ReceiptForm> {
             readOnly: isFieldReadOnly(formState),
           ),
           textFieldSpacing,
-          FormBuilderTextField(
-            name: "amount",
-            decoration: const InputDecoration(labelText: "Amount"),
-            initialValue: receipt.amount.toString(),
-            validator: FormBuilderValidators.required(),
-            readOnly: isFieldReadOnly(formState),
-          ),
+          buildAmountField(receipt, formState),
           textFieldSpacing,
           buildDateField(receipt, formState),
           textFieldSpacing,
