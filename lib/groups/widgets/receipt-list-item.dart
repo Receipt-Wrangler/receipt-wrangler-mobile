@@ -133,6 +133,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     return SlidableAction(
       icon: Icons.edit,
       label: "Edit",
+      foregroundColor: Theme.of(context).colorScheme.primary,
       onPressed: (BuildContext context) {
         context.go("/receipts/${widget.data.id}/edit",
             extra: ReceiptNavigationExtras(
