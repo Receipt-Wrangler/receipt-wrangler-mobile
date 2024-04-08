@@ -31,6 +31,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId;
   }
 
+  // TODO: refactor to a common Widget to use in receipt form
   Widget _buildGroupField(api.UserPreferences userPreferences) {
     int? initialValue = null;
 
@@ -46,7 +47,6 @@ class _QuickScanForm extends State<QuickScanForm> {
       initialValue: initialValue,
       onChanged: (value) {
         setState(() {
-          print(widget.formKey.currentState);
           widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });

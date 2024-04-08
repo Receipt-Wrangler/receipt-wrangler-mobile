@@ -3,18 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
-import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
-import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../../models/receipt_model.dart';
 
@@ -29,11 +25,14 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final formState = getFormStateFromContext(context);
+  int groupId = 0;
 
   @override
   void initState() {
     super.initState();
     Provider.of<ReceiptModel>(context, listen: false);
+
+    groupId = receipt.groupId;
   }
 
   Widget buildNameField() {
@@ -80,36 +79,37 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildGroupField() {
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-
-    var items = groupModel.groups.map((group) => DropdownMenuItem(
-          value: group.id,
-          child: Text(group.name),
-        ));
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      items: items.toList(),
+      items: buildGroupDropDownMenuItems(context),
       initialValue: receipt.groupId,
       enabled: !isFieldReadOnly(formState),
+      onChanged: (value) {
+        setState(() {
+          _formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          groupId = value as int;
+        });
+      },
     );
   }
 
   Widget buildPaidByField() {
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-    var groupId = receipt.groupId.toString();
+    List<DropdownMenuItem> items = [];
+    var initialValue = null;
+    if (groupId == receipt.groupId) {
+      initialValue = receipt.paidByUserId;
+    }
 
-    var items = getUsersInGroup(userModel, groupModel, groupId)
-        .map((user) => DropdownMenuItem(
-              value: user.id,
-              child: Text(user.displayName),
-            ));
+    if (groupId > 0) {
+      items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
+    }
+
     return FormBuilderDropdown(
       name: "paidByUserId",
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items.toList(),
-      initialValue: receipt.paidByUserId,
+      initialValue: initialValue,
       enabled: !isFieldReadOnly(formState),
     );
   }
@@ -172,8 +172,6 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   @override
   Widget build(BuildContext context) {
-    var uri = GoRouterState.of(context).uri;
-
     return FormBuilder(
       key: _formKey,
       child: Column(
