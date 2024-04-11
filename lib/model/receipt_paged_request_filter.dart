@@ -21,6 +21,7 @@ class ReceiptPagedRequestFilter {
     this.tags,
     this.status,
     this.resolvedDate,
+    this.createdAt,
   });
 
   ///
@@ -87,6 +88,14 @@ class ReceiptPagedRequestFilter {
   ///
   PagedRequestField? resolvedDate;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  PagedRequestField? createdAt;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ReceiptPagedRequestFilter &&
      other.date == date &&
@@ -96,7 +105,8 @@ class ReceiptPagedRequestFilter {
      other.categories == categories &&
      other.tags == tags &&
      other.status == status &&
-     other.resolvedDate == resolvedDate;
+     other.resolvedDate == resolvedDate &&
+     other.createdAt == createdAt;
 
   @override
   int get hashCode =>
@@ -108,10 +118,11 @@ class ReceiptPagedRequestFilter {
     (categories == null ? 0 : categories!.hashCode) +
     (tags == null ? 0 : tags!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
-    (resolvedDate == null ? 0 : resolvedDate!.hashCode);
+    (resolvedDate == null ? 0 : resolvedDate!.hashCode) +
+    (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
-  String toString() => 'ReceiptPagedRequestFilter[date=$date, amount=$amount, name=$name, paidBy=$paidBy, categories=$categories, tags=$tags, status=$status, resolvedDate=$resolvedDate]';
+  String toString() => 'ReceiptPagedRequestFilter[date=$date, amount=$amount, name=$name, paidBy=$paidBy, categories=$categories, tags=$tags, status=$status, resolvedDate=$resolvedDate, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -155,6 +166,11 @@ class ReceiptPagedRequestFilter {
     } else {
       json[r'resolvedDate'] = null;
     }
+    if (this.createdAt != null) {
+      json[r'createdAt'] = this.createdAt;
+    } else {
+      json[r'createdAt'] = null;
+    }
     return json;
   }
 
@@ -185,6 +201,7 @@ class ReceiptPagedRequestFilter {
         tags: PagedRequestField.fromJson(json[r'tags']),
         status: PagedRequestField.fromJson(json[r'status']),
         resolvedDate: PagedRequestField.fromJson(json[r'resolvedDate']),
+        createdAt: PagedRequestField.fromJson(json[r'createdAt']),
       );
     }
     return null;

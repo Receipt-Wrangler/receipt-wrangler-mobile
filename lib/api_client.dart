@@ -273,8 +273,16 @@ class ApiClient {
           return UpdateGroupSettingsCommand.fromJson(value);
         case 'UpdateProfileCommand':
           return UpdateProfileCommand.fromJson(value);
+        case 'UpsertCategoryCommand':
+          return UpsertCategoryCommand.fromJson(value);
+        case 'UpsertCommentCommand':
+          return UpsertCommentCommand.fromJson(value);
         case 'UpsertDashboardCommand':
           return UpsertDashboardCommand.fromJson(value);
+        case 'UpsertItemCommand':
+          return UpsertItemCommand.fromJson(value);
+        case 'UpsertReceiptCommand':
+          return UpsertReceiptCommand.fromJson(value);
         case 'UpsertTagCommand':
           return UpsertTagCommand.fromJson(value);
         case 'UpsertWidgetCommand':

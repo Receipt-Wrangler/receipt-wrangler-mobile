@@ -32,7 +32,7 @@ class Receipt {
     this.createdByString,
   });
 
-  /// Reciept total amount
+  /// Receipt total amount
   String amount;
 
   /// Categories associated to receipt

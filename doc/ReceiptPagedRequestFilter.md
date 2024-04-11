@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **tags** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
 **status** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
 **resolvedDate** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
+**createdAt** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
