@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav(
-      {super.key,
-      required this.destinations,
-      required this.getInitialSelectedIndex,
-      required this.onDestinationSelected,
-      required this.indexSelectedController});
+  const BottomNav({
+    super.key,
+    required this.destinations,
+    required this.getInitialSelectedIndex,
+    required this.onDestinationSelected,
+    required this.indexSelectedController,
+  });
 
   final List<NavigationDestination> destinations;
 
@@ -38,9 +39,10 @@ class _BottomNav extends State<BottomNav> {
 
   Widget buildNavigationBar() {
     return NavigationBar(
-        destinations: widget.destinations,
-        onDestinationSelected: widget.onDestinationSelected,
-        selectedIndex: widget.getInitialSelectedIndex());
+      destinations: widget.destinations,
+      onDestinationSelected: widget.onDestinationSelected,
+      selectedIndex: widget.getInitialSelectedIndex(),
+    );
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/constants/routes.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
@@ -39,7 +40,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
     setIndexSelected() {
       var fullPath = GoRouterState.of(context).fullPath ?? "";
-      if (fullPath == "/receipts/:receiptId/view") {
+      if (fullPath == fullReceiptViewPath) {
         return 0;
       }
 
