@@ -8,16 +8,16 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/receipt_model.dart';
-import '../../utils/snackbar.dart';
 
 class ReceiptForm extends StatefulWidget {
-  const ReceiptForm({super.key});
+  const ReceiptForm({super.key, required this.formKey});
+
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   State<ReceiptForm> createState() => _ReceiptForm();
@@ -89,7 +89,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       enabled: !isFieldReadOnly(formState),
       onChanged: (value) {
         setState(() {
-          _formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
       },
@@ -170,44 +170,10 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.receiptItems);
   }
 
-  // TODO: update to command
-  Widget buildSubmitButton() {
-    if (formState == WranglerFormState.edit) {
-      return BottomSubmitButton(onPressed: () async => _submitReceipt());
-    }
-
-    return SizedBox.shrink();
-  }
-
-  _submitReceipt() async {
-    if (_formKey.currentState!.saveAndValidate()) {
-      var form = {..._formKey.currentState!.value};
-
-      try {
-        var date = form["date"] as DateTime;
-        form["date"] = date.toIso8601String();
-
-        var status = form["status"] as api.ReceiptStatus;
-        form["status"] = status.value;
-
-        var receiptToUpdate =
-            api.UpsertReceiptCommand.fromJson(form) as api.UpsertReceiptCommand;
-
-        await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
-        showSuccessSnackbar(context, "Receipt updated successfully");
-      } catch (e) {
-        handleApiError(context, e);
-        print(e);
-      }
-    }
-  }
-
-  final _formKey = GlobalKey<FormBuilderState>();
-
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      key: _formKey,
+      key: widget.formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -232,12 +198,11 @@ class _ReceiptForm extends State<ReceiptForm> {
           kDebugMode
               ? ElevatedButton(
                   onPressed: () => {
-                        if (_formKey.currentState!.saveAndValidate())
-                          {print(_formKey.currentState!.value)}
+                        if (widget.formKey.currentState!.saveAndValidate())
+                          {print(widget.formKey.currentState!.value)}
                       },
                   child: Text("Check form value"))
               : SizedBox.shrink(),
-          buildSubmitButton(),
         ],
       ),
     );
