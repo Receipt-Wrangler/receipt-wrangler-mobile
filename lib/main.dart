@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -28,16 +27,13 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_comments.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
-import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
-import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -124,92 +120,13 @@ final _router = GoRouter(
     GoRoute(
       path: '/receipts/:receiptId/view',
       builder: (context, state) {
-        var future = api.ReceiptApi().getReceiptById(
-            int.parse(state.pathParameters['receiptId'] as String));
-        return FutureBuilder(
-            future: future,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData) {
-                var formKey = GlobalKey<FormBuilderState>();
-                var receiptModel =
-                    Provider.of<ReceiptModel>(context, listen: false);
-                receiptModel.setReceipt(snapshot.data as api.Receipt, false);
-
-                return ScreenWrapper(
-                  appBarWidget: const ReceiptAppBar(),
-                  bottomNavigationBarWidget: const ReceiptBottomNav(),
-                  child: SingleChildScrollView(
-                    child: ReceiptForm(
-                      formKey: formKey,
-                    ),
-                  ),
-                );
-              }
-
-              return const CircularLoadingProgress();
-            });
+        return buildReceiptFormRoute(context, state);
       },
     ),
     GoRoute(
       path: '/receipts/:receiptId/edit',
       builder: (context, state) {
-        var future = api.ReceiptApi().getReceiptById(
-            int.parse(state.pathParameters['receiptId'] as String));
-        return FutureBuilder(
-            future: future,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData) {
-                var receiptModel =
-                    Provider.of<ReceiptModel>(context, listen: false);
-                receiptModel.setReceipt(snapshot.data as api.Receipt, false);
-                var formKey = GlobalKey<FormBuilderState>();
-
-                return ScreenWrapper(
-                  appBarWidget: const ReceiptAppBar(),
-                  bottomNavigationBarWidget: const ReceiptBottomNav(),
-                  child: SingleChildScrollView(
-                    child: ReceiptForm(
-                      formKey: formKey,
-                    ),
-                  ),
-                  bottomSheetWidget: BottomSubmitButton(
-                    onPressed: () async {
-                      if (formKey.currentState!.saveAndValidate()) {
-                        var receipt = receiptModel.receipt;
-                        var form = {...formKey.currentState!.value};
-
-                        try {
-                          var date = form["date"] as DateTime;
-                          form["date"] = date.toString();
-
-                          print(date);
-
-                          var status = form["status"] as api.ReceiptStatus;
-                          form["status"] = status.value;
-
-                          var receiptToUpdate =
-                              api.UpsertReceiptCommand.fromJson(form)
-                                  as api.UpsertReceiptCommand;
-
-                          await api.ReceiptApi()
-                              .updateReceipt(receipt.id, receiptToUpdate);
-                          showSuccessSnackbar(
-                              context, "Receipt updated successfully");
-                          context.go("/receipts/${receipt.id}/view");
-                        } catch (e) {
-                          handleApiError(context, e);
-                          print(e);
-                        }
-                      }
-                    },
-                  ),
-                );
-              }
-
-              return const CircularLoadingProgress();
-            });
+        return buildReceiptFormRoute(context, state);
       },
     ),
     ShellRoute(
