@@ -165,7 +165,7 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildReceiptItemList() {
     return ReceiptItemField(
-        name: "receiptItems",
+        name: "items",
         label: "Shared With",
         initialValue: receipt.receiptItems);
   }
@@ -184,9 +184,14 @@ class _ReceiptForm extends State<ReceiptForm> {
       var form = {..._formKey.currentState!.value};
 
       try {
-        form["id"] = receipt.id;
-        print(form);
-        var receiptToUpdate = api.Receipt.fromJson(form) as api.Receipt;
+        var date = form["date"] as DateTime;
+        form["date"] = date.toIso8601String();
+
+        var status = form["status"] as api.ReceiptStatus;
+        form["status"] = status.value;
+
+        var receiptToUpdate =
+            api.UpsertReceiptCommand.fromJson(form) as api.UpsertReceiptCommand;
 
         await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
         showSuccessSnackbar(context, "Receipt updated successfully");
