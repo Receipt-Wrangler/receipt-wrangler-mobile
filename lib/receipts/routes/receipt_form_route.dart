@@ -48,12 +48,13 @@ PreferredSizeWidget buildAppBarWidget(
 Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
   var future = api.ReceiptApi()
       .getReceiptById(int.parse(state.pathParameters['receiptId'] as String));
+  final formKey = GlobalKey<FormBuilderState>();
+
   return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          var formKey = GlobalKey<FormBuilderState>();
           var formState = getFormStateFromContext(context);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           receiptModel.setReceipt(snapshot.data as api.Receipt, false);
