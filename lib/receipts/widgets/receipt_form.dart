@@ -182,6 +182,7 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildTagField(),
           textFieldSpacing,
           buildReceiptItemList(),
+          textFieldSpacing,
           kDebugMode
               ? ElevatedButton(
                   onPressed: () => {
