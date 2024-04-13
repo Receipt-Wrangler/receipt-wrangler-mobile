@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -11,10 +11,39 @@ import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
 import '../../shared/widgets/circular_loading_progress.dart';
 import '../../shared/widgets/screen_wrapper.dart';
+import '../../shared/widgets/top-app-bar.dart';
 import '../../utils/forms.dart';
+import '../../utils/receipts.dart';
 import '../../utils/snackbar.dart';
-import '../nav/receipt_app_bar.dart';
 import '../nav/receipt_bottom_nav.dart';
+
+Widget buildMenuButton(BuildContext context) {
+  return PopupMenuButton(
+    itemBuilder: (BuildContext context) {
+      return [
+        PopupMenuItem(
+          child: Text("Edit"),
+          onTap: () {
+            var receiptModel =
+                Provider.of<ReceiptModel>(context, listen: false);
+            var receipt = receiptModel.receipt;
+            context.go("/receipts/${receipt.id}/edit");
+          },
+        )
+      ];
+    },
+  );
+}
+
+PreferredSizeWidget buildAppBarWidget(
+    BuildContext context, WranglerFormState formState, api.Receipt receipt) {
+  return TopAppBar(
+    titleText: getTitleText(formState, receipt.name),
+    leadingArrowRedirect: "/groups/${receipt.groupId}/receipts",
+    actions: [buildMenuButton(context)],
+    hideAvatar: true,
+  );
+}
 
 Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
   var future = api.ReceiptApi()
@@ -30,7 +59,8 @@ Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
           receiptModel.setReceipt(snapshot.data as api.Receipt, false);
 
           return ScreenWrapper(
-            appBarWidget: const ReceiptAppBar(),
+            appBarWidget:
+                buildAppBarWidget(context, formState, receiptModel.receipt),
             bottomNavigationBarWidget: const ReceiptBottomNav(),
             child: SingleChildScrollView(
               child: ReceiptForm(
