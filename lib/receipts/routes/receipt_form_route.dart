@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
@@ -55,10 +56,10 @@ Widget buildSubmitButton(
         var form = {...formKey.currentState!.value};
 
         try {
+          final DateFormat formatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
           var date = form["date"] as DateTime;
-          form["date"] = date.toString();
 
-          print(date);
+          form["date"] = formatter.format(date);
 
           var status = form["status"] as api.ReceiptStatus;
           form["status"] = status.value;
