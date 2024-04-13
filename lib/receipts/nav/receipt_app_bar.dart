@@ -29,37 +29,40 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     return "${group.name} Receipts";
   }
 
+  Widget buildImageUploadIcon(api.Receipt receipt) {
+    return IconButton(
+      icon: const Icon(Icons.add_a_photo),
+      onPressed: () async {
+        try {
+          var filesUploaded =
+              await uploadImagesToReceipt(receipt.id.toString());
+          if (filesUploaded.isNotEmpty) {
+            showSuccessSnackbar(context,
+                "Successfully uploaded ${filesUploaded.length} images");
+            for (var file in filesUploaded) {
+              Provider.of<ReceiptModel>(context, listen: false).pushImage(file);
+            }
+          }
+        } catch (e) {
+          print(e);
+          return;
+        }
+      },
+    );
+  }
+
+  Widget getImageUploadIcon(context, api.Receipt receipt) {
+    var fullPath = GoRouterState.of(context).fullPath;
+
+    if (fullPath == "/receipts/:receiptId/images/edit") {
+      return buildImageUploadIcon(receipt);
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget getImageUploadIcon(context, api.Receipt receipt) {
-      var fullPath = GoRouterState.of(context).fullPath;
-
-      if (fullPath == "/receipts/:receiptId/images/edit") {
-        return IconButton(
-          icon: const Icon(Icons.add_a_photo),
-          onPressed: () async {
-            try {
-              var filesUploaded =
-                  await uploadImagesToReceipt(receipt.id.toString());
-              if (filesUploaded.isNotEmpty) {
-                showSuccessSnackbar(context,
-                    "Successfully uploaded ${filesUploaded.length} images");
-                for (var file in filesUploaded) {
-                  Provider.of<ReceiptModel>(context, listen: false)
-                      .pushImage(file);
-                }
-              }
-            } catch (e) {
-              print(e);
-              return;
-            }
-          },
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
-    }
-
     var uri = GoRouter.of(context).routeInformationProvider.value.uri;
     var formState = getFormState(uri.toString());
     var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
@@ -69,6 +72,7 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
       titleText: getTitleText(formState, receipt.name),
       leadingArrowRedirect: "/groups/${receipt.groupId}/receipts",
       actions: actions,
+      hideAvatar: true,
     );
   }
 }

@@ -1,4 +1,4 @@
-# openapi.model.UpsertTagCommand
+# openapi.model.UpsertCommentCommand
 
 ## Load the model package
 ```dart
@@ -8,9 +8,9 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **int** | Tag id | [optional] 
-**name** | **String** | Tag name | 
-**description** | **String** | Tag description | [optional] 
+**comment** | **String** | Comment itself | 
+**receiptId** | **int** | Receipt foreign key | 
+**userId** | **int** | User foreign key | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

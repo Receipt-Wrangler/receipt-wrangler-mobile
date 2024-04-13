@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../enums/form_state.dart';
@@ -16,6 +18,11 @@ WranglerFormState getFormState(String uri) {
   } else {
     return WranglerFormState.view;
   }
+}
+
+WranglerFormState getFormStateFromContext(BuildContext context) {
+  var uri = GoRouterState.of(context).uri;
+  return getFormState(uri.toString());
 }
 
 String getFormStateHeader(WranglerFormState formState) {
@@ -86,4 +93,11 @@ List<DropdownMenuItem> buildStatusDropDownMenuItems() {
 
 setLoadingBarState(BuildContext context, bool isLoading) {
   Provider.of<LoadingModel>(context, listen: false).setIsLoading(isLoading);
+}
+
+handleApiError(BuildContext context, dynamic e) {
+  if (e is ApiException) {
+    showApiErrorSnackbar(context, e);
+    return;
+  }
 }

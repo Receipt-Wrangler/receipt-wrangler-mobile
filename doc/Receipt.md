@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**amount** | **String** | Reciept total amount | 
+**amount** | **String** | Receipt total amount | 
 **categories** | [**List<Category>**](Category.md) | Categories associated to receipt | [optional] [default to const []]
 **comments** | [**List<Comment>**](Comment.md) | Comments associated to receipt | [optional] [default to const []]
 **createdAt** | **String** |  | [optional] 

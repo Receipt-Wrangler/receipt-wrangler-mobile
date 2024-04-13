@@ -21,7 +21,7 @@ void showErrorSnackbar(BuildContext context, String message,
 void showApiErrorSnackbar(BuildContext context, ApiException error) {
   var errorObject = jsonDecode(error.message ?? "{}");
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(errorObject["errorMsg"] ?? 'An error occured'),
+    content: Text(errorObject["errorMsg"] ?? 'An error occurred'),
     backgroundColor: Colors.red,
   ));
 }

@@ -10,15 +10,15 @@
 
 part of openapi.api;
 
-class UpsertTagCommand {
-  /// Returns a new [UpsertTagCommand] instance.
-  UpsertTagCommand({
+class UpsertCategoryCommand {
+  /// Returns a new [UpsertCategoryCommand] instance.
+  UpsertCategoryCommand({
     this.id,
     required this.name,
     this.description,
   });
 
-  /// Tag id
+  /// Category id
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -27,10 +27,10 @@ class UpsertTagCommand {
   ///
   int? id;
 
-  /// Tag name
+  /// Category name
   String name;
 
-  /// Tag description
+  /// Category description
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -40,7 +40,7 @@ class UpsertTagCommand {
   String? description;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpsertTagCommand &&
+  bool operator ==(Object other) => identical(this, other) || other is UpsertCategoryCommand &&
      other.id == id &&
      other.name == name &&
      other.description == description;
@@ -53,7 +53,7 @@ class UpsertTagCommand {
     (description == null ? 0 : description!.hashCode);
 
   @override
-  String toString() => 'UpsertTagCommand[id=$id, name=$name, description=$description]';
+  String toString() => 'UpsertCategoryCommand[id=$id, name=$name, description=$description]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -71,10 +71,10 @@ class UpsertTagCommand {
     return json;
   }
 
-  /// Returns a new [UpsertTagCommand] instance and imports its values from
+  /// Returns a new [UpsertCategoryCommand] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static UpsertTagCommand? fromJson(dynamic value) {
+  static UpsertCategoryCommand? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -83,13 +83,13 @@ class UpsertTagCommand {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "UpsertTagCommand[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "UpsertTagCommand[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "UpsertCategoryCommand[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "UpsertCategoryCommand[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return UpsertTagCommand(
+      return UpsertCategoryCommand(
         id: mapValueOfType<int>(json, r'id'),
         name: mapValueOfType<String>(json, r'name')!,
         description: mapValueOfType<String>(json, r'description'),
@@ -98,11 +98,11 @@ class UpsertTagCommand {
     return null;
   }
 
-  static List<UpsertTagCommand>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <UpsertTagCommand>[];
+  static List<UpsertCategoryCommand>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <UpsertCategoryCommand>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = UpsertTagCommand.fromJson(row);
+        final value = UpsertCategoryCommand.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -111,12 +111,12 @@ class UpsertTagCommand {
     return result.toList(growable: growable);
   }
 
-  static Map<String, UpsertTagCommand> mapFromJson(dynamic json) {
-    final map = <String, UpsertTagCommand>{};
+  static Map<String, UpsertCategoryCommand> mapFromJson(dynamic json) {
+    final map = <String, UpsertCategoryCommand>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = UpsertTagCommand.fromJson(entry.value);
+        final value = UpsertCategoryCommand.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -125,13 +125,13 @@ class UpsertTagCommand {
     return map;
   }
 
-  // maps a json object with a list of UpsertTagCommand-objects as value to a dart map
-  static Map<String, List<UpsertTagCommand>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<UpsertTagCommand>>{};
+  // maps a json object with a list of UpsertCategoryCommand-objects as value to a dart map
+  static Map<String, List<UpsertCategoryCommand>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<UpsertCategoryCommand>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = UpsertTagCommand.listFromJson(entry.value, growable: growable,);
+        final value = UpsertCategoryCommand.listFromJson(entry.value, growable: growable,);
         if (value != null) {
           map[entry.key] = value;
         }

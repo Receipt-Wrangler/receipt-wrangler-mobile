@@ -93,7 +93,7 @@ class _ReceiptComments extends State<ReceiptComments> {
     );
   }
 
-  Widget buildCommentWidgets(bool hasComments ) {
+  Widget buildCommentWidgets(bool hasComments) {
     return SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -109,5 +109,6 @@ class _ReceiptComments extends State<ReceiptComments> {
       return SingleChildScrollView(child: buildCommentWidgets(hasComments));
     } else {
       return buildCommentWidgets(hasComments);
+    }
   }
 }

@@ -91,16 +91,16 @@ class ReceiptApi {
   ///
   /// Parameters:
   ///
-  /// * [Receipt] receipt (required):
+  /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to create
   Future<Response> createReceiptWithHttpInfo(
-    Receipt receipt,
+    UpsertReceiptCommand upsertReceiptCommand,
   ) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/';
 
     // ignore: prefer_final_locals
-    Object? postBody = receipt;
+    Object? postBody = upsertReceiptCommand;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -125,13 +125,13 @@ class ReceiptApi {
   ///
   /// Parameters:
   ///
-  /// * [Receipt] receipt (required):
+  /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to create
   Future<void> createReceipt(
-    Receipt receipt,
+    UpsertReceiptCommand upsertReceiptCommand,
   ) async {
     final response = await createReceiptWithHttpInfo(
-      receipt,
+      upsertReceiptCommand,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -579,18 +579,18 @@ class ReceiptApi {
   /// * [int] receiptId (required):
   ///   Id of receipt to get
   ///
-  /// * [Receipt] receipt (required):
+  /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to update
   Future<Response> updateReceiptWithHttpInfo(
     int receiptId,
-    Receipt receipt,
+    UpsertReceiptCommand upsertReceiptCommand,
   ) async {
     // ignore: prefer_const_declarations
     final path =
         r'/receipt/{receiptId}'.replaceAll('{receiptId}', receiptId.toString());
 
     // ignore: prefer_final_locals
-    Object? postBody = receipt;
+    Object? postBody = upsertReceiptCommand;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -618,15 +618,15 @@ class ReceiptApi {
   /// * [int] receiptId (required):
   ///   Id of receipt to get
   ///
-  /// * [Receipt] receipt (required):
+  /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to update
   Future<void> updateReceipt(
     int receiptId,
-    Receipt receipt,
+    UpsertReceiptCommand upsertReceiptCommand,
   ) async {
     final response = await updateReceiptWithHttpInfo(
       receiptId,
-      receipt,
+      upsertReceiptCommand,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));

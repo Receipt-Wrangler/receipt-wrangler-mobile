@@ -1,37 +1,67 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
-import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
-import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../../models/receipt_model.dart';
 
 class ReceiptForm extends StatefulWidget {
-  const ReceiptForm({super.key});
+  const ReceiptForm({super.key, required this.formKey});
+
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   State<ReceiptForm> createState() => _ReceiptForm();
 }
 
 class _ReceiptForm extends State<ReceiptForm> {
+  late final receipt =
+      Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final formState = getFormStateFromContext(context);
+  int groupId = 0;
+
   @override
   void initState() {
     super.initState();
     Provider.of<ReceiptModel>(context, listen: false);
+
+    groupId = receipt.groupId;
   }
 
-  Widget buildDateField(api.Receipt receipt, WranglerFormState formState) {
+  Widget buildNameField() {
+    return FormBuilderTextField(
+      name: "name",
+      decoration: const InputDecoration(labelText: "Name"),
+      initialValue: receipt.name,
+      validator: FormBuilderValidators.required(),
+      readOnly: isFieldReadOnly(formState),
+    );
+  }
+
+  Widget buildAmountField() {
+    var amountMask = new CurrencyTextInputFormatter(
+        decimalDigits: 2, enableNegative: false, symbol: "");
+    return FormBuilderTextField(
+      name: "amount",
+      decoration: const InputDecoration(labelText: "Amount", prefixText: "\$ "),
+      keyboardType: TextInputType.number,
+      initialValue: receipt.amount.toString(),
+      validator: FormBuilderValidators.required(),
+      readOnly: isFieldReadOnly(formState),
+      inputFormatters: [amountMask],
+    );
+  }
+
+  Widget buildDateField() {
     if (formState == WranglerFormState.view) {
       var formattedDate =
           formatDate(defaultDateFormat, DateTime.parse(receipt.date));
@@ -44,75 +74,63 @@ class _ReceiptForm extends State<ReceiptForm> {
       return FormBuilderDateTimePicker(
         name: "date",
         decoration: const InputDecoration(labelText: "Date"),
+        validator: FormBuilderValidators.required(),
         initialValue: DateTime.parse(receipt.date),
         inputType: InputType.date,
       );
     }
   }
 
-  Widget buildGroupField(api.Receipt receipt, WranglerFormState formState) {
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-
-    var items = groupModel.groups.map((group) => DropdownMenuItem(
-          value: group.id,
-          child: Text(group.name),
-        ));
+  Widget buildGroupField() {
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      items: items.toList(),
+      items: buildGroupDropDownMenuItems(context),
       initialValue: receipt.groupId,
       enabled: !isFieldReadOnly(formState),
+      validator: FormBuilderValidators.required(),
+      onChanged: (value) {
+        setState(() {
+          widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          groupId = value as int;
+        });
+      },
     );
   }
 
-  Widget buildPaidByField(api.Receipt receipt, WranglerFormState formState) {
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    var groupModel = Provider.of<GroupModel>(context, listen: false);
-    var groupId = receipt.groupId.toString();
+  Widget buildPaidByField() {
+    List<DropdownMenuItem> items = [];
+    var initialValue = null;
+    if (groupId == receipt.groupId) {
+      initialValue = receipt.paidByUserId;
+    }
 
-    var items = getUsersInGroup(userModel, groupModel, groupId)
-        .map((user) => DropdownMenuItem(
-              value: user.id,
-              child: Text(user.displayName),
-            ));
+    if (groupId > 0) {
+      items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
+    }
+
     return FormBuilderDropdown(
       name: "paidByUserId",
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items.toList(),
-      initialValue: receipt.paidByUserId,
+      initialValue: initialValue,
+      validator: FormBuilderValidators.required(),
       enabled: !isFieldReadOnly(formState),
     );
   }
 
-  Widget buildStatusField(api.Receipt receipt, WranglerFormState formState) {
+  Widget buildStatusField() {
     return FormBuilderDropdown(
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
-      items: const [
-        DropdownMenuItem(
-          value: api.ReceiptStatus.OPEN,
-          child: Text("Open"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.NEEDS_ATTENTION,
-          child: Text("Needs Attention"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.RESOLVED,
-          child: Text("Resolved"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.DRAFT,
-          child: Text("Draft"),
-        ),
-      ],
+      items: buildStatusDropDownMenuItems(),
       initialValue: receipt.status,
       enabled: !isFieldReadOnly(formState),
+      validator: FormBuilderValidators.required(),
     );
   }
 
-  Widget buildCategoryField(api.Receipt receipt) {
+  Widget buildCategoryField() {
     return MultiSelectField<api.Category>(
       name: "categories",
       label: "Categories",
@@ -122,7 +140,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildTagField(api.Receipt receipt) {
+  Widget buildTagField() {
     return MultiSelectField<api.Tag>(
       name: "tags",
       label: "Tags",
@@ -132,64 +150,47 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildReceiptItemList(api.Receipt receipt) {
+  Widget buildReceiptItemList() {
     return ReceiptItemField(
-        name: "receiptItems",
+        name: "items",
         label: "Shared With",
         initialValue: receipt.receiptItems);
   }
 
-  final _formKey = GlobalKey<FormBuilderState>();
-
   @override
   Widget build(BuildContext context) {
-    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
-    var uri = GoRouterState.of(context).uri;
-    var formState = getFormState(uri.toString());
-
     return FormBuilder(
-      key: _formKey,
+      key: widget.formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           textFieldSpacing,
-          FormBuilderTextField(
-            name: "name",
-            decoration: const InputDecoration(labelText: "Name"),
-            initialValue: receipt.name,
-            validator: FormBuilderValidators.required(),
-            readOnly: isFieldReadOnly(formState),
-          ),
+          buildNameField(),
           textFieldSpacing,
-          FormBuilderTextField(
-            name: "amount",
-            decoration: const InputDecoration(labelText: "Amount"),
-            initialValue: receipt.amount.toString(),
-            validator: FormBuilderValidators.required(),
-            readOnly: isFieldReadOnly(formState),
-          ),
+          buildAmountField(),
           textFieldSpacing,
-          buildDateField(receipt, formState),
+          buildDateField(),
           textFieldSpacing,
-          buildGroupField(receipt, formState),
+          buildGroupField(),
           textFieldSpacing,
-          buildPaidByField(receipt, formState),
+          buildPaidByField(),
           textFieldSpacing,
-          buildStatusField(receipt, formState),
+          buildStatusField(),
           textFieldSpacing,
-          buildCategoryField(receipt),
+          buildCategoryField(),
           textFieldSpacing,
-          buildTagField(receipt),
+          buildTagField(),
           textFieldSpacing,
-          buildReceiptItemList(receipt),
+          buildReceiptItemList(),
+          textFieldSpacing,
           kDebugMode
               ? ElevatedButton(
                   onPressed: () => {
-                        if (_formKey.currentState!.saveAndValidate())
-                          {print(_formKey.currentState!.value)}
+                        if (widget.formKey.currentState!.saveAndValidate())
+                          {print(widget.formKey.currentState!.value)}
                       },
                   child: Text("Check form value"))
-              : SizedBox.shrink()
+              : SizedBox.shrink(),
         ],
       ),
     );

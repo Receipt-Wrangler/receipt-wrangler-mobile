@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/groups/widgets/group-receipts-list.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/group_receipts_list.dart';
 
 class GroupReceiptsScreen extends StatefulWidget {
   const GroupReceiptsScreen({super.key});

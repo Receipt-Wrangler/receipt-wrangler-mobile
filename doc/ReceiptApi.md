@@ -70,7 +70,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createReceipt**
-> createReceipt(receipt)
+> createReceipt(upsertReceiptCommand)
 
 Create receipt
 
@@ -87,10 +87,10 @@ import 'package:openapi/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = ReceiptApi();
-final receipt = Receipt(); // Receipt | Receipt to create
+final upsertReceiptCommand = UpsertReceiptCommand(); // UpsertReceiptCommand | Receipt to create
 
 try {
-    api_instance.createReceipt(receipt);
+    api_instance.createReceipt(upsertReceiptCommand);
 } catch (e) {
     print('Exception when calling ReceiptApi->createReceipt: $e\n');
 }
@@ -100,7 +100,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **receipt** | [**Receipt**](Receipt.md)| Receipt to create | 
+ **upsertReceiptCommand** | [**UpsertReceiptCommand**](UpsertReceiptCommand.md)| Receipt to create | 
 
 ### Return type
 
@@ -419,7 +419,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateReceipt**
-> updateReceipt(receiptId, receipt)
+> updateReceipt(receiptId, upsertReceiptCommand)
 
 Update receipt
 
@@ -437,10 +437,10 @@ import 'package:openapi/api.dart';
 
 final api_instance = ReceiptApi();
 final receiptId = 56; // int | Id of receipt to get
-final receipt = Receipt(); // Receipt | Receipt to update
+final upsertReceiptCommand = UpsertReceiptCommand(); // UpsertReceiptCommand | Receipt to update
 
 try {
-    api_instance.updateReceipt(receiptId, receipt);
+    api_instance.updateReceipt(receiptId, upsertReceiptCommand);
 } catch (e) {
     print('Exception when calling ReceiptApi->updateReceipt: $e\n');
 }
@@ -451,7 +451,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **receiptId** | **int**| Id of receipt to get | 
- **receipt** | [**Receipt**](Receipt.md)| Receipt to update | 
+ **upsertReceiptCommand** | [**UpsertReceiptCommand**](UpsertReceiptCommand.md)| Receipt to update | 
 
 ### Return type
 

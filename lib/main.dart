@@ -27,8 +27,8 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_comments.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
@@ -117,6 +117,18 @@ final _router = GoRouter(
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
         ]),
+    GoRoute(
+      path: '/receipts/:receiptId/view',
+      builder: (context, state) {
+        return buildReceiptFormRoute(context, state);
+      },
+    ),
+    GoRoute(
+      path: '/receipts/:receiptId/edit',
+      builder: (context, state) {
+        return buildReceiptFormRoute(context, state);
+      },
+    ),
     ShellRoute(
         builder: (context, state, child) {
           var future = api.ReceiptApi().getReceiptById(
@@ -131,15 +143,16 @@ final _router = GoRouter(
                   receiptModel.setReceipt(snapshot.data as api.Receipt, false);
 
                   EdgeInsets? customPadding;
-                  if (state.fullPath == '/receipts/:receiptId/images/view') {
+                  if ((state.fullPath ?? "").contains("images")) {
                     customPadding = const EdgeInsets.all(0);
                   }
 
                   return ScreenWrapper(
-                      appBarWidget: const ReceiptAppBar(),
-                      bottomNavigationBarWidget: const ReceiptBottomNav(),
-                      bodyPadding: customPadding,
-                      child: child);
+                    appBarWidget: const ReceiptAppBar(),
+                    bottomNavigationBarWidget: const ReceiptBottomNav(),
+                    bodyPadding: customPadding,
+                    child: child,
+                  );
                 }
 
                 return const CircularLoadingProgress();
@@ -147,16 +160,20 @@ final _router = GoRouter(
         },
         routes: [
           GoRoute(
-            path: '/receipts/:receiptId/view',
-            builder: (context, state) =>
-                const SingleChildScrollView(child: ReceiptForm()),
-          ),
-          GoRoute(
             path: '/receipts/:receiptId/images/view',
             builder: (context, state) => const SingleChildScrollView(
               child: ReceiptImages(),
             ),
           ),
+        ]),
+    ShellRoute(
+        builder: (context, state, child) {
+          return ScreenWrapper(
+              appBarWidget: const ReceiptAppBar(),
+              bottomNavigationBarWidget: const ReceiptBottomNav(),
+              child: child);
+        },
+        routes: [
           GoRoute(
             path: '/receipts/:receiptId/comments/view',
             builder: (context, state) => ReceiptComments(),
