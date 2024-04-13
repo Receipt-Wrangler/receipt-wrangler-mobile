@@ -74,6 +74,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       return FormBuilderDateTimePicker(
         name: "date",
         decoration: const InputDecoration(labelText: "Date"),
+        validator: FormBuilderValidators.required(),
         initialValue: DateTime.parse(receipt.date),
         inputType: InputType.date,
       );
@@ -87,6 +88,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       items: buildGroupDropDownMenuItems(context),
       initialValue: receipt.groupId,
       enabled: !isFieldReadOnly(formState),
+      validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
           widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
@@ -112,6 +114,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items.toList(),
       initialValue: initialValue,
+      validator: FormBuilderValidators.required(),
       enabled: !isFieldReadOnly(formState),
     );
   }
@@ -120,26 +123,10 @@ class _ReceiptForm extends State<ReceiptForm> {
     return FormBuilderDropdown(
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
-      items: const [
-        DropdownMenuItem(
-          value: api.ReceiptStatus.OPEN,
-          child: Text("Open"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.NEEDS_ATTENTION,
-          child: Text("Needs Attention"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.RESOLVED,
-          child: Text("Resolved"),
-        ),
-        DropdownMenuItem(
-          value: api.ReceiptStatus.DRAFT,
-          child: Text("Draft"),
-        ),
-      ],
+      items: buildStatusDropDownMenuItems(),
       initialValue: receipt.status,
       enabled: !isFieldReadOnly(formState),
+      validator: FormBuilderValidators.required(),
     );
   }
 
