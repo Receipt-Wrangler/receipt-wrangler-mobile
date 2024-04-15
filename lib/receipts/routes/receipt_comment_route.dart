@@ -3,10 +3,13 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_comments.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../shared/widgets/screen_wrapper.dart';
 import '../nav/receipt_app_bar.dart';
 import '../nav/receipt_bottom_nav.dart';
+
+var textBehaviorSubject = BehaviorSubject<String>();
 
 Widget buildReceiptCommentRoute(BuildContext context, GoRouterState state) {
   return ScreenWrapper(
@@ -22,7 +25,11 @@ Widget buildCommentBar(BuildContext context) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       buildCommentTextField(context, formKey),
-      buildSubmitButton(formKey)
+      StreamBuilder(
+          stream: textBehaviorSubject,
+          builder: (context, snapshot) {
+            return buildSubmitButton(formKey);
+          }),
     ],
   );
 }
@@ -36,7 +43,9 @@ Widget buildCommentTextField(
           name: "comment",
           decoration: const InputDecoration(labelText: "Comment"),
           validator: FormBuilderValidators.required(),
-          onChanged: (value) {},
+          onChanged: (value) {
+            textBehaviorSubject.add(value ?? "");
+          },
         )),
   );
 }

@@ -27,8 +27,8 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
-import 'package:receipt_wrangler_mobile/receipts/routes/receipt_comment_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
@@ -167,12 +167,11 @@ final _router = GoRouter(
           ),
         ]),
     GoRoute(
-      path: '/receipts/:receiptId/comments/view',
-      builder: (context, state) => buildReceiptCommentRoute(context, state),
-    ),
+        path: '/receipts/:receiptId/comments/view',
+        builder: (context, state) => ReceiptCommentScreen()),
     GoRoute(
       path: '/receipts/:receiptId/comments/edit',
-      builder: (context, state) => buildReceiptCommentRoute(context, state),
+      builder: (context, state) => ReceiptCommentScreen(),
     ),
   ],
 );
