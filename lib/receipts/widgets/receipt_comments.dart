@@ -3,28 +3,26 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 
-import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
 
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments({super.key});
+  const ReceiptComments({super.key, required this.comments});
+
+  final List<api.Comment> comments;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
 }
 
 class _ReceiptComments extends State<ReceiptComments> {
-  late final receipt =
-      Provider.of<ReceiptModel>(context, listen: false).receipt;
-
   Widget buildWidgetList() {
     return ListView.builder(
-      itemCount: receipt.comments.length,
+      itemCount: widget.comments.length,
       itemBuilder: (context, index) {
         return Column(
           children: [
-            buildCommentRow(receipt.comments[index], index),
+            buildCommentRow(widget.comments[index], index),
             SizedBox(height: 10),
           ],
         );
@@ -41,7 +39,7 @@ class _ReceiptComments extends State<ReceiptComments> {
     var isLoggedInUsersComment = user?.id ==
         Provider.of<AuthModel>(context, listen: false).claims?.userId;
 
-    if (index > 0 && receipt.comments[index - 1].userId == comment.userId) {
+    if (index > 0 && widget.comments[index - 1].userId == comment.userId) {
       lastCommentHasSameUser = true;
     }
 
@@ -104,7 +102,7 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   @override
   Widget build(BuildContext context) {
-    var hasComments = receipt.comments.length > 0;
+    var hasComments = widget.comments.length > 0;
     if (hasComments) {
       return SingleChildScrollView(child: buildCommentWidgets(hasComments));
     } else {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:rxdart/rxdart.dart';
 
+import '../../models/receipt_model.dart';
 import '../../shared/widgets/screen_wrapper.dart';
 import '../../utils/forms.dart';
 import '../../utils/receipts.dart';
@@ -20,6 +22,9 @@ class ReceiptCommentScreen extends StatefulWidget {
 
 class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
   final textBehaviorSubject = BehaviorSubject<String>();
+  final commentsBehaviorSubject = BehaviorSubject<List<api.Comment>>();
+  late final receipt =
+      Provider.of<ReceiptModel>(context, listen: false).receipt;
 
   @override
   void initState() {
@@ -81,8 +86,14 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
           api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
 
       api.CommentApi().addComment(command).then((value) {
+        print("hitting");
+        var comments = [...commentsBehaviorSubject.value];
+        comments.add(value as api.Comment);
+
+        commentsBehaviorSubject.add(comments);
         textBehaviorSubject.add("");
       }).catchError((error) {
+        print(error);
         handleApiError(context, error);
       });
     }
@@ -90,10 +101,16 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    commentsBehaviorSubject.add(receipt.comments);
+
     return ScreenWrapper(
         appBarWidget: const ReceiptAppBar(),
         bottomNavigationBarWidget: const ReceiptBottomNav(),
-        child: ReceiptComments(),
+        child: StreamBuilder(
+            stream: commentsBehaviorSubject,
+            builder: (context, snapshot) {
+              return ReceiptComments(comments: snapshot.data ?? []);
+            }),
         bottomSheetWidget: buildCommentBar(context));
   }
 }
