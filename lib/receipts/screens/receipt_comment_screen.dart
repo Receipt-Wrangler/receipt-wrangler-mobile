@@ -5,6 +5,8 @@ import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:rxdart/rxdart.dart';
 
 import '../../shared/widgets/screen_wrapper.dart';
+import '../../utils/forms.dart';
+import '../../utils/receipts.dart';
 import '../nav/receipt_app_bar.dart';
 import '../nav/receipt_bottom_nav.dart';
 import '../widgets/receipt_comments.dart';
@@ -70,12 +72,19 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
         onPressed: (isValid ?? false) ? () => submitComment(formKey) : null);
   }
 
-  void submitComment(GlobalKey<FormBuilderState> formKey) {
+  void submitComment(GlobalKey<FormBuilderState> formKey) async {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       var comment = formKey.currentState?.value['comment'];
+      var receiptId = int.parse(getReceiptId(context) ?? "0");
 
-      // TODO: remove userId
-      api.UpsertCommentCommand(comment: comment, receiptId: 1, userId: 1);
+      var command =
+          api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
+
+      api.CommentApi().addComment(command).then((value) {
+        textBehaviorSubject.add("");
+      }).catchError((error) {
+        handleApiError(context, error);
+      });
     }
   }
 
