@@ -24,14 +24,14 @@ class CommentApi {
   ///
   /// Parameters:
   ///
-  /// * [Comment] comment (required):
+  /// * [UpsertCommentCommand] upsertCommentCommand (required):
   ///   Comment to create
-  Future<Response> addCommentWithHttpInfo(Comment comment,) async {
+  Future<Response> addCommentWithHttpInfo(UpsertCommentCommand upsertCommentCommand,) async {
     // ignore: prefer_const_declarations
     final path = r'/comment/';
 
     // ignore: prefer_final_locals
-    Object? postBody = comment;
+    Object? postBody = upsertCommentCommand;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -57,13 +57,21 @@ class CommentApi {
   ///
   /// Parameters:
   ///
-  /// * [Comment] comment (required):
+  /// * [UpsertCommentCommand] upsertCommentCommand (required):
   ///   Comment to create
-  Future<void> addComment(Comment comment,) async {
-    final response = await addCommentWithHttpInfo(comment,);
+  Future<Comment?> addComment(UpsertCommentCommand upsertCommentCommand,) async {
+    final response = await addCommentWithHttpInfo(upsertCommentCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Comment',) as Comment;
+    
+    }
+    return null;
   }
 
   /// Delete comment

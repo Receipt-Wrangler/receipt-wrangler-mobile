@@ -15,7 +15,7 @@ class UpsertCommentCommand {
   UpsertCommentCommand({
     required this.comment,
     required this.receiptId,
-    required this.userId,
+    this.userId,
   });
 
   /// Comment itself
@@ -25,7 +25,13 @@ class UpsertCommentCommand {
   int receiptId;
 
   /// User foreign key
-  int userId;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? userId;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UpsertCommentCommand &&
@@ -38,7 +44,7 @@ class UpsertCommentCommand {
     // ignore: unnecessary_parenthesis
     (comment.hashCode) +
     (receiptId.hashCode) +
-    (userId.hashCode);
+    (userId == null ? 0 : userId!.hashCode);
 
   @override
   String toString() => 'UpsertCommentCommand[comment=$comment, receiptId=$receiptId, userId=$userId]';
@@ -47,7 +53,11 @@ class UpsertCommentCommand {
     final json = <String, dynamic>{};
       json[r'comment'] = this.comment;
       json[r'receiptId'] = this.receiptId;
+    if (this.userId != null) {
       json[r'userId'] = this.userId;
+    } else {
+      json[r'userId'] = null;
+    }
     return json;
   }
 
@@ -72,7 +82,7 @@ class UpsertCommentCommand {
       return UpsertCommentCommand(
         comment: mapValueOfType<String>(json, r'comment')!,
         receiptId: mapValueOfType<int>(json, r'receiptId')!,
-        userId: mapValueOfType<int>(json, r'userId')!,
+        userId: mapValueOfType<int>(json, r'userId'),
       );
     }
     return null;
@@ -124,7 +134,6 @@ class UpsertCommentCommand {
   static const requiredKeys = <String>{
     'comment',
     'receiptId',
-    'userId',
   };
 }
 

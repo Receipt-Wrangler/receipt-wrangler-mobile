@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **addComment**
-> addComment(comment)
+> Comment addComment(upsertCommentCommand)
 
 Add comment
 
@@ -31,10 +31,11 @@ import 'package:openapi/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = CommentApi();
-final comment = Comment(); // Comment | Comment to create
+final upsertCommentCommand = UpsertCommentCommand(); // UpsertCommentCommand | Comment to create
 
 try {
-    api_instance.addComment(comment);
+    final result = api_instance.addComment(upsertCommentCommand);
+    print(result);
 } catch (e) {
     print('Exception when calling CommentApi->addComment: $e\n');
 }
@@ -44,11 +45,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **comment** | [**Comment**](Comment.md)| Comment to create | 
+ **upsertCommentCommand** | [**UpsertCommentCommand**](UpsertCommentCommand.md)| Comment to create | 
 
 ### Return type
 
-void (empty response body)
+[**Comment**](Comment.md)
 
 ### Authorization
 
@@ -57,7 +58,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
