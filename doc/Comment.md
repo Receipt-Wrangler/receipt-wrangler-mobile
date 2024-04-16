@@ -14,8 +14,7 @@ Name | Type | Description | Notes
 **createdAt** | **String** |  | [optional] 
 **createdBy** | **int** |  | [optional] 
 **id** | **int** |  | 
-**receiptId** | **int** | Receipt foreign key | 
-**replies** | [**List<Comment>**](Comment.md) | Comment's replies | [default to const []]
+**receiptId** | [**List<Comment>**](Comment.md) | Receipt foreign key | [default to const []]
 **updatedAt** | **String** |  | [optional] 
 **userId** | **int** | User foreign key | 
 

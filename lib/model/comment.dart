@@ -19,8 +19,7 @@ class Comment {
     this.createdAt,
     this.createdBy,
     required this.id,
-    required this.receiptId,
-    this.replies = const [],
+    this.receiptId = const [],
     this.updatedAt,
     required this.userId,
   });
@@ -65,10 +64,7 @@ class Comment {
   int id;
 
   /// Receipt foreign key
-  int receiptId;
-
-  /// Comment's replies
-  List<Comment> replies;
+  List<Comment> receiptId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -90,7 +86,6 @@ class Comment {
      other.createdBy == createdBy &&
      other.id == id &&
      other.receiptId == receiptId &&
-     other.replies == replies &&
      other.updatedAt == updatedAt &&
      other.userId == userId;
 
@@ -104,12 +99,11 @@ class Comment {
     (createdBy == null ? 0 : createdBy!.hashCode) +
     (id.hashCode) +
     (receiptId.hashCode) +
-    (replies.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode) +
     (userId.hashCode);
 
   @override
-  String toString() => 'Comment[additionalInfo=$additionalInfo, comment=$comment, commentId=$commentId, createdAt=$createdAt, createdBy=$createdBy, id=$id, receiptId=$receiptId, replies=$replies, updatedAt=$updatedAt, userId=$userId]';
+  String toString() => 'Comment[additionalInfo=$additionalInfo, comment=$comment, commentId=$commentId, createdAt=$createdAt, createdBy=$createdBy, id=$id, receiptId=$receiptId, updatedAt=$updatedAt, userId=$userId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -136,7 +130,6 @@ class Comment {
     }
       json[r'id'] = this.id;
       json[r'receiptId'] = this.receiptId;
-      json[r'replies'] = this.replies;
     if (this.updatedAt != null) {
       json[r'updatedAt'] = this.updatedAt;
     } else {
@@ -171,8 +164,7 @@ class Comment {
         createdAt: mapValueOfType<String>(json, r'createdAt'),
         createdBy: mapValueOfType<int>(json, r'createdBy'),
         id: mapValueOfType<int>(json, r'id')!,
-        receiptId: mapValueOfType<int>(json, r'receiptId')!,
-        replies: Comment.listFromJson(json[r'replies'])!,
+        receiptId: Comment.listFromJson(json[r'receiptId'])!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
         userId: mapValueOfType<int>(json, r'userId')!,
       );
@@ -227,7 +219,6 @@ class Comment {
     'comment',
     'id',
     'receiptId',
-    'replies',
     'userId',
   };
 }
