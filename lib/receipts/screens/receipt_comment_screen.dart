@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../models/receipt_model.dart';
@@ -23,6 +24,7 @@ class ReceiptCommentScreen extends StatefulWidget {
 class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
   final textBehaviorSubject = BehaviorSubject<String>();
   final commentsBehaviorSubject = BehaviorSubject<List<api.Comment>>();
+  late final formState = getFormStateFromContext(context);
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
 
@@ -111,6 +113,8 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
             builder: (context, snapshot) {
               return ReceiptComments(comments: snapshot.data ?? []);
             }),
-        bottomSheetWidget: buildCommentBar(context));
+        bottomSheetWidget: formState == WranglerFormState.view
+            ? null
+            : buildCommentBar(context));
   }
 }

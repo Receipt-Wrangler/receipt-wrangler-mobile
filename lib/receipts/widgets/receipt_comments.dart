@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
+import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
   const ReceiptComments({super.key, required this.comments});
@@ -16,9 +18,14 @@ class ReceiptComments extends StatefulWidget {
 }
 
 class _ReceiptComments extends State<ReceiptComments> {
+  late final formState = getFormStateFromContext(context);
+
   Widget buildWidgetList() {
     return ListView.builder(
       itemCount: widget.comments.length,
+      padding: formState == WranglerFormState.view
+          ? null
+          : EdgeInsets.only(bottom: 60),
       itemBuilder: (context, index) {
         return Column(
           children: [
@@ -92,19 +99,16 @@ class _ReceiptComments extends State<ReceiptComments> {
   }
 
   Widget buildCommentWidgets(bool hasComments) {
-    return SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: hasComments
-            ? buildWidgetList()
-            : Center(child: Text("No comments found.")));
+    return hasComments
+        ? buildWidgetList()
+        : Center(child: Text("No comments found."));
   }
 
   @override
   Widget build(BuildContext context) {
     var hasComments = widget.comments.length > 0;
     if (hasComments) {
-      return SingleChildScrollView(child: buildCommentWidgets(hasComments));
+      return buildCommentWidgets(hasComments);
     } else {
       return buildCommentWidgets(hasComments);
     }
