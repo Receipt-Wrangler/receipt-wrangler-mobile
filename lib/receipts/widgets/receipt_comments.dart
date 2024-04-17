@@ -6,6 +6,7 @@ import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
+import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
@@ -39,6 +40,8 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   Widget buildCommentRow(api.Comment comment, int index) {
     var lastCommentHasSameUser = false;
+    var commentDate = formatDate(
+        "MMM d, h:mm a", DateTime.parse(comment.createdAt ?? "").toLocal());
     var spacerWidget = SizedBox.shrink();
     var user = Provider.of<UserModel>(context, listen: false)
         .getUserById(comment.userId.toString());
@@ -91,6 +94,7 @@ class _ReceiptComments extends State<ReceiptComments> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
               lastCommentHasSameUser ? SizedBox.shrink() : SizedBox(height: 5),
               Text(comment.comment.trim()),
+              Text(commentDate, style: TextStyle(fontSize: 10)),
             ],
           ),
         ),
