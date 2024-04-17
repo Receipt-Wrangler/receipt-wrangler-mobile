@@ -88,12 +88,12 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
           api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
 
       api.CommentApi().addComment(command).then((value) {
-        print("hitting");
         var comments = [...commentsBehaviorSubject.value];
         comments.add(value as api.Comment);
 
         commentsBehaviorSubject.add(comments);
         textBehaviorSubject.add("");
+        formKey.currentState?.reset();
       }).catchError((error) {
         print(error);
         handleApiError(context, error);
