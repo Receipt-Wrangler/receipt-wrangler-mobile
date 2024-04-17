@@ -11,38 +11,34 @@ import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
 import '../../shared/widgets/circular_loading_progress.dart';
 import '../../shared/widgets/screen_wrapper.dart';
-import '../../shared/widgets/top-app-bar.dart';
 import '../../utils/forms.dart';
-import '../../utils/receipts.dart';
 import '../../utils/snackbar.dart';
+import '../nav/receipt_app_bar.dart';
 import '../nav/receipt_bottom_nav.dart';
 
 Widget buildMenuButton(BuildContext context) {
-  return PopupMenuButton(
-    itemBuilder: (BuildContext context) {
-      return [
-        PopupMenuItem(
-          child: Text("Edit"),
-          onTap: () {
-            var receiptModel =
-                Provider.of<ReceiptModel>(context, listen: false);
-            var receipt = receiptModel.receipt;
-            context.go("/receipts/${receipt.id}/edit");
-          },
-        )
-      ];
-    },
-  );
-}
+  var formState = getFormStateFromContext(context);
+  switch (formState) {
+    case WranglerFormState.view:
+      return PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem(
+              child: Text("Edit"),
+              onTap: () {
+                var receiptModel =
+                    Provider.of<ReceiptModel>(context, listen: false);
+                var receipt = receiptModel.receipt;
+                context.go("/receipts/${receipt.id}/edit");
+              },
+            )
+          ];
+        },
+      );
 
-PreferredSizeWidget buildAppBarWidget(
-    BuildContext context, WranglerFormState formState, api.Receipt receipt) {
-  return TopAppBar(
-    titleText: getTitleText(formState, receipt.name),
-    leadingArrowRedirect: "/groups/${receipt.groupId}/receipts",
-    actions: [buildMenuButton(context)],
-    hideAvatar: true,
-  );
+    default:
+      return const SizedBox();
+  }
 }
 
 Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
@@ -60,8 +56,9 @@ Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
           receiptModel.setReceipt(snapshot.data as api.Receipt, false);
 
           return ScreenWrapper(
-            appBarWidget:
-                buildAppBarWidget(context, formState, receiptModel.receipt),
+            appBarWidget: ReceiptAppBar(
+              actions: [buildMenuButton(context)],
+            ),
             bottomNavigationBarWidget: const ReceiptBottomNav(),
             child: SingleChildScrollView(
               child: ReceiptForm(
