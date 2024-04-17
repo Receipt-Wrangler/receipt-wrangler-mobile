@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
@@ -101,12 +102,38 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
     }
   }
 
+  Widget buildMenuButton() {
+    switch (formState) {
+      case WranglerFormState.create:
+      case WranglerFormState.edit:
+        return const SizedBox.shrink();
+      case WranglerFormState.view:
+        return PopupMenuButton(
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                child: Text("Edit"),
+                onTap: () {
+                  var receiptModel =
+                      Provider.of<ReceiptModel>(context, listen: false);
+                  var receipt = receiptModel.receipt;
+                  context.go("/receipts/${receipt.id}/comments/edit");
+                },
+              )
+            ];
+          },
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     commentsBehaviorSubject.add(receipt.comments);
 
     return ScreenWrapper(
-        appBarWidget: const ReceiptAppBar(),
+        appBarWidget: ReceiptAppBar(
+          actions: [buildMenuButton()],
+        ),
         bottomNavigationBarWidget: const ReceiptBottomNav(),
         child: StreamBuilder(
             stream: commentsBehaviorSubject,
