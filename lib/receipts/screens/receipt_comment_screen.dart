@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_edit_popup_menu.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../models/receipt_model.dart';
@@ -108,21 +109,17 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
       case WranglerFormState.edit:
         return const SizedBox.shrink();
       case WranglerFormState.view:
-        return PopupMenuButton(
-          itemBuilder: (BuildContext context) {
-            return [
+        var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+        return ReceiptEditPopupMenu(
+            groupId: receipt.groupId,
+            popupMenuChildren: [
               PopupMenuItem(
                 child: Text("Edit"),
                 onTap: () {
-                  var receiptModel =
-                      Provider.of<ReceiptModel>(context, listen: false);
-                  var receipt = receiptModel.receipt;
                   context.go("/receipts/${receipt.id}/comments/edit");
                 },
               )
-            ];
-          },
-        );
+            ]);
     }
   }
 

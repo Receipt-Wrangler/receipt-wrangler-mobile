@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_form.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_edit_popup_menu.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 import '../../api.dart' as api;
@@ -20,24 +21,18 @@ Widget buildMenuButton(BuildContext context) {
   var formState = getFormStateFromContext(context);
   switch (formState) {
     case WranglerFormState.view:
-      return PopupMenuButton(
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(
-              child: Text("Edit"),
-              onTap: () {
-                var receiptModel =
-                    Provider.of<ReceiptModel>(context, listen: false);
-                var receipt = receiptModel.receipt;
-                context.go("/receipts/${receipt.id}/edit");
-              },
-            )
-          ];
-        },
-      );
+      var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+      return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+        PopupMenuItem(
+          child: Text("Edit"),
+          onTap: () {
+            context.go("/receipts/${receipt.id}/edit");
+          },
+        )
+      ]);
 
     default:
-      return const SizedBox();
+      return const SizedBox.shrink();
   }
 }
 
