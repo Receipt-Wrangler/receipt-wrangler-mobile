@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -29,7 +30,6 @@ class ReceiptComments extends StatefulWidget {
 class _ReceiptComments extends State<ReceiptComments> {
   late final formState = getFormStateFromContext(context);
 
-  // TODO: make slidable shared
   Widget buildWidgetList() {
     var slideEnabled = formState == WranglerFormState.edit ||
         formState == WranglerFormState.create;
@@ -40,13 +40,10 @@ class _ReceiptComments extends State<ReceiptComments> {
           ? null
           : EdgeInsets.only(bottom: 60),
       itemBuilder: (context, index) {
-        return Slidable(
-            enabled: slideEnabled,
-            endActionPane: ActionPane(
-              motion: const DrawerMotion(),
-              children: [buildDeleteButton(index)],
-            ),
-            child: Column(
+        return SlidableWidget(
+            slideEnabled: slideEnabled,
+            endActionPaneChildren: [buildDeleteButton(index)],
+            slidableChild: Column(
               children: [
                 buildCommentRow(widget.comments[index], index),
                 SizedBox(height: 10),
@@ -56,15 +53,8 @@ class _ReceiptComments extends State<ReceiptComments> {
     );
   }
 
-  // TODO: make shared widget
   Widget buildDeleteButton(int index) {
-    return SlidableAction(
-        onPressed: (BuildContext context) {
-          deleteComment(index);
-        },
-        icon: Icons.delete,
-        foregroundColor: Colors.red,
-        label: "Delete");
+    return SlidableDeleteButton(onPressed: () => deleteComment(index));
   }
 
   deleteComment(int index) {
