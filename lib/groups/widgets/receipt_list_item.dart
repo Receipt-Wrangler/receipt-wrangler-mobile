@@ -9,6 +9,10 @@ import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
+import '../../models/auth_model.dart';
+import '../../models/group_model.dart';
+import '../../shared/functions/permissions.dart';
+
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem({super.key, required this.data});
 
@@ -19,6 +23,9 @@ class ReceiptListItem extends StatefulWidget {
 }
 
 class _ReceiptListItem extends State<ReceiptListItem> {
+  late final authModel = Provider.of<AuthModel>(context, listen: false);
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
+
   Widget getStatusText() {
     var text = "";
     switch (widget.data.status) {
@@ -141,8 +148,10 @@ class _ReceiptListItem extends State<ReceiptListItem> {
 
   @override
   Widget build(BuildContext context) {
+    var canEdit = canEditReceipt(authModel, groupModel, widget.data.groupId);
+
     return SlidableWidget(
-        slideEnabled: true,
+        slideEnabled: canEdit,
         endActionPaneChildren: [buildEditButton()],
         slidableChild: buildListTile());
   }
