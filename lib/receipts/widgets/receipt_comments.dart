@@ -1,39 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
+import '../../utils/date.dart';
+import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments({super.key});
+  const ReceiptComments(
+      {super.key,
+      required this.comments,
+      required this.commentsBehaviorSubject});
+
+  final List<api.Comment> comments;
+
+  final BehaviorSubject<List<api.Comment>> commentsBehaviorSubject;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
 }
 
 class _ReceiptComments extends State<ReceiptComments> {
-  late final receipt =
-      Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final formState = getFormStateFromContext(context);
 
   Widget buildWidgetList() {
+    var slideEnabled = formState == WranglerFormState.edit ||
+        formState == WranglerFormState.create;
+
     return ListView.builder(
-      itemCount: receipt.comments.length,
+      itemCount: widget.comments.length,
+      padding: formState == WranglerFormState.view
+          ? null
+          : EdgeInsets.only(bottom: 60),
       itemBuilder: (context, index) {
-        return Column(
-          children: [
-            buildCommentRow(receipt.comments[index], index),
-            SizedBox(height: 10),
-          ],
-        );
+        return SlidableWidget(
+            slideEnabled: slideEnabled,
+            endActionPaneChildren: [buildDeleteButton(index)],
+            slidableChild: Column(
+              children: [
+                buildCommentRow(widget.comments[index], index),
+                SizedBox(height: 10),
+              ],
+            ));
       },
     );
   }
 
+  Widget buildDeleteButton(int index) {
+    return SlidableDeleteButton(onPressed: () => deleteComment(index));
+  }
+
+  deleteComment(int index) {
+    var commentId = widget.comments[index].id;
+    api.CommentApi().deleteComment(commentId).then((value) {
+      setState(() {
+        var comments =
+            new List<api.Comment>.from(widget.commentsBehaviorSubject.value);
+        comments.removeAt(index);
+
+        widget.commentsBehaviorSubject.add(comments);
+      });
+    }).catchError((error) {
+      showApiErrorSnackbar(context, error);
+    });
+  }
+
   Widget buildCommentRow(api.Comment comment, int index) {
     var lastCommentHasSameUser = false;
+    var commentDate = formatDate(
+        "MMM d, h:mm a", DateTime.parse(comment.createdAt ?? "").toLocal());
     var spacerWidget = SizedBox.shrink();
     var user = Provider.of<UserModel>(context, listen: false)
         .getUserById(comment.userId.toString());
@@ -41,7 +83,7 @@ class _ReceiptComments extends State<ReceiptComments> {
     var isLoggedInUsersComment = user?.id ==
         Provider.of<AuthModel>(context, listen: false).claims?.userId;
 
-    if (index > 0 && receipt.comments[index - 1].userId == comment.userId) {
+    if (index > 0 && widget.comments[index - 1].userId == comment.userId) {
       lastCommentHasSameUser = true;
     }
 
@@ -86,6 +128,7 @@ class _ReceiptComments extends State<ReceiptComments> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
               lastCommentHasSameUser ? SizedBox.shrink() : SizedBox(height: 5),
               Text(comment.comment.trim()),
+              Text(commentDate, style: TextStyle(fontSize: 10)),
             ],
           ),
         ),
@@ -94,19 +137,16 @@ class _ReceiptComments extends State<ReceiptComments> {
   }
 
   Widget buildCommentWidgets(bool hasComments) {
-    return SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: hasComments
-            ? buildWidgetList()
-            : Center(child: Text("No comments found.")));
+    return hasComments
+        ? buildWidgetList()
+        : Center(child: Text("No comments found."));
   }
 
   @override
   Widget build(BuildContext context) {
-    var hasComments = receipt.comments.length > 0;
+    var hasComments = widget.comments.length > 0;
     if (hasComments) {
-      return SingleChildScrollView(child: buildCommentWidgets(hasComments));
+      return buildCommentWidgets(hasComments);
     } else {
       return buildCommentWidgets(hasComments);
     }

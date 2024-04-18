@@ -11,7 +11,9 @@ import '../../utils/receipts.dart';
 import '../../utils/snackbar.dart';
 
 class ReceiptAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const ReceiptAppBar({super.key});
+  const ReceiptAppBar({super.key, this.actions});
+
+  final List<Widget>? actions;
 
   @override
   State<ReceiptAppBar> createState() => _ReceiptAppBar();
@@ -66,7 +68,7 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     var uri = GoRouter.of(context).routeInformationProvider.value.uri;
     var formState = getFormState(uri.toString());
     var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
-    List<Widget> actions = [getImageUploadIcon(context, receipt)];
+    List<Widget> actions = [...widget.actions ?? []];
 
     return TopAppBar(
       titleText: getTitleText(formState, receipt.name),

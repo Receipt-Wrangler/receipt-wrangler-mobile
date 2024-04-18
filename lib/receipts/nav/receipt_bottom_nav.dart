@@ -8,6 +8,8 @@ import 'package:receipt_wrangler_mobile/constants/routes.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
+import '../../utils/forms.dart';
+
 class ReceiptBottomNav extends StatefulWidget {
   const ReceiptBottomNav({super.key});
 
@@ -21,17 +23,19 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    var formState = getFormStateFromContext(context).name;
+
     onDestinationSelected(int indexSelected) {
       var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
       switch (indexSelected) {
         case 0:
-          context.go("/receipts/${receipt.id}/view");
+          context.go("/receipts/${receipt.id}/${formState}");
           break;
         case 1:
-          context.go("/receipts/${receipt.id}/images/view");
+          context.go("/receipts/${receipt.id}/images/${formState}");
           break;
         case 2:
-          context.go("/receipts/${receipt.id}/comments/view");
+          context.go("/receipts/${receipt.id}/comments/${formState}");
           break;
         default:
           context.go("/groups");
