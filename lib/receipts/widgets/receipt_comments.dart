@@ -59,6 +59,7 @@ class _ReceiptComments extends State<ReceiptComments> {
           deleteComment(index);
         },
         icon: Icons.delete,
+        foregroundColor: Colors.red,
         label: "Delete");
   }
 
