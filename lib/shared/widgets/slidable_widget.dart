@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SlidableWidget extends StatefulWidget {
-  const SlidableWidget(
-      {super.key,
-      required this.slideEnabled,
-      required this.slidableChild,
-      required this.endActionPaneChildren});
+  const SlidableWidget({
+    super.key,
+    required this.slideEnabled,
+    required this.endActionPaneChildren,
+    required this.slidableChild,
+  });
 
   final bool slideEnabled;
 

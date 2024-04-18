@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/classes/receipt_navigation_extras.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 class ReceiptListItem extends StatefulWidget {
@@ -126,36 +127,23 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         leading: getLeadingWidget(),
         trailing: getStatusText(),
         contentPadding: EdgeInsets.zero,
-        onTap: () => onTap());
+        onTap: () => navigateToReceipt(WranglerFormState.view));
   }
 
   Widget buildEditButton() {
-    return SlidableAction(
-      icon: Icons.edit,
-      label: "Edit",
-      foregroundColor: Theme.of(context).colorScheme.primary,
-      onPressed: (BuildContext context) {
-        context.go("/receipts/${widget.data.id}/edit",
-            extra: ReceiptNavigationExtras(
-                name: widget.data.name,
-                groupId: widget.data.groupId.toString()));
-      },
-    );
+    return SlidableEditButton(
+        onPressed: () => navigateToReceipt(WranglerFormState.edit));
   }
 
-  void onTap() {
-    context.go("/receipts/${widget.data.id}/view",
-        extra: ReceiptNavigationExtras(
-            name: widget.data.name, groupId: widget.data.groupId.toString()));
+  void navigateToReceipt(WranglerFormState formState) {
+    context.go("/receipts/${widget.data.id}/${formState.name}");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-        endActionPane: ActionPane(
-          motion: const DrawerMotion(),
-          children: [buildEditButton()],
-        ),
-        child: buildListTile());
+    return SlidableWidget(
+        slideEnabled: true,
+        endActionPaneChildren: [buildEditButton()],
+        slidableChild: buildListTile());
   }
 }
