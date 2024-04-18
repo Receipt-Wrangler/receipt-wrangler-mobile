@@ -138,7 +138,9 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
         child: StreamBuilder(
             stream: commentsBehaviorSubject,
             builder: (context, snapshot) {
-              return ReceiptComments(comments: snapshot.data ?? []);
+              return ReceiptComments(
+                  comments: snapshot.data ?? [],
+                  commentsBehaviorSubject: commentsBehaviorSubject);
             }),
         bottomSheetWidget: formState == WranglerFormState.view
             ? null

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -10,9 +13,14 @@ import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments({super.key, required this.comments});
+  const ReceiptComments(
+      {super.key,
+      required this.comments,
+      required this.commentsBehaviorSubject});
 
   final List<api.Comment> comments;
+
+  final BehaviorSubject<List<api.Comment>> commentsBehaviorSubject;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
@@ -21,6 +29,7 @@ class ReceiptComments extends StatefulWidget {
 class _ReceiptComments extends State<ReceiptComments> {
   late final formState = getFormStateFromContext(context);
 
+  // TODO: make slidable shared
   Widget buildWidgetList() {
     return ListView.builder(
       itemCount: widget.comments.length,
@@ -28,14 +37,44 @@ class _ReceiptComments extends State<ReceiptComments> {
           ? null
           : EdgeInsets.only(bottom: 60),
       itemBuilder: (context, index) {
-        return Column(
-          children: [
-            buildCommentRow(widget.comments[index], index),
-            SizedBox(height: 10),
-          ],
-        );
+        return Slidable(
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
+              children: [buildDeleteButton(index)],
+            ),
+            child: Column(
+              children: [
+                buildCommentRow(widget.comments[index], index),
+                SizedBox(height: 10),
+              ],
+            ));
       },
     );
+  }
+
+  // TODO: make shared widget
+  Widget buildDeleteButton(int index) {
+    return SlidableAction(
+        onPressed: (BuildContext context) {
+          deleteComment(index);
+        },
+        icon: Icons.delete,
+        label: "Delete");
+  }
+
+  deleteComment(int index) {
+    var commentId = widget.comments[index].id;
+    api.CommentApi().deleteComment(commentId).then((value) {
+      setState(() {
+        var comments =
+            new List<api.Comment>.from(widget.commentsBehaviorSubject.value);
+        comments.removeAt(index);
+
+        widget.commentsBehaviorSubject.add(comments);
+      });
+    }).catchError((error) {
+      showApiErrorSnackbar(context, error);
+    });
   }
 
   Widget buildCommentRow(api.Comment comment, int index) {
