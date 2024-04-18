@@ -31,6 +31,9 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   // TODO: make slidable shared
   Widget buildWidgetList() {
+    var slideEnabled = formState == WranglerFormState.edit ||
+        formState == WranglerFormState.create;
+
     return ListView.builder(
       itemCount: widget.comments.length,
       padding: formState == WranglerFormState.view
@@ -38,6 +41,7 @@ class _ReceiptComments extends State<ReceiptComments> {
           : EdgeInsets.only(bottom: 60),
       itemBuilder: (context, index) {
         return Slidable(
+            enabled: slideEnabled,
             endActionPane: ActionPane(
               motion: const DrawerMotion(),
               children: [buildDeleteButton(index)],
