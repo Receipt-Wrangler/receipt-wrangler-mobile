@@ -29,6 +29,12 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final future = getReceiptImageFutures(receipt);
   late final formState = getFormStateFromContext(context);
 
+  @override
+  void initState() {
+    super.initState();
+    future.then((value) => imageBehaviorSubject.add(value));
+  }
+
   Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
     List<Future<api.FileDataView?>> imageFutures = [];
 
@@ -131,23 +137,12 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: checkout building on menu select
-    print("build");
-    return FutureBuilder(
-        future: future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            imageBehaviorSubject.add(snapshot.data as List<api.FileDataView?>);
-            return ScreenWrapper(
-                appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
-                bodyPadding: const EdgeInsets.all(0),
-                bottomNavigationBarWidget: const ReceiptBottomNav(),
-                child: ReceiptImages(
-                  imageStream: imageBehaviorSubject.stream,
-                ));
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+    return ScreenWrapper(
+        appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
+        bodyPadding: const EdgeInsets.all(0),
+        bottomNavigationBarWidget: const ReceiptBottomNav(),
+        child: ReceiptImages(
+          imageStream: imageBehaviorSubject.stream,
+        ));
   }
 }
