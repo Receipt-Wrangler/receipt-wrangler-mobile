@@ -28,11 +28,19 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
   late final formState = getFormStateFromContext(context);
+  var isLoadingBehaviorSubject = BehaviorSubject<bool>();
 
   @override
   void initState() {
     super.initState();
-    future.then((value) => imageBehaviorSubject.add(value));
+    isLoadingBehaviorSubject.add(true);
+    future.then((value) {
+      imageBehaviorSubject.add(value);
+      isLoadingBehaviorSubject.add(false);
+    }).catchError((err) {
+      isLoadingBehaviorSubject.add(false);
+      return err;
+    });
   }
 
   Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
@@ -137,12 +145,20 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenWrapper(
-        appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
-        bodyPadding: const EdgeInsets.all(0),
-        bottomNavigationBarWidget: const ReceiptBottomNav(),
-        child: ReceiptImages(
-          imageStream: imageBehaviorSubject.stream,
-        ));
+    return StreamBuilder<bool>(
+        stream: isLoadingBehaviorSubject.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data == true) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return ScreenWrapper(
+              appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
+              bodyPadding: const EdgeInsets.all(0),
+              bottomNavigationBarWidget: const ReceiptBottomNav(),
+              child: ReceiptImages(
+                imageStream: imageBehaviorSubject.stream,
+              ));
+        });
   }
 }
