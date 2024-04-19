@@ -130,6 +130,9 @@ final _router = GoRouter(
         path: '/receipts/:receiptId/images/view',
         builder: (context, state) => ReceiptImageScreen()),
     GoRoute(
+        path: '/receipts/:receiptId/images/edit',
+        builder: (context, state) => ReceiptImageScreen()),
+    GoRoute(
         path: '/receipts/:receiptId/comments/view',
         builder: (context, state) => ReceiptCommentScreen()),
     GoRoute(

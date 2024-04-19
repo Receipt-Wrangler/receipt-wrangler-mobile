@@ -48,7 +48,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         return 0;
       }
 
-      if (fullPath == "/receipts/:receiptId/images/view") {
+      if (fullPath.contains("images")) {
         return 1;
       }
 

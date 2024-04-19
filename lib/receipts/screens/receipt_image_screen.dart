@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_edit_popup_menu.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
+import 'package:receipt_wrangler_mobile/utils/forms.dart';
+import 'package:receipt_wrangler_mobile/utils/scan.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../models/receipt_model.dart';
@@ -21,6 +27,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
+  late final formState = getFormStateFromContext(context);
 
   Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
     List<Future<api.FileDataView?>> imageFutures = [];
@@ -34,6 +41,68 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     });
   }
 
+  Widget buildViewAppBarMenu() {
+    return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+      PopupMenuItem(
+          value: "edit",
+          child: const Text("Edit"),
+          onTap: () => context.go("/receipts/${receipt.id}/images/edit")),
+    ]);
+  }
+
+  buildEditAppBarMenu() {
+    return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+      buildUploadFromGalleryButton(),
+    ]);
+  }
+
+  PopupMenuEntry buildUploadFromGalleryButton() {
+    return PopupMenuItem(
+        value: "upload",
+        child: const Text("Upload from Gallery"),
+        onTap: () async => await uploadFromGallery());
+  }
+
+  uploadFromGallery() async {
+    try {
+      var successMessage = "Successfully uploaded image";
+
+      var imagesToUpload = await getGalleryImages(multiple: false);
+      for (var image in imagesToUpload) {
+        var uploadedImage = await api.ReceiptImageApi()
+            .uploadReceiptImage(image.multipartFile, receipt.id);
+        var oldImages =
+            List<api.FileDataView?>.from(imageBehaviorSubject.value);
+        oldImages.add(uploadedImage);
+        imageBehaviorSubject.add(oldImages);
+      }
+
+      if (imagesToUpload.isEmpty) {
+        return;
+      }
+      if (imagesToUpload.length > 1) {
+        successMessage =
+            "Successfully uploaded ${imagesToUpload.length} images";
+        return;
+      }
+
+      showSuccessSnackbar(context, successMessage);
+    } catch (e) {
+      showApiErrorSnackbar(context, e as api.ApiException);
+    }
+  }
+
+  List<Widget> buildAppBarActions() {
+    switch (formState) {
+      case WranglerFormState.view:
+        return [buildViewAppBarMenu()];
+      case WranglerFormState.edit:
+        return [buildEditAppBarMenu()];
+      default:
+        return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -42,7 +111,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             imageBehaviorSubject.add(snapshot.data as List<api.FileDataView?>);
             return ScreenWrapper(
-                appBarWidget: ReceiptAppBar(),
+                appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
                 bodyPadding: const EdgeInsets.all(0),
                 bottomNavigationBarWidget: const ReceiptBottomNav(),
                 child: ReceiptImages(
