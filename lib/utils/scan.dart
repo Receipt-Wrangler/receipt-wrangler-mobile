@@ -5,7 +5,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:http/http.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 
-const fileFieldName = "files";
+const multipleFileFieldName = "files";
 const singularFileFieldName = "file";
 
 Future<List<String>> scanImages(int numberOfPages) async {
@@ -24,7 +24,8 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
   }
 
   for (var filePath in filePaths) {
-    var multipartFile = await MultipartFile.fromPath(fileFieldName, filePath);
+    var multipartFile =
+        await MultipartFile.fromPath(multipleFileFieldName, filePath);
     var bytes = await File(filePath).readAsBytes();
 
     files.add(
@@ -65,7 +66,7 @@ Future<List<UploadMultipartFileData>> getGalleryImages(
 }
 
 getFieldName(bool multiple) {
-  return multiple ? fileFieldName : singularFileFieldName;
+  return multiple ? multipleFileFieldName : singularFileFieldName;
 }
 
 Future<List<XFile>> openIOSGallery() async {

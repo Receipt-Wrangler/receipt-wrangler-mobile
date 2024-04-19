@@ -53,7 +53,33 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   buildEditAppBarMenu() {
     return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
       buildUploadFromGalleryButton(),
+      buildDeleteButton(),
     ]);
+  }
+
+  PopupMenuEntry buildDeleteButton() {
+    return PopupMenuItem(
+      child: const Text("Delete Image"),
+      value: "delete",
+      onTap: () async => await deleteImage(),
+    );
+  }
+
+  deleteImage() async {
+    try {
+      // TODO: get index from scroll controller
+      var index = 0;
+      await api.ReceiptImageApi()
+          .deleteReceiptImageById(imageBehaviorSubject.value[index]!.id);
+      var currentImages =
+          List<api.FileDataView?>.from(imageBehaviorSubject.value);
+      currentImages.removeAt(index);
+      imageBehaviorSubject.add(currentImages);
+
+      showSuccessSnackbar(context, "Successfully deleted image");
+    } catch (e) {
+      showApiErrorSnackbar(context, e as api.ApiException);
+    }
   }
 
   PopupMenuEntry buildUploadFromGalleryButton() {
