@@ -1,23 +1,16 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
-import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
-import '../../models/receipt_model.dart';
-
 class ReceiptImageCarousel extends StatefulWidget {
-  const ReceiptImageCarousel(
-      {super.key, required this.images, required this.receipt});
+  const ReceiptImageCarousel({super.key, required this.images});
 
   final List<api.FileDataView?> images;
-
-  final api.Receipt receipt;
 
   @override
   State<ReceiptImageCarousel> createState() => _ReceiptImageCarousel();
@@ -25,22 +18,11 @@ class ReceiptImageCarousel extends StatefulWidget {
 
 class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
   late InfiniteScrollController controller;
-  late StreamSubscription<api.FileDataView> streamListener;
-  List<api.FileDataView?> _images = [];
 
   @override
   void initState() {
     super.initState();
     controller = InfiniteScrollController();
-    _images = [...widget.images];
-    var receiptImageStream =
-        Provider.of<ReceiptModel>(context, listen: false).imagesStream;
-    streamListener = receiptImageStream.listen((event) {
-      setState(() {
-        _images = [..._images, event];
-        controller = InfiniteScrollController();
-      });
-    });
   }
 
   @override
@@ -50,14 +32,14 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
         decoration: const InputDecoration(
           labelText: "Name",
         ),
-        initialValue: _images[index]?.name ?? "",
+        initialValue: widget.images[index]?.name ?? "",
         readOnly: true,
       );
     }
 
     Widget buildDateAddedField(int index) {
-      var formattedDate = formatDate(
-          defaultDateFormat, DateTime.parse(_images[index]?.createdAt ?? ""));
+      var formattedDate = formatDate(defaultDateFormat,
+          DateTime.parse(widget.images[index]?.createdAt ?? ""));
       return TextFormField(
         decoration: const InputDecoration(
           labelText: "Date Added",
@@ -68,7 +50,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     }
 
     Image getDecodedImage(int index) {
-      var image = _images[index];
+      var image = widget.images[index];
       if (image?.encodedImage == null) {
         // TODO: add placeholder. This should never happen though
         return Image.asset("assets/images/placeholder.png");
@@ -92,11 +74,11 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     }
 
     Widget buildInfiniteCarousel() {
-      if (_images.isEmpty) {
+      if (widget.images.isEmpty) {
         return const Center(child: Text("No images found"));
       } else {
         return InfiniteCarousel.builder(
-          itemCount: _images.length,
+          itemCount: widget.images.length,
           itemExtent: MediaQuery.of(context).size.width,
           center: false,
           velocityFactor: 0.2,
@@ -131,11 +113,5 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     }
 
     return buildInfiniteCarousel();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    streamListener.cancel();
   }
 }

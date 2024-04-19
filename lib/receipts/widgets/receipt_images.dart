@@ -29,7 +29,6 @@ class _ReceiptImages extends State<ReceiptImages> {
             child: ReceiptImageCarousel(
               key: UniqueKey(),
               images: snapshot.data as List<api.FileDataView?>,
-              receipt: receipt,
             ),
           );
         } else {
