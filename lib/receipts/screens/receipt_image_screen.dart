@@ -131,6 +131,8 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: checkout building on menu select
+    print("build");
     return FutureBuilder(
         future: future,
         builder: (context, snapshot) {
