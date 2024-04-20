@@ -23,9 +23,10 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
     return files;
   }
 
+  var multiple = numberOfPages > 1;
   for (var filePath in filePaths) {
     var multipartFile =
-        await MultipartFile.fromPath(multipleFileFieldName, filePath);
+        await MultipartFile.fromPath(getFieldName(multiple), filePath);
     var bytes = await File(filePath).readAsBytes();
 
     files.add(

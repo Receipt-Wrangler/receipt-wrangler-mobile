@@ -4,6 +4,8 @@ import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/enums/upload_method.dart';
+import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_edit_popup_menu.dart';
@@ -66,8 +68,9 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     ]);
   }
 
-  buildEditAppBarMenu() {
+  Widget buildEditAppBarMenu() {
     return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+      buildUploadFromCameraButton(),
       buildUploadFromGalleryButton(),
       buildDeleteButton(),
     ]);
@@ -99,16 +102,29 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   PopupMenuEntry buildUploadFromGalleryButton() {
     return PopupMenuItem(
-        value: "upload",
+        value: "gallery",
         child: const Text("Upload from Gallery"),
-        onTap: () async => await uploadFromGallery());
+        onTap: () async => await uploadImages(UploadMethod.gallery));
   }
 
-  uploadFromGallery() async {
+  PopupMenuEntry buildUploadFromCameraButton() {
+    return PopupMenuItem(
+        value: "camera",
+        child: const Text("Upload from Camera"),
+        onTap: () async => await uploadImages(UploadMethod.camera));
+  }
+
+  Future<void> uploadImages(UploadMethod method) async {
     try {
       var successMessage = "Successfully uploaded image";
+      List<UploadMultipartFileData> imagesToUpload;
 
-      var imagesToUpload = await getGalleryImages(multiple: false);
+      if (method == UploadMethod.camera) {
+        imagesToUpload = await scanImagesMultiPart(1);
+      } else {
+        imagesToUpload = await getGalleryImages(multiple: false);
+      }
+
       for (var image in imagesToUpload) {
         var uploadedImage = await api.ReceiptImageApi()
             .uploadReceiptImage(image.multipartFile, receipt.id);
