@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/upload_method.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
+import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_base.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
@@ -78,6 +80,10 @@ class _ReceiptImageScreenEdit
         imagesToUpload = await getGalleryImages(multiple: false);
       }
 
+      if (imagesToUpload.isNotEmpty) {
+        Provider.of<LoadingModel>(context, listen: false).setIsLoading(true);
+      }
+
       for (var image in imagesToUpload) {
         var uploadedImage = await api.ReceiptImageApi()
             .uploadReceiptImage(image.multipartFile, receipt.id);
@@ -86,6 +92,7 @@ class _ReceiptImageScreenEdit
         oldImages.add(uploadedImage);
         imageBehaviorSubject.add(oldImages);
       }
+      Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
 
       if (imagesToUpload.isEmpty) {
         return;
@@ -98,6 +105,7 @@ class _ReceiptImageScreenEdit
 
       showSuccessSnackbar(context, successMessage);
     } catch (e) {
+      Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
       showApiErrorSnackbar(context, e as api.ApiException);
     }
   }
