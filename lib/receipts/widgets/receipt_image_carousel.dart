@@ -8,16 +8,20 @@ import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 class ReceiptImageCarousel extends StatefulWidget {
-  const ReceiptImageCarousel({super.key, required this.images});
+  const ReceiptImageCarousel(
+      {super.key, required this.images, this.infiniteScrollController});
 
   final List<api.FileDataView?> images;
+
+  final infiniteScrollController;
 
   @override
   State<ReceiptImageCarousel> createState() => _ReceiptImageCarousel();
 }
 
 class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
-  final controller = InfiniteScrollController();
+  late final controller =
+      widget.infiniteScrollController ?? InfiniteScrollController();
 
   Widget buildNameField(int index) {
     return TextFormField(

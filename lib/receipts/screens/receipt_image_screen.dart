@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
@@ -29,6 +30,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final future = getReceiptImageFutures(receipt);
   late final formState = getFormStateFromContext(context);
   var isLoadingBehaviorSubject = BehaviorSubject<bool>();
+  final controller = InfiniteScrollController();
 
   @override
   void initState() {
@@ -81,8 +83,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   deleteImage() async {
     try {
-      // TODO: get index from scroll controller
-      var index = 0;
+      var index = controller.selectedItem;
       await api.ReceiptImageApi()
           .deleteReceiptImageById(imageBehaviorSubject.value[index]!.id);
       var currentImages =
@@ -158,6 +159,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
               bottomNavigationBarWidget: const ReceiptBottomNav(),
               child: ReceiptImages(
                 imageStream: imageBehaviorSubject.stream,
+                infiniteScrollController: controller,
               ));
         });
   }
