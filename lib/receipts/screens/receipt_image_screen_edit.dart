@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
-import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/enums/upload_method.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
@@ -18,14 +16,14 @@ import 'package:rxdart/rxdart.dart';
 import '../../models/receipt_model.dart';
 import '../nav/receipt_bottom_nav.dart';
 
-class ReceiptImageScreen extends StatefulWidget {
-  const ReceiptImageScreen({super.key});
+class ReceiptImageScreenEdit extends StatefulWidget {
+  const ReceiptImageScreenEdit({super.key});
 
   @override
-  State<ReceiptImageScreen> createState() => _ReceiptImageScreen();
+  State<ReceiptImageScreenEdit> createState() => _ReceiptImageScreenEdit();
 }
 
-class _ReceiptImageScreen extends State<ReceiptImageScreen> {
+class _ReceiptImageScreenEdit extends State<ReceiptImageScreenEdit> {
   final imageBehaviorSubject = BehaviorSubject<List<api.FileDataView?>>();
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
@@ -59,15 +57,6 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     });
   }
 
-  List<PopupMenuEntry> buildViewAppBarMenuOptions() {
-    return [
-      PopupMenuItem(
-          value: "edit",
-          child: const Text("Edit"),
-          onTap: () => context.go("/receipts/${receipt.id}/images/edit")),
-    ];
-  }
-
   List<PopupMenuEntry> buildEditAppBarMenuOptions() {
     return [
       buildUploadFromCameraButton(),
@@ -84,7 +73,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     );
   }
 
-  deleteImage() async {
+  Future<void> deleteImage() async {
     try {
       var index = controller.selectedItem;
       await api.ReceiptImageApi()
@@ -150,15 +139,9 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   }
 
   Widget buildAppBarMenu() {
-    List<PopupMenuEntry> menuOptions = [];
-    if (formState == WranglerFormState.view) {
-      menuOptions = buildViewAppBarMenuOptions();
-    } else if (formState == WranglerFormState.edit) {
-      menuOptions = buildEditAppBarMenuOptions();
-    }
-
     return ReceiptEditPopupMenu(
-        groupId: receipt.groupId, popupMenuChildren: menuOptions);
+        groupId: receipt.groupId,
+        popupMenuChildren: buildEditAppBarMenuOptions());
   }
 
   @override
