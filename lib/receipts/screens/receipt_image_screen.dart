@@ -165,18 +165,20 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     return StreamBuilder<bool>(
         stream: isLoadingBehaviorSubject.stream,
         builder: (context, snapshot) {
+          Widget widget = ReceiptImages(
+            imageStream: imageBehaviorSubject.stream,
+            infiniteScrollController: controller,
+          );
+
           if (snapshot.hasData && snapshot.data == true) {
-            return const Center(child: CircularProgressIndicator());
+            widget = const Center(child: CircularProgressIndicator());
           }
 
           return ScreenWrapper(
               appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
               bodyPadding: const EdgeInsets.all(0),
               bottomNavigationBarWidget: const ReceiptBottomNav(),
-              child: ReceiptImages(
-                imageStream: imageBehaviorSubject.stream,
-                infiniteScrollController: controller,
-              ));
+              child: widget);
         });
   }
 }
