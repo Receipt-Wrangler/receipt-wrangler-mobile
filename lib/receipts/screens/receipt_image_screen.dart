@@ -59,21 +59,21 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     });
   }
 
-  Widget buildViewAppBarMenu() {
-    return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+  List<PopupMenuEntry> buildViewAppBarMenuOptions() {
+    return [
       PopupMenuItem(
           value: "edit",
           child: const Text("Edit"),
           onTap: () => context.go("/receipts/${receipt.id}/images/edit")),
-    ]);
+    ];
   }
 
-  Widget buildEditAppBarMenu() {
-    return ReceiptEditPopupMenu(groupId: receipt.groupId, popupMenuChildren: [
+  List<PopupMenuEntry> buildEditAppBarMenuOptions() {
+    return [
       buildUploadFromCameraButton(),
       buildUploadFromGalleryButton(),
       buildDeleteButton(),
-    ]);
+    ];
   }
 
   PopupMenuEntry buildDeleteButton() {
@@ -149,15 +149,16 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     }
   }
 
-  List<Widget> buildAppBarActions() {
-    switch (formState) {
-      case WranglerFormState.view:
-        return [buildViewAppBarMenu()];
-      case WranglerFormState.edit:
-        return [buildEditAppBarMenu()];
-      default:
-        return [];
+  Widget buildAppBarMenu() {
+    List<PopupMenuEntry> menuOptions = [];
+    if (formState == WranglerFormState.view) {
+      menuOptions = buildViewAppBarMenuOptions();
+    } else if (formState == WranglerFormState.edit) {
+      menuOptions = buildEditAppBarMenuOptions();
     }
+
+    return ReceiptEditPopupMenu(
+        groupId: receipt.groupId, popupMenuChildren: menuOptions);
   }
 
   @override
@@ -175,7 +176,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
           }
 
           return ScreenWrapper(
-              appBarWidget: ReceiptAppBar(actions: buildAppBarActions()),
+              appBarWidget: ReceiptAppBar(actions: [buildAppBarMenu()]),
               bodyPadding: const EdgeInsets.all(0),
               bottomNavigationBarWidget: const ReceiptBottomNav(),
               child: widget);
