@@ -1,62 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_carousel/infinite_carousel.dart';
-import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/upload_method.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_base.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_edit_popup_menu.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
-import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../../models/receipt_model.dart';
 import '../nav/receipt_bottom_nav.dart';
 
-class ReceiptImageScreenEdit extends StatefulWidget {
+class ReceiptImageScreenEdit extends ReceiptImageScreenBase {
   const ReceiptImageScreenEdit({super.key});
 
   @override
   State<ReceiptImageScreenEdit> createState() => _ReceiptImageScreenEdit();
 }
 
-class _ReceiptImageScreenEdit extends State<ReceiptImageScreenEdit> {
-  final imageBehaviorSubject = BehaviorSubject<List<api.FileDataView?>>();
-  late final receipt =
-      Provider.of<ReceiptModel>(context, listen: false).receipt;
-  late final future = getReceiptImageFutures(receipt);
-  late final formState = getFormStateFromContext(context);
-  var isLoadingBehaviorSubject = BehaviorSubject<bool>();
-  final controller = InfiniteScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    isLoadingBehaviorSubject.add(true);
-    future.then((value) {
-      imageBehaviorSubject.add(value);
-      isLoadingBehaviorSubject.add(false);
-    }).catchError((err) {
-      isLoadingBehaviorSubject.add(false);
-      return err;
-    });
-  }
-
-  Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
-    List<Future<api.FileDataView?>> imageFutures = [];
-
-    return api.ReceiptApi().getReceiptById(receipt.id).then((receipt) {
-      for (var image in receipt?.imageFiles ?? []) {
-        imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
-      }
-
-      return Future.wait(imageFutures);
-    });
-  }
-
+class _ReceiptImageScreenEdit
+    extends ReceiptImageScreenBaseState<ReceiptImageScreenEdit> {
   List<PopupMenuEntry> buildEditAppBarMenuOptions() {
     return [
       buildUploadFromCameraButton(),
@@ -144,7 +108,6 @@ class _ReceiptImageScreenEdit extends State<ReceiptImageScreenEdit> {
         popupMenuChildren: buildEditAppBarMenuOptions());
   }
 
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
         stream: isLoadingBehaviorSubject.stream,
