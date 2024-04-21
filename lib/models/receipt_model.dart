@@ -7,11 +7,22 @@ class ReceiptModel extends ChangeNotifier {
 
   Receipt get receipt => _receipt;
 
+  List<Comment> _comments = [];
+
+  List<Comment> get comments => _comments;
+
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
+
+    _comments = receipt.comments;
 
     if (notify) {
       notifyListeners();
     }
+  }
+
+  void setComments(List<Comment> comments) {
+    _comments = comments;
+    notifyListeners();
   }
 }

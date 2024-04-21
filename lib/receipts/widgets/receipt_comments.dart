@@ -6,17 +6,17 @@ import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
-import 'package:rxdart/rxdart.dart';
 
+import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
 import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments({super.key, required this.commentsBehaviorSubject});
+  const ReceiptComments({super.key, required this.comments});
 
-  final BehaviorSubject<List<api.Comment>> commentsBehaviorSubject;
+  final List<api.Comment> comments;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
@@ -30,7 +30,7 @@ class _ReceiptComments extends State<ReceiptComments> {
         formState == WranglerFormState.create;
 
     return ListView.builder(
-      itemCount: widget.commentsBehaviorSubject.value.length,
+      itemCount: widget.comments.length,
       padding: formState == WranglerFormState.view
           ? null
           : EdgeInsets.only(bottom: 60),
@@ -40,8 +40,7 @@ class _ReceiptComments extends State<ReceiptComments> {
             endActionPaneChildren: [buildDeleteButton(index)],
             slidableChild: Column(
               children: [
-                buildCommentRow(
-                    widget.commentsBehaviorSubject.value[index], index),
+                buildCommentRow(widget.comments[index], index),
                 SizedBox(height: 10),
               ],
             ));
@@ -54,15 +53,13 @@ class _ReceiptComments extends State<ReceiptComments> {
   }
 
   void deleteComment(int index) {
-    var commentId = widget.commentsBehaviorSubject.value[index].id;
+    var commentId = widget.comments[index].id;
     api.CommentApi().deleteComment(commentId).then((value) {
-      setState(() {
-        var comments =
-            new List<api.Comment>.from(widget.commentsBehaviorSubject.value);
-        comments.removeAt(index);
+      var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+      var comments = new List<api.Comment>.from(receiptModel.comments);
+      comments.removeAt(index);
 
-        widget.commentsBehaviorSubject.add(comments);
-      });
+      receiptModel.setComments(comments);
     }).catchError((error) {
       showApiErrorSnackbar(context, error);
     });
@@ -79,9 +76,7 @@ class _ReceiptComments extends State<ReceiptComments> {
     var isLoggedInUsersComment = user?.id ==
         Provider.of<AuthModel>(context, listen: false).claims?.userId;
 
-    if (index > 0 &&
-        widget.commentsBehaviorSubject.value[index - 1].userId ==
-            comment.userId) {
+    if (index > 0 && widget.comments[index - 1].userId == comment.userId) {
       lastCommentHasSameUser = true;
     }
 
@@ -142,7 +137,7 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   @override
   Widget build(BuildContext context) {
-    var hasComments = widget.commentsBehaviorSubject.value.length > 0;
+    var hasComments = widget.comments.length > 0;
     if (hasComments) {
       return buildCommentWidgets(hasComments);
     } else {

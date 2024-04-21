@@ -25,7 +25,6 @@ class ReceiptCommentScreen extends StatefulWidget {
 
 class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
   final textBehaviorSubject = BehaviorSubject<String>();
-  final commentsBehaviorSubject = BehaviorSubject<List<api.Comment>>();
   late final formState = getFormStateFromContext(context);
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
@@ -90,10 +89,11 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
           api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
 
       api.CommentApi().addComment(command).then((value) {
-        var comments = [...commentsBehaviorSubject.value];
+        var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+        var comments = [...receiptModel.comments];
         comments.add(value as api.Comment);
 
-        commentsBehaviorSubject.add(comments);
+        receiptModel.setComments(comments);
         textBehaviorSubject.add("");
         formKey.currentState?.reset();
       }).catchError((error) {
@@ -125,19 +125,18 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    commentsBehaviorSubject.add(receipt.comments);
-
     return ScreenWrapper(
         appBarWidget: ReceiptAppBar(
           actions: [buildMenuButton()],
         ),
         bottomNavigationBarWidget: const ReceiptBottomNav(),
-        child: StreamBuilder(
-            stream: commentsBehaviorSubject,
-            builder: (context, snapshot) {
-              return ReceiptComments(
-                  commentsBehaviorSubject: commentsBehaviorSubject);
-            }),
+        child: Consumer<ReceiptModel>(
+          builder: (context, receiptModel, child) {
+            return ReceiptComments(
+              comments: receiptModel.comments,
+            );
+          },
+        ),
         bottomSheetWidget: formState == WranglerFormState.view
             ? null
             : buildCommentBar(context));
