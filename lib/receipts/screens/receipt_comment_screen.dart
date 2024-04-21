@@ -136,7 +136,6 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
             stream: commentsBehaviorSubject,
             builder: (context, snapshot) {
               return ReceiptComments(
-                  comments: snapshot.data ?? [],
                   commentsBehaviorSubject: commentsBehaviorSubject);
             }),
         bottomSheetWidget: formState == WranglerFormState.view

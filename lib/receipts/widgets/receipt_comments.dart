@@ -13,14 +13,8 @@ import '../../shared/widgets/user_avatar.dart';
 import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
-// TODO: Adding a comment, then leaving and coming back does not display comment
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments(
-      {super.key,
-      required this.comments,
-      required this.commentsBehaviorSubject});
-
-  final List<api.Comment> comments;
+  const ReceiptComments({super.key, required this.commentsBehaviorSubject});
 
   final BehaviorSubject<List<api.Comment>> commentsBehaviorSubject;
 
@@ -36,7 +30,7 @@ class _ReceiptComments extends State<ReceiptComments> {
         formState == WranglerFormState.create;
 
     return ListView.builder(
-      itemCount: widget.comments.length,
+      itemCount: widget.commentsBehaviorSubject.value.length,
       padding: formState == WranglerFormState.view
           ? null
           : EdgeInsets.only(bottom: 60),
@@ -46,7 +40,8 @@ class _ReceiptComments extends State<ReceiptComments> {
             endActionPaneChildren: [buildDeleteButton(index)],
             slidableChild: Column(
               children: [
-                buildCommentRow(widget.comments[index], index),
+                buildCommentRow(
+                    widget.commentsBehaviorSubject.value[index], index),
                 SizedBox(height: 10),
               ],
             ));
@@ -58,8 +53,8 @@ class _ReceiptComments extends State<ReceiptComments> {
     return SlidableDeleteButton(onPressed: () => deleteComment(index));
   }
 
-  deleteComment(int index) {
-    var commentId = widget.comments[index].id;
+  void deleteComment(int index) {
+    var commentId = widget.commentsBehaviorSubject.value[index].id;
     api.CommentApi().deleteComment(commentId).then((value) {
       setState(() {
         var comments =
@@ -84,7 +79,9 @@ class _ReceiptComments extends State<ReceiptComments> {
     var isLoggedInUsersComment = user?.id ==
         Provider.of<AuthModel>(context, listen: false).claims?.userId;
 
-    if (index > 0 && widget.comments[index - 1].userId == comment.userId) {
+    if (index > 0 &&
+        widget.commentsBehaviorSubject.value[index - 1].userId ==
+            comment.userId) {
       lastCommentHasSameUser = true;
     }
 
@@ -145,7 +142,7 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   @override
   Widget build(BuildContext context) {
-    var hasComments = widget.comments.length > 0;
+    var hasComments = widget.commentsBehaviorSubject.value.length > 0;
     if (hasComments) {
       return buildCommentWidgets(hasComments);
     } else {
