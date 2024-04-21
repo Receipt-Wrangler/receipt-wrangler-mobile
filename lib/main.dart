@@ -52,7 +52,6 @@ void main() async {
     ],
     child: const ReceiptWrangler(),
   ));
-  FlutterNativeSplash.remove();
 }
 
 // GoRouter configuration
@@ -167,6 +166,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
 
     requestPermissions();
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -181,14 +181,6 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     super.didChangeDependencies();
 
     Timer.periodic(const Duration(minutes: 15), (timer) async {
-      var authModel = Provider.of<AuthModel>(context, listen: false);
-      var groupModel = Provider.of<GroupModel>(context, listen: false);
-      var userModel = Provider.of<UserModel>(context, listen: false);
-      var userPreferencesModel =
-          Provider.of<UserPreferencesModel>(context, listen: false);
-      var categoryModel = Provider.of<CategoryModel>(context, listen: false);
-      var tagModel = Provider.of<TagModel>(context, listen: false);
-
       await refreshTokens(authModel, groupModel, userModel,
           userPreferencesModel, categoryModel, tagModel,
           force: true);
