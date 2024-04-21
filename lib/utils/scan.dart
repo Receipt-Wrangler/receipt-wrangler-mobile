@@ -5,7 +5,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:http/http.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 
-const fileFieldName = "files";
+const multipleFileFieldName = "files";
+const singularFileFieldName = "file";
 
 Future<List<String>> scanImages(int numberOfPages) async {
   return await CunningDocumentScanner.getPictures(noOfPages: numberOfPages) ??
@@ -22,8 +23,10 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
     return files;
   }
 
+  var multiple = numberOfPages > 1;
   for (var filePath in filePaths) {
-    var multipartFile = await MultipartFile.fromPath(fileFieldName, filePath);
+    var multipartFile =
+        await MultipartFile.fromPath(getFieldName(multiple), filePath);
     var bytes = await File(filePath).readAsBytes();
 
     files.add(
@@ -33,7 +36,8 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
   return files;
 }
 
-Future<List<UploadMultipartFileData>> getGalleryImages() async {
+Future<List<UploadMultipartFileData>> getGalleryImages(
+    {multiple = true}) async {
   var files = <UploadMultipartFileData>[];
 
   const XTypeGroup typeGroup = XTypeGroup();
@@ -52,13 +56,18 @@ Future<List<UploadMultipartFileData>> getGalleryImages() async {
 
   for (var file in openedFiles) {
     var bytes = await file.readAsBytes();
-    var multipartFile = await MultipartFile.fromBytes(fileFieldName, bytes,
+    var multipartFile = await MultipartFile.fromBytes(
+        getFieldName(multiple), bytes,
         filename: file.name);
     files.add(
         UploadMultipartFileData(multipartFile: multipartFile, bytes: bytes));
   }
 
   return files;
+}
+
+getFieldName(bool multiple) {
+  return multiple ? multipleFileFieldName : singularFileFieldName;
 }
 
 Future<List<XFile>> openIOSGallery() async {

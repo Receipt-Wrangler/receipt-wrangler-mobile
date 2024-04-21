@@ -44,29 +44,31 @@ Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
   return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          var formState = getFormStateFromContext(context);
+        var isReady = snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData;
+        var formState = getFormStateFromContext(context);
+
+        if (isReady) {
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           receiptModel.setReceipt(snapshot.data as api.Receipt, false);
-
-          return ScreenWrapper(
-            appBarWidget: ReceiptAppBar(
-              actions: [buildMenuButton(context)],
-            ),
-            bottomNavigationBarWidget: const ReceiptBottomNav(),
-            child: SingleChildScrollView(
-              child: ReceiptForm(
-                formKey: formKey,
-              ),
-            ),
-            bottomSheetWidget: formState == WranglerFormState.edit
-                ? buildSubmitButton(context, formKey)
-                : null,
-          );
         }
 
-        return const CircularLoadingProgress();
+        return ScreenWrapper(
+          appBarWidget: ReceiptAppBar(
+            actions: [buildMenuButton(context)],
+          ),
+          bottomNavigationBarWidget: const ReceiptBottomNav(),
+          child: isReady
+              ? SingleChildScrollView(
+                  child: ReceiptForm(
+                    formKey: formKey,
+                  ),
+                )
+              : const CircularLoadingProgress(),
+          bottomSheetWidget: formState == WranglerFormState.edit
+              ? buildSubmitButton(context, formKey)
+              : null,
+        );
       });
 }
 

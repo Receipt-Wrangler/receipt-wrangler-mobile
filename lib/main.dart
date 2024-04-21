@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group/group_bottom_nav.dart';
@@ -25,11 +24,10 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_edit.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_view.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -129,43 +127,12 @@ final _router = GoRouter(
         return buildReceiptFormRoute(context, state);
       },
     ),
-    ShellRoute(
-        builder: (context, state, child) {
-          var future = api.ReceiptApi().getReceiptById(
-              int.parse(state.pathParameters['receiptId'] as String));
-          return FutureBuilder(
-              future: future,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  var receiptModel =
-                      Provider.of<ReceiptModel>(context, listen: false);
-                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
-
-                  EdgeInsets? customPadding;
-                  if ((state.fullPath ?? "").contains("images")) {
-                    customPadding = const EdgeInsets.all(0);
-                  }
-
-                  return ScreenWrapper(
-                    appBarWidget: const ReceiptAppBar(),
-                    bottomNavigationBarWidget: const ReceiptBottomNav(),
-                    bodyPadding: customPadding,
-                    child: child,
-                  );
-                }
-
-                return const CircularLoadingProgress();
-              });
-        },
-        routes: [
-          GoRoute(
-            path: '/receipts/:receiptId/images/view',
-            builder: (context, state) => const SingleChildScrollView(
-              child: ReceiptImages(),
-            ),
-          ),
-        ]),
+    GoRoute(
+        path: '/receipts/:receiptId/images/view',
+        builder: (context, state) => ReceiptImageScreenView()),
+    GoRoute(
+        path: '/receipts/:receiptId/images/edit',
+        builder: (context, state) => ReceiptImageScreenEdit()),
     GoRoute(
         path: '/receipts/:receiptId/comments/view',
         builder: (context, state) => ReceiptCommentScreen()),

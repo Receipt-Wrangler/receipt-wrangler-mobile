@@ -13,6 +13,7 @@ import '../../shared/widgets/user_avatar.dart';
 import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
+// TODO: Adding a comment, then leaving and coming back does not display comment
 class ReceiptComments extends StatefulWidget {
   const ReceiptComments(
       {super.key,
