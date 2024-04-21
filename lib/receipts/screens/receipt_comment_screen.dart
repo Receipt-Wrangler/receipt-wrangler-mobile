@@ -123,8 +123,16 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
     }
   }
 
+  // TODO: refactor  Receipt, and the implement bottom bottom widget
   @override
   Widget build(BuildContext context) {
+    return Consumer<ReceiptModel>(
+      builder: (context, receiptModel, child) {
+        return ReceiptComments(
+          comments: receiptModel.comments,
+        );
+      },
+    );
     return ScreenWrapper(
         appBarWidget: ReceiptAppBar(
           actions: [buildMenuButton()],

@@ -24,9 +24,29 @@ class ReceiptAppBarActionBuilder {
   List<Widget> buildAppBarMenu(GoRouterState state) {
     if (state.fullPath!.contains("images")) {
       return [_buildImagesAppBarMenu(state.fullPath!)];
+    } else if (state.fullPath!.contains("comments")) {
+      return [_buildCommentsAppBarMenu(state.fullPath!)];
     } else {
       return [];
     }
+  }
+
+  Widget _buildCommentsAppBarMenu(String fullPath) {
+    if (fullPath.contains("view")) {
+      return ReceiptEditPopupMenu(
+          groupId: receiptModel.receipt.groupId,
+          popupMenuChildren: [
+            PopupMenuItem(
+              child: Text("Edit"),
+              onTap: () {
+                context
+                    .go("/receipts/${receiptModel.receipt.id}/comments/edit");
+              },
+            )
+          ]);
+    }
+
+    return SizedBox.shrink();
   }
 
   Widget _buildImagesAppBarMenu(String fullPath) {

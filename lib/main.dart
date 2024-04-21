@@ -142,6 +142,13 @@ final _router = GoRouter(
           GoRoute(
               path: '/receipts/:receiptId/images/edit',
               builder: (context, state) => ReceiptImageScreenEdit()),
+          GoRoute(
+              path: '/receipts/:receiptId/comments/view',
+              builder: (context, state) => ReceiptCommentScreen()),
+          GoRoute(
+            path: '/receipts/:receiptId/comments/edit',
+            builder: (context, state) => ReceiptCommentScreen(),
+          ),
         ]),
     GoRoute(
       path: '/receipts/:receiptId/view',
@@ -154,13 +161,6 @@ final _router = GoRouter(
       builder: (context, state) {
         return buildReceiptFormRoute(context, state);
       },
-    ),
-    GoRoute(
-        path: '/receipts/:receiptId/comments/view',
-        builder: (context, state) => ReceiptCommentScreen()),
-    GoRoute(
-      path: '/receipts/:receiptId/comments/edit',
-      builder: (context, state) => ReceiptCommentScreen(),
     ),
   ],
 );
