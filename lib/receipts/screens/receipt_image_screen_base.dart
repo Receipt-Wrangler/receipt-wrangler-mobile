@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,8 +19,7 @@ abstract class ReceiptImageScreenBaseState<T extends ReceiptImageScreenBase>
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
   late final formState = getFormStateFromContext(context);
-  final imageBehaviorSubject = BehaviorSubject<List<api.FileDataView?>>();
-  final controller = InfiniteScrollController();
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   var isLoadingBehaviorSubject = BehaviorSubject<bool>();
 
   @override
@@ -29,7 +27,7 @@ abstract class ReceiptImageScreenBaseState<T extends ReceiptImageScreenBase>
     super.initState();
     isLoadingBehaviorSubject.add(true);
     future.then((value) {
-      imageBehaviorSubject.add(value);
+      receiptModel.imageBehaviorSubject.add(value);
       isLoadingBehaviorSubject.add(false);
     }).catchError((err) {
       isLoadingBehaviorSubject.add(false);

@@ -75,6 +75,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
     ];
 
     return BottomNav(
+      key: const Key("receipt_bottom_nav"),
       destinations: destinations,
       onDestinationSelected: onDestinationSelected,
       getInitialSelectedIndex: setIndexSelected,

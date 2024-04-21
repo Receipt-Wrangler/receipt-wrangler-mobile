@@ -24,6 +24,9 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_edit.dart';
@@ -114,6 +117,32 @@ final _router = GoRouter(
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
         ]),
+    ShellRoute(
+        builder: (context, state, child) {
+          EdgeInsets? padding;
+          if (state.fullPath!.contains("images")) {
+            padding = const EdgeInsets.all(0);
+          }
+
+          var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+          var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
+
+          return ScreenWrapper(
+            appBarWidget:
+                ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
+            bottomNavigationBarWidget: const ReceiptBottomNav(),
+            bodyPadding: padding,
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+              path: '/receipts/:receiptId/images/view',
+              builder: (context, state) => ReceiptImageScreenView()),
+          GoRoute(
+              path: '/receipts/:receiptId/images/edit',
+              builder: (context, state) => ReceiptImageScreenEdit()),
+        ]),
     GoRoute(
       path: '/receipts/:receiptId/view',
       builder: (context, state) {
@@ -126,12 +155,6 @@ final _router = GoRouter(
         return buildReceiptFormRoute(context, state);
       },
     ),
-    GoRoute(
-        path: '/receipts/:receiptId/images/view',
-        builder: (context, state) => ReceiptImageScreenView()),
-    GoRoute(
-        path: '/receipts/:receiptId/images/edit',
-        builder: (context, state) => ReceiptImageScreenEdit()),
     GoRoute(
         path: '/receipts/:receiptId/comments/view',
         builder: (context, state) => ReceiptCommentScreen()),

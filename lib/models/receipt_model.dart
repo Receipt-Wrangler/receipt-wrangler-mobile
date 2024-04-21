@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ReceiptModel extends ChangeNotifier {
   Receipt _receipt = getDefaultReceipt();
@@ -10,6 +12,18 @@ class ReceiptModel extends ChangeNotifier {
   List<Comment> _comments = [];
 
   List<Comment> get comments => _comments;
+
+  BehaviorSubject<List<FileDataView?>> _imageBehaviorSubject =
+      BehaviorSubject<List<FileDataView?>>.seeded([]);
+
+  BehaviorSubject<List<FileDataView?>> get imageBehaviorSubject =>
+      _imageBehaviorSubject;
+
+  InfiniteScrollController _infiniteScrollController =
+      InfiniteScrollController();
+
+  InfiniteScrollController get infiniteScrollController =>
+      _infiniteScrollController;
 
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
