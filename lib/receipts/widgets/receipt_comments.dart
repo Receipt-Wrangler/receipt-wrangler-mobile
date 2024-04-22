@@ -6,23 +6,17 @@ import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
-import 'package:rxdart/rxdart.dart';
 
+import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
 import '../../utils/date.dart';
 import '../../utils/forms.dart';
 
-// TODO: Adding a comment, then leaving and coming back does not display comment
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments(
-      {super.key,
-      required this.comments,
-      required this.commentsBehaviorSubject});
+  const ReceiptComments({super.key, required this.comments});
 
   final List<api.Comment> comments;
-
-  final BehaviorSubject<List<api.Comment>> commentsBehaviorSubject;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
@@ -58,16 +52,14 @@ class _ReceiptComments extends State<ReceiptComments> {
     return SlidableDeleteButton(onPressed: () => deleteComment(index));
   }
 
-  deleteComment(int index) {
+  void deleteComment(int index) {
     var commentId = widget.comments[index].id;
     api.CommentApi().deleteComment(commentId).then((value) {
-      setState(() {
-        var comments =
-            new List<api.Comment>.from(widget.commentsBehaviorSubject.value);
-        comments.removeAt(index);
+      var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+      var comments = new List<api.Comment>.from(receiptModel.comments);
+      comments.removeAt(index);
 
-        widget.commentsBehaviorSubject.add(comments);
-      });
+      receiptModel.setComments(comments);
     }).catchError((error) {
       showApiErrorSnackbar(context, error);
     });

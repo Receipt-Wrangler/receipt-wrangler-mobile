@@ -24,10 +24,13 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_edit.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_view.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -52,7 +55,6 @@ void main() async {
     ],
     child: const ReceiptWrangler(),
   ));
-  FlutterNativeSplash.remove();
 }
 
 // GoRouter configuration
@@ -115,31 +117,54 @@ final _router = GoRouter(
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
         ]),
-    GoRoute(
-      path: '/receipts/:receiptId/view',
-      builder: (context, state) {
-        return buildReceiptFormRoute(context, state);
-      },
-    ),
-    GoRoute(
-      path: '/receipts/:receiptId/edit',
-      builder: (context, state) {
-        return buildReceiptFormRoute(context, state);
-      },
-    ),
-    GoRoute(
-        path: '/receipts/:receiptId/images/view',
-        builder: (context, state) => ReceiptImageScreenView()),
-    GoRoute(
-        path: '/receipts/:receiptId/images/edit',
-        builder: (context, state) => ReceiptImageScreenEdit()),
-    GoRoute(
-        path: '/receipts/:receiptId/comments/view',
-        builder: (context, state) => ReceiptCommentScreen()),
-    GoRoute(
-      path: '/receipts/:receiptId/comments/edit',
-      builder: (context, state) => ReceiptCommentScreen(),
-    ),
+    ShellRoute(
+        builder: (context, state, child) {
+          EdgeInsets? padding;
+          if (state.fullPath!.contains("images")) {
+            padding = const EdgeInsets.all(0);
+          }
+
+          var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+          var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
+          var bottomSheetBuilder =
+              ReceiptBottomSheetBuilder(context, receiptModel);
+
+          return ScreenWrapper(
+            appBarWidget:
+                ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
+            bottomNavigationBarWidget: const ReceiptBottomNav(),
+            bodyPadding: padding,
+            bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+              path: '/receipts/:receiptId/images/view',
+              builder: (context, state) => ReceiptImageScreen()),
+          GoRoute(
+              path: '/receipts/:receiptId/images/edit',
+              builder: (context, state) => ReceiptImageScreen()),
+          GoRoute(
+              path: '/receipts/:receiptId/comments/view',
+              builder: (context, state) => ReceiptCommentScreen()),
+          GoRoute(
+            path: '/receipts/:receiptId/comments/edit',
+            builder: (context, state) => ReceiptCommentScreen(),
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/view',
+            builder: (context, state) {
+              return buildReceiptFormRoute(context, state);
+            },
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/edit',
+            builder: (context, state) {
+              return buildReceiptFormRoute(context, state);
+            },
+          ),
+        ]),
   ],
 );
 
@@ -167,6 +192,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     _lifecycleListener = AppLifecycleListener(onStateChange: _onStateChanged);
 
     requestPermissions();
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -181,14 +207,6 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
     super.didChangeDependencies();
 
     Timer.periodic(const Duration(minutes: 15), (timer) async {
-      var authModel = Provider.of<AuthModel>(context, listen: false);
-      var groupModel = Provider.of<GroupModel>(context, listen: false);
-      var userModel = Provider.of<UserModel>(context, listen: false);
-      var userPreferencesModel =
-          Provider.of<UserPreferencesModel>(context, listen: false);
-      var categoryModel = Provider.of<CategoryModel>(context, listen: false);
-      var tagModel = Provider.of<TagModel>(context, listen: false);
-
       await refreshTokens(authModel, groupModel, userModel,
           userPreferencesModel, categoryModel, tagModel,
           force: true);

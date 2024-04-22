@@ -15,9 +15,7 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../models/receipt_model.dart';
 
 class ReceiptForm extends StatefulWidget {
-  const ReceiptForm({super.key, required this.formKey});
-
-  final GlobalKey<FormBuilderState> formKey;
+  const ReceiptForm({super.key});
 
   @override
   State<ReceiptForm> createState() => _ReceiptForm();
@@ -26,6 +24,8 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final formKey =
+      Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
   int groupId = 0;
 
@@ -91,7 +91,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
-          widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
+          formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
       },
@@ -160,7 +160,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      key: widget.formKey,
+      key: formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -186,8 +186,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           kDebugMode
               ? ElevatedButton(
                   onPressed: () => {
-                        if (widget.formKey.currentState!.saveAndValidate())
-                          {print(widget.formKey.currentState!.value)}
+                        if (formKey.currentState!.saveAndValidate())
+                          {print(formKey.currentState!.value)}
                       },
                   child: Text("Check form value"))
               : SizedBox.shrink(),
