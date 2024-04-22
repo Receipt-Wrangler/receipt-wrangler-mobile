@@ -1,20 +1,20 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
 import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
-abstract class ReceiptImageScreenBase extends StatefulWidget {
-  const ReceiptImageScreenBase({Key? key}) : super(key: key);
+class ReceiptImageScreen extends StatefulWidget {
+  const ReceiptImageScreen({super.key});
 
   @override
-  State<ReceiptImageScreenBase> createState();
+  State<ReceiptImageScreen> createState() => _ReceiptImageScreen();
 }
 
-abstract class ReceiptImageScreenBaseState<T extends ReceiptImageScreenBase>
-    extends State<T> {
+class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
@@ -45,5 +45,23 @@ abstract class ReceiptImageScreenBaseState<T extends ReceiptImageScreenBase>
 
       return Future.wait(imageFutures);
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<bool>(
+        stream: isLoadingBehaviorSubject.stream,
+        builder: (context, snapshot) {
+          Widget widget = ReceiptImages(
+            imageStream: receiptModel.imageBehaviorSubject.stream,
+            infiniteScrollController: receiptModel.infiniteScrollController,
+          );
+
+          if (snapshot.hasData && snapshot.data == true) {
+            widget = const Center(child: CircularProgressIndicator());
+          }
+
+          return widget;
+        });
   }
 }

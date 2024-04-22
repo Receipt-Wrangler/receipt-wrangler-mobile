@@ -30,8 +30,7 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_edit.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_view.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -142,10 +141,10 @@ final _router = GoRouter(
         routes: [
           GoRoute(
               path: '/receipts/:receiptId/images/view',
-              builder: (context, state) => ReceiptImageScreenView()),
+              builder: (context, state) => ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/:receiptId/images/edit',
-              builder: (context, state) => ReceiptImageScreenEdit()),
+              builder: (context, state) => ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/:receiptId/comments/view',
               builder: (context, state) => ReceiptCommentScreen()),
