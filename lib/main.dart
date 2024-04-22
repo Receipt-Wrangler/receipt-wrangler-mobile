@@ -27,6 +27,7 @@ import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.da
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen_edit.dart';
@@ -126,12 +127,15 @@ final _router = GoRouter(
 
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
+          var bottomSheetBuilder =
+              ReceiptBottomSheetBuilder(context, receiptModel);
 
           return ScreenWrapper(
             appBarWidget:
                 ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
             bottomNavigationBarWidget: const ReceiptBottomNav(),
             bodyPadding: padding,
+            bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
             child: child,
           );
         },
