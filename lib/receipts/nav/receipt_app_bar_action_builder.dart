@@ -27,8 +27,25 @@ class ReceiptAppBarActionBuilder {
     } else if (state.fullPath!.contains("comments")) {
       return [_buildCommentsAppBarMenu(state.fullPath!)];
     } else {
-      return [];
+      return [_buildReceiptAppBarMenu(state.fullPath!)];
     }
+  }
+
+  Widget _buildReceiptAppBarMenu(String fullPath) {
+    if (fullPath.contains("view")) {
+      return ReceiptEditPopupMenu(
+          groupId: receiptModel.receipt.groupId,
+          popupMenuChildren: [
+            PopupMenuItem(
+              child: Text("Edit"),
+              onTap: () {
+                context.go("/receipts/${receiptModel.receipt.id}/edit");
+              },
+            )
+          ]);
+    }
+
+    return SizedBox.shrink();
   }
 
   Widget _buildCommentsAppBarMenu(String fullPath) {

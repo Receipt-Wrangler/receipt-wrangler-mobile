@@ -11,11 +11,8 @@ import '../../api.dart' as api;
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
 import '../../shared/widgets/circular_loading_progress.dart';
-import '../../shared/widgets/screen_wrapper.dart';
 import '../../utils/forms.dart';
 import '../../utils/snackbar.dart';
-import '../nav/receipt_app_bar.dart';
-import '../nav/receipt_bottom_nav.dart';
 
 Widget buildMenuButton(BuildContext context) {
   var formState = getFormStateFromContext(context);
@@ -46,29 +43,19 @@ Widget buildReceiptFormRoute(BuildContext context, GoRouterState state) {
       builder: (context, snapshot) {
         var isReady = snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData;
-        var formState = getFormStateFromContext(context);
 
         if (isReady) {
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           receiptModel.setReceipt(snapshot.data as api.Receipt, false);
         }
 
-        return ScreenWrapper(
-          appBarWidget: ReceiptAppBar(
-            actions: [buildMenuButton(context)],
-          ),
-          bottomNavigationBarWidget: const ReceiptBottomNav(),
-          child: isReady
-              ? SingleChildScrollView(
-                  child: ReceiptForm(
-                    formKey: formKey,
-                  ),
-                )
-              : const CircularLoadingProgress(),
-          bottomSheetWidget: formState == WranglerFormState.edit
-              ? buildSubmitButton(context, formKey)
-              : null,
-        );
+        return isReady
+            ? SingleChildScrollView(
+                child: ReceiptForm(
+                  formKey: formKey,
+                ),
+              )
+            : const CircularLoadingProgress();
       });
 }
 

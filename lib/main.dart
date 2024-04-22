@@ -149,19 +149,19 @@ final _router = GoRouter(
             path: '/receipts/:receiptId/comments/edit',
             builder: (context, state) => ReceiptCommentScreen(),
           ),
+          GoRoute(
+            path: '/receipts/:receiptId/view',
+            builder: (context, state) {
+              return buildReceiptFormRoute(context, state);
+            },
+          ),
+          GoRoute(
+            path: '/receipts/:receiptId/edit',
+            builder: (context, state) {
+              return buildReceiptFormRoute(context, state);
+            },
+          ),
         ]),
-    GoRoute(
-      path: '/receipts/:receiptId/view',
-      builder: (context, state) {
-        return buildReceiptFormRoute(context, state);
-      },
-    ),
-    GoRoute(
-      path: '/receipts/:receiptId/edit',
-      builder: (context, state) {
-        return buildReceiptFormRoute(context, state);
-      },
-    ),
   ],
 );
 
