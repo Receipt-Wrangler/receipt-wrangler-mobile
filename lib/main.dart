@@ -36,6 +36,8 @@ import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
+import 'api.dart' as api;
+
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -128,15 +130,29 @@ final _router = GoRouter(
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
+          var future = api.ReceiptApi().getReceiptById(
+              int.parse(state.pathParameters['receiptId'] as String));
 
-          return ScreenWrapper(
-            appBarWidget:
-                ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
-            bottomNavigationBarWidget: const ReceiptBottomNav(),
-            bodyPadding: padding,
-            bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-            child: child,
-          );
+          return FutureBuilder(
+              future: future,
+              builder: (context, snapshot) {
+                var isReady =
+                    snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData;
+
+                if (isReady) {
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+                }
+
+                return ScreenWrapper(
+                  appBarWidget: ReceiptAppBar(
+                      actions: actionBuilder.buildAppBarMenu(state)),
+                  bottomNavigationBarWidget: const ReceiptBottomNav(),
+                  bodyPadding: padding,
+                  bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
+                  child: isReady ? child : const CircularLoadingProgress(),
+                );
+              });
         },
         routes: [
           GoRoute(
