@@ -28,13 +28,15 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
-import 'package:receipt_wrangler_mobile/receipts/routes/receipt_form_route.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
+import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+
+import 'api.dart' as api;
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -128,41 +130,51 @@ final _router = GoRouter(
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
+          var future = api.ReceiptApi().getReceiptById(
+              int.parse(state.pathParameters['receiptId'] as String));
 
-          return ScreenWrapper(
-            appBarWidget:
-                ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
-            bottomNavigationBarWidget: const ReceiptBottomNav(),
-            bodyPadding: padding,
-            bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-            child: child,
-          );
+          return FutureBuilder(
+              future: future,
+              builder: (context, snapshot) {
+                var isReady =
+                    snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData;
+
+                if (isReady) {
+                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+                }
+
+                return ScreenWrapper(
+                  appBarWidget: ReceiptAppBar(
+                      actions: actionBuilder.buildAppBarMenu(state)),
+                  bottomNavigationBarWidget: const ReceiptBottomNav(),
+                  bodyPadding: padding,
+                  bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
+                  child: isReady ? child : const CircularLoadingProgress(),
+                );
+              });
         },
         routes: [
           GoRoute(
               path: '/receipts/:receiptId/images/view',
-              builder: (context, state) => ReceiptImageScreen()),
+              builder: (context, state) => const ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/:receiptId/images/edit',
-              builder: (context, state) => ReceiptImageScreen()),
+              builder: (context, state) => const ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/:receiptId/comments/view',
-              builder: (context, state) => ReceiptCommentScreen()),
+              builder: (context, state) => const ReceiptCommentScreen()),
           GoRoute(
             path: '/receipts/:receiptId/comments/edit',
-            builder: (context, state) => ReceiptCommentScreen(),
+            builder: (context, state) => const ReceiptCommentScreen(),
           ),
           GoRoute(
             path: '/receipts/:receiptId/view',
-            builder: (context, state) {
-              return buildReceiptFormRoute(context, state);
-            },
+            builder: (context, state) => const ReceiptFormScreen(),
           ),
           GoRoute(
             path: '/receipts/:receiptId/edit',
-            builder: (context, state) {
-              return buildReceiptFormRoute(context, state);
-            },
+            builder: (context, state) => const ReceiptFormScreen(),
           ),
         ]),
   ],
