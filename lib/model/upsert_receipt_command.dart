@@ -21,7 +21,7 @@ class UpsertReceiptCommand {
     required this.status,
     this.categories = const [],
     this.tags = const [],
-    this.items = const [],
+    this.receiptItems = const [],
     this.comments = const [],
   });
 
@@ -49,7 +49,7 @@ class UpsertReceiptCommand {
   List<UpsertTagCommand> tags;
 
   /// Items associated to receipt
-  List<UpsertItemCommand> items;
+  List<UpsertItemCommand> receiptItems;
 
   /// Comments associated to receipt
   List<UpsertCommentCommand> comments;
@@ -64,7 +64,7 @@ class UpsertReceiptCommand {
      other.status == status &&
      other.categories == categories &&
      other.tags == tags &&
-     other.items == items &&
+     other.receiptItems == receiptItems &&
      other.comments == comments;
 
   @override
@@ -78,11 +78,11 @@ class UpsertReceiptCommand {
     (status.hashCode) +
     (categories.hashCode) +
     (tags.hashCode) +
-    (items.hashCode) +
+    (receiptItems.hashCode) +
     (comments.hashCode);
 
   @override
-  String toString() => 'UpsertReceiptCommand[name=$name, amount=$amount, date=$date, groupId=$groupId, paidByUserId=$paidByUserId, status=$status, categories=$categories, tags=$tags, items=$items, comments=$comments]';
+  String toString() => 'UpsertReceiptCommand[name=$name, amount=$amount, date=$date, groupId=$groupId, paidByUserId=$paidByUserId, status=$status, categories=$categories, tags=$tags, receiptItems=$receiptItems, comments=$comments]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -94,7 +94,7 @@ class UpsertReceiptCommand {
       json[r'status'] = this.status;
       json[r'categories'] = this.categories;
       json[r'tags'] = this.tags;
-      json[r'items'] = this.items;
+      json[r'receiptItems'] = this.receiptItems;
       json[r'comments'] = this.comments;
     return json;
   }
@@ -126,7 +126,7 @@ class UpsertReceiptCommand {
         status: ReceiptStatus.fromJson(json[r'status'])!,
         categories: UpsertCategoryCommand.listFromJson(json[r'categories']) ?? const [],
         tags: UpsertTagCommand.listFromJson(json[r'tags']) ?? const [],
-        items: UpsertItemCommand.listFromJson(json[r'items']) ?? const [],
+        receiptItems: UpsertItemCommand.listFromJson(json[r'receiptItems']) ?? const [],
         comments: UpsertCommentCommand.listFromJson(json[r'comments']) ?? const [],
       );
     }

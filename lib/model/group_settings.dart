@@ -16,11 +16,17 @@ class GroupSettings {
     required this.id,
     required this.groupId,
     this.emailIntegrationEnabled,
+    this.systemEmailId,
+    this.systemEmail,
     this.emailToRead,
     this.subjectLineRegexes = const [],
     this.emailWhiteList = const [],
     this.emailDefaultReceiptStatus,
     this.emailDefaultReceiptPaidById,
+    this.prompt,
+    this.promptId,
+    this.fallbackPrompt,
+    this.fallbackPromptId,
     this.createdAt,
     this.createdBy,
     this.updatedAt,
@@ -40,6 +46,23 @@ class GroupSettings {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   bool? emailIntegrationEnabled;
+
+  /// System email foreign key
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? systemEmailId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  SystemEmail? systemEmail;
 
   /// Email to read
   ///
@@ -79,6 +102,40 @@ class GroupSettings {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  Prompt? prompt;
+
+  /// Prompt foreign key
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? promptId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  Prompt? fallbackPrompt;
+
+  /// Fallback prompt foreign key
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? fallbackPromptId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   String? createdAt;
 
   ///
@@ -102,11 +159,17 @@ class GroupSettings {
      other.id == id &&
      other.groupId == groupId &&
      other.emailIntegrationEnabled == emailIntegrationEnabled &&
+     other.systemEmailId == systemEmailId &&
+     other.systemEmail == systemEmail &&
      other.emailToRead == emailToRead &&
      other.subjectLineRegexes == subjectLineRegexes &&
      other.emailWhiteList == emailWhiteList &&
      other.emailDefaultReceiptStatus == emailDefaultReceiptStatus &&
      other.emailDefaultReceiptPaidById == emailDefaultReceiptPaidById &&
+     other.prompt == prompt &&
+     other.promptId == promptId &&
+     other.fallbackPrompt == fallbackPrompt &&
+     other.fallbackPromptId == fallbackPromptId &&
      other.createdAt == createdAt &&
      other.createdBy == createdBy &&
      other.updatedAt == updatedAt;
@@ -117,17 +180,23 @@ class GroupSettings {
     (id.hashCode) +
     (groupId.hashCode) +
     (emailIntegrationEnabled == null ? 0 : emailIntegrationEnabled!.hashCode) +
+    (systemEmailId == null ? 0 : systemEmailId!.hashCode) +
+    (systemEmail == null ? 0 : systemEmail!.hashCode) +
     (emailToRead == null ? 0 : emailToRead!.hashCode) +
     (subjectLineRegexes.hashCode) +
     (emailWhiteList.hashCode) +
     (emailDefaultReceiptStatus == null ? 0 : emailDefaultReceiptStatus!.hashCode) +
     (emailDefaultReceiptPaidById == null ? 0 : emailDefaultReceiptPaidById!.hashCode) +
+    (prompt == null ? 0 : prompt!.hashCode) +
+    (promptId == null ? 0 : promptId!.hashCode) +
+    (fallbackPrompt == null ? 0 : fallbackPrompt!.hashCode) +
+    (fallbackPromptId == null ? 0 : fallbackPromptId!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
     (createdBy == null ? 0 : createdBy!.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode);
 
   @override
-  String toString() => 'GroupSettings[id=$id, groupId=$groupId, emailIntegrationEnabled=$emailIntegrationEnabled, emailToRead=$emailToRead, subjectLineRegexes=$subjectLineRegexes, emailWhiteList=$emailWhiteList, emailDefaultReceiptStatus=$emailDefaultReceiptStatus, emailDefaultReceiptPaidById=$emailDefaultReceiptPaidById, createdAt=$createdAt, createdBy=$createdBy, updatedAt=$updatedAt]';
+  String toString() => 'GroupSettings[id=$id, groupId=$groupId, emailIntegrationEnabled=$emailIntegrationEnabled, systemEmailId=$systemEmailId, systemEmail=$systemEmail, emailToRead=$emailToRead, subjectLineRegexes=$subjectLineRegexes, emailWhiteList=$emailWhiteList, emailDefaultReceiptStatus=$emailDefaultReceiptStatus, emailDefaultReceiptPaidById=$emailDefaultReceiptPaidById, prompt=$prompt, promptId=$promptId, fallbackPrompt=$fallbackPrompt, fallbackPromptId=$fallbackPromptId, createdAt=$createdAt, createdBy=$createdBy, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -137,6 +206,16 @@ class GroupSettings {
       json[r'emailIntegrationEnabled'] = this.emailIntegrationEnabled;
     } else {
       json[r'emailIntegrationEnabled'] = null;
+    }
+    if (this.systemEmailId != null) {
+      json[r'systemEmailId'] = this.systemEmailId;
+    } else {
+      json[r'systemEmailId'] = null;
+    }
+    if (this.systemEmail != null) {
+      json[r'systemEmail'] = this.systemEmail;
+    } else {
+      json[r'systemEmail'] = null;
     }
     if (this.emailToRead != null) {
       json[r'emailToRead'] = this.emailToRead;
@@ -154,6 +233,26 @@ class GroupSettings {
       json[r'emailDefaultReceiptPaidById'] = this.emailDefaultReceiptPaidById;
     } else {
       json[r'emailDefaultReceiptPaidById'] = null;
+    }
+    if (this.prompt != null) {
+      json[r'prompt'] = this.prompt;
+    } else {
+      json[r'prompt'] = null;
+    }
+    if (this.promptId != null) {
+      json[r'promptId'] = this.promptId;
+    } else {
+      json[r'promptId'] = null;
+    }
+    if (this.fallbackPrompt != null) {
+      json[r'fallbackPrompt'] = this.fallbackPrompt;
+    } else {
+      json[r'fallbackPrompt'] = null;
+    }
+    if (this.fallbackPromptId != null) {
+      json[r'fallbackPromptId'] = this.fallbackPromptId;
+    } else {
+      json[r'fallbackPromptId'] = null;
     }
     if (this.createdAt != null) {
       json[r'createdAt'] = this.createdAt;
@@ -195,11 +294,17 @@ class GroupSettings {
         id: mapValueOfType<int>(json, r'id')!,
         groupId: mapValueOfType<int>(json, r'groupId')!,
         emailIntegrationEnabled: mapValueOfType<bool>(json, r'emailIntegrationEnabled'),
+        systemEmailId: mapValueOfType<int>(json, r'systemEmailId'),
+        systemEmail: SystemEmail.fromJson(json[r'systemEmail']),
         emailToRead: mapValueOfType<String>(json, r'emailToRead'),
         subjectLineRegexes: SubjectLineRegex.listFromJson(json[r'subjectLineRegexes']) ?? const [],
         emailWhiteList: GroupSettingsWhiteListEmail.listFromJson(json[r'emailWhiteList']) ?? const [],
         emailDefaultReceiptStatus: ReceiptStatus.fromJson(json[r'emailDefaultReceiptStatus']),
         emailDefaultReceiptPaidById: mapValueOfType<int>(json, r'emailDefaultReceiptPaidById'),
+        prompt: Prompt.fromJson(json[r'prompt']),
+        promptId: mapValueOfType<int>(json, r'promptId'),
+        fallbackPrompt: Prompt.fromJson(json[r'fallbackPrompt']),
+        fallbackPromptId: mapValueOfType<int>(json, r'fallbackPromptId'),
         createdAt: mapValueOfType<String>(json, r'createdAt'),
         createdBy: mapValueOfType<int>(json, r'createdBy'),
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),

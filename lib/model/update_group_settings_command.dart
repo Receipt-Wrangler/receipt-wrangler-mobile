@@ -13,13 +13,18 @@ part of openapi.api;
 class UpdateGroupSettingsCommand {
   /// Returns a new [UpdateGroupSettingsCommand] instance.
   UpdateGroupSettingsCommand({
+    required this.systemEmailId,
     this.emailIntegrationEnabled,
-    required this.emailToRead,
     this.subjectLineRegexes = const [],
     this.emailWhiteList = const [],
     this.emailDefaultReceiptStatus,
     this.emailDefaultReceiptPaidById,
+    this.promptId,
+    this.fallbackPromptId,
   });
+
+  /// System email foreign key
+  int systemEmailId;
 
   /// Whether email integration is enabled
   ///
@@ -29,9 +34,6 @@ class UpdateGroupSettingsCommand {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   bool? emailIntegrationEnabled;
-
-  /// Email to read
-  String emailToRead;
 
   /// Subject line regexes
   List<SubjectLineRegex> subjectLineRegexes;
@@ -56,36 +58,58 @@ class UpdateGroupSettingsCommand {
   ///
   int? emailDefaultReceiptPaidById;
 
+  /// Prompt foreign key
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? promptId;
+
+  /// Fallback prompt foreign key
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? fallbackPromptId;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is UpdateGroupSettingsCommand &&
+     other.systemEmailId == systemEmailId &&
      other.emailIntegrationEnabled == emailIntegrationEnabled &&
-     other.emailToRead == emailToRead &&
      other.subjectLineRegexes == subjectLineRegexes &&
      other.emailWhiteList == emailWhiteList &&
      other.emailDefaultReceiptStatus == emailDefaultReceiptStatus &&
-     other.emailDefaultReceiptPaidById == emailDefaultReceiptPaidById;
+     other.emailDefaultReceiptPaidById == emailDefaultReceiptPaidById &&
+     other.promptId == promptId &&
+     other.fallbackPromptId == fallbackPromptId;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (systemEmailId.hashCode) +
     (emailIntegrationEnabled == null ? 0 : emailIntegrationEnabled!.hashCode) +
-    (emailToRead.hashCode) +
     (subjectLineRegexes.hashCode) +
     (emailWhiteList.hashCode) +
     (emailDefaultReceiptStatus == null ? 0 : emailDefaultReceiptStatus!.hashCode) +
-    (emailDefaultReceiptPaidById == null ? 0 : emailDefaultReceiptPaidById!.hashCode);
+    (emailDefaultReceiptPaidById == null ? 0 : emailDefaultReceiptPaidById!.hashCode) +
+    (promptId == null ? 0 : promptId!.hashCode) +
+    (fallbackPromptId == null ? 0 : fallbackPromptId!.hashCode);
 
   @override
-  String toString() => 'UpdateGroupSettingsCommand[emailIntegrationEnabled=$emailIntegrationEnabled, emailToRead=$emailToRead, subjectLineRegexes=$subjectLineRegexes, emailWhiteList=$emailWhiteList, emailDefaultReceiptStatus=$emailDefaultReceiptStatus, emailDefaultReceiptPaidById=$emailDefaultReceiptPaidById]';
+  String toString() => 'UpdateGroupSettingsCommand[systemEmailId=$systemEmailId, emailIntegrationEnabled=$emailIntegrationEnabled, subjectLineRegexes=$subjectLineRegexes, emailWhiteList=$emailWhiteList, emailDefaultReceiptStatus=$emailDefaultReceiptStatus, emailDefaultReceiptPaidById=$emailDefaultReceiptPaidById, promptId=$promptId, fallbackPromptId=$fallbackPromptId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+      json[r'systemEmailId'] = this.systemEmailId;
     if (this.emailIntegrationEnabled != null) {
       json[r'emailIntegrationEnabled'] = this.emailIntegrationEnabled;
     } else {
       json[r'emailIntegrationEnabled'] = null;
     }
-      json[r'emailToRead'] = this.emailToRead;
       json[r'subjectLineRegexes'] = this.subjectLineRegexes;
       json[r'emailWhiteList'] = this.emailWhiteList;
     if (this.emailDefaultReceiptStatus != null) {
@@ -97,6 +121,16 @@ class UpdateGroupSettingsCommand {
       json[r'emailDefaultReceiptPaidById'] = this.emailDefaultReceiptPaidById;
     } else {
       json[r'emailDefaultReceiptPaidById'] = null;
+    }
+    if (this.promptId != null) {
+      json[r'promptId'] = this.promptId;
+    } else {
+      json[r'promptId'] = null;
+    }
+    if (this.fallbackPromptId != null) {
+      json[r'fallbackPromptId'] = this.fallbackPromptId;
+    } else {
+      json[r'fallbackPromptId'] = null;
     }
     return json;
   }
@@ -120,12 +154,14 @@ class UpdateGroupSettingsCommand {
       }());
 
       return UpdateGroupSettingsCommand(
+        systemEmailId: mapValueOfType<int>(json, r'systemEmailId')!,
         emailIntegrationEnabled: mapValueOfType<bool>(json, r'emailIntegrationEnabled'),
-        emailToRead: mapValueOfType<String>(json, r'emailToRead')!,
         subjectLineRegexes: SubjectLineRegex.listFromJson(json[r'subjectLineRegexes'])!,
         emailWhiteList: GroupSettingsWhiteListEmail.listFromJson(json[r'emailWhiteList'])!,
         emailDefaultReceiptStatus: ReceiptStatus.fromJson(json[r'emailDefaultReceiptStatus']),
         emailDefaultReceiptPaidById: mapValueOfType<int>(json, r'emailDefaultReceiptPaidById'),
+        promptId: mapValueOfType<int>(json, r'promptId'),
+        fallbackPromptId: mapValueOfType<int>(json, r'fallbackPromptId'),
       );
     }
     return null;
@@ -175,7 +211,7 @@ class UpdateGroupSettingsCommand {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'emailToRead',
+    'systemEmailId',
     'subjectLineRegexes',
     'emailWhiteList',
   };

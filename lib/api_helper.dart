@@ -55,6 +55,15 @@ String parameterToString(dynamic value) {
   if (value is DateTime) {
     return value.toUtc().toIso8601String();
   }
+  if (value is AiType) {
+    return AiTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is AssociatedEntityType) {
+    return AssociatedEntityTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is AssociatedGroup) {
+    return AssociatedGroupTypeTransformer().encode(value).toString();
+  }
   if (value is FilterOperation) {
     return FilterOperationTypeTransformer().encode(value).toString();
   }
@@ -64,14 +73,26 @@ String parameterToString(dynamic value) {
   if (value is GroupStatus) {
     return GroupStatusTypeTransformer().encode(value).toString();
   }
+  if (value is ImportType) {
+    return ImportTypeTypeTransformer().encode(value).toString();
+  }
   if (value is ItemStatus) {
     return ItemStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is OcrEngine) {
+    return OcrEngineTypeTransformer().encode(value).toString();
   }
   if (value is ReceiptStatus) {
     return ReceiptStatusTypeTransformer().encode(value).toString();
   }
   if (value is SortDirection) {
     return SortDirectionTypeTransformer().encode(value).toString();
+  }
+  if (value is SystemTaskStatus) {
+    return SystemTaskStatusTypeTransformer().encode(value).toString();
+  }
+  if (value is SystemTaskType) {
+    return SystemTaskTypeTypeTransformer().encode(value).toString();
   }
   if (value is UserRole) {
     return UserRoleTypeTransformer().encode(value).toString();
