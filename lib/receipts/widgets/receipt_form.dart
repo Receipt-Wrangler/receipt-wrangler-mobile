@@ -132,12 +132,12 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildCategoryField() {
     return MultiSelectField<api.Category>(
-      name: "categories",
-      label: "Categories",
-      initialValue: receipt.categories,
-      itemDisplayName: (category) => category.name ?? "",
-      itemName: "Categories",
-    );
+        name: "categories",
+        label: "Categories",
+        initialValue: receipt.categories,
+        itemDisplayName: (category) => category.name ?? "",
+        itemName: "Categories",
+        onTap: () => print("Tapped"));
   }
 
   Widget buildTagField() {

@@ -8,25 +8,41 @@ class MultiSelectField<T> extends FormBuilderField<List<T>> {
     required String Function(T) itemDisplayName,
     required String itemName,
     List<T>? initialValue,
+    Function()? onTap,
   }) : super(
           key: Key(name),
           name: name,
           initialValue: initialValue ?? [],
           builder: (FormFieldState<List<T>?> field) {
+            Widget buildChip(T thing) {
+              return ChoiceChip(
+                label: Text(itemDisplayName(thing)),
+                selectedColor: Colors.blue,
+                selected: true,
+              );
+            }
+
+            List<Widget> buildChipList() {
+              if (field.value != null && field.value!.isNotEmpty) {
+                return (field.value as List<T>)
+                    .map((thing) => buildChip(thing))
+                    .toList();
+              } else {
+                return [Text("No $itemName selected")];
+              }
+            }
+
             return InputDecorator(
               decoration: InputDecoration(labelText: label),
               child: GestureDetector(
                   child: Wrap(
-                    children: (field.value != null && field.value!.isNotEmpty)
-                        ? (field.value as List<T>)
-                            .map((thing) => ChoiceChip(
-                                  label: Text(itemDisplayName(thing)),
-                                  selected: true,
-                                ))
-                            .toList()
-                        : [Text("No $itemName selected")],
+                    children: buildChipList(),
                   ),
-                  onTap: () {}),
+                  onTap: () {
+                    if (onTap != null) {
+                      onTap();
+                    }
+                  }),
             );
           },
         );
