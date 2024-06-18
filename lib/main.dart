@@ -37,6 +37,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 import 'api.dart' as api;
+import 'models/context_model.dart';
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +55,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
+      ChangeNotifierProvider(create: (_) => ContextModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -126,12 +128,15 @@ final _router = GoRouter(
             padding = const EdgeInsets.all(0);
           }
 
+          var contextModel = Provider.of<ContextModel>(context, listen: false);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
           var future = api.ReceiptApi().getReceiptById(
               int.parse(state.pathParameters['receiptId'] as String));
+
+          contextModel.setShellContext(context);
 
           return FutureBuilder(
               future: future,
