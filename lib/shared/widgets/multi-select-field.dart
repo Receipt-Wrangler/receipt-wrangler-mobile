@@ -1,49 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class MultiSelectField<T> extends FormBuilderField<List<T>> {
-  MultiSelectField({
-    required String name,
-    required String label,
-    required String Function(T) itemDisplayName,
-    required String itemName,
-    List<T>? initialValue,
-    Function()? onTap,
-  }) : super(
-          key: Key(name),
-          name: name,
-          initialValue: initialValue ?? [],
-          builder: (FormFieldState<List<T>?> field) {
-            Widget buildChip(T thing) {
-              return ChoiceChip(
-                label: Text(itemDisplayName(thing)),
-                selectedColor: Colors.blue,
-                selected: true,
-              );
-            }
+class MultiSelectField<T> extends StatefulWidget {
+  const MultiSelectField({
+    super.key,
+    required this.name,
+    required this.label,
+    required this.itemDisplayName,
+    required this.itemName,
+    this.initialValue,
+    this.onTap,
+  });
 
-            List<Widget> buildChipList() {
-              if (field.value != null && field.value!.isNotEmpty) {
-                return (field.value as List<T>)
-                    .map((thing) => buildChip(thing))
-                    .toList();
-              } else {
-                return [Text("No $itemName selected")];
+  final String name;
+
+  final String label;
+
+  final String Function(T) itemDisplayName;
+
+  final String itemName;
+
+  final List<T>? initialValue;
+
+  final Function()? onTap;
+
+  @override
+  State<MultiSelectField> createState() => _MultiSelectField<T>();
+}
+
+class _MultiSelectField<T> extends State<MultiSelectField<T>> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilderField<List<T>>(
+      name: widget.name,
+      initialValue: widget!.initialValue as dynamic,
+      builder: (FormFieldState<List<T>?> field) {
+        Widget buildChipLabel(T thing) {
+          return Text(widget.itemDisplayName(thing));
+        }
+
+        Widget buildChip(T thing) {
+          return ChoiceChip(
+            label: buildChipLabel(thing),
+            selectedColor: Theme.of(context).primaryColor,
+            showCheckmark: false,
+            selected: true,
+            onSelected: (bool selected) {
+              if (widget.onTap != null) {
+                widget!.onTap!();
               }
-            }
+            },
+          );
+        }
 
-            return InputDecorator(
-              decoration: InputDecoration(labelText: label),
-              child: GestureDetector(
-                  child: Wrap(
-                    children: buildChipList(),
-                  ),
-                  onTap: () {
-                    if (onTap != null) {
-                      onTap();
-                    }
-                  }),
-            );
-          },
+        List<Widget> buildChipList() {
+          if (field.value != null && field.value!.isNotEmpty) {
+            return (field.value as List<T>)
+                .map((thing) => buildChip(thing))
+                .toList();
+          } else {
+            return [Text("No ${widget.itemName} selected")];
+          }
+        }
+
+        return InputDecorator(
+          decoration: InputDecoration(labelText: widget.label),
+          child: GestureDetector(
+              child: Wrap(
+                children: buildChipList(),
+              ),
+              onTap: () {
+                if (widget.onTap != null) {
+                  widget!.onTap!();
+                }
+              }),
         );
+      },
+    );
+  }
 }

@@ -13,6 +13,7 @@ import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/receipt_model.dart';
+import '../../shared/functions/multi_select_bottom_sheet.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -137,7 +138,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.categories,
         itemDisplayName: (category) => category.name ?? "",
         itemName: "Categories",
-        onTap: () => print("Tapped"));
+        onTap: () => showMultiselectBottomSheet(context));
   }
 
   Widget buildTagField() {
