@@ -23,7 +23,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
         return ScreenWrapper(
             bodyPadding: bodyPadding,
             appBarWidget: TopAppBar(
-              titleText: 'Quick Scan',
+              titleText: label,
               actions: actions,
               hideAvatar: true,
               surfaceTintColor: Colors.white,

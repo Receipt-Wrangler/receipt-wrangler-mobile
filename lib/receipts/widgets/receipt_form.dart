@@ -12,6 +12,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
+import '../../models/category_model.dart';
 import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
@@ -29,6 +30,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
+  late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   int groupId = 0;
@@ -141,7 +143,12 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.categories,
         itemDisplayName: (category) => category.name ?? "",
         itemName: "Categories",
-        onTap: () => showMultiselectBottomSheet(shellContext));
+        onTap: () => showMultiselectBottomSheet(
+            shellContext,
+            "Select Categories",
+            categoryModel.categories,
+            receipt.categories,
+            (category) => category.name));
   }
 
   Widget buildTagField() {
