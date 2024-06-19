@@ -15,12 +15,13 @@ class FilterMultiSelect<T> extends StatefulWidget {
   final String Function(T) itemDisplayName;
 
   @override
-  _FilterMultiSelect<T> createState() {
-    return _FilterMultiSelect();
+  FilterMultiSelectState<T> createState() {
+    return FilterMultiSelectState();
   }
 }
 
-class _FilterMultiSelect<T> extends State<FilterMultiSelect<T>> {
+class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
+  late List<T> filteredOptions = [...widget.options];
   List<T> selectedOptions = [];
 
   @override
@@ -64,7 +65,7 @@ class _FilterMultiSelect<T> extends State<FilterMultiSelect<T>> {
     Widget buildChoiceChipGrid() {
       return GridView.builder(
         shrinkWrap: true,
-        itemCount: widget.options.length,
+        itemCount: filteredOptions.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           crossAxisSpacing: 8,

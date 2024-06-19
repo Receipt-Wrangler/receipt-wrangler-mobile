@@ -6,7 +6,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     {List<Widget>? actions,
     Widget? bottomSheetWidget,
     EdgeInsets? bodyPadding}) {
-  showModalBottomSheet(
+  return showModalBottomSheet(
     context: context,
     enableDrag: true,
     isDismissible: true,

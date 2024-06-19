@@ -143,12 +143,27 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.categories,
         itemDisplayName: (category) => category.name ?? "",
         itemName: "Categories",
-        onTap: () => showMultiselectBottomSheet(
-            shellContext,
-            "Select Categories",
-            categoryModel.categories,
-            receipt.categories,
-            (category) => category.name));
+        onTap: formState == WranglerFormState.view
+            ? null
+            : showCategoryMultiSelect);
+  }
+
+  void showCategoryMultiSelect() {
+    showMultiselectBottomSheet(
+        shellContext,
+        "Select Categories",
+        categoryModel.categories,
+        formKey.currentState!.fields["categories"]!.value ?? receipt.categories,
+        (category) => category.name).then((value) {
+      if (value != null) {
+        var categories =
+            List<api.Category>.from(value.map((item) => item as api.Category));
+
+        setState(() {
+          formKey.currentState!.fields["categories"]!.setValue(categories);
+        });
+      }
+    });
   }
 
   Widget buildTagField() {
