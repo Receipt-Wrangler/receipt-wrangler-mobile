@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FilterMultiSelect<T> extends StatefulWidget {
   const FilterMultiSelect({
@@ -63,17 +64,13 @@ class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
     }
 
     Widget buildChoiceChipGrid() {
-      return GridView.builder(
+      return MasonryGridView.count(
         shrinkWrap: true,
         itemCount: filteredOptions.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
         itemBuilder: (BuildContext context, int index) {
           return buildChoiceChip(widget.options[index], index);
         },
+        crossAxisCount: 3,
       );
     }
 
