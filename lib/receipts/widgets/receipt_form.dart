@@ -152,6 +152,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     showMultiselectBottomSheet(
         shellContext,
         "Select Categories",
+        "Select",
         categoryModel.categories,
         formKey.currentState!.fields["categories"]!.value ?? receipt.categories,
         (category) => category.name).then((value) {

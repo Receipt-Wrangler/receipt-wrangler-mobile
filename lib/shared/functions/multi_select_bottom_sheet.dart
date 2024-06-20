@@ -7,6 +7,7 @@ import '../widgets/filter_multiselect.dart';
 Future<dynamic> showMultiselectBottomSheet(
     context,
     String label,
+    String buttonText,
     List<dynamic> options,
     List<dynamic> initialSelectedOptions,
     String Function(dynamic) itemDisplayName) {
@@ -22,9 +23,14 @@ Future<dynamic> showMultiselectBottomSheet(
             itemDisplayName: itemDisplayName,
           ),
           label,
-          actions: [], bottomSheetWidget: BottomSubmitButton(onPressed: () {
-    navigator.pop(multiselectKey.currentState!.selectedOptions ?? []);
-  }), bodyPadding: EdgeInsets.zero)
+          actions: [],
+          bottomSheetWidget: BottomSubmitButton(
+            onPressed: () {
+              navigator.pop(multiselectKey.currentState!.selectedOptions ?? []);
+            },
+            buttonText: buttonText,
+          ),
+          bodyPadding: EdgeInsets.zero)
       .then((value) {
     return value;
   });
