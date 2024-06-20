@@ -13,10 +13,7 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     useSafeArea: true,
     isScrollControlled: true,
     showDragHandle: true,
-    constraints: BoxConstraints(
-      minHeight: MediaQuery.of(context).size.height,
-      minWidth: MediaQuery.of(context).size.width,
-    ),
+    constraints: BoxConstraints(),
     builder: (BuildContext context) {
       return StatefulBuilder(builder:
           (BuildContext context, void Function(void Function()) setState) {

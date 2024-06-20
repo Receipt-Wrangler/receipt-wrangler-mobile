@@ -24,6 +24,7 @@ class FilterMultiSelect<T> extends StatefulWidget {
 
 class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
   late List<T> filteredOptions = [...widget.options];
+  final formKey = GlobalKey<FormBuilderState>();
   List<T> selectedOptions = [];
 
   @override
@@ -48,7 +49,6 @@ class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
       decoration: const InputDecoration(labelText: "Filter"),
       onChanged: (String? value) {
         setState(() {
-          print("fired");
           filteredOptions = widget.options
               .where((element) => widget
                   .itemDisplayName(element)
@@ -81,7 +81,7 @@ class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
       shrinkWrap: true,
       itemCount: filteredOptions.length,
       itemBuilder: (BuildContext context, int index) {
-        return buildChoiceChip(widget.options[index], index);
+        return buildChoiceChip(filteredOptions[index], index);
       },
       crossAxisCount: 3,
     );
@@ -89,17 +89,17 @@ class FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
 
   @override
   Widget build(BuildContext context) {
-    print("built");
-
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          buildFilterBar(),
-          SizedBox(height: 10),
-          buildChoiceChipGrid(),
-        ],
-      ),
-    );
+    return FormBuilder(
+        key: formKey,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              buildFilterBar(),
+              SizedBox(height: 10),
+              buildChoiceChipGrid(),
+            ],
+          ),
+        ));
   }
 }
