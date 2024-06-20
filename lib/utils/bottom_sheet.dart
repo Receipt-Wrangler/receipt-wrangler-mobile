@@ -6,24 +6,21 @@ showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     {List<Widget>? actions,
     Widget? bottomSheetWidget,
     EdgeInsets? bodyPadding}) {
-  showModalBottomSheet(
+  return showModalBottomSheet(
     context: context,
     enableDrag: true,
     isDismissible: true,
     useSafeArea: true,
     isScrollControlled: true,
     showDragHandle: true,
-    constraints: BoxConstraints(
-      minHeight: MediaQuery.of(context).size.height,
-      minWidth: MediaQuery.of(context).size.width,
-    ),
+    constraints: BoxConstraints(),
     builder: (BuildContext context) {
       return StatefulBuilder(builder:
           (BuildContext context, void Function(void Function()) setState) {
         return ScreenWrapper(
             bodyPadding: bodyPadding,
             appBarWidget: TopAppBar(
-              titleText: 'Quick Scan',
+              titleText: label,
               actions: actions,
               hideAvatar: true,
               surfaceTintColor: Colors.white,

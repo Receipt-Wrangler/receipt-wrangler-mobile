@@ -3,7 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 
 class BottomSubmitButton extends StatefulWidget {
-  const BottomSubmitButton({super.key, required this.onPressed});
+  const BottomSubmitButton(
+      {super.key, required this.onPressed, this.buttonText});
+
+  final String? buttonText;
 
   final void Function() onPressed;
 
@@ -22,8 +25,8 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
           return MaterialButton(
             onPressed: loadingModel.isLoading ? null : widget.onPressed,
             color: Theme.of(context).primaryColor,
-            child: const Text(
-              'Submit',
+            child: Text(
+              widget.buttonText ?? "Submit",
               style: TextStyle(color: Colors.white),
             ),
           );

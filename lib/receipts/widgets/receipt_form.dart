@@ -12,7 +12,11 @@ import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
+import '../../models/category_model.dart';
+import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
+import '../../models/tag_model.dart';
+import '../../shared/functions/multi_select_bottom_sheet.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -27,6 +31,10 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
+  late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
+  late final tagModel = Provider.of<TagModel>(context, listen: false);
+  late final shellContext =
+      Provider.of<ContextModel>(context, listen: false).shellContext;
   int groupId = 0;
 
   @override
@@ -132,22 +140,61 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildCategoryField() {
     return MultiSelectField<api.Category>(
-      name: "categories",
-      label: "Categories",
-      initialValue: receipt.categories,
-      itemDisplayName: (category) => category.name ?? "",
-      itemName: "Categories",
-    );
+        name: "categories",
+        label: "Categories",
+        initialValue: receipt.categories,
+        itemDisplayName: (category) => category.name ?? "",
+        itemName: "Categories",
+        onTap: formState == WranglerFormState.view
+            ? null
+            : showCategoryMultiSelect);
+  }
+
+  void showCategoryMultiSelect() {
+    showMultiselectBottomSheet(
+        shellContext,
+        "Select Categories",
+        "Select",
+        categoryModel.categories,
+        formKey.currentState!.fields["categories"]!.value ?? receipt.categories,
+        (category) => category.name).then((value) {
+      if (value != null) {
+        var categories =
+            List<api.Category>.from(value.map((item) => item as api.Category));
+
+        setState(() {
+          formKey.currentState!.fields["categories"]!.setValue(categories);
+        });
+      }
+    });
   }
 
   Widget buildTagField() {
     return MultiSelectField<api.Tag>(
-      name: "tags",
-      label: "Tags",
-      initialValue: receipt.tags,
-      itemDisplayName: (tag) => tag.name ?? "",
-      itemName: "Tags",
-    );
+        name: "tags",
+        label: "Tags",
+        initialValue: receipt.tags,
+        itemDisplayName: (tag) => tag.name ?? "",
+        itemName: "Tags",
+        onTap: formState == WranglerFormState.view ? null : showTagMultiSelect);
+  }
+
+  void showTagMultiSelect() {
+    showMultiselectBottomSheet(
+        shellContext,
+        "Select Tags",
+        "Select",
+        tagModel.tags,
+        formKey.currentState!.fields["tags"]!.value ?? receipt.tags,
+        (tag) => tag.name).then((value) {
+      if (value != null) {
+        var tags = List<api.Tag>.from(value.map((item) => item as api.Tag));
+
+        setState(() {
+          formKey.currentState!.fields["tags"]!.setValue(tags);
+        });
+      }
+    });
   }
 
   Widget buildReceiptItemList() {

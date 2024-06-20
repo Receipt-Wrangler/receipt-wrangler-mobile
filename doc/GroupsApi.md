@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**getGroupById**](GroupsApi.md#getgroupbyid) | **GET** /group/{groupId} | Gets a group by Id
 [**getGroupsForuser**](GroupsApi.md#getgroupsforuser) | **GET** /group | Get groups for user
 [**getOcrTextForGroup**](GroupsApi.md#getocrtextforgroup) | **GET** /group/{groupId}/ocrText | Reads each image in a group and returns the zipped read text
+[**getPagedGroups**](GroupsApi.md#getpagedgroups) | **POST** /group/getPagedGroups | Get paged groups
 [**pollGroupEmail**](GroupsApi.md#pollgroupemail) | **POST** /group/{groupId}/pollGroupEmail | Poll group email
 [**updateGroup**](GroupsApi.md#updategroup) | **PUT** /group/{groupId} | Update a group
 [**updateGroupSettings**](GroupsApi.md#updategroupsettings) | **PUT** /group/{groupId}/groupSettings | Update group settings
@@ -253,6 +254,55 @@ void (empty response body)
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getPagedGroups**
+> PagedData getPagedGroups(pagedGroupRequestCommand)
+
+Get paged groups
+
+This will return paged groups
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = GroupsApi();
+final pagedGroupRequestCommand = PagedGroupRequestCommand(); // PagedGroupRequestCommand | Paging and sorting data
+
+try {
+    final result = api_instance.getPagedGroups(pagedGroupRequestCommand);
+    print(result);
+} catch (e) {
+    print('Exception when calling GroupsApi->getPagedGroups: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **pagedGroupRequestCommand** | [**PagedGroupRequestCommand**](PagedGroupRequestCommand.md)| Paging and sorting data | 
+
+### Return type
+
+[**PagedData**](PagedData.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

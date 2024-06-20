@@ -106,6 +106,30 @@ class ReceiptBottomSheetBuilder {
     }
   }
 
+  List<api.UpsertCategoryCommand> buildUpsertCategoryCommand(
+      Map<String, dynamic> form) {
+    var categories = List<api.Category>.from(
+        form["categories"].map((item) => item as api.Category));
+
+    return categories
+        .map((category) => api.UpsertCategoryCommand(
+            id: category.id,
+            name: category.name ?? "",
+            description: category.description ?? ""))
+        .toList();
+  }
+
+  List<api.UpsertTagCommand> buildUpsertTagCommand(Map<String, dynamic> form) {
+    var tags = List<api.Tag>.from(form["tags"].map((item) => item as api.Tag));
+
+    return tags
+        .map((tag) => api.UpsertTagCommand(
+            id: tag.id,
+            name: tag.name ?? "",
+            description: tag.description ?? ""))
+        .toList();
+  }
+
   Widget buildReceiptSubmitButton(String fullPath) {
     if (fullPath.contains("edit")) {
       return BottomSubmitButton(
@@ -123,6 +147,9 @@ class ReceiptBottomSheetBuilder {
 
               var receiptToUpdate = api.UpsertReceiptCommand.fromJson(form)
                   as api.UpsertReceiptCommand;
+
+              receiptToUpdate.categories = buildUpsertCategoryCommand(form);
+              receiptToUpdate.tags = buildUpsertTagCommand(form);
 
               await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
               showSuccessSnackbar(context, "Receipt updated successfully");

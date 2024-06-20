@@ -19,7 +19,7 @@ class Comment {
     this.createdAt,
     this.createdBy,
     required this.id,
-    this.receiptId = const [],
+    required this.receiptId,
     this.updatedAt,
     required this.userId,
   });
@@ -64,7 +64,7 @@ class Comment {
   int id;
 
   /// Receipt foreign key
-  List<Comment> receiptId;
+  int receiptId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -164,7 +164,7 @@ class Comment {
         createdAt: mapValueOfType<String>(json, r'createdAt'),
         createdBy: mapValueOfType<int>(json, r'createdBy'),
         id: mapValueOfType<int>(json, r'id')!,
-        receiptId: Comment.listFromJson(json[r'receiptId'])!,
+        receiptId: mapValueOfType<int>(json, r'receiptId')!,
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
         userId: mapValueOfType<int>(json, r'userId')!,
       );

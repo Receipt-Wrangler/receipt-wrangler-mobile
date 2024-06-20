@@ -181,8 +181,14 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AiType':
+          return AiTypeTypeTransformer().decode(value);
         case 'AppData':
           return AppData.fromJson(value);
+        case 'AssociatedEntityType':
+          return AssociatedEntityTypeTypeTransformer().decode(value);
+        case 'AssociatedGroup':
+          return AssociatedGroupTypeTransformer().decode(value);
         case 'BaseModel':
           return BaseModel.fromJson(value);
         case 'BulkStatusUpdateCommand':
@@ -191,6 +197,10 @@ class ApiClient {
           return Category.fromJson(value);
         case 'CategoryView':
           return CategoryView.fromJson(value);
+        case 'CheckEmailConnectivityCommand':
+          return CheckEmailConnectivityCommand.fromJson(value);
+        case 'CheckReceiptProcessingSettingsConnectivityCommand':
+          return CheckReceiptProcessingSettingsConnectivityCommand.fromJson(value);
         case 'Claims':
           return Claims.fromJson(value);
         case 'Comment':
@@ -211,8 +221,12 @@ class ApiClient {
           return FilterOperationTypeTransformer().decode(value);
         case 'GetNewRefreshToken200Response':
           return GetNewRefreshToken200Response.fromJson(value);
+        case 'GetSystemTaskCommand':
+          return GetSystemTaskCommand.fromJson(value);
         case 'Group':
           return Group.fromJson(value);
+        case 'GroupFilter':
+          return GroupFilter.fromJson(value);
         case 'GroupMember':
           return GroupMember.fromJson(value);
         case 'GroupRole':
@@ -223,6 +237,8 @@ class ApiClient {
           return GroupSettingsWhiteListEmail.fromJson(value);
         case 'GroupStatus':
           return GroupStatusTypeTransformer().decode(value);
+        case 'ImportType':
+          return ImportTypeTypeTransformer().decode(value);
         case 'Item':
           return Item.fromJson(value);
         case 'ItemStatus':
@@ -235,22 +251,36 @@ class ApiClient {
           return MagicFillCommand.fromJson(value);
         case 'Notification':
           return Notification.fromJson(value);
+        case 'OcrEngine':
+          return OcrEngineTypeTransformer().decode(value);
         case 'PagedData':
           return PagedData.fromJson(value);
         case 'PagedDataDataInner':
           return PagedDataDataInner.fromJson(value);
+        case 'PagedGroupRequestCommand':
+          return PagedGroupRequestCommand.fromJson(value);
+        case 'PagedGroupRequestCommandAllOf':
+          return PagedGroupRequestCommandAllOf.fromJson(value);
         case 'PagedRequestCommand':
           return PagedRequestCommand.fromJson(value);
         case 'PagedRequestField':
           return PagedRequestField.fromJson(value);
         case 'PagedRequestFieldValue':
           return PagedRequestFieldValue.fromJson(value);
+        case 'Prompt':
+          return Prompt.fromJson(value);
+        case 'PromptAllOf':
+          return PromptAllOf.fromJson(value);
         case 'Receipt':
           return Receipt.fromJson(value);
         case 'ReceiptPagedRequestCommand':
           return ReceiptPagedRequestCommand.fromJson(value);
         case 'ReceiptPagedRequestFilter':
           return ReceiptPagedRequestFilter.fromJson(value);
+        case 'ReceiptProcessingSettings':
+          return ReceiptProcessingSettings.fromJson(value);
+        case 'ReceiptProcessingSettingsAllOf':
+          return ReceiptProcessingSettingsAllOf.fromJson(value);
         case 'ReceiptStatus':
           return ReceiptStatusTypeTransformer().decode(value);
         case 'ResetPasswordCommand':
@@ -263,6 +293,22 @@ class ApiClient {
           return SortDirectionTypeTransformer().decode(value);
         case 'SubjectLineRegex':
           return SubjectLineRegex.fromJson(value);
+        case 'SystemEmail':
+          return SystemEmail.fromJson(value);
+        case 'SystemEmailAllOf':
+          return SystemEmailAllOf.fromJson(value);
+        case 'SystemSettings':
+          return SystemSettings.fromJson(value);
+        case 'SystemSettingsAllOf':
+          return SystemSettingsAllOf.fromJson(value);
+        case 'SystemTask':
+          return SystemTask.fromJson(value);
+        case 'SystemTaskAllOf':
+          return SystemTaskAllOf.fromJson(value);
+        case 'SystemTaskStatus':
+          return SystemTaskStatusTypeTransformer().decode(value);
+        case 'SystemTaskType':
+          return SystemTaskTypeTypeTransformer().decode(value);
         case 'Tag':
           return Tag.fromJson(value);
         case 'TagView':
@@ -281,8 +327,16 @@ class ApiClient {
           return UpsertDashboardCommand.fromJson(value);
         case 'UpsertItemCommand':
           return UpsertItemCommand.fromJson(value);
+        case 'UpsertPromptCommand':
+          return UpsertPromptCommand.fromJson(value);
         case 'UpsertReceiptCommand':
           return UpsertReceiptCommand.fromJson(value);
+        case 'UpsertReceiptProcessingSettingsCommand':
+          return UpsertReceiptProcessingSettingsCommand.fromJson(value);
+        case 'UpsertSystemEmailCommand':
+          return UpsertSystemEmailCommand.fromJson(value);
+        case 'UpsertSystemSettingsCommand':
+          return UpsertSystemSettingsCommand.fromJson(value);
         case 'UpsertTagCommand':
           return UpsertTagCommand.fromJson(value);
         case 'UpsertWidgetCommand':
