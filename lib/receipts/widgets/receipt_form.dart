@@ -15,6 +15,7 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../models/category_model.dart';
 import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
+import '../../models/tag_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 
 class ReceiptForm extends StatefulWidget {
@@ -31,6 +32,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
+  late final tagModel = Provider.of<TagModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   int groupId = 0;
@@ -169,12 +171,30 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildTagField() {
     return MultiSelectField<api.Tag>(
-      name: "tags",
-      label: "Tags",
-      initialValue: receipt.tags,
-      itemDisplayName: (tag) => tag.name ?? "",
-      itemName: "Tags",
-    );
+        name: "tags",
+        label: "Tags",
+        initialValue: receipt.tags,
+        itemDisplayName: (tag) => tag.name ?? "",
+        itemName: "Tags",
+        onTap: formState == WranglerFormState.view ? null : showTagMultiSelect);
+  }
+
+  void showTagMultiSelect() {
+    showMultiselectBottomSheet(
+        shellContext,
+        "Select Tags",
+        "Select",
+        tagModel.tags,
+        formKey.currentState!.fields["tags"]!.value ?? receipt.tags,
+        (tag) => tag.name).then((value) {
+      if (value != null) {
+        var tags = List<api.Tag>.from(value.map((item) => item as api.Tag));
+
+        setState(() {
+          formKey.currentState!.fields["tags"]!.setValue(tags);
+        });
+      }
+    });
   }
 
   Widget buildReceiptItemList() {

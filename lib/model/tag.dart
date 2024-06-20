@@ -17,6 +17,7 @@ class Tag {
     this.createdBy,
     this.id,
     required this.name,
+    this.description,
     this.updatedAt,
   });
 
@@ -47,6 +48,15 @@ class Tag {
   /// Tag name
   String name;
 
+  /// Tag description
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? description;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -61,6 +71,7 @@ class Tag {
      other.createdBy == createdBy &&
      other.id == id &&
      other.name == name &&
+     other.description == description &&
      other.updatedAt == updatedAt;
 
   @override
@@ -70,10 +81,11 @@ class Tag {
     (createdBy == null ? 0 : createdBy!.hashCode) +
     (id == null ? 0 : id!.hashCode) +
     (name.hashCode) +
+    (description == null ? 0 : description!.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode);
 
   @override
-  String toString() => 'Tag[createdAt=$createdAt, createdBy=$createdBy, id=$id, name=$name, updatedAt=$updatedAt]';
+  String toString() => 'Tag[createdAt=$createdAt, createdBy=$createdBy, id=$id, name=$name, description=$description, updatedAt=$updatedAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -93,6 +105,11 @@ class Tag {
       json[r'id'] = null;
     }
       json[r'name'] = this.name;
+    if (this.description != null) {
+      json[r'description'] = this.description;
+    } else {
+      json[r'description'] = null;
+    }
     if (this.updatedAt != null) {
       json[r'updatedAt'] = this.updatedAt;
     } else {
@@ -124,6 +141,7 @@ class Tag {
         createdBy: mapValueOfType<int>(json, r'createdBy'),
         id: mapValueOfType<int>(json, r'id'),
         name: mapValueOfType<String>(json, r'name')!,
+        description: mapValueOfType<String>(json, r'description'),
         updatedAt: mapValueOfType<String>(json, r'updatedAt'),
       );
     }
