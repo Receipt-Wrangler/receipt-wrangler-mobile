@@ -1,4 +1,3 @@
-import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
@@ -56,20 +55,27 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return tiles;
   }
 
-  Widget buildUserAccordion(Map<int, List<api.Item>> userItemMap) {
-    return Accordion(
+  Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
+    return ExpansionPanelList(
       children: userItemMap.entries
-          .map((e) => buildAccordionSection(e.key, e.value))
+          .map((e) => buildExpansionPanel(e.key, e.value))
           .toList(),
     );
   }
 
-  AccordionSection buildAccordionSection(int userId, List<api.Item> items) {
+  ExpansionPanel buildExpansionPanel(int userId, List<api.Item> items) {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
 
-    return AccordionSection(header: Text("hello world"), content: Text("yeet"));
+    return ExpansionPanel(
+        canTapOnHeader: true,
+        headerBuilder: (context, expanded) {
+          return ListTile(
+            title: Text("${user?.displayName} - Owes: 0"),
+          );
+        },
+        body: Text("hello body"));
   }
 
   @override
@@ -80,6 +86,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       return const Text("No shares found");
     }
 
-    return buildUserAccordion(userItemMap);
+    return buildUserExpansionList(userItemMap);
   }
 }
