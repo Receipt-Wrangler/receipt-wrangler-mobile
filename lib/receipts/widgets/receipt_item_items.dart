@@ -18,6 +18,7 @@ class ReceiptItemItems extends StatefulWidget {
 
 class _ReceiptItemItems extends State<ReceiptItemItems> {
   var indexSelected = 0;
+  var expandedUserMap = <int, bool>{};
 
   Map<int, List<api.Item>> getUserItemMap() {
     var itemMap = <int, List<api.Item>>{};
@@ -57,6 +58,13 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
 
   Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
     return ExpansionPanelList(
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          // TODO: could probably be simplified by using index instead of user id in map
+          var userId = userItemMap.keys.elementAt(index);
+          expandedUserMap[userId] = isExpanded;
+        });
+      },
       children: userItemMap.entries
           .map((e) => buildExpansionPanel(e.key, e.value))
           .toList(),
@@ -67,12 +75,17 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
+    var expanded = expandedUserMap[userId] ?? false;
+    var owedAmount = items
+        .map((item) => num.parse(item.amount))
+        .reduce((value, element) => value + element);
 
     return ExpansionPanel(
         canTapOnHeader: true,
+        isExpanded: expanded,
         headerBuilder: (context, expanded) {
           return ListTile(
-            title: Text("${user?.displayName} - Owes: 0"),
+            title: Text("${user?.displayName} - Amount Owed: ${owedAmount}"),
           );
         },
         body: Text("hello body"));
