@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
+
+import '../../utils/forms.dart';
 
 class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
@@ -19,6 +24,7 @@ class ReceiptItemItems extends StatefulWidget {
 class _ReceiptItemItems extends State<ReceiptItemItems> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
+  late final formState = getFormStateFromContext(context);
 
   Map<int, List<api.Item>> getUserItemMap() {
     var itemMap = <int, List<api.Item>>{};
@@ -57,7 +63,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   }
 
   Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
-    return ExpansionPanelList(
+    var expansionList = ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
           // TODO: could probably be simplified by using index instead of user id in map
@@ -69,6 +75,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           .map((e) => buildExpansionPanel(e.key, e.value))
           .toList(),
     );
+
+    return expansionList;
   }
 
   ExpansionPanel buildExpansionPanel(int userId, List<api.Item> items) {
@@ -88,7 +96,43 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             title: Text("${user?.displayName} - Amount Owed: ${owedAmount}"),
           );
         },
-        body: Text("hello body"));
+        body: Container(
+          child: buildExpansionPanelBody(items),
+        ));
+  }
+
+  Widget buildExpansionPanelBody(List<api.Item> items) {
+    List<Widget> itemWidgets = [];
+    for (var i = 0; i < items.length; i++) {
+      itemWidgets.add(textFieldSpacing);
+      itemWidgets.add(buildItemRow(items[i], i));
+    }
+
+    return Column(
+      children: itemWidgets,
+    );
+  }
+
+  Widget buildItemRow(api.Item item, int index) {
+    var itemName = "receiptItems.$index.name";
+    var amountName = "receiptItems.$index.amount";
+
+    return Row(
+      children: [
+        Expanded(
+          child: FormBuilderTextField(
+            name: itemName,
+            initialValue: item.name,
+            decoration: const InputDecoration(label: Text("Name")),
+          ),
+        ),
+        Expanded(
+            child: amountField("Amount", amountName, item.amount, formState)),
+        Expanded(
+          child: FormBuilderTextField(name: itemName, initialValue: item.name),
+        )
+      ],
+    );
   }
 
   @override
