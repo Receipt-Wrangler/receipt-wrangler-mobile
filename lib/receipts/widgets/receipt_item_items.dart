@@ -119,8 +119,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var amountName = "receiptItems.$index.amount";
     var statusName = "receiptItems.$index.status";
 
-    print(item.status);
-
     return Row(
       children: [
         Expanded(
@@ -128,6 +126,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             name: itemName,
             initialValue: item.name,
             decoration: const InputDecoration(label: Text("Name")),
+            readOnly: isFieldReadOnly(formState),
           ),
         ),
         Expanded(

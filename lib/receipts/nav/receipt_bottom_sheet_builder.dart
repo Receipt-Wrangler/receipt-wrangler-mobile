@@ -130,6 +130,22 @@ class ReceiptBottomSheetBuilder {
         .toList();
   }
 
+  List<api.UpsertItemCommand> buildUpsertItemCommand(
+      Map<String, dynamic> form) {
+    var items =
+        List<api.Item>.from(form["items"].map((item) => item as api.Item));
+
+    return items
+        .map((item) => api.UpsertItemCommand(
+            amount: item.amount,
+            chargedToUserId: item.chargedToUserId,
+            name: item.name,
+            receiptId: item.receiptId,
+            status: item.status))
+        .toList();
+  }
+
+  // TODO: get items actually updating
   Widget buildReceiptSubmitButton(String fullPath) {
     if (fullPath.contains("edit")) {
       return BottomSubmitButton(
@@ -150,6 +166,7 @@ class ReceiptBottomSheetBuilder {
 
               receiptToUpdate.categories = buildUpsertCategoryCommand(form);
               receiptToUpdate.tags = buildUpsertTagCommand(form);
+              receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
 
               await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
               showSuccessSnackbar(context, "Receipt updated successfully");
