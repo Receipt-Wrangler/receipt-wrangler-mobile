@@ -5,6 +5,7 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 
 import '../../utils/forms.dart';
@@ -116,6 +117,9 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   Widget buildItemRow(api.Item item, int index) {
     var itemName = "receiptItems.$index.name";
     var amountName = "receiptItems.$index.amount";
+    var statusName = "receiptItems.$index.status";
+
+    print(item.status);
 
     return Row(
       children: [
@@ -129,7 +133,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         Expanded(
             child: amountField("Amount", amountName, item.amount, formState)),
         Expanded(
-          child: FormBuilderTextField(name: itemName, initialValue: item.name),
+          child: itemStatusField("Status", statusName, item.status, formState),
         )
       ],
     );

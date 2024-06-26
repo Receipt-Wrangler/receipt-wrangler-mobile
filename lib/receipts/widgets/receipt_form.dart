@@ -17,6 +17,7 @@ import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
+import '../../shared/functions/status_field.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -119,14 +120,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildStatusField() {
-    return FormBuilderDropdown(
-      name: "status",
-      decoration: const InputDecoration(labelText: "Status"),
-      items: buildStatusDropDownMenuItems(),
-      initialValue: receipt.status,
-      enabled: !isFieldReadOnly(formState),
-      validator: FormBuilderValidators.required(),
-    );
+    return receiptStatusField("Status", "status", receipt.status, formState);
   }
 
   Widget buildCategoryField() {

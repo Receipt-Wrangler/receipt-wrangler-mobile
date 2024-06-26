@@ -90,7 +90,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     return FormBuilderDropdown(
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
-      items: buildStatusDropDownMenuItems(),
+      items: buildReceiptStatusDropDownMenuItems(),
       validator: FormBuilderValidators.required(),
       initialValue: initialValue,
     );
