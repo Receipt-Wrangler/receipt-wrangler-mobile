@@ -115,9 +115,9 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   }
 
   Widget buildItemRow(api.Item item, int index) {
-    var itemName = "receiptItems.$index.name";
-    var amountName = "receiptItems.$index.amount";
-    var statusName = "receiptItems.$index.status";
+    var itemName = "items.$index.name";
+    var amountName = "items.$index.amount";
+    var statusName = "items.$index.status";
 
     return Row(
       children: [
