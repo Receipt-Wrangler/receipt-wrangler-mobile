@@ -189,6 +189,32 @@ class _ReceiptForm extends State<ReceiptForm> {
         initialValue: receipt.receiptItems);
   }
 
+  Widget buildHeaderText(String headerText) {
+    return Text(
+      headerText,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget buildDetailsHeader() {
+    return Row(
+      children: [
+        buildHeaderText("Details"),
+      ],
+    );
+  }
+
+  Widget buildSharesHeader() {
+    return Row(
+      children: [
+        buildHeaderText("Shares"),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -196,6 +222,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          buildDetailsHeader(),
           textFieldSpacing,
           buildNameField(),
           textFieldSpacing,
@@ -212,6 +239,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildCategoryField(),
           textFieldSpacing,
           buildTagField(),
+          textFieldSpacing,
+          buildSharesHeader(),
           textFieldSpacing,
           buildReceiptItemList(),
           textFieldSpacing,
