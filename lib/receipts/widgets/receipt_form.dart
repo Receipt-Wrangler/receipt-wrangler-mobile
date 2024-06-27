@@ -209,8 +209,17 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildSharesHeader() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         buildHeaderText("Shares"),
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+              onPressed: () => {},
+            )
+          ],
+        )
       ],
     );
   }
