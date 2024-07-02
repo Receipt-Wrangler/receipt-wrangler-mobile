@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
@@ -132,18 +133,37 @@ class ReceiptBottomSheetBuilder {
 
   List<api.UpsertItemCommand> buildUpsertItemCommand(
       Map<String, dynamic> form) {
-    var items =
-        List<api.Item>.from(form["items"].map((item) => item as api.Item));
+    var items = Provider.of<ReceiptModel>(context, listen: false).items;
     List<api.UpsertItemCommand> upsertItems = [];
+
+    print(items);
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
+
+      print("index");
+      print(i);
+
+      print("amount");
+      print(form["items.${i.toString()}.amount"]);
+
+      print("chargedToUserId");
+      print(item.chargedToUserId);
+
+      print("name");
+      print(form["items.${i.toString()}.name"]);
+
+      print("receiptId");
+      print(item?.receiptId ?? 0);
+
+      print("status");
+      print(form["items.${i.toString()}.status"]);
 
       var command = api.UpsertItemCommand(
         amount: form["items.${i.toString()}.amount"],
         chargedToUserId: item.chargedToUserId,
         name: form["items.${i.toString()}.name"],
-        receiptId: item.receiptId,
+        receiptId: item?.receiptId ?? 0,
         status: form["items.${i.toString()}.status"],
       );
 

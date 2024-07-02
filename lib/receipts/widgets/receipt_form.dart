@@ -29,6 +29,7 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
@@ -36,7 +37,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
+  final addSharesFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
+  bool isAddingShare = false;
 
   @override
   void initState() {
@@ -183,10 +186,14 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildReceiptItemList() {
-    return ReceiptItemField(
-        name: "items",
-        label: "Shared With",
-        initialValue: receipt.receiptItems);
+    return Consumer<ReceiptModel>(
+      builder: (context, consumerModel, child) {
+        return ReceiptItemField(
+            name: "items",
+            label: "Shared With",
+            initialValue: consumerModel.items);
+      },
+    );
   }
 
   Widget buildHeaderText(String headerText) {
@@ -208,20 +215,126 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildSharesHeader() {
+    var rowChildren = [
+      buildHeaderText("Shares"),
+    ];
+
+    if (formState != WranglerFormState.view) {
+      rowChildren.add(Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+            onPressed: isAddingShare || groupId == 0
+                ? null
+                : () {
+                    setState(() {
+                      isAddingShare = true;
+                    });
+                  },
+          )
+        ],
+      ));
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildHeaderText("Shares"),
-        Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-              onPressed: () => {},
-            )
-          ],
-        )
+        ...rowChildren,
       ],
     );
+  }
+
+  Widget buildAddSharesCard() {
+    if (isAddingShare) {
+      return Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(children: [
+                Text(
+                  "Add Share",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ]),
+              textFieldSpacing,
+              FormBuilder(
+                key: addSharesFormKey,
+                child: Column(
+                  children: [
+                    FormBuilderDropdown(
+                      name: "chargedToUserId",
+                      decoration:
+                          const InputDecoration(labelText: "Shared With"),
+                      items: buildGroupMemberDropDownMenuItems(
+                          context, groupId.toString()),
+                      initialValue: "",
+                      validator: FormBuilderValidators.required(),
+                      enabled: !isFieldReadOnly(formState),
+                    ),
+                    textFieldSpacing,
+                    FormBuilderTextField(
+                        name: "name",
+                        decoration: InputDecoration(labelText: "Name")),
+                    textFieldSpacing,
+                    amountField("Amount", "amount", "", formState),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            child: Text("Add Share"),
+                            onPressed: () {
+                              var items = [...receiptModel.items];
+                              items.add(api.Item(
+                                name: addSharesFormKey
+                                    .currentState!.fields["name"]!.value,
+                                amount: addSharesFormKey
+                                    .currentState!.fields["amount"]!.value,
+                                chargedToUserId: addSharesFormKey.currentState!
+                                    .fields["chargedToUserId"]!.value,
+                                receiptId: receipt?.id ?? 0,
+                                status: api.ItemStatus.OPEN,
+                              ));
+
+                              receiptModel.setItems(items);
+                              setState(() {
+                                isAddingShare = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              setState(() {
+                                isAddingShare = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+              // user field,
+              // item name
+              // amount field,
+            ],
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   @override
@@ -250,6 +363,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildTagField(),
           textFieldSpacing,
           buildSharesHeader(),
+          textFieldSpacing,
+          buildAddSharesCard(),
           textFieldSpacing,
           buildReceiptItemList(),
           textFieldSpacing,

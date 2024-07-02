@@ -6,7 +6,6 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 
 import '../../utils/forms.dart';
 
@@ -38,29 +37,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     }
 
     return itemMap;
-  }
-
-  List<Widget> buildSummaryTiles(Map<int, List<api.Item>> userItemMap) {
-    var tiles = List<Widget>.empty(growable: true);
-    var userModel = Provider.of<UserModel>(context, listen: false);
-
-    for (var element in userItemMap.entries) {
-      var totalOwed = element.value
-          .map((item) => num.parse(item.amount))
-          .reduce((value, element) => value + element);
-
-      var userId = element.key.toString();
-      var user = userModel.getUserById(userId);
-
-      var tile = ListTile(
-        title: Text(user?.displayName ?? ""),
-        subtitle: Text("Total Owed: $totalOwed"),
-        leading: UserAvatar(userId: userId),
-      );
-      tiles.add(tile);
-    }
-
-    return tiles;
   }
 
   Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
@@ -106,7 +82,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     List<Widget> itemWidgets = [];
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
-      itemWidgets.add(buildItemRow(items[i], i));
+      itemWidgets.add(buildItemRow(items[i]));
     }
 
     return Column(
@@ -114,7 +90,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     );
   }
 
-  Widget buildItemRow(api.Item item, int index) {
+  Widget buildItemRow(api.Item item) {
+    var index = widget.items.indexWhere((element) => element == item);
     var itemName = "items.$index.name";
     var amountName = "items.$index.amount";
     var statusName = "items.$index.status";
@@ -145,6 +122,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     if (userItemMap.isEmpty) {
       return const Text("No shares found");
     }
+
+    print(userItemMap);
 
     return buildUserExpansionList(userItemMap);
   }
