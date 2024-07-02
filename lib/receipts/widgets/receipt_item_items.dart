@@ -7,6 +7,7 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 
+import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
 class ReceiptItemItems extends StatefulWidget {
@@ -25,6 +26,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
   late final formState = getFormStateFromContext(context);
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
   Map<int, List<api.Item>> getUserItemMap() {
     var itemMap = <int, List<api.Item>>{};
@@ -96,6 +98,18 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var amountName = "items.$index.amount";
     var statusName = "items.$index.status";
 
+    Widget iconButton = SizedBox.shrink();
+    if (!isFieldReadOnly(formState)) {
+      iconButton = IconButton(
+          icon: Icon(Icons.delete, color: Colors.red),
+          onPressed: () {
+            var newItems = [...widget.items];
+            newItems.removeAt(index);
+
+            receiptModel.setItems(newItems);
+          });
+    }
+
     return Row(
       children: [
         Expanded(
@@ -110,7 +124,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             child: amountField("Amount", amountName, item.amount, formState)),
         Expanded(
           child: itemStatusField("Status", statusName, item.status, formState),
-        )
+        ),
+        iconButton
       ],
     );
   }
