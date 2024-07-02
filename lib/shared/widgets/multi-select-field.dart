@@ -60,9 +60,13 @@ class _MultiSelectField<T> extends State<MultiSelectField<T>> {
 
         List<Widget> buildChipList() {
           if (field.value != null && field.value!.isNotEmpty) {
-            return (field.value as List<T>)
-                .map((thing) => buildChip(thing))
-                .toList();
+            List<Widget> widgets = [];
+            for (T thing in field.value!) {
+              const space = SizedBox(width: 5);
+              widgets.add(buildChip(thing));
+              widgets.add(space);
+            }
+            return widgets;
           } else {
             return [Text("No ${widget.itemName} selected")];
           }
