@@ -138,8 +138,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       return const Text("No shares found");
     }
 
-    print(userItemMap);
-
     return buildUserExpansionList(userItemMap);
   }
 }

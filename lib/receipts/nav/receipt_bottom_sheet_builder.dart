@@ -136,28 +136,8 @@ class ReceiptBottomSheetBuilder {
     var items = Provider.of<ReceiptModel>(context, listen: false).items;
     List<api.UpsertItemCommand> upsertItems = [];
 
-    print(items);
-
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-
-      print("index");
-      print(i);
-
-      print("amount");
-      print(form["items.${i.toString()}.amount"]);
-
-      print("chargedToUserId");
-      print(item.chargedToUserId);
-
-      print("name");
-      print(form["items.${i.toString()}.name"]);
-
-      print("receiptId");
-      print(item?.receiptId ?? 0);
-
-      print("status");
-      print(form["items.${i.toString()}.status"]);
 
       var command = api.UpsertItemCommand(
         amount: form["items.${i.toString()}.amount"],
