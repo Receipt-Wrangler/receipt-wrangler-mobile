@@ -70,7 +70,7 @@ List<DropdownMenuItem> buildGroupMemberDropDownMenuItems(
       .toList();
 }
 
-List<DropdownMenuItem> buildStatusDropDownMenuItems() {
+List<DropdownMenuItem> buildReceiptStatusDropDownMenuItems() {
   return const [
     DropdownMenuItem(
       value: ReceiptStatus.OPEN,
@@ -86,6 +86,23 @@ List<DropdownMenuItem> buildStatusDropDownMenuItems() {
     ),
     DropdownMenuItem(
       value: ReceiptStatus.DRAFT,
+      child: Text("Draft"),
+    ),
+  ];
+}
+
+List<DropdownMenuItem> buildItemStatusDropDownMenuItems() {
+  return const [
+    DropdownMenuItem(
+      value: ItemStatus.OPEN,
+      child: Text("Open"),
+    ),
+    DropdownMenuItem(
+      value: ItemStatus.RESOLVED,
+      child: Text("Resolved"),
+    ),
+    DropdownMenuItem(
+      value: ItemStatus.DRAFT,
       child: Text("Draft"),
     ),
   ];

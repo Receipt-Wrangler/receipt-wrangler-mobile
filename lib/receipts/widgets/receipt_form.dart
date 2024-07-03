@@ -1,4 +1,3 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -8,6 +7,7 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -17,6 +17,7 @@ import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
+import '../../shared/functions/status_field.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -28,6 +29,7 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
   late final formState = getFormStateFromContext(context);
@@ -35,7 +37,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
+  final addSharesFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
+  bool isAddingShare = false;
 
   @override
   void initState() {
@@ -56,17 +60,8 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAmountField() {
-    var amountMask = new CurrencyTextInputFormatter(
-        decimalDigits: 2, enableNegative: false, symbol: "");
-    return FormBuilderTextField(
-      name: "amount",
-      decoration: const InputDecoration(labelText: "Amount", prefixText: "\$ "),
-      keyboardType: TextInputType.number,
-      initialValue: receipt.amount.toString(),
-      validator: FormBuilderValidators.required(),
-      readOnly: isFieldReadOnly(formState),
-      inputFormatters: [amountMask],
-    );
+    return amountField(
+        "Amount", "amount", receipt.amount.toString(), formState);
   }
 
   Widget buildDateField() {
@@ -128,14 +123,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildStatusField() {
-    return FormBuilderDropdown(
-      name: "status",
-      decoration: const InputDecoration(labelText: "Status"),
-      items: buildStatusDropDownMenuItems(),
-      initialValue: receipt.status,
-      enabled: !isFieldReadOnly(formState),
-      validator: FormBuilderValidators.required(),
-    );
+    return receiptStatusField("Status", "status", receipt.status, formState);
   }
 
   Widget buildCategoryField() {
@@ -198,10 +186,162 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildReceiptItemList() {
-    return ReceiptItemField(
-        name: "items",
-        label: "Shared With",
-        initialValue: receipt.receiptItems);
+    return Consumer<ReceiptModel>(
+      builder: (context, consumerModel, child) {
+        return ReceiptItemField(
+            name: "items",
+            label: "Shared With",
+            initialValue: consumerModel.items);
+      },
+    );
+  }
+
+  Widget buildHeaderText(String headerText) {
+    return Text(
+      headerText,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget buildDetailsHeader() {
+    return Row(
+      children: [
+        buildHeaderText("Details"),
+      ],
+    );
+  }
+
+  Widget buildSharesHeader() {
+    var rowChildren = [
+      buildHeaderText("Shares"),
+    ];
+
+    if (formState != WranglerFormState.view) {
+      rowChildren.add(Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+            onPressed: isAddingShare || groupId == 0
+                ? null
+                : () {
+                    setState(() {
+                      isAddingShare = true;
+                    });
+                  },
+          )
+        ],
+      ));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ...rowChildren,
+      ],
+    );
+  }
+
+  Widget buildAddSharesCard() {
+    if (isAddingShare) {
+      return Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(children: [
+                Text(
+                  "Add Share",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ]),
+              textFieldSpacing,
+              FormBuilder(
+                key: addSharesFormKey,
+                child: Column(
+                  children: [
+                    FormBuilderDropdown(
+                      name: "chargedToUserId",
+                      decoration:
+                          const InputDecoration(labelText: "Shared With"),
+                      items: buildGroupMemberDropDownMenuItems(
+                          context, groupId.toString()),
+                      initialValue: "",
+                      validator: FormBuilderValidators.required(),
+                      enabled: !isFieldReadOnly(formState),
+                    ),
+                    textFieldSpacing,
+                    FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(labelText: "Name"),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                    textFieldSpacing,
+                    amountField("Amount", "amount", "", formState),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            child: Text("Add Share"),
+                            onPressed: () {
+                              if (!addSharesFormKey.currentState!
+                                  .saveAndValidate()) {
+                                return;
+                              }
+
+                              var items = [...receiptModel.items];
+                              items.add(api.Item(
+                                name: addSharesFormKey
+                                    .currentState!.fields["name"]!.value,
+                                amount: addSharesFormKey
+                                    .currentState!.fields["amount"]!.value,
+                                chargedToUserId: addSharesFormKey.currentState!
+                                    .fields["chargedToUserId"]!.value,
+                                receiptId: receipt?.id ?? 0,
+                                status: api.ItemStatus.OPEN,
+                              ));
+
+                              receiptModel.setItems(items);
+                              setState(() {
+                                isAddingShare = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              setState(() {
+                                isAddingShare = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+              // user field,
+              // item name
+              // amount field,
+            ],
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   @override
@@ -211,6 +351,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          buildDetailsHeader(),
           textFieldSpacing,
           buildNameField(),
           textFieldSpacing,
@@ -227,6 +368,10 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildCategoryField(),
           textFieldSpacing,
           buildTagField(),
+          textFieldSpacing,
+          buildSharesHeader(),
+          textFieldSpacing,
+          buildAddSharesCard(),
           textFieldSpacing,
           buildReceiptItemList(),
           textFieldSpacing,

@@ -15,6 +15,10 @@ class ReceiptModel extends ChangeNotifier {
 
   List<Comment> get comments => _comments;
 
+  List<Item> _items = [];
+
+  List<Item> get items => _items;
+
   BehaviorSubject<List<FileDataView?>> _imageBehaviorSubject =
       BehaviorSubject<List<FileDataView?>>.seeded([]);
 
@@ -36,6 +40,8 @@ class ReceiptModel extends ChangeNotifier {
 
     _comments = receipt.comments;
 
+    _items = receipt.receiptItems;
+
     _receiptFormKey = GlobalKey<FormBuilderState>();
 
     if (notify) {
@@ -45,6 +51,11 @@ class ReceiptModel extends ChangeNotifier {
 
   void setComments(List<Comment> comments) {
     _comments = comments;
+    notifyListeners();
+  }
+
+  void setItems(List<Item> items) {
+    _items = items;
     notifyListeners();
   }
 }

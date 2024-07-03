@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
@@ -130,6 +131,28 @@ class ReceiptBottomSheetBuilder {
         .toList();
   }
 
+  List<api.UpsertItemCommand> buildUpsertItemCommand(
+      Map<String, dynamic> form) {
+    var items = Provider.of<ReceiptModel>(context, listen: false).items;
+    List<api.UpsertItemCommand> upsertItems = [];
+
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+
+      var command = api.UpsertItemCommand(
+        amount: form["items.${i.toString()}.amount"],
+        chargedToUserId: item.chargedToUserId,
+        name: form["items.${i.toString()}.name"],
+        receiptId: item?.receiptId ?? 0,
+        status: form["items.${i.toString()}.status"],
+      );
+
+      upsertItems.add(command);
+    }
+
+    return upsertItems;
+  }
+
   Widget buildReceiptSubmitButton(String fullPath) {
     if (fullPath.contains("edit")) {
       return BottomSubmitButton(
@@ -150,6 +173,7 @@ class ReceiptBottomSheetBuilder {
 
               receiptToUpdate.categories = buildUpsertCategoryCommand(form);
               receiptToUpdate.tags = buildUpsertTagCommand(form);
+              receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
 
               await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
               showSuccessSnackbar(context, "Receipt updated successfully");
