@@ -276,8 +276,10 @@ class _ReceiptForm extends State<ReceiptForm> {
                     ),
                     textFieldSpacing,
                     FormBuilderTextField(
-                        name: "name",
-                        decoration: InputDecoration(labelText: "Name")),
+                      name: "name",
+                      decoration: InputDecoration(labelText: "Name"),
+                      validator: FormBuilderValidators.required(),
+                    ),
                     textFieldSpacing,
                     amountField("Amount", "amount", "", formState),
                     Row(
@@ -287,6 +289,11 @@ class _ReceiptForm extends State<ReceiptForm> {
                           child: ElevatedButton(
                             child: Text("Add Share"),
                             onPressed: () {
+                              if (!addSharesFormKey.currentState!
+                                  .saveAndValidate()) {
+                                return;
+                              }
+
                               var items = [...receiptModel.items];
                               items.add(api.Item(
                                 name: addSharesFormKey

@@ -19,7 +19,11 @@ Widget amountField(
     decoration: InputDecoration(labelText: label, prefixText: "\$ "),
     keyboardType: TextInputType.number,
     initialValue: initialAmount,
-    validator: FormBuilderValidators.required(),
+    validator: FormBuilderValidators.compose([
+      FormBuilderValidators.required(),
+      FormBuilderValidators.numeric(),
+      FormBuilderValidators.min(0, inclusive: false),
+    ]),
     readOnly: isFieldReadOnly(formState),
     inputFormatters: [amountMask],
   );
