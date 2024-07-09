@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+
+import '../../../shared/functions/show_add_menu.dart';
 
 class GroupSelectBottomNav extends StatefulWidget {
   const GroupSelectBottomNav({super.key});
@@ -14,6 +15,7 @@ class GroupSelectBottomNav extends StatefulWidget {
 
 class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
   var indexSelectedController = StreamController<int>();
+  final addButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
           context.go("/groups");
           break;
         case 1:
-          showQuickScanBottomSheet(context);
+          showAddMenu(context, addButtonKey);
           break;
         case 2:
           context.go("/search");
@@ -51,16 +53,17 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
       return index;
     }
 
-    var destinations = const [
-      NavigationDestination(
+    var destinations = [
+      const NavigationDestination(
         icon: Icon(Icons.group),
         label: "Groups",
       ),
       NavigationDestination(
+        key: addButtonKey,
         icon: Icon(Icons.add),
         label: "Add",
       ),
-      NavigationDestination(
+      const NavigationDestination(
         icon: Icon(Icons.search),
         label: "Search",
         enabled: false,
