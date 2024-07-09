@@ -141,7 +141,8 @@ class _Login extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
+    return AutofillGroup(
+        child: FormBuilder(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -160,6 +161,7 @@ class _Login extends State<AuthForm> {
           _isSignUp() ? textFieldSpacing : const SizedBox.shrink(),
           FormBuilderTextField(
               name: "username",
+              autofillHints: const [AutofillHints.username],
               decoration: const InputDecoration(
                   labelText: "Username", border: OutlineInputBorder()),
               validator: FormBuilderValidators.compose([
@@ -168,6 +170,7 @@ class _Login extends State<AuthForm> {
           textFieldSpacing,
           FormBuilderTextField(
               name: "password",
+              autofillHints: const [AutofillHints.password],
               obscureText: true,
               decoration: const InputDecoration(
                   labelText: "Password", border: OutlineInputBorder()),
@@ -198,6 +201,6 @@ class _Login extends State<AuthForm> {
           _getChangeServerButton(),
         ],
       ),
-    );
+    ));
   }
 }
