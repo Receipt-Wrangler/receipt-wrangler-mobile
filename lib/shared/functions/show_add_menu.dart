@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/quick_scan.dart';
 
@@ -44,6 +45,7 @@ void showAddMenu(BuildContext context, GlobalKey addButtonKey) {
     PopupMenuItem(
       value: 0,
       child: Text("Add Manual Receipt"),
+      onTap: () => context.go("/receipts/add"),
     ),
     PopupMenuItem(
       value: 1,

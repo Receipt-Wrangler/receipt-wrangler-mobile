@@ -27,7 +27,7 @@ class _ReceiptComments extends State<ReceiptComments> {
 
   Widget buildWidgetList() {
     var slideEnabled = formState == WranglerFormState.edit ||
-        formState == WranglerFormState.create;
+        formState == WranglerFormState.add;
 
     return ListView.builder(
       itemCount: widget.comments.length,

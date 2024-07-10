@@ -36,6 +36,8 @@ class _MultiSelectField<T> extends State<MultiSelectField<T>> {
 
   @override
   Widget build(BuildContext context) {
+    print("initial value");
+    print(widget.initialValue);
     return FormBuilderField<List<T>>(
       name: widget.name,
       initialValue: widget!.initialValue as dynamic,

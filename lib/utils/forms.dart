@@ -11,8 +11,8 @@ import '../models/group_model.dart';
 import '../models/user_model.dart';
 
 WranglerFormState getFormState(String uri) {
-  if (uri.contains("create")) {
-    return WranglerFormState.create;
+  if (uri.contains("add")) {
+    return WranglerFormState.add;
   } else if (uri.contains("edit")) {
     return WranglerFormState.edit;
   } else {
@@ -27,8 +27,8 @@ WranglerFormState getFormStateFromContext(BuildContext context) {
 
 String getFormStateHeader(WranglerFormState formState) {
   switch (formState) {
-    case WranglerFormState.create:
-      return "Create";
+    case WranglerFormState.add:
+      return "Add";
     case WranglerFormState.edit:
       return "Edit";
     case WranglerFormState.view:
