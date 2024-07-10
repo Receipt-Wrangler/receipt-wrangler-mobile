@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/routes.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
@@ -23,22 +24,40 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    var formState = getFormStateFromContext(context).name;
+    var formState = getFormStateFromContext(context);
+    var formStateName = formState.name;
 
     onDestinationSelected(int indexSelected) {
       var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
-      switch (indexSelected) {
-        case 0:
-          context.go("/receipts/${receipt.id}/${formState}");
-          break;
-        case 1:
-          context.go("/receipts/${receipt.id}/images/${formState}");
-          break;
-        case 2:
-          context.go("/receipts/${receipt.id}/comments/${formState}");
-          break;
-        default:
-          context.go("/groups");
+
+      if (formState != WranglerFormState.add) {
+        switch (indexSelected) {
+          case 0:
+            context.go("/receipts/${receipt.id}/${formStateName}");
+            break;
+          case 1:
+            context.go("/receipts/${receipt.id}/images/${formStateName}");
+            break;
+          case 2:
+            context.go("/receipts/${receipt.id}/comments/${formStateName}");
+            break;
+          default:
+            context.go("/groups");
+        }
+      } else {
+        switch (indexSelected) {
+          case 0:
+            context.go("/receipts/${formStateName}");
+            break;
+          case 1:
+            context.go("/receipts/images/${formStateName}");
+            break;
+          case 2:
+            context.go("/receipts/comments/${formStateName}");
+            break;
+          default:
+            context.go("/groups");
+        }
       }
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
 
@@ -20,16 +21,27 @@ class ReceiptAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ReceiptAppBar extends State<ReceiptAppBar> {
+  late final receipt = Provider.of<ReceiptModel>(context, listen: true).receipt;
+
+  String buildBackUrl(WranglerFormState formState) {
+    if (formState == WranglerFormState.add) {
+      return "/groups";
+    } else {
+      return "/groups/${receipt.groupId}/receipts";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var uri = GoRouter.of(context).routeInformationProvider.value.uri;
     var formState = getFormState(uri.toString());
-    var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
     List<Widget> actions = [...widget.actions ?? []];
+
+    var backUrl = buildBackUrl(formState);
 
     return TopAppBar(
       titleText: getTitleText(formState, receipt.name),
-      leadingArrowRedirect: "/groups/${receipt.groupId}/receipts",
+      leadingArrowRedirect: backUrl,
       actions: actions,
       hideAvatar: true,
     );

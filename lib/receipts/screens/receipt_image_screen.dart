@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,6 +27,12 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   void initState() {
     super.initState();
     isLoadingBehaviorSubject.add(true);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     future.then((value) {
       receiptModel.imageBehaviorSubject.add(value);
       isLoadingBehaviorSubject.add(false);
@@ -36,15 +43,19 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   }
 
   Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
-    List<Future<api.FileDataView?>> imageFutures = [];
+    if (formState == WranglerFormState.add) {
+      return Future.wait([]);
+    } else {
+      List<Future<api.FileDataView?>> imageFutures = [];
 
-    return api.ReceiptApi().getReceiptById(receipt.id).then((receipt) {
-      for (var image in receipt?.imageFiles ?? []) {
-        imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
-      }
+      return api.ReceiptApi().getReceiptById(receipt.id).then((receipt) {
+        for (var image in receipt?.imageFiles ?? []) {
+          imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
+        }
 
-      return Future.wait(imageFutures);
-    });
+        return Future.wait(imageFutures);
+      });
+    }
   }
 
   @override
