@@ -117,6 +117,10 @@ class _ReceiptForm extends State<ReceiptForm> {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
     }
 
+    if (formState == WranglerFormState.add) {
+      initialValue = null;
+    }
+
     return FormBuilderDropdown(
       name: "paidByUserId",
       decoration: const InputDecoration(labelText: "Paid By"),
