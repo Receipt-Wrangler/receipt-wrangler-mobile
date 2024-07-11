@@ -85,11 +85,16 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildGroupField() {
+    int? initialValue = receipt.groupId;
+    if (formState == WranglerFormState.add) {
+      initialValue = null;
+    }
+
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
       items: buildGroupDropDownMenuItems(context),
-      initialValue: receipt.groupId,
+      initialValue: initialValue,
       enabled: !isFieldReadOnly(formState),
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
