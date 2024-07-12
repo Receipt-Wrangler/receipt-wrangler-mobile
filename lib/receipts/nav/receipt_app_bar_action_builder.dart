@@ -8,6 +8,7 @@ import '../../interfaces/upload_multipart_file_data.dart';
 import '../../models/loading_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/receipt_edit_popup_menu.dart';
+import '../../utils/forms.dart';
 import '../../utils/scan.dart';
 import '../../utils/snackbar.dart';
 
@@ -68,7 +69,7 @@ class ReceiptAppBarActionBuilder {
 
   Widget _buildImagesAppBarMenu(String fullPath) {
     List<PopupMenuEntry> options = [];
-    if (fullPath.contains("edit")) {
+    if (isEditingBasedOnFullPath(fullPath)) {
       options = buildEditAppBarMenuOptions();
     } else {
       options = _buildViewAppBarMenuOptions();

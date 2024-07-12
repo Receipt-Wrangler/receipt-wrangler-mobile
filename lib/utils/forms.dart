@@ -118,3 +118,7 @@ handleApiError(BuildContext context, dynamic e) {
     return;
   }
 }
+
+bool isEditingBasedOnFullPath(String fullPath) {
+  return fullPath.contains("edit") || fullPath.contains("add");
+}

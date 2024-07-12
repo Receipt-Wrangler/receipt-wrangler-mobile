@@ -36,7 +36,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   Widget buildCommentBottomBar(String fullPath) {
-    if (isEditing(fullPath)) {
+    if (isEditingBasedOnFullPath(fullPath)) {
       return buildCommentBar();
     }
 
@@ -154,7 +154,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   Widget buildReceiptSubmitButton(String fullPath) {
-    if (isEditing(fullPath)) {
+    if (isEditingBasedOnFullPath(fullPath)) {
       return BottomSubmitButton(
         onPressed: () async {
           if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {
@@ -188,9 +188,5 @@ class ReceiptBottomSheetBuilder {
     }
 
     return SizedBox.shrink();
-  }
-
-  bool isEditing(String fullPath) {
-    return fullPath.contains("edit") || fullPath.contains("add");
   }
 }
