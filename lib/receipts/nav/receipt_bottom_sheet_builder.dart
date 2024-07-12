@@ -3,9 +3,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
+import '../../models/auth_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
 import '../../utils/date.dart';
@@ -86,25 +88,52 @@ class ReceiptBottomSheetBuilder {
   }
 
   void submitComment(GlobalKey<FormBuilderState> formKey) async {
+    var formState = getFormStateFromContext(context);
     if (formKey.currentState?.saveAndValidate() ?? false) {
-      var comment = formKey.currentState?.value['comment'];
-      var receiptId = int.parse(getReceiptId(context) ?? "0");
-
-      var command =
-          api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
-
-      api.CommentApi().addComment(command).then((value) {
-        var comments = [...receiptModel.comments];
-        comments.add(value as api.Comment);
-
-        receiptModel.setComments(comments);
-        textBehaviorSubject.add("");
-        formKey.currentState?.reset();
-      }).catchError((error) {
-        print(error);
-        handleApiError(context, error);
-      });
+      if (formState == WranglerFormState.edit) {
+        submitCommentToApi(formKey);
+      } else if (formState == WranglerFormState.add) {
+        addCommentToModel(formKey);
+      }
     }
+  }
+
+  void addCommentToModel(GlobalKey<FormBuilderState> formKey) {
+    var commentText = formKey.currentState?.value['comment'];
+    var userId =
+        Provider.of<AuthModel>(context, listen: false).claims?.userId ?? 0;
+
+    var comment = api.Comment(
+        id: 0,
+        comment: commentText,
+        receiptId: 0,
+        userId: userId,
+        createdAt: new DateTime.now().toString());
+
+    var comments = [...receiptModel.comments];
+    comments.add(comment);
+
+    receiptModel.setComments(comments);
+  }
+
+  void submitCommentToApi(GlobalKey<FormBuilderState> formKey) {
+    var comment = formKey.currentState?.value['comment'];
+    var receiptId = int.parse(getReceiptId(context) ?? "0");
+
+    var command =
+        api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
+
+    api.CommentApi().addComment(command).then((value) {
+      var comments = [...receiptModel.comments];
+      comments.add(value as api.Comment);
+
+      receiptModel.setComments(comments);
+      textBehaviorSubject.add("");
+      formKey.currentState?.reset();
+    }).catchError((error) {
+      print(error);
+      handleApiError(context, error);
+    });
   }
 
   List<api.UpsertCategoryCommand> buildUpsertCategoryCommand(
@@ -155,6 +184,8 @@ class ReceiptBottomSheetBuilder {
 
   Widget buildReceiptSubmitButton(String fullPath) {
     if (isEditingBasedOnFullPath(fullPath)) {
+      // TODO: Separate edit and add logic
+      // TODO: add comments to receiptTOUpdate
       return BottomSubmitButton(
         onPressed: () async {
           if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {

@@ -53,16 +53,25 @@ class _ReceiptComments extends State<ReceiptComments> {
   }
 
   void deleteComment(int index) {
-    var commentId = widget.comments[index].id;
-    api.CommentApi().deleteComment(commentId).then((value) {
-      var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-      var comments = new List<api.Comment>.from(receiptModel.comments);
+    if (formState == WranglerFormState.add) {
+      var comments = new List<api.Comment>.from(widget.comments);
       comments.removeAt(index);
 
-      receiptModel.setComments(comments);
-    }).catchError((error) {
-      showApiErrorSnackbar(context, error);
-    });
+      Provider.of<ReceiptModel>(context, listen: false).setComments(comments);
+    }
+
+    if (formState == WranglerFormState.edit) {
+      var commentId = widget.comments[index].id;
+      api.CommentApi().deleteComment(commentId).then((value) {
+        var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+        var comments = new List<api.Comment>.from(receiptModel.comments);
+        comments.removeAt(index);
+
+        receiptModel.setComments(comments);
+      }).catchError((error) {
+        showApiErrorSnackbar(context, error);
+      });
+    }
   }
 
   Widget buildCommentRow(api.Comment comment, int index) {
