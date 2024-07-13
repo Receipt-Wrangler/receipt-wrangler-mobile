@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 
 import '../../api.dart' as api;
 import '../../enums/upload_method.dart';
@@ -125,27 +126,44 @@ class ReceiptAppBarActionBuilder {
     return PopupMenuItem(
         value: "gallery",
         child: const Text("Upload from Gallery"),
-        onTap: () async => await uploadImages(UploadMethod.gallery));
+        onTap: () async => await getImages(UploadMethod.gallery));
   }
 
   PopupMenuEntry buildUploadFromCameraButton() {
     return PopupMenuItem(
         value: "camera",
         child: const Text("Upload from Camera"),
-        onTap: () async => await uploadImages(UploadMethod.camera));
+        onTap: () async => await getImages(UploadMethod.camera));
   }
 
-  Future<void> uploadImages(UploadMethod method) async {
+  Future<void> getImages(UploadMethod method) async {
+    List<UploadMultipartFileData> imagesToUpload;
+    var formState = getFormStateFromContext(context);
+
+    if (method == UploadMethod.camera) {
+      imagesToUpload = await scanImagesMultiPart(1);
+    } else {
+      imagesToUpload = await getGalleryImages(multiple: false);
+    }
+
+    if (formState == WranglerFormState.add) {
+      addImagesToModel(imagesToUpload);
+    } else if (formState == WranglerFormState.edit) {
+      await uploadImages(imagesToUpload);
+    }
+  }
+
+  void addImagesToModel(List<UploadMultipartFileData> imagesToUpload) {
+    for (var image in imagesToUpload) {
+      var currentList = receiptModel.imagesToUploadBehaviorSubject.value;
+      receiptModel.imagesToUploadBehaviorSubject.add([...currentList, image]);
+    }
+  }
+
+  Future<void> uploadImages(
+      List<UploadMultipartFileData> imagesToUpload) async {
+    var successMessage = "Successfully uploaded image";
     try {
-      var successMessage = "Successfully uploaded image";
-      List<UploadMultipartFileData> imagesToUpload;
-
-      if (method == UploadMethod.camera) {
-        imagesToUpload = await scanImagesMultiPart(1);
-      } else {
-        imagesToUpload = await getGalleryImages(multiple: false);
-      }
-
       if (imagesToUpload.isNotEmpty) {
         Provider.of<LoadingModel>(context, listen: false).setIsLoading(true);
       }

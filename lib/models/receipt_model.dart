@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,6 +25,13 @@ class ReceiptModel extends ChangeNotifier {
 
   BehaviorSubject<List<FileDataView?>> get imageBehaviorSubject =>
       _imageBehaviorSubject;
+
+  BehaviorSubject<List<UploadMultipartFileData>>
+      _imagesToUploadBehaviorSubject =
+      BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
+
+  BehaviorSubject<List<UploadMultipartFileData>>
+      get imagesToUploadBehaviorSubject => _imagesToUploadBehaviorSubject;
 
   InfiniteScrollController _infiniteScrollController =
       InfiniteScrollController();
@@ -57,5 +65,16 @@ class ReceiptModel extends ChangeNotifier {
   void setItems(List<Item> items) {
     _items = items;
     notifyListeners();
+  }
+
+  void resetModel() {
+    _receipt = getDefaultReceipt();
+    _comments = [];
+    _items = [];
+    _imageBehaviorSubject = BehaviorSubject<List<FileDataView?>>.seeded([]);
+    _imagesToUploadBehaviorSubject =
+        BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
+    _infiniteScrollController = InfiniteScrollController();
+    _receiptFormKey = GlobalKey<FormBuilderState>();
   }
 }

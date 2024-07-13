@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_carousel.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ReceiptImages extends StatefulWidget {
   const ReceiptImages(
@@ -22,11 +23,14 @@ class ReceiptImages extends StatefulWidget {
 class _ReceiptImages extends State<ReceiptImages> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+  late final imageStream = CombineLatestStream.combine2(widget.imageStream,
+      receiptModel.imagesToUploadBehaviorSubject.stream, (a, b) => a);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: widget.imageStream,
+      stream: imageStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
@@ -35,6 +39,7 @@ class _ReceiptImages extends State<ReceiptImages> {
             child: ReceiptImageCarousel(
               key: UniqueKey(),
               images: snapshot.data as List<api.FileDataView?>,
+              imagesToUpload: receiptModel.imagesToUploadBehaviorSubject.value,
               infiniteScrollController: widget.infiniteScrollController,
             ),
           );

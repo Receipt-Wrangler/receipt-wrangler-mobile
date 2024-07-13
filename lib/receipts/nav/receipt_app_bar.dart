@@ -21,13 +21,11 @@ class ReceiptAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ReceiptAppBar extends State<ReceiptAppBar> {
-  late final receipt = Provider.of<ReceiptModel>(context, listen: true).receipt;
-
-  String buildBackUrl(WranglerFormState formState) {
+  String buildBackUrl(WranglerFormState formState, ReceiptModel receiptModel) {
     if (formState == WranglerFormState.add) {
       return "/groups";
     } else {
-      return "/groups/${receipt.groupId}/receipts";
+      return "/groups/${receiptModel.receipt.groupId}/receipts";
     }
   }
 
@@ -37,13 +35,12 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     var formState = getFormState(uri.toString());
     List<Widget> actions = [...widget.actions ?? []];
 
-    var backUrl = buildBackUrl(formState);
-
-    return TopAppBar(
-      titleText: getTitleText(formState, receipt.name),
-      leadingArrowRedirect: backUrl,
-      actions: actions,
-      hideAvatar: true,
-    );
+    return Consumer<ReceiptModel>(
+        builder: (context, receiptModel, child) => TopAppBar(
+              titleText: getTitleText(formState, receiptModel.receipt.name),
+              leadingArrowRedirect: buildBackUrl(formState, receiptModel),
+              actions: actions,
+              hideAvatar: true,
+            ));
   }
 }
