@@ -20,26 +20,20 @@ class ReceiptEditPopupMenu extends StatelessWidget {
     late final authModel = Provider.of<AuthModel>(context, listen: false);
     late final groupModel = Provider.of<GroupModel>(context, listen: false);
     late final formState = getFormStateFromContext(context);
-    var canEdit = false;
+    var canEdit = canEditReceipt(authModel, groupModel, groupId);
 
     if (formState == WranglerFormState.add) {
       canEdit = true;
     }
 
-    if (formState == WranglerFormState.edit) {
-      canEdit = canEditReceipt(authModel, groupModel, groupId);
-    }
-
-    if (formState != WranglerFormState.view) {
-      if (canEdit) {
-        return PopupMenuButton(
-          itemBuilder: (BuildContext context) {
-            return popupMenuChildren;
-          },
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
+    if (canEdit) {
+      return PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          return popupMenuChildren;
+        },
+      );
+    } else {
+      return const SizedBox.shrink();
     }
 
     return const SizedBox.shrink();
