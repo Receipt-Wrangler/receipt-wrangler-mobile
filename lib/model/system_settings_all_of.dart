@@ -14,6 +14,7 @@ class SystemSettingsAllOf {
   /// Returns a new [SystemSettingsAllOf] instance.
   SystemSettingsAllOf({
     this.enableLocalSignUp = false,
+    this.currencyDisplay = '$',
     this.debugOcr = false,
     this.numWorkers = 1,
     this.emailPollingInterval = 1800,
@@ -23,6 +24,9 @@ class SystemSettingsAllOf {
 
   /// Whether local sign up is enabled
   bool enableLocalSignUp;
+
+  /// Currency display
+  String currencyDisplay;
 
   /// Debug OCR
   bool debugOcr;
@@ -54,6 +58,7 @@ class SystemSettingsAllOf {
   @override
   bool operator ==(Object other) => identical(this, other) || other is SystemSettingsAllOf &&
      other.enableLocalSignUp == enableLocalSignUp &&
+     other.currencyDisplay == currencyDisplay &&
      other.debugOcr == debugOcr &&
      other.numWorkers == numWorkers &&
      other.emailPollingInterval == emailPollingInterval &&
@@ -64,6 +69,7 @@ class SystemSettingsAllOf {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (enableLocalSignUp.hashCode) +
+    (currencyDisplay.hashCode) +
     (debugOcr.hashCode) +
     (numWorkers.hashCode) +
     (emailPollingInterval.hashCode) +
@@ -71,11 +77,12 @@ class SystemSettingsAllOf {
     (fallbackReceiptProcessingSettingsId == null ? 0 : fallbackReceiptProcessingSettingsId!.hashCode);
 
   @override
-  String toString() => 'SystemSettingsAllOf[enableLocalSignUp=$enableLocalSignUp, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
+  String toString() => 'SystemSettingsAllOf[enableLocalSignUp=$enableLocalSignUp, currencyDisplay=$currencyDisplay, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'enableLocalSignUp'] = this.enableLocalSignUp;
+      json[r'currencyDisplay'] = this.currencyDisplay;
       json[r'debugOcr'] = this.debugOcr;
       json[r'numWorkers'] = this.numWorkers;
       json[r'emailPollingInterval'] = this.emailPollingInterval;
@@ -112,6 +119,7 @@ class SystemSettingsAllOf {
 
       return SystemSettingsAllOf(
         enableLocalSignUp: mapValueOfType<bool>(json, r'enableLocalSignUp') ?? false,
+        currencyDisplay: mapValueOfType<String>(json, r'currencyDisplay') ?? '$',
         debugOcr: mapValueOfType<bool>(json, r'debugOcr') ?? false,
         numWorkers: mapValueOfType<int>(json, r'numWorkers') ?? 1,
         emailPollingInterval: mapValueOfType<int>(json, r'emailPollingInterval') ?? 1800,

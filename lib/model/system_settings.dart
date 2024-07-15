@@ -19,6 +19,7 @@ class SystemSettings {
     this.createdByString = '',
     this.updatedAt = '',
     this.enableLocalSignUp = false,
+    this.currencyDisplay = '$',
     this.debugOcr = false,
     this.numWorkers = 1,
     this.emailPollingInterval = 1800,
@@ -39,6 +40,9 @@ class SystemSettings {
 
   /// Whether local sign up is enabled
   bool enableLocalSignUp;
+
+  /// Currency display
+  String currencyDisplay;
 
   /// Debug OCR
   bool debugOcr;
@@ -75,6 +79,7 @@ class SystemSettings {
      other.createdByString == createdByString &&
      other.updatedAt == updatedAt &&
      other.enableLocalSignUp == enableLocalSignUp &&
+     other.currencyDisplay == currencyDisplay &&
      other.debugOcr == debugOcr &&
      other.numWorkers == numWorkers &&
      other.emailPollingInterval == emailPollingInterval &&
@@ -90,6 +95,7 @@ class SystemSettings {
     (createdByString.hashCode) +
     (updatedAt.hashCode) +
     (enableLocalSignUp.hashCode) +
+    (currencyDisplay.hashCode) +
     (debugOcr.hashCode) +
     (numWorkers.hashCode) +
     (emailPollingInterval.hashCode) +
@@ -97,7 +103,7 @@ class SystemSettings {
     (fallbackReceiptProcessingSettingsId == null ? 0 : fallbackReceiptProcessingSettingsId!.hashCode);
 
   @override
-  String toString() => 'SystemSettings[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, enableLocalSignUp=$enableLocalSignUp, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
+  String toString() => 'SystemSettings[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, enableLocalSignUp=$enableLocalSignUp, currencyDisplay=$currencyDisplay, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -107,6 +113,7 @@ class SystemSettings {
       json[r'createdByString'] = this.createdByString;
       json[r'updatedAt'] = this.updatedAt;
       json[r'enableLocalSignUp'] = this.enableLocalSignUp;
+      json[r'currencyDisplay'] = this.currencyDisplay;
       json[r'debugOcr'] = this.debugOcr;
       json[r'numWorkers'] = this.numWorkers;
       json[r'emailPollingInterval'] = this.emailPollingInterval;
@@ -148,6 +155,7 @@ class SystemSettings {
         createdByString: mapValueOfType<String>(json, r'createdByString') ?? '',
         updatedAt: mapValueOfType<String>(json, r'updatedAt') ?? '',
         enableLocalSignUp: mapValueOfType<bool>(json, r'enableLocalSignUp') ?? false,
+        currencyDisplay: mapValueOfType<String>(json, r'currencyDisplay') ?? '$',
         debugOcr: mapValueOfType<bool>(json, r'debugOcr') ?? false,
         numWorkers: mapValueOfType<int>(json, r'numWorkers') ?? 1,
         emailPollingInterval: mapValueOfType<int>(json, r'emailPollingInterval') ?? 1800,

@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
+
 class ReceiptApi {
-  ReceiptApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+  ReceiptApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -26,9 +26,7 @@ class ReceiptApi {
   ///
   /// * [BulkStatusUpdateCommand] bulkStatusUpdateCommand (required):
   ///   Bulk status data
-  Future<Response> bulkReceiptStatusUpdateWithHttpInfo(
-    BulkStatusUpdateCommand bulkStatusUpdateCommand,
-  ) async {
+  Future<Response> bulkReceiptStatusUpdateWithHttpInfo(BulkStatusUpdateCommand bulkStatusUpdateCommand,) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/bulkStatusUpdate';
 
@@ -40,6 +38,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -60,25 +59,20 @@ class ReceiptApi {
   ///
   /// * [BulkStatusUpdateCommand] bulkStatusUpdateCommand (required):
   ///   Bulk status data
-  Future<List<Receipt>?> bulkReceiptStatusUpdate(
-    BulkStatusUpdateCommand bulkStatusUpdateCommand,
-  ) async {
-    final response = await bulkReceiptStatusUpdateWithHttpInfo(
-      bulkStatusUpdateCommand,
-    );
+  Future<List<Receipt>?> bulkReceiptStatusUpdate(BulkStatusUpdateCommand bulkStatusUpdateCommand,) async {
+    final response = await bulkReceiptStatusUpdateWithHttpInfo(bulkStatusUpdateCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Receipt>')
-              as List)
-          .cast<Receipt>()
-          .toList();
+      return (await apiClient.deserializeAsync(responseBody, 'List<Receipt>') as List)
+        .cast<Receipt>()
+        .toList();
+
     }
     return null;
   }
@@ -93,9 +87,7 @@ class ReceiptApi {
   ///
   /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to create
-  Future<Response> createReceiptWithHttpInfo(
-    UpsertReceiptCommand upsertReceiptCommand,
-  ) async {
+  Future<Response> createReceiptWithHttpInfo(UpsertReceiptCommand upsertReceiptCommand,) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/';
 
@@ -107,6 +99,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -127,15 +120,19 @@ class ReceiptApi {
   ///
   /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to create
-  Future<void> createReceipt(
-    UpsertReceiptCommand upsertReceiptCommand,
-  ) async {
-    final response = await createReceiptWithHttpInfo(
-      upsertReceiptCommand,
-    );
+  Future<Receipt?> createReceipt(UpsertReceiptCommand upsertReceiptCommand,) async {
+    final response = await createReceiptWithHttpInfo(upsertReceiptCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Receipt',) as Receipt;
+    
+    }
+    return null;
   }
 
   /// Delete receipt
@@ -148,12 +145,10 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to get
-  Future<Response> deleteReceiptByIdWithHttpInfo(
-    int receiptId,
-  ) async {
+  Future<Response> deleteReceiptByIdWithHttpInfo(int receiptId,) async {
     // ignore: prefer_const_declarations
-    final path =
-        r'/receipt/{receiptId}'.replaceAll('{receiptId}', receiptId.toString());
+    final path = r'/receipt/{receiptId}'
+      .replaceAll('{receiptId}', receiptId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -163,6 +158,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -183,12 +179,8 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to get
-  Future<void> deleteReceiptById(
-    int receiptId,
-  ) async {
-    final response = await deleteReceiptByIdWithHttpInfo(
-      receiptId,
-    );
+  Future<void> deleteReceiptById(int receiptId,) async {
+    final response = await deleteReceiptByIdWithHttpInfo(receiptId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -204,12 +196,10 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to duplicate
-  Future<Response> duplicateReceiptWithHttpInfo(
-    int receiptId,
-  ) async {
+  Future<Response> duplicateReceiptWithHttpInfo(int receiptId,) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/{receiptId}/duplicate'
-        .replaceAll('{receiptId}', receiptId.toString());
+      .replaceAll('{receiptId}', receiptId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -219,6 +209,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -239,12 +230,8 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to duplicate
-  Future<void> duplicateReceipt(
-    int receiptId,
-  ) async {
-    final response = await duplicateReceiptWithHttpInfo(
-      receiptId,
-    );
+  Future<void> duplicateReceipt(int receiptId,) async {
+    final response = await duplicateReceiptWithHttpInfo(receiptId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -260,12 +247,10 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to get
-  Future<Response> getReceiptByIdWithHttpInfo(
-    int receiptId,
-  ) async {
+  Future<Response> getReceiptByIdWithHttpInfo(int receiptId,) async {
     // ignore: prefer_const_declarations
-    final path =
-        r'/receipt/{receiptId}'.replaceAll('{receiptId}', receiptId.toString());
+    final path = r'/receipt/{receiptId}'
+      .replaceAll('{receiptId}', receiptId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -275,6 +260,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -295,24 +281,17 @@ class ReceiptApi {
   ///
   /// * [int] receiptId (required):
   ///   Id of receipt to get
-  Future<Receipt?> getReceiptById(
-    int receiptId,
-  ) async {
-    final response = await getReceiptByIdWithHttpInfo(
-      receiptId,
-    );
+  Future<Receipt?> getReceiptById(int receiptId,) async {
+    final response = await getReceiptByIdWithHttpInfo(receiptId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'Receipt',
-      ) as Receipt;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Receipt',) as Receipt;
+    
     }
     return null;
   }
@@ -329,13 +308,10 @@ class ReceiptApi {
   ///   Get all receipts that belong to groupId
   ///
   /// * [ReceiptPagedRequestCommand] receiptPagedRequestCommand (required):
-  Future<Response> getReceiptsForGroupWithHttpInfo(
-    int groupId,
-    ReceiptPagedRequestCommand receiptPagedRequestCommand,
-  ) async {
+  Future<Response> getReceiptsForGroupWithHttpInfo(int groupId, ReceiptPagedRequestCommand receiptPagedRequestCommand,) async {
     // ignore: prefer_const_declarations
-    final path =
-        r'/receipt/group/{groupId}'.replaceAll('{groupId}', groupId.toString());
+    final path = r'/receipt/group/{groupId}'
+      .replaceAll('{groupId}', groupId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody = receiptPagedRequestCommand;
@@ -346,6 +322,7 @@ class ReceiptApi {
 
     const contentTypes = <String>['application/json'];
 
+
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -367,26 +344,17 @@ class ReceiptApi {
   ///   Get all receipts that belong to groupId
   ///
   /// * [ReceiptPagedRequestCommand] receiptPagedRequestCommand (required):
-  Future<PagedData?> getReceiptsForGroup(
-    int groupId,
-    ReceiptPagedRequestCommand receiptPagedRequestCommand,
-  ) async {
-    final response = await getReceiptsForGroupWithHttpInfo(
-      groupId,
-      receiptPagedRequestCommand,
-    );
+  Future<PagedData?> getReceiptsForGroup(int groupId, ReceiptPagedRequestCommand receiptPagedRequestCommand,) async {
+    final response = await getReceiptsForGroupWithHttpInfo(groupId, receiptPagedRequestCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'PagedData',
-      ) as PagedData;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PagedData',) as PagedData;
+    
     }
     return null;
   }
@@ -403,10 +371,7 @@ class ReceiptApi {
   ///
   /// * [String] groupRole:
   ///   Role required to have access to receipt
-  Future<Response> hasAccessToReceiptWithHttpInfo(
-    int receiptId, {
-    String? groupRole,
-  }) async {
+  Future<Response> hasAccessToReceiptWithHttpInfo(int receiptId, { String? groupRole, }) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/hasAccess';
 
@@ -417,12 +382,13 @@ class ReceiptApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    queryParams.addAll(_queryParams('', 'receiptId', receiptId));
+      queryParams.addAll(_queryParams('', 'receiptId', receiptId));
     if (groupRole != null) {
       queryParams.addAll(_queryParams('', 'groupRole', groupRole));
     }
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -445,14 +411,8 @@ class ReceiptApi {
   ///
   /// * [String] groupRole:
   ///   Role required to have access to receipt
-  Future<void> hasAccessToReceipt(
-    int receiptId, {
-    String? groupRole,
-  }) async {
-    final response = await hasAccessToReceiptWithHttpInfo(
-      receiptId,
-      groupRole: groupRole,
-    );
+  Future<void> hasAccessToReceipt(int receiptId, { String? groupRole, }) async {
+    final response = await hasAccessToReceiptWithHttpInfo(receiptId,  groupRole: groupRole, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -473,12 +433,7 @@ class ReceiptApi {
   /// * [List<int>] paidByUserIds (required):
   ///
   /// * [List<ReceiptStatus>] statuses (required):
-  Future<Response> quickScanReceiptWithHttpInfo(
-    List<MultipartFile> files,
-    List<int> groupIds,
-    List<int> paidByUserIds,
-    List<ReceiptStatus> statuses,
-  ) async {
+  Future<Response> quickScanReceiptWithHttpInfo(List<MultipartFile> files, List<int> groupIds, List<int> paidByUserIds, List<ReceiptStatus> statuses,) async {
     // ignore: prefer_const_declarations
     final path = r'/receipt/quickScan';
 
@@ -495,9 +450,8 @@ class ReceiptApi {
     final mp = MultipartRequest('POST', Uri.parse(path));
     if (files != null) {
       hasFields = true;
-      for (var file in files) {
-        mp.files.add(file);
-      }
+      mp.fields[r'files'] = files.field;
+      mp.files.add(files);
     }
     if (groupIds != null) {
       hasFields = true;
@@ -539,31 +493,20 @@ class ReceiptApi {
   /// * [List<int>] paidByUserIds (required):
   ///
   /// * [List<ReceiptStatus>] statuses (required):
-  Future<List<Receipt>?> quickScanReceipt(
-    List<MultipartFile> files,
-    List<int> groupIds,
-    List<int> paidByUserIds,
-    List<ReceiptStatus> statuses,
-  ) async {
-    final response = await quickScanReceiptWithHttpInfo(
-      files,
-      groupIds,
-      paidByUserIds,
-      statuses,
-    );
+  Future<List<Receipt>?> quickScanReceipt(List<MultipartFile> files, List<int> groupIds, List<int> paidByUserIds, List<ReceiptStatus> statuses,) async {
+    final response = await quickScanReceiptWithHttpInfo(files, groupIds, paidByUserIds, statuses,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Receipt>')
-              as List)
-          .cast<Receipt>()
-          .toList();
+      return (await apiClient.deserializeAsync(responseBody, 'List<Receipt>') as List)
+        .cast<Receipt>()
+        .toList();
+
     }
     return null;
   }
@@ -581,13 +524,10 @@ class ReceiptApi {
   ///
   /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to update
-  Future<Response> updateReceiptWithHttpInfo(
-    int receiptId,
-    UpsertReceiptCommand upsertReceiptCommand,
-  ) async {
+  Future<Response> updateReceiptWithHttpInfo(int receiptId, UpsertReceiptCommand upsertReceiptCommand,) async {
     // ignore: prefer_const_declarations
-    final path =
-        r'/receipt/{receiptId}'.replaceAll('{receiptId}', receiptId.toString());
+    final path = r'/receipt/{receiptId}'
+      .replaceAll('{receiptId}', receiptId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody = upsertReceiptCommand;
@@ -597,6 +537,7 @@ class ReceiptApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -620,14 +561,8 @@ class ReceiptApi {
   ///
   /// * [UpsertReceiptCommand] upsertReceiptCommand (required):
   ///   Receipt to update
-  Future<void> updateReceipt(
-    int receiptId,
-    UpsertReceiptCommand upsertReceiptCommand,
-  ) async {
-    final response = await updateReceiptWithHttpInfo(
-      receiptId,
-      upsertReceiptCommand,
-    );
+  Future<void> updateReceipt(int receiptId, UpsertReceiptCommand upsertReceiptCommand,) async {
+    final response = await updateReceiptWithHttpInfo(receiptId, upsertReceiptCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

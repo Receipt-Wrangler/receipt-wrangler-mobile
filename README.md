@@ -112,6 +112,7 @@ Class | Method | HTTP request | Description
 *ReceiptApi* | [**updateReceipt**](doc//ReceiptApi.md#updatereceipt) | **PUT** /receipt/{receiptId} | Update receipt
 *ReceiptImageApi* | [**convertToJpg**](doc//ReceiptImageApi.md#converttojpg) | **POST** /receiptImage/convertToJpg | Converts a receipt image to jpg
 *ReceiptImageApi* | [**deleteReceiptImageById**](doc//ReceiptImageApi.md#deletereceiptimagebyid) | **DELETE** /receiptImage/{receiptImageId} | Delete receipt image
+*ReceiptImageApi* | [**downloadReceiptImageById**](doc//ReceiptImageApi.md#downloadreceiptimagebyid) | **GET** /receiptImage/{receiptImageId}/download | Download receipt image
 *ReceiptImageApi* | [**getReceiptImageById**](doc//ReceiptImageApi.md#getreceiptimagebyid) | **GET** /receiptImage/{receiptImageId} | Get receipt image
 *ReceiptImageApi* | [**magicFillReceipt**](doc//ReceiptImageApi.md#magicfillreceipt) | **POST** /receiptImage/magicFill | Reads a receipt image and returns the parsed results
 *ReceiptImageApi* | [**uploadReceiptImage**](doc//ReceiptImageApi.md#uploadreceiptimage) | **POST** /receiptImage/ | Uploads a receipt image

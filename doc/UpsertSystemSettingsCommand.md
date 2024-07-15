@@ -9,6 +9,7 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **enableLocalSignUp** | **bool** | Whether local sign up is enabled | [optional] 
+**currencyDisplay** | **String** | Currency display | [optional] 
 **debugOcr** | **bool** |  | [optional] 
 **numWorkers** | **int** | Number of workers to use | [optional] [default to 1]
 **emailPollingInterval** | **int** | Email polling interval | [optional] 

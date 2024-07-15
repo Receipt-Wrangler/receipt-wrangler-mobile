@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**convertToJpg**](ReceiptImageApi.md#converttojpg) | **POST** /receiptImage/convertToJpg | Converts a receipt image to jpg
 [**deleteReceiptImageById**](ReceiptImageApi.md#deletereceiptimagebyid) | **DELETE** /receiptImage/{receiptImageId} | Delete receipt image
+[**downloadReceiptImageById**](ReceiptImageApi.md#downloadreceiptimagebyid) | **GET** /receiptImage/{receiptImageId}/download | Download receipt image
 [**getReceiptImageById**](ReceiptImageApi.md#getreceiptimagebyid) | **GET** /receiptImage/{receiptImageId} | Get receipt image
 [**magicFillReceipt**](ReceiptImageApi.md#magicfillreceipt) | **POST** /receiptImage/magicFill | Reads a receipt image and returns the parsed results
 [**uploadReceiptImage**](ReceiptImageApi.md#uploadreceiptimage) | **POST** /receiptImage/ | Uploads a receipt image
@@ -110,6 +111,55 @@ void (empty response body)
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **downloadReceiptImageById**
+> MultipartFile downloadReceiptImageById(receiptImageId)
+
+Download receipt image
+
+This will download a receipt image by id, [SYSTEM USER]
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: bearerAuth
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = ReceiptImageApi();
+final receiptImageId = 56; // int | Id of receipt image to download
+
+try {
+    final result = api_instance.downloadReceiptImageById(receiptImageId);
+    print(result);
+} catch (e) {
+    print('Exception when calling ReceiptImageApi->downloadReceiptImageById: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **receiptImageId** | **int**| Id of receipt image to download | 
+
+### Return type
+
+[**MultipartFile**](MultipartFile.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/octet-stream
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -70,7 +70,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createReceipt**
-> createReceipt(upsertReceiptCommand)
+> Receipt createReceipt(upsertReceiptCommand)
 
 Create receipt
 
@@ -90,7 +90,8 @@ final api_instance = ReceiptApi();
 final upsertReceiptCommand = UpsertReceiptCommand(); // UpsertReceiptCommand | Receipt to create
 
 try {
-    api_instance.createReceipt(upsertReceiptCommand);
+    final result = api_instance.createReceipt(upsertReceiptCommand);
+    print(result);
 } catch (e) {
     print('Exception when calling ReceiptApi->createReceipt: $e\n');
 }
@@ -104,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**Receipt**](Receipt.md)
 
 ### Authorization
 
@@ -113,7 +114,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
