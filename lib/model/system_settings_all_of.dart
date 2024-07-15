@@ -14,7 +14,7 @@ class SystemSettingsAllOf {
   /// Returns a new [SystemSettingsAllOf] instance.
   SystemSettingsAllOf({
     this.enableLocalSignUp = false,
-    this.currencyDisplay = '$',
+    this.currencyDisplay = '\$',
     this.debugOcr = false,
     this.numWorkers = 1,
     this.emailPollingInterval = 1800,
@@ -56,43 +56,52 @@ class SystemSettingsAllOf {
   int? fallbackReceiptProcessingSettingsId;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SystemSettingsAllOf &&
-     other.enableLocalSignUp == enableLocalSignUp &&
-     other.currencyDisplay == currencyDisplay &&
-     other.debugOcr == debugOcr &&
-     other.numWorkers == numWorkers &&
-     other.emailPollingInterval == emailPollingInterval &&
-     other.receiptProcessingSettingsId == receiptProcessingSettingsId &&
-     other.fallbackReceiptProcessingSettingsId == fallbackReceiptProcessingSettingsId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SystemSettingsAllOf &&
+          other.enableLocalSignUp == enableLocalSignUp &&
+          other.currencyDisplay == currencyDisplay &&
+          other.debugOcr == debugOcr &&
+          other.numWorkers == numWorkers &&
+          other.emailPollingInterval == emailPollingInterval &&
+          other.receiptProcessingSettingsId == receiptProcessingSettingsId &&
+          other.fallbackReceiptProcessingSettingsId ==
+              fallbackReceiptProcessingSettingsId;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (enableLocalSignUp.hashCode) +
-    (currencyDisplay.hashCode) +
-    (debugOcr.hashCode) +
-    (numWorkers.hashCode) +
-    (emailPollingInterval.hashCode) +
-    (receiptProcessingSettingsId == null ? 0 : receiptProcessingSettingsId!.hashCode) +
-    (fallbackReceiptProcessingSettingsId == null ? 0 : fallbackReceiptProcessingSettingsId!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (enableLocalSignUp.hashCode) +
+      (currencyDisplay.hashCode) +
+      (debugOcr.hashCode) +
+      (numWorkers.hashCode) +
+      (emailPollingInterval.hashCode) +
+      (receiptProcessingSettingsId == null
+          ? 0
+          : receiptProcessingSettingsId!.hashCode) +
+      (fallbackReceiptProcessingSettingsId == null
+          ? 0
+          : fallbackReceiptProcessingSettingsId!.hashCode);
 
   @override
-  String toString() => 'SystemSettingsAllOf[enableLocalSignUp=$enableLocalSignUp, currencyDisplay=$currencyDisplay, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
+  String toString() =>
+      'SystemSettingsAllOf[enableLocalSignUp=$enableLocalSignUp, currencyDisplay=$currencyDisplay, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'enableLocalSignUp'] = this.enableLocalSignUp;
-      json[r'currencyDisplay'] = this.currencyDisplay;
-      json[r'debugOcr'] = this.debugOcr;
-      json[r'numWorkers'] = this.numWorkers;
-      json[r'emailPollingInterval'] = this.emailPollingInterval;
+    json[r'enableLocalSignUp'] = this.enableLocalSignUp;
+    json[r'currencyDisplay'] = this.currencyDisplay;
+    json[r'debugOcr'] = this.debugOcr;
+    json[r'numWorkers'] = this.numWorkers;
+    json[r'emailPollingInterval'] = this.emailPollingInterval;
     if (this.receiptProcessingSettingsId != null) {
       json[r'receiptProcessingSettingsId'] = this.receiptProcessingSettingsId;
     } else {
       json[r'receiptProcessingSettingsId'] = null;
     }
     if (this.fallbackReceiptProcessingSettingsId != null) {
-      json[r'fallbackReceiptProcessingSettingsId'] = this.fallbackReceiptProcessingSettingsId;
+      json[r'fallbackReceiptProcessingSettingsId'] =
+          this.fallbackReceiptProcessingSettingsId;
     } else {
       json[r'fallbackReceiptProcessingSettingsId'] = null;
     }
@@ -111,26 +120,36 @@ class SystemSettingsAllOf {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "SystemSettingsAllOf[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "SystemSettingsAllOf[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "SystemSettingsAllOf[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "SystemSettingsAllOf[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
       return SystemSettingsAllOf(
-        enableLocalSignUp: mapValueOfType<bool>(json, r'enableLocalSignUp') ?? false,
-        currencyDisplay: mapValueOfType<String>(json, r'currencyDisplay') ?? '$',
+        enableLocalSignUp:
+            mapValueOfType<bool>(json, r'enableLocalSignUp') ?? false,
+        currencyDisplay:
+            mapValueOfType<String>(json, r'currencyDisplay') ?? "\$",
         debugOcr: mapValueOfType<bool>(json, r'debugOcr') ?? false,
         numWorkers: mapValueOfType<int>(json, r'numWorkers') ?? 1,
-        emailPollingInterval: mapValueOfType<int>(json, r'emailPollingInterval') ?? 1800,
-        receiptProcessingSettingsId: mapValueOfType<int>(json, r'receiptProcessingSettingsId'),
-        fallbackReceiptProcessingSettingsId: mapValueOfType<int>(json, r'fallbackReceiptProcessingSettingsId'),
+        emailPollingInterval:
+            mapValueOfType<int>(json, r'emailPollingInterval') ?? 1800,
+        receiptProcessingSettingsId:
+            mapValueOfType<int>(json, r'receiptProcessingSettingsId'),
+        fallbackReceiptProcessingSettingsId:
+            mapValueOfType<int>(json, r'fallbackReceiptProcessingSettingsId'),
       );
     }
     return null;
   }
 
-  static List<SystemSettingsAllOf>? listFromJson(dynamic json, {bool growable = false,}) {
+  static List<SystemSettingsAllOf>? listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <SystemSettingsAllOf>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -158,12 +177,18 @@ class SystemSettingsAllOf {
   }
 
   // maps a json object with a list of SystemSettingsAllOf-objects as value to a dart map
-  static Map<String, List<SystemSettingsAllOf>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<SystemSettingsAllOf>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<SystemSettingsAllOf>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = SystemSettingsAllOf.listFromJson(entry.value, growable: growable,);
+        final value = SystemSettingsAllOf.listFromJson(
+          entry.value,
+          growable: growable,
+        );
         if (value != null) {
           map[entry.key] = value;
         }
@@ -173,7 +198,5 @@ class SystemSettingsAllOf {
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
+  static const requiredKeys = <String>{};
 }
-

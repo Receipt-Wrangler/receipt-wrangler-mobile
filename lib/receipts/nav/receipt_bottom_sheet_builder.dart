@@ -22,6 +22,8 @@ class ReceiptBottomSheetBuilder {
 
   late final textBehaviorSubject = BehaviorSubject<String>();
 
+  late final formState = getFormStateFromContext(context);
+
   ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel) {
     this.context = context;
     this.receiptModel = receiptModel;
@@ -182,6 +184,72 @@ class ReceiptBottomSheetBuilder {
     return upsertItems;
   }
 
+  List<api.UpsertCommentCommand> buildCommentUpsertCommand(
+      Map<String, dynamic> form) {
+    var comments = Provider.of<ReceiptModel>(context, listen: false).comments;
+    List<api.UpsertCommentCommand> upsertComments = [];
+
+    for (var i = 0; i < comments.length; i++) {
+      var comment = comments[i];
+
+      var command = api.UpsertCommentCommand(
+        receiptId: comment.receiptId,
+        userId: comment.userId,
+        comment: form["comments.${i.toString()}.comment"],
+      );
+
+      upsertComments.add(command);
+    }
+
+    return upsertComments;
+  }
+
+  api.UpsertReceiptCommand buildReceiptUpsertCommand() {
+    var form = {...receiptModel.receiptFormKey.currentState!.value};
+
+    var date = form["date"] as DateTime;
+    form["date"] = formatDate(zuluDateFormat, date);
+
+    var status = form["status"] as api.ReceiptStatus;
+    form["status"] = status.value;
+
+    var receiptToUpdate =
+        api.UpsertReceiptCommand.fromJson(form) as api.UpsertReceiptCommand;
+
+    receiptToUpdate.categories = buildUpsertCategoryCommand(form);
+    receiptToUpdate.tags = buildUpsertTagCommand(form);
+    receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
+
+    if (formState == WranglerFormState.add) {
+      receiptToUpdate.comments = buildCommentUpsertCommand(form);
+    }
+
+    return receiptToUpdate;
+  }
+
+  Future<void> addReceipt(api.UpsertReceiptCommand receiptToAdd) async {
+    var receipt = await api.ReceiptApi().createReceipt(receiptToAdd);
+    showSuccessSnackbar(context, "Receipt added successfully");
+
+    var images = receiptModel.imagesToUploadBehaviorSubject.value;
+    List<Future<api.FileDataView?>> imageFutures = [];
+
+    for (var image in images) {
+      imageFutures.add(api.ReceiptImageApi()
+          .uploadReceiptImage(image.multipartFile, receipt!.id));
+    }
+    await Future.wait(imageFutures);
+
+    context.go("/receipts/${receipt!.id}/view");
+  }
+
+  Future<void> updateReceipt(api.UpsertReceiptCommand receiptToUpdate) async {
+    var receipt = receiptModel.receipt;
+    await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
+    showSuccessSnackbar(context, "Receipt updated successfully");
+    context.go("/receipts/${receipt.id}/view");
+  }
+
   Widget buildReceiptSubmitButton(String fullPath) {
     if (isEditingBasedOnFullPath(fullPath)) {
       // TODO: Separate edit and add logic
@@ -189,26 +257,14 @@ class ReceiptBottomSheetBuilder {
       return BottomSubmitButton(
         onPressed: () async {
           if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {
-            var receipt = receiptModel.receipt;
-            var form = {...receiptModel.receiptFormKey.currentState!.value};
-
             try {
-              var date = form["date"] as DateTime;
-              form["date"] = formatDate(zuluDateFormat, date);
+              var receiptToUpdate = buildReceiptUpsertCommand();
 
-              var status = form["status"] as api.ReceiptStatus;
-              form["status"] = status.value;
-
-              var receiptToUpdate = api.UpsertReceiptCommand.fromJson(form)
-                  as api.UpsertReceiptCommand;
-
-              receiptToUpdate.categories = buildUpsertCategoryCommand(form);
-              receiptToUpdate.tags = buildUpsertTagCommand(form);
-              receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
-
-              await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
-              showSuccessSnackbar(context, "Receipt updated successfully");
-              context.go("/receipts/${receipt.id}/view");
+              if (formState == WranglerFormState.add) {
+                await addReceipt(receiptToUpdate);
+              } else if (formState == WranglerFormState.edit) {
+                await updateReceipt(receiptToUpdate);
+              }
             } catch (e) {
               handleApiError(context, e);
               print(e);
