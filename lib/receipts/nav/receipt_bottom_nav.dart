@@ -24,11 +24,16 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     var formState = getFormStateFromContext(context);
     var formStateName = formState.name;
 
     onDestinationSelected(int indexSelected) {
-      var receipt = Provider.of<ReceiptModel>(context, listen: false).receipt;
+      var receipt = receiptModel.receipt;
+      
+      if (receiptModel.receiptFormKey.currentState != null) {
+        receiptModel.receiptFormKey.currentState!.save();
+      }
 
       if (formState != WranglerFormState.add) {
         switch (indexSelected) {

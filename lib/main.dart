@@ -126,7 +126,8 @@ final _router = GoRouter(
     ShellRoute(
         builder: (context, state, child) {
           EdgeInsets? padding;
-          if (state.fullPath!.contains("images")) {
+          var fullPath = state.fullPath!;
+          if (fullPath.contains("images")) {
             padding = const EdgeInsets.all(0);
           }
 
@@ -138,8 +139,10 @@ final _router = GoRouter(
 
           Future<api.Receipt?> future = Future.value(getDefaultReceipt());
 
-          var receiptId = state.pathParameters['receiptId'] ?? "";
-          if (receiptId.isNotEmpty) {
+          var receiptId = state.pathParameters['receiptId'] ?? "0";
+          var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
+
+          if (idsAreDifferent && receiptId.isNotEmpty) {
             future = api.ReceiptApi().getReceiptById(
                 int.parse(state.pathParameters['receiptId'] as String));
           }
@@ -153,7 +156,7 @@ final _router = GoRouter(
                     snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData;
 
-                if (isReady) {
+                if (isReady && idsAreDifferent) {
                   receiptModel.setReceipt(snapshot.data as api.Receipt, false);
                 }
 
