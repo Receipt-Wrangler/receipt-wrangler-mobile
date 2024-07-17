@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
+import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
@@ -121,4 +123,22 @@ handleApiError(BuildContext context, dynamic e) {
 
 bool isEditingBasedOnFullPath(String fullPath) {
   return fullPath.contains("edit") || fullPath.contains("add");
+}
+
+dynamic formatDateBasedOnFormState(WranglerFormState formState, String date) {
+  if (formState == WranglerFormState.view) {
+    return date;
+  } else {
+    return DateTime.parse(date);
+  }
+}
+
+String convertDateFormatForForm(String inputDate) {
+  // Parse the input date string to a DateTime object
+  DateTime parsedDate = DateFormat("MM/dd/yyyy").parse(inputDate);
+
+  // Format the DateTime object to the desired output format
+  String formattedDate = DateFormat(zuluDateFormat).format(parsedDate);
+
+  return formattedDate;
 }

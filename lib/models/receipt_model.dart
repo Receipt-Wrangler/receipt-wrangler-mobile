@@ -12,6 +12,10 @@ class ReceiptModel extends ChangeNotifier {
 
   Receipt get receipt => _receipt;
 
+  Receipt _modifiedReceipt = getDefaultReceipt();
+
+  Receipt get modifiedReceipt => _modifiedReceipt;
+
   List<Comment> _comments = [];
 
   List<Comment> get comments => _comments;
@@ -46,6 +50,8 @@ class ReceiptModel extends ChangeNotifier {
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
 
+    _modifiedReceipt = receipt;
+
     _comments = receipt.comments;
 
     _items = receipt.receiptItems;
@@ -67,8 +73,14 @@ class ReceiptModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setModifiedReceipt(Receipt receipt) {
+    _modifiedReceipt = receipt;
+    notifyListeners();
+  }
+
   void resetModel() {
     _receipt = getDefaultReceipt();
+    _modifiedReceipt = getDefaultReceipt();
     _comments = [];
     _items = [];
     _imageBehaviorSubject = BehaviorSubject<List<FileDataView?>>.seeded([]);

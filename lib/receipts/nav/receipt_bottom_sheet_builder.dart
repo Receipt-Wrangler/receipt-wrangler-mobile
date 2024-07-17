@@ -152,6 +152,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   List<api.UpsertTagCommand> buildUpsertTagCommand(Map<String, dynamic> form) {
+    // TODO: move these into shared funcs
     var tags = List<api.Tag>.from(form["tags"].map((item) => item as api.Tag));
 
     return tags
@@ -252,8 +253,6 @@ class ReceiptBottomSheetBuilder {
 
   Widget buildReceiptSubmitButton(String fullPath) {
     if (isEditingBasedOnFullPath(fullPath)) {
-      // TODO: Separate edit and add logic
-      // TODO: add comments to receiptTOUpdate
       return BottomSubmitButton(
         onPressed: () async {
           if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {

@@ -8,6 +8,7 @@ import 'package:receipt_wrangler_mobile/constants/routes.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
+import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 import '../../utils/forms.dart';
 
@@ -19,20 +20,55 @@ class ReceiptBottomNav extends StatefulWidget {
 }
 
 class _ReceiptBottomNav extends State<ReceiptBottomNav> {
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   var indexSelectedController = StreamController<int>();
   var imagesAddedController = StreamController<api.FileDataView>.broadcast();
 
+  void updateModifiedReceipt() {
+    var formState = getFormStateFromContext(context);
+    receiptModel.receiptFormKey.currentState!.save();
+    var form = {...receiptModel.receiptFormKey.currentState!.value};
+    var date = "";
+
+    if (formState == WranglerFormState.view) {
+      date = convertDateFormatForForm(form["date"]);
+    } else {
+      try {
+        date = formatDate(zuluDateFormat, form["date"] as DateTime);
+      } catch (e) {
+        var zuluDate = convertDateFormatForForm(form["date"]);
+        date = formatDate(zuluDateFormat, DateTime.parse(zuluDate));
+      }
+    }
+    print(form);
+    var modifiedReceipt = api.Receipt(
+        id: receiptModel.receipt.id,
+        name: form["name"] ?? "",
+        amount: form["amount"] ?? "0",
+        date: date,
+        groupId: int.parse((form["groupId"] ?? "0").toString()),
+        paidByUserId: int.parse((form["paidByUserId"] ?? "0").toString()),
+        status: form["status"] as api.ReceiptStatus,
+        comments: receiptModel.comments ?? [],
+        receiptItems: receiptModel.items ?? [],
+        categories: List<api.Category>.from(
+            (form["categories"] ?? []).map((item) => item as api.Category)),
+        tags: List<api.Tag>.from(
+            (form["tags"] ?? []).map((item) => item as api.Tag)));
+
+    receiptModel.setModifiedReceipt(modifiedReceipt!);
+  }
+
   @override
   Widget build(BuildContext context) {
-    late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     var formState = getFormStateFromContext(context);
     var formStateName = formState.name;
 
     onDestinationSelected(int indexSelected) {
       var receipt = receiptModel.receipt;
-      
+
       if (receiptModel.receiptFormKey.currentState != null) {
-        receiptModel.receiptFormKey.currentState!.save();
+        updateModifiedReceipt();
       }
 
       if (formState != WranglerFormState.add) {
