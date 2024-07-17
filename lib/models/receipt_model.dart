@@ -56,6 +56,11 @@ class ReceiptModel extends ChangeNotifier {
 
     _items = receipt.receiptItems;
 
+    _imageBehaviorSubject = BehaviorSubject<List<FileDataView?>>.seeded([]);
+
+    _imagesToUploadBehaviorSubject =
+        BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
+
     _receiptFormKey = GlobalKey<FormBuilderState>();
 
     if (notify) {
