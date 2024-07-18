@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
 import '../../enums/upload_method.dart';
@@ -76,8 +77,18 @@ class ReceiptAppBarActionBuilder {
       options = _buildViewAppBarMenuOptions();
     }
 
-    return ReceiptEditPopupMenu(
-        groupId: receiptModel.receipt.groupId, popupMenuChildren: options);
+    var combinedStream = Rx.merge([
+      receiptModel.imagesToUploadBehaviorSubject.stream,
+      receiptModel.imageBehaviorSubject.stream
+    ]);
+
+    return StreamBuilder(
+        stream: combinedStream,
+        builder: (context, snapshot) {
+          return ReceiptEditPopupMenu(
+              groupId: receiptModel.receipt.groupId,
+              popupMenuChildren: options);
+        });
   }
 
   List<PopupMenuEntry> _buildViewAppBarMenuOptions() {
@@ -91,11 +102,19 @@ class ReceiptAppBarActionBuilder {
   }
 
   List<PopupMenuEntry> buildEditAppBarMenuOptions() {
-    return [
+    List<PopupMenuEntry> popupMenuEntries = [
       buildUploadFromCameraButton(),
       buildUploadFromGalleryButton(),
-      buildDeleteButton(),
     ];
+
+    if (receiptModel.imageBehaviorSubject.value.isNotEmpty ||
+        receiptModel.imagesToUploadBehaviorSubject.value.isNotEmpty) {
+      popupMenuEntries.add(
+        buildDeleteButton(),
+      );
+    }
+
+    return popupMenuEntries;
   }
 
   PopupMenuEntry buildDeleteButton() {
