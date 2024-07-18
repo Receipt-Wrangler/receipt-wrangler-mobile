@@ -107,6 +107,27 @@ class ReceiptAppBarActionBuilder {
   }
 
   Future<void> deleteImage() async {
+    var formState = getFormStateFromContext(context);
+    if (formState == WranglerFormState.add) {
+      deleteImageFromModel();
+      return;
+    }
+
+    if (formState == WranglerFormState.edit) {
+      await deleteImageViaApi();
+      return;
+    }
+  }
+
+  void deleteImageFromModel() {
+    var index = receiptModel.infiniteScrollController.selectedItem;
+    var currentImages = List<UploadMultipartFileData>.from(
+        receiptModel.imagesToUploadBehaviorSubject.value);
+    currentImages.removeAt(index);
+    receiptModel.imagesToUploadBehaviorSubject.add(currentImages);
+  }
+
+  Future<void> deleteImageViaApi() async {
     try {
       var index = receiptModel.infiniteScrollController.selectedItem;
       await api.ReceiptImageApi().deleteReceiptImageById(
