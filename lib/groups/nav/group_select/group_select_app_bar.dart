@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top_app_bar.dart';
 
 class GroupSelectAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GroupSelectAppBar({super.key});

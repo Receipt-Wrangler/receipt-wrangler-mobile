@@ -101,7 +101,6 @@ final _router = GoRouter(
         ]),
     ShellRoute(
         builder: (context, state, child) {
-          Provider.of<ReceiptModel>(context, listen: false).resetModel();
           EdgeInsets? padding;
           if (state.fullPath == '/groups/:groupId/receipts') {
             padding = const EdgeInsets.all(0);

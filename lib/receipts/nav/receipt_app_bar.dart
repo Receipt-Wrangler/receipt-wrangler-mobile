@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top_app_bar.dart';
 
 import '../../utils/forms.dart';
 import '../../utils/receipts.dart';
@@ -39,6 +39,9 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
         builder: (context, receiptModel, child) => TopAppBar(
               titleText: getTitleText(formState, receiptModel.receipt.name),
               leadingArrowRedirect: buildBackUrl(formState, receiptModel),
+              onLeadingArrowPressed: () {
+                receiptModel.resetModel();
+              },
               actions: actions,
               hideAvatar: true,
             ));

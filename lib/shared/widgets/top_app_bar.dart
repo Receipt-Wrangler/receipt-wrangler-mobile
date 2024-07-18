@@ -13,6 +13,7 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
       required this.titleText,
       this.leadingArrowRedirect,
       this.leadingArrowExtra,
+      this.onLeadingArrowPressed,
       this.actions,
       this.hideAvatar,
       this.surfaceTintColor});
@@ -22,6 +23,8 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? leadingArrowRedirect;
 
   final dynamic leadingArrowExtra;
+
+  final Function? onLeadingArrowPressed;
 
   final List<Widget>? actions;
 
@@ -56,6 +59,10 @@ class _TopAppBar extends State<TopAppBar> {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
+          if (widget.onLeadingArrowPressed != null) {
+            widget.onLeadingArrowPressed!();
+          }
+
           context.go(widget.leadingArrowRedirect ?? "/",
               extra: widget.leadingArrowExtra);
         },
