@@ -185,8 +185,7 @@ class ReceiptBottomSheetBuilder {
     return upsertItems;
   }
 
-  List<api.UpsertCommentCommand> buildCommentUpsertCommand(
-      Map<String, dynamic> form) {
+  List<api.UpsertCommentCommand> buildCommentUpsertCommand() {
     var comments = Provider.of<ReceiptModel>(context, listen: false).comments;
     List<api.UpsertCommentCommand> upsertComments = [];
 
@@ -196,7 +195,7 @@ class ReceiptBottomSheetBuilder {
       var command = api.UpsertCommentCommand(
         receiptId: comment.receiptId,
         userId: comment.userId,
-        comment: form["comments.${i.toString()}.comment"],
+        comment: comment.comment,
       );
 
       upsertComments.add(command);
@@ -222,7 +221,7 @@ class ReceiptBottomSheetBuilder {
     receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
 
     if (formState == WranglerFormState.add) {
-      receiptToUpdate.comments = buildCommentUpsertCommand(form);
+      receiptToUpdate.comments = buildCommentUpsertCommand();
     }
 
     return receiptToUpdate;

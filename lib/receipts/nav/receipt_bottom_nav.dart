@@ -40,7 +40,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         date = formatDate(zuluDateFormat, DateTime.parse(zuluDate));
       }
     }
-    print(form);
     var modifiedReceipt = api.Receipt(
         id: receiptModel.receipt.id,
         name: form["name"] ?? "",
