@@ -237,7 +237,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         children: [
           IconButton(
             icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: isAddingShare || groupId == 0
+            onPressed: (isAddingShare || groupId == 0)
                 ? null
                 : () {
                     setState(() {
