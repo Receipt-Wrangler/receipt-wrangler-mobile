@@ -34,10 +34,12 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     var uri = GoRouter.of(context).routeInformationProvider.value.uri;
     var formState = getFormState(uri.toString());
     List<Widget> actions = [...widget.actions ?? []];
+    print(formState);
 
     return Consumer<ReceiptModel>(
         builder: (context, receiptModel, child) => TopAppBar(
               titleText: getTitleText(formState, receiptModel.receipt.name),
+              leadingArrowPop: formState == WranglerFormState.add,
               leadingArrowRedirect: buildBackUrl(formState, receiptModel),
               onLeadingArrowPressed: () {
                 receiptModel.resetModel();

@@ -13,6 +13,7 @@ import '../models/group_model.dart';
 import '../models/user_model.dart';
 
 WranglerFormState getFormState(String uri) {
+  print(uri);
   if (uri.contains("add")) {
     return WranglerFormState.add;
   } else if (uri.contains("edit")) {

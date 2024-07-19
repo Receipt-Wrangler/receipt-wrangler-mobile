@@ -25,19 +25,19 @@ class _GroupBottomNav extends State<GroupBottomNav> {
 
       switch (indexSelected) {
         case 0:
-          context.go("/groups/$groupId/dashboards");
+          context.push("/groups/$groupId/dashboards");
           break;
         case 1:
           showAddMenu(context, addButtonKey);
           break;
         case 2:
-          context.go("/groups/$groupId/receipts");
+          context.push("/groups/$groupId/receipts");
           break;
         case 3:
-          context.go("/search");
+          context.push("/search");
           break;
         default:
-          context.go("/groups");
+          context.push("/groups");
       }
 
       indexSelectedController.add(indexSelected);

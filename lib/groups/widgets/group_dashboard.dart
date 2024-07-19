@@ -16,7 +16,7 @@ class _GroupDashboard extends State<GroupDashboard> {
   int? selectedDashboardIndex;
 
   void onGroupTap(api.Group group) {
-    context.go("/groups/${group.id}");
+    context.push("/groups/${group.id}");
   }
 
   void setSelectedDashboardIndex(int index) {

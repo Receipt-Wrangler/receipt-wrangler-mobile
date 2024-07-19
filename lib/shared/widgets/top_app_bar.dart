@@ -14,6 +14,7 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.leadingArrowRedirect,
       this.leadingArrowExtra,
       this.onLeadingArrowPressed,
+      this.leadingArrowPop,
       this.actions,
       this.hideAvatar,
       this.surfaceTintColor});
@@ -23,6 +24,8 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? leadingArrowRedirect;
 
   final dynamic leadingArrowExtra;
+
+  final bool? leadingArrowPop;
 
   final Function? onLeadingArrowPressed;
 
@@ -48,14 +51,14 @@ class _TopAppBar extends State<TopAppBar> {
           logoutCommand: api.LogoutCommand(refreshToken: refreshToken ?? ""));
       await authModel.purgeTokens();
       showSuccessSnackbar(context, "Successfully logged out");
-      context.go("/login");
+      context.push("/login");
     } catch (e) {
       showErrorSnackbar(context, e as dynamic);
     }
   }
 
   Widget? getIconButton() {
-    if (widget.leadingArrowRedirect != null) {
+    if (widget.leadingArrowRedirect != null && widget.leadingArrowPop != null) {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
@@ -63,7 +66,14 @@ class _TopAppBar extends State<TopAppBar> {
             widget.onLeadingArrowPressed!();
           }
 
-          context.go(widget.leadingArrowRedirect ?? "/",
+          if (widget.leadingArrowPop == true) {
+            context.pop();
+            return;
+          }
+
+          print("ran");
+          print(widget.leadingArrowPop);
+          context.push(widget.leadingArrowRedirect ?? "/",
               extra: widget.leadingArrowExtra);
         },
       );

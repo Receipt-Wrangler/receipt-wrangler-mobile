@@ -143,7 +143,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   void navigateToReceipt(WranglerFormState formState) {
-    context.go("/receipts/${widget.data.id}/${formState.name}");
+    context.push("/receipts/${widget.data.id}/${formState.name}");
   }
 
   @override

@@ -130,6 +130,8 @@ final _router = GoRouter(
             padding = const EdgeInsets.all(0);
           }
 
+          print(fullPath);
+
           var contextModel = Provider.of<ContextModel>(context, listen: false);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);

@@ -22,16 +22,16 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
     onDestinationSelected(int indexSelected) {
       switch (indexSelected) {
         case 0:
-          context.go("/groups");
+          context.push("/groups");
           break;
         case 1:
           showAddMenu(context, addButtonKey);
           break;
         case 2:
-          context.go("/search");
+          context.push("/search");
           break;
         default:
-          context.go("/groups");
+          context.push("/groups");
       }
 
       indexSelectedController.add(indexSelected);

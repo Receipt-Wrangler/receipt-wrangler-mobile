@@ -33,6 +33,7 @@ Future<String?> protectedRouteRedirect(
 
 Future<String?> unprotectedRouteRedirect(
     BuildContext context, String? redirect) async {
+  print("running route redirect");
   // TODO: check server connection
   var authModelProvider = Provider.of<AuthModel>(context, listen: false);
   var groupModel = Provider.of<GroupModel>(context, listen: false);

@@ -14,7 +14,7 @@ class GroupList extends StatefulWidget {
 
 class _GroupList extends State<GroupList> {
   void onGroupTap(api.Group group) {
-    context.go("/groups/${group.id}/dashboards");
+    context.push("/groups/${group.id}/dashboards");
   }
 
   @override

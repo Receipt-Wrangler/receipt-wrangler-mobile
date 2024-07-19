@@ -66,7 +66,7 @@ class _Login extends State<AuthForm> {
     await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
         categoryModel, tagModel, appData);
     showSuccessSnackbar(context, "Successfully logged in!");
-    context.go("/groups");
+    context.push("/groups");
   }
 
   bool _isSignUp() {
@@ -111,7 +111,7 @@ class _Login extends State<AuthForm> {
 
     return CupertinoButton(
         onPressed: () {
-          context.go(route);
+          context.push(route);
         },
         child: Text(buttonText));
   }
@@ -134,7 +134,7 @@ class _Login extends State<AuthForm> {
   Widget _getChangeServerButton() {
     return CupertinoButton(
         onPressed: () {
-          context.go("/");
+          context.push("/");
         },
         child: const Text("Change Server"));
   }

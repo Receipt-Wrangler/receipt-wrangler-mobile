@@ -42,7 +42,7 @@ class ReceiptAppBarActionBuilder {
             PopupMenuItem(
               child: Text("Edit"),
               onTap: () {
-                context.go("/receipts/${receiptModel.receipt.id}/edit");
+                context.push("/receipts/${receiptModel.receipt.id}/edit");
               },
             )
           ]);
@@ -97,7 +97,7 @@ class ReceiptAppBarActionBuilder {
           value: "edit",
           child: const Text("Edit"),
           onTap: () =>
-              context.go("/receipts/${receiptModel.receipt.id}/images/edit")),
+              context.push("/receipts/${receiptModel.receipt.id}/images/edit")),
     ];
   }
 
