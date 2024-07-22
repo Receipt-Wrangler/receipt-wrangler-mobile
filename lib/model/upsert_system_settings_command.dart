@@ -14,6 +14,7 @@ class UpsertSystemSettingsCommand {
   /// Returns a new [UpsertSystemSettingsCommand] instance.
   UpsertSystemSettingsCommand({
     this.enableLocalSignUp,
+    this.currencyDisplay,
     this.debugOcr,
     this.numWorkers = 1,
     this.emailPollingInterval,
@@ -29,6 +30,15 @@ class UpsertSystemSettingsCommand {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   bool? enableLocalSignUp;
+
+  /// Currency display
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? currencyDisplay;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -71,6 +81,7 @@ class UpsertSystemSettingsCommand {
   @override
   bool operator ==(Object other) => identical(this, other) || other is UpsertSystemSettingsCommand &&
      other.enableLocalSignUp == enableLocalSignUp &&
+     other.currencyDisplay == currencyDisplay &&
      other.debugOcr == debugOcr &&
      other.numWorkers == numWorkers &&
      other.emailPollingInterval == emailPollingInterval &&
@@ -81,6 +92,7 @@ class UpsertSystemSettingsCommand {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (enableLocalSignUp == null ? 0 : enableLocalSignUp!.hashCode) +
+    (currencyDisplay == null ? 0 : currencyDisplay!.hashCode) +
     (debugOcr == null ? 0 : debugOcr!.hashCode) +
     (numWorkers.hashCode) +
     (emailPollingInterval == null ? 0 : emailPollingInterval!.hashCode) +
@@ -88,7 +100,7 @@ class UpsertSystemSettingsCommand {
     (fallbackReceiptProcessingSettingsId == null ? 0 : fallbackReceiptProcessingSettingsId!.hashCode);
 
   @override
-  String toString() => 'UpsertSystemSettingsCommand[enableLocalSignUp=$enableLocalSignUp, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
+  String toString() => 'UpsertSystemSettingsCommand[enableLocalSignUp=$enableLocalSignUp, currencyDisplay=$currencyDisplay, debugOcr=$debugOcr, numWorkers=$numWorkers, emailPollingInterval=$emailPollingInterval, receiptProcessingSettingsId=$receiptProcessingSettingsId, fallbackReceiptProcessingSettingsId=$fallbackReceiptProcessingSettingsId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -96,6 +108,11 @@ class UpsertSystemSettingsCommand {
       json[r'enableLocalSignUp'] = this.enableLocalSignUp;
     } else {
       json[r'enableLocalSignUp'] = null;
+    }
+    if (this.currencyDisplay != null) {
+      json[r'currencyDisplay'] = this.currencyDisplay;
+    } else {
+      json[r'currencyDisplay'] = null;
     }
     if (this.debugOcr != null) {
       json[r'debugOcr'] = this.debugOcr;
@@ -141,6 +158,7 @@ class UpsertSystemSettingsCommand {
 
       return UpsertSystemSettingsCommand(
         enableLocalSignUp: mapValueOfType<bool>(json, r'enableLocalSignUp'),
+        currencyDisplay: mapValueOfType<String>(json, r'currencyDisplay'),
         debugOcr: mapValueOfType<bool>(json, r'debugOcr'),
         numWorkers: mapValueOfType<int>(json, r'numWorkers') ?? 1,
         emailPollingInterval: mapValueOfType<int>(json, r'emailPollingInterval'),

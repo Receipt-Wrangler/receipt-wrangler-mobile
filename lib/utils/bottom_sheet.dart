@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/top-app-bar.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/top_app_bar.dart';
 
 showFullscreenBottomSheet(BuildContext context, Widget child, String label,
     {List<Widget>? actions,

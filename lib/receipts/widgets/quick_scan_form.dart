@@ -20,6 +20,8 @@ class QuickScanForm extends StatefulWidget {
 }
 
 class _QuickScanForm extends State<QuickScanForm> {
+  late final userPreferences =
+      Provider.of<UserPreferencesModel>(context, listen: false).userPreferences;
   int groupId = 0;
 
   @override
@@ -32,7 +34,7 @@ class _QuickScanForm extends State<QuickScanForm> {
   }
 
   // TODO: refactor to a common Widget to use in receipt form
-  Widget _buildGroupField(api.UserPreferences userPreferences) {
+  Widget _buildGroupField() {
     int? initialValue = null;
 
     if (userPreferences.quickScanDefaultGroupId > 0) {
@@ -54,7 +56,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     );
   }
 
-  Widget _buildUserDropDown(api.UserPreferences userPreferences) {
+  Widget _buildUserDropDown() {
     List<DropdownMenuItem> items = [];
     int? initialValue = null;
 
@@ -77,7 +79,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     );
   }
 
-  Widget _buildStatusDropdown(api.UserPreferences userPreferences) {
+  Widget _buildStatusDropdown() {
     api.ReceiptStatus? initialValue = null;
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
@@ -98,19 +100,16 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   @override
   Widget build(BuildContext context) {
-    var userPreferences =
-        Provider.of<UserPreferencesModel>(context, listen: false)
-            .userPreferences;
     return FormBuilder(
         key: widget.formKey,
         child: Column(
           children: [
             textFieldSpacing,
-            _buildGroupField(userPreferences),
+            _buildGroupField(),
             textFieldSpacing,
-            _buildUserDropDown(userPreferences),
+            _buildUserDropDown(),
             textFieldSpacing,
-            _buildStatusDropdown(userPreferences),
+            _buildStatusDropdown(),
             submitButtonSpacing
           ],
         ));

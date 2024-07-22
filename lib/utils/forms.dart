@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
+import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
@@ -11,8 +13,9 @@ import '../models/group_model.dart';
 import '../models/user_model.dart';
 
 WranglerFormState getFormState(String uri) {
-  if (uri.contains("create")) {
-    return WranglerFormState.create;
+  print(uri);
+  if (uri.contains("add")) {
+    return WranglerFormState.add;
   } else if (uri.contains("edit")) {
     return WranglerFormState.edit;
   } else {
@@ -27,8 +30,8 @@ WranglerFormState getFormStateFromContext(BuildContext context) {
 
 String getFormStateHeader(WranglerFormState formState) {
   switch (formState) {
-    case WranglerFormState.create:
-      return "Create";
+    case WranglerFormState.add:
+      return "Add";
     case WranglerFormState.edit:
       return "Edit";
     case WranglerFormState.view:
@@ -117,4 +120,26 @@ handleApiError(BuildContext context, dynamic e) {
     showApiErrorSnackbar(context, e);
     return;
   }
+}
+
+bool isEditingBasedOnFullPath(String fullPath) {
+  return fullPath.contains("edit") || fullPath.contains("add");
+}
+
+dynamic formatDateBasedOnFormState(WranglerFormState formState, String date) {
+  if (formState == WranglerFormState.view) {
+    return date;
+  } else {
+    return DateTime.parse(date);
+  }
+}
+
+String convertDateFormatForForm(String inputDate) {
+  // Parse the input date string to a DateTime object
+  DateTime parsedDate = DateFormat("MM/dd/yyyy").parse(inputDate);
+
+  // Format the DateTime object to the desired output format
+  String formattedDate = DateFormat(zuluDateFormat).format(parsedDate);
+
+  return formattedDate;
 }

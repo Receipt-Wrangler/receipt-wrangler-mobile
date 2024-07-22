@@ -29,6 +29,8 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
+  late final modifiedReceipt =
+      Provider.of<ReceiptModel>(context, listen: false).modifiedReceipt;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
@@ -46,14 +48,14 @@ class _ReceiptForm extends State<ReceiptForm> {
     super.initState();
     Provider.of<ReceiptModel>(context, listen: false);
 
-    groupId = receipt.groupId;
+    groupId = modifiedReceipt.groupId;
   }
 
   Widget buildNameField() {
     return FormBuilderTextField(
       name: "name",
       decoration: const InputDecoration(labelText: "Name"),
-      initialValue: receipt.name,
+      initialValue: modifiedReceipt.name,
       validator: FormBuilderValidators.required(),
       readOnly: isFieldReadOnly(formState),
     );
@@ -61,13 +63,13 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildAmountField() {
     return amountField(
-        "Amount", "amount", receipt.amount.toString(), formState);
+        "Amount", "amount", modifiedReceipt.amount.toString(), formState);
   }
 
   Widget buildDateField() {
     if (formState == WranglerFormState.view) {
       var formattedDate =
-          formatDate(defaultDateFormat, DateTime.parse(receipt.date));
+          formatDate(defaultDateFormat, DateTime.parse(modifiedReceipt.date));
       return FormBuilderTextField(
           name: "date",
           decoration: const InputDecoration(labelText: "Date"),
@@ -78,18 +80,23 @@ class _ReceiptForm extends State<ReceiptForm> {
         name: "date",
         decoration: const InputDecoration(labelText: "Date"),
         validator: FormBuilderValidators.required(),
-        initialValue: DateTime.parse(receipt.date),
+        initialValue: DateTime.parse(modifiedReceipt.date),
         inputType: InputType.date,
       );
     }
   }
 
   Widget buildGroupField() {
+    int? initialValue = modifiedReceipt.groupId;
+    if (formState == WranglerFormState.add && initialValue == 0) {
+      initialValue = null;
+    }
+
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
       items: buildGroupDropDownMenuItems(context),
-      initialValue: receipt.groupId,
+      initialValue: initialValue,
       enabled: !isFieldReadOnly(formState),
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
@@ -104,12 +111,16 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildPaidByField() {
     List<DropdownMenuItem> items = [];
     var initialValue = null;
-    if (groupId == receipt.groupId) {
-      initialValue = receipt.paidByUserId;
+    if (groupId == modifiedReceipt.groupId) {
+      initialValue = modifiedReceipt.paidByUserId;
     }
 
     if (groupId > 0) {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
+    }
+
+    if (formState == WranglerFormState.add && initialValue == 0) {
+      initialValue = null;
     }
 
     return FormBuilderDropdown(
@@ -123,14 +134,15 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildStatusField() {
-    return receiptStatusField("Status", "status", receipt.status, formState);
+    return receiptStatusField(
+        "Status", "status", modifiedReceipt.status, formState);
   }
 
   Widget buildCategoryField() {
     return MultiSelectField<api.Category>(
         name: "categories",
         label: "Categories",
-        initialValue: receipt.categories,
+        initialValue: modifiedReceipt.categories,
         itemDisplayName: (category) => category.name ?? "",
         itemName: "Categories",
         onTap: formState == WranglerFormState.view
@@ -144,7 +156,8 @@ class _ReceiptForm extends State<ReceiptForm> {
         "Select Categories",
         "Select",
         categoryModel.categories,
-        formKey.currentState!.fields["categories"]!.value ?? receipt.categories,
+        formKey.currentState!.fields["categories"]!.value ??
+            modifiedReceipt.categories,
         (category) => category.name).then((value) {
       if (value != null) {
         var categories =
@@ -161,7 +174,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     return MultiSelectField<api.Tag>(
         name: "tags",
         label: "Tags",
-        initialValue: receipt.tags,
+        initialValue: modifiedReceipt.tags,
         itemDisplayName: (tag) => tag.name ?? "",
         itemName: "Tags",
         onTap: formState == WranglerFormState.view ? null : showTagMultiSelect);
@@ -173,7 +186,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         "Select Tags",
         "Select",
         tagModel.tags,
-        formKey.currentState!.fields["tags"]!.value ?? receipt.tags,
+        formKey.currentState!.fields["tags"]!.value ?? modifiedReceipt.tags,
         (tag) => tag.name).then((value) {
       if (value != null) {
         var tags = List<api.Tag>.from(value.map((item) => item as api.Tag));
@@ -224,7 +237,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         children: [
           IconButton(
             icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: isAddingShare || groupId == 0
+            onPressed: (isAddingShare || groupId == 0)
                 ? null
                 : () {
                     setState(() {

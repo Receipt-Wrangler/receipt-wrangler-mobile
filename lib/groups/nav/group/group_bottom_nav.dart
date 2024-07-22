@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
+
+import '../../../shared/functions/show_add_menu.dart';
 
 class GroupBottomNav extends StatefulWidget {
   const GroupBottomNav({super.key});
@@ -15,6 +16,7 @@ class GroupBottomNav extends StatefulWidget {
 
 class _GroupBottomNav extends State<GroupBottomNav> {
   var indexSelectedController = StreamController<int>();
+  final addButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _GroupBottomNav extends State<GroupBottomNav> {
           context.go("/groups/$groupId/dashboards");
           break;
         case 1:
-          showQuickScanBottomSheet(context);
+          showAddMenu(context, addButtonKey);
           break;
         case 2:
           context.go("/groups/$groupId/receipts");
@@ -59,20 +61,21 @@ class _GroupBottomNav extends State<GroupBottomNav> {
       return index;
     }
 
-    var destinations = const [
-      NavigationDestination(
+    var destinations = [
+      const NavigationDestination(
         icon: Icon(Icons.dashboard),
         label: "Dashboards",
       ),
       NavigationDestination(
+        key: addButtonKey,
         icon: Icon(Icons.add),
         label: "Add",
       ),
-      NavigationDestination(
+      const NavigationDestination(
         icon: Icon(Icons.receipt),
         label: "Receipts",
       ),
-      NavigationDestination(
+      const NavigationDestination(
         icon: Icon(Icons.search),
         label: "Search",
         enabled: false,

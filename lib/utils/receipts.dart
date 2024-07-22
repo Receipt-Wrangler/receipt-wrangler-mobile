@@ -17,6 +17,8 @@ Receipt getDefaultReceipt() {
     amount: "0",
     name: "",
     status: ReceiptStatus.OPEN,
+    categories: [],
+    tags: [],
   );
 }
 

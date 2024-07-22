@@ -35,6 +35,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import 'api.dart' as api;
 import 'models/context_model.dart';
@@ -124,7 +125,8 @@ final _router = GoRouter(
     ShellRoute(
         builder: (context, state, child) {
           EdgeInsets? padding;
-          if (state.fullPath!.contains("images")) {
+          var fullPath = state.fullPath!;
+          if (fullPath.contains("images")) {
             padding = const EdgeInsets.all(0);
           }
 
@@ -133,8 +135,16 @@ final _router = GoRouter(
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
-          var future = api.ReceiptApi().getReceiptById(
-              int.parse(state.pathParameters['receiptId'] as String));
+
+          Future<api.Receipt?> future = Future.value(getDefaultReceipt());
+
+          var receiptId = state.pathParameters['receiptId'] ?? "0";
+          var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
+
+          if (idsAreDifferent && receiptId.isNotEmpty) {
+            future = api.ReceiptApi().getReceiptById(
+                int.parse(state.pathParameters['receiptId'] as String));
+          }
 
           contextModel.setShellContext(context);
 
@@ -145,7 +155,7 @@ final _router = GoRouter(
                     snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData;
 
-                if (isReady) {
+                if (isReady && idsAreDifferent) {
                   receiptModel.setReceipt(snapshot.data as api.Receipt, false);
                 }
 
@@ -161,17 +171,27 @@ final _router = GoRouter(
         },
         routes: [
           GoRoute(
+              path: '/receipts/images/add',
+              builder: (context, state) => const ReceiptImageScreen()),
+          GoRoute(
               path: '/receipts/:receiptId/images/view',
               builder: (context, state) => const ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/:receiptId/images/edit',
               builder: (context, state) => const ReceiptImageScreen()),
           GoRoute(
+              path: '/receipts/comments/add',
+              builder: (context, state) => const ReceiptCommentScreen()),
+          GoRoute(
               path: '/receipts/:receiptId/comments/view',
               builder: (context, state) => const ReceiptCommentScreen()),
           GoRoute(
             path: '/receipts/:receiptId/comments/edit',
             builder: (context, state) => const ReceiptCommentScreen(),
+          ),
+          GoRoute(
+            path: '/receipts/add',
+            builder: (context, state) => const ReceiptFormScreen(),
           ),
           GoRoute(
             path: '/receipts/:receiptId/view',

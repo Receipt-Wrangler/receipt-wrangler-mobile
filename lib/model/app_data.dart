@@ -22,6 +22,7 @@ class AppData {
     this.tags = const [],
     this.jwt,
     this.refreshToken,
+    required this.currencyDisplay,
   });
 
   Claims claims;
@@ -60,6 +61,9 @@ class AppData {
   ///
   String? refreshToken;
 
+  /// Currency display
+  String currencyDisplay;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is AppData &&
      other.claims == claims &&
@@ -70,7 +74,8 @@ class AppData {
      other.categories == categories &&
      other.tags == tags &&
      other.jwt == jwt &&
-     other.refreshToken == refreshToken;
+     other.refreshToken == refreshToken &&
+     other.currencyDisplay == currencyDisplay;
 
   @override
   int get hashCode =>
@@ -83,10 +88,11 @@ class AppData {
     (categories.hashCode) +
     (tags.hashCode) +
     (jwt == null ? 0 : jwt!.hashCode) +
-    (refreshToken == null ? 0 : refreshToken!.hashCode);
+    (refreshToken == null ? 0 : refreshToken!.hashCode) +
+    (currencyDisplay.hashCode);
 
   @override
-  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, featureConfig=$featureConfig, categories=$categories, tags=$tags, jwt=$jwt, refreshToken=$refreshToken]';
+  String toString() => 'AppData[claims=$claims, groups=$groups, users=$users, userPreferences=$userPreferences, featureConfig=$featureConfig, categories=$categories, tags=$tags, jwt=$jwt, refreshToken=$refreshToken, currencyDisplay=$currencyDisplay]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -107,6 +113,7 @@ class AppData {
     } else {
       json[r'refreshToken'] = null;
     }
+      json[r'currencyDisplay'] = this.currencyDisplay;
     return json;
   }
 
@@ -138,6 +145,7 @@ class AppData {
         tags: Tag.listFromJson(json[r'tags'])!,
         jwt: mapValueOfType<String>(json, r'jwt'),
         refreshToken: mapValueOfType<String>(json, r'refreshToken'),
+        currencyDisplay: mapValueOfType<String>(json, r'currencyDisplay')!,
       );
     }
     return null;
@@ -194,6 +202,7 @@ class AppData {
     'featureConfig',
     'categories',
     'tags',
+    'currencyDisplay',
   };
 }
 

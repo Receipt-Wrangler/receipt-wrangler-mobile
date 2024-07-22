@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **tags** | [**List<Tag>**](Tag.md) | Tags in the system | [default to const []]
 **jwt** | **String** | JWT token | [optional] 
 **refreshToken** | **String** | Refresh token | [optional] 
+**currencyDisplay** | **String** | Currency display | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
