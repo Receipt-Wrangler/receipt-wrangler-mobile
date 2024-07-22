@@ -29,7 +29,7 @@ class _SetHomeserverUrl extends State<SetHomeserverUrl> {
         var featureConfig = await api.FeatureConfigApi().getFeatureConfig();
         authModel.setFeatureConfig(featureConfig);
         showSuccessSnackbar(context, "Successfully connected to server");
-        context.push("/login");
+        context.go("/login");
       } catch (e) {
         showErrorSnackbar(context, "Failed to connect to server");
       }

@@ -45,7 +45,7 @@ void showAddMenu(BuildContext context, GlobalKey addButtonKey) {
     PopupMenuItem(
       value: 0,
       child: Text("Add Manual Receipt"),
-      onTap: () => context.push("/receipts/add"),
+      onTap: () => context.go("/receipts/add"),
     ),
     PopupMenuItem(
       value: 1,

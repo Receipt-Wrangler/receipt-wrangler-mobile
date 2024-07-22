@@ -240,14 +240,14 @@ class ReceiptBottomSheetBuilder {
     }
     await Future.wait(imageFutures);
 
-    context.push("/receipts/${receipt!.id}/view");
+    context.go("/receipts/${receipt!.id}/view");
   }
 
   Future<void> updateReceipt(api.UpsertReceiptCommand receiptToUpdate) async {
     var receipt = receiptModel.receipt;
     await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
     showSuccessSnackbar(context, "Receipt updated successfully");
-    context.push("/receipts/${receipt.id}/view");
+    context.go("/receipts/${receipt.id}/view");
   }
 
   Widget buildReceiptSubmitButton(String fullPath) {

@@ -73,30 +73,30 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       if (formState != WranglerFormState.add) {
         switch (indexSelected) {
           case 0:
-            context.push("/receipts/${receipt.id}/${formStateName}");
+            context.go("/receipts/${receipt.id}/${formStateName}");
             break;
           case 1:
-            context.push("/receipts/${receipt.id}/images/${formStateName}");
+            context.go("/receipts/${receipt.id}/images/${formStateName}");
             break;
           case 2:
-            context.push("/receipts/${receipt.id}/comments/${formStateName}");
+            context.go("/receipts/${receipt.id}/comments/${formStateName}");
             break;
           default:
-            context.push("/groups");
+            context.go("/groups");
         }
       } else {
         switch (indexSelected) {
           case 0:
-            context.push("/receipts/${formStateName}");
+            context.go("/receipts/${formStateName}");
             break;
           case 1:
-            context.push("/receipts/images/${formStateName}");
+            context.go("/receipts/images/${formStateName}");
             break;
           case 2:
-            context.push("/receipts/comments/${formStateName}");
+            context.go("/receipts/comments/${formStateName}");
             break;
           default:
-            context.push("/groups");
+            context.go("/groups");
         }
       }
     }

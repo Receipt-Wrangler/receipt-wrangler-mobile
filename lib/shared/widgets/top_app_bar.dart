@@ -51,7 +51,7 @@ class _TopAppBar extends State<TopAppBar> {
           logoutCommand: api.LogoutCommand(refreshToken: refreshToken ?? ""));
       await authModel.purgeTokens();
       showSuccessSnackbar(context, "Successfully logged out");
-      context.push("/login");
+      context.go("/login");
     } catch (e) {
       showErrorSnackbar(context, e as dynamic);
     }
@@ -71,9 +71,7 @@ class _TopAppBar extends State<TopAppBar> {
             return;
           }
 
-          print("ran");
-          print(widget.leadingArrowPop);
-          context.push(widget.leadingArrowRedirect ?? "/",
+          context.go(widget.leadingArrowRedirect ?? "/",
               extra: widget.leadingArrowExtra);
         },
       );
