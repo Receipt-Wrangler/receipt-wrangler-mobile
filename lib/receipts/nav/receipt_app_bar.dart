@@ -35,6 +35,7 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     var formState = getFormState(uri.toString());
     List<Widget> actions = [...widget.actions ?? []];
 
+    // TODO: fix add redirect
     return Consumer<ReceiptModel>(
         builder: (context, receiptModel, child) => TopAppBar(
               titleText: getTitleText(formState, receiptModel.receipt.name),
