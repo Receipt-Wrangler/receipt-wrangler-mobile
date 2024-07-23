@@ -53,7 +53,41 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
 
   Widget buildSortFilterBar() {
     return Row(
-      children: [buildSortChip()],
+      children: [
+        buildSortChip(),
+        SizedBox(
+          width: 4,
+        ),
+        buildSortDirectionChip()
+      ],
+    );
+  }
+
+  Widget buildSortDirectionChip() {
+    var direction =
+        Provider.of<ReceiptListModel>(context, listen: false).sortDirection;
+    return PopupMenuButton(
+      child: Chip(
+        label: Text(
+            direction == api.SortDirection.asc ? "Ascending" : "Descending"),
+      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            child: Text("Sort Ascending"),
+            value: api.SortDirection.asc,
+          ),
+          PopupMenuItem(
+            child: Text("Sort Descending"),
+            value: api.SortDirection.desc,
+          ),
+        ];
+      },
+      onSelected: (value) {
+        var model = Provider.of<ReceiptListModel>(context, listen: false);
+        model.setSortDirection(value, false);
+        _pagingController.refresh();
+      },
     );
   }
 

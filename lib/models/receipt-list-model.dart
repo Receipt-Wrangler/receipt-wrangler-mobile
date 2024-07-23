@@ -11,12 +11,16 @@ class ReceiptListModel extends ChangeNotifier {
 
   int get page => _page;
 
+  SortDirection _sortDirection = SortDirection.desc;
+
+  SortDirection get sortDirection => _sortDirection;
+
   ReceiptPagedRequestCommand get receiptPagedRequestCommand =>
       ReceiptPagedRequestCommand(
           page: _page,
           pageSize: 10,
           orderBy: _orderBy,
-          sortDirection: SortDirection.desc,
+          sortDirection: _sortDirection,
           filter: ReceiptPagedRequestFilter());
 
   void setOrderBy(String orderBy, bool notify) {
@@ -28,6 +32,13 @@ class ReceiptListModel extends ChangeNotifier {
 
   void setPage(int page, bool notify) {
     _page = page;
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void setSortDirection(SortDirection sortDirection, bool notify) {
+    _sortDirection = sortDirection;
     if (notify) {
       notifyListeners();
     }
