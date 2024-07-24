@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 
 import '../../models/receipt_model.dart';
@@ -121,7 +121,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           ),
         ),
         Expanded(
-            child: amountField("Amount", amountName, item.amount, formState)),
+            child: amountField(
+                context, "Amount", amountName, item.amount, formState)),
         Expanded(
           child: itemStatusField("Status", statusName, item.status, formState),
         ),

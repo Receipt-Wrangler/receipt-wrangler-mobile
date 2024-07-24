@@ -119,7 +119,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
 
     var user = userModel.getUserById(widget.data.paidByUserId.toString());
     var amount = double.parse(widget.data.amount);
-    var formattedAmount = formatCurrency(amount);
+    var formattedAmount = formatCurrency(context, amount);
     var formattedDate =
         formatDate(defaultDateFormat, DateTime.parse(widget.data.date));
 
