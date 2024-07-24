@@ -19,15 +19,20 @@ class _GroupList extends State<GroupList> {
 
   @override
   Widget build(BuildContext context) {
-    var groupProvider = Provider.of<GroupModel>(context, listen: true);
+    late final groupProvider = Provider.of<GroupModel>(context, listen: true);
 
     List<Widget> buildGroupCards() {
       var widgets = <Widget>[];
-      for (int i = 0; i < groupProvider.groups.length; i++) {
-        widgets.add(GroupListCard(
-            group: groupProvider.groups[i], onGroupTap: onGroupTap));
+      var activeGroups = groupProvider.groups
+          .where((group) => group.status == api.GroupStatus.ACTIVE)
+          .toList();
 
-        if (i < groupProvider.groups.length - 1) {
+      for (int i = 0; i < activeGroups.length; i++) {
+        var group = activeGroups[i];
+
+        widgets.add(GroupListCard(group: group, onGroupTap: onGroupTap));
+
+        if (i < activeGroups.length - 1) {
           widgets.add(const Divider());
         }
       }
