@@ -16,8 +16,10 @@ import '../../models/category_model.dart';
 import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
+import '../../shared/functions/forms.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/functions/status_field.dart';
+import '../../shared/widgets/audit_detail_section.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -209,16 +211,6 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildHeaderText(String headerText) {
-    return Text(
-      headerText,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
   Widget buildDetailsHeader() {
     return Row(
       children: [
@@ -364,6 +356,8 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          AuditDetailSection(entity: receipt),
+          textFieldSpacing,
           buildDetailsHeader(),
           textFieldSpacing,
           buildNameField(),
