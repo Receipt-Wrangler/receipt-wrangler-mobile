@@ -15,6 +15,8 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
+import '../../../models/system_settings_model.dart';
+
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
 
@@ -62,9 +64,11 @@ class _Login extends State<AuthForm> {
         Provider.of<UserPreferencesModel>(context, listen: false);
     var categoryModel = Provider.of<CategoryModel>(context, listen: false);
     var tagModel = Provider.of<TagModel>(context, listen: false);
+    var systemSettingsModel =
+        Provider.of<SystemSettingsModel>(context, listen: false);
 
     await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
-        categoryModel, tagModel, appData);
+        categoryModel, tagModel, systemSettingsModel, appData);
     showSuccessSnackbar(context, "Successfully logged in!");
     context.go("/groups");
   }

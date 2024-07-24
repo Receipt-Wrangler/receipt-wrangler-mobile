@@ -8,6 +8,7 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 import '../models/auth_model.dart';
+import '../models/system_settings_model.dart';
 
 Future<String?> protectedRouteRedirect(
     BuildContext context, String? redirect) async {
@@ -19,9 +20,17 @@ Future<String?> protectedRouteRedirect(
       Provider.of<UserPreferencesModel>(context, listen: false);
   var categoryModel = Provider.of<CategoryModel>(context, listen: false);
   var tagModel = Provider.of<TagModel>(context, listen: false);
+  var systemSettingsModel =
+      Provider.of<SystemSettingsModel>(context, listen: false);
 
-  var tokensValid = await refreshTokens(authModelProvider, groupModel,
-      userModel, userPreferencesModel, categoryModel, tagModel);
+  var tokensValid = await refreshTokens(
+      authModelProvider,
+      groupModel,
+      userModel,
+      userPreferencesModel,
+      categoryModel,
+      tagModel,
+      systemSettingsModel);
   var redirectRoute = redirect ?? "/";
 
   if (tokensValid) {
@@ -41,9 +50,17 @@ Future<String?> unprotectedRouteRedirect(
       Provider.of<UserPreferencesModel>(context, listen: false);
   var categoryModel = Provider.of<CategoryModel>(context, listen: false);
   var tagModel = Provider.of<TagModel>(context, listen: false);
+  var systemSettingsModel =
+      Provider.of<SystemSettingsModel>(context, listen: false);
 
-  var tokensValid = await refreshTokens(authModelProvider, groupModel,
-      userModel, userPreferencesModel, categoryModel, tagModel);
+  var tokensValid = await refreshTokens(
+      authModelProvider,
+      groupModel,
+      userModel,
+      userPreferencesModel,
+      categoryModel,
+      tagModel,
+      systemSettingsModel);
   var redirectRoute = redirect ?? "/";
 
   if (tokensValid) {

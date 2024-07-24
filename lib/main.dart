@@ -39,6 +39,7 @@ import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import 'api.dart' as api;
 import 'models/context_model.dart';
+import 'models/system_settings_model.dart';
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -49,14 +50,15 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AuthModel()),
       ChangeNotifierProvider(create: (_) => CategoryModel()),
+      ChangeNotifierProvider(create: (_) => ContextModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
       ChangeNotifierProvider(create: (_) => LoadingModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => SystemSettingsModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
       ChangeNotifierProvider(create: (_) => UserPreferencesModel()),
-      ChangeNotifierProvider(create: (_) => ContextModel()),
     ],
     child: const ReceiptWrangler(),
   ));
@@ -219,6 +221,8 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
+  late final systemSettingsModel =
+      Provider.of<SystemSettingsModel>(context, listen: false);
   late final userPreferencesModel =
       Provider.of<UserPreferencesModel>(context, listen: false);
 
@@ -245,7 +249,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
 
     Timer.periodic(const Duration(minutes: 15), (timer) async {
       await refreshTokens(authModel, groupModel, userModel,
-          userPreferencesModel, categoryModel, tagModel,
+          userPreferencesModel, categoryModel, tagModel, systemSettingsModel,
           force: true);
     });
   }
@@ -293,7 +297,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   Widget build(BuildContext context) {
     authModel.initializeAuth();
     var future = refreshTokens(authModel, groupModel, userModel,
-        userPreferencesModel, categoryModel, tagModel);
+        userPreferencesModel, categoryModel, tagModel, systemSettingsModel);
 
     return FutureBuilder(
       future: future,
@@ -328,7 +332,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   void _onResumed() async {
     print("resumed");
     await refreshTokens(authModel, groupModel, userModel, userPreferencesModel,
-        categoryModel, tagModel);
+        categoryModel, tagModel, systemSettingsModel);
   }
 
   void _onInactive() => print('inactive');
