@@ -53,6 +53,14 @@ class _ReceiptForm extends State<ReceiptForm> {
     groupId = modifiedReceipt.groupId;
   }
 
+  Widget buildAuditDetailSection() {
+    if (formState == WranglerFormState.add) {
+      return SizedBox.shrink();
+    }
+
+    return AuditDetailSection(entity: receipt);
+  }
+
   Widget buildNameField() {
     return FormBuilderTextField(
       name: "name",
@@ -356,7 +364,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          AuditDetailSection(entity: receipt),
+          buildAuditDetailSection(),
           textFieldSpacing,
           buildDetailsHeader(),
           textFieldSpacing,
