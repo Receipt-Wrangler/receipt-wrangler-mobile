@@ -8,6 +8,7 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
+import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
@@ -91,7 +92,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   Widget getDateText() {
-    var date = DateTime.parse(widget.data.date);
+    var date = DateTime.parse(widget.data.createdAt ?? "");
     DateFormat format = DateFormat("MMM d");
     var formattedDate = format.format(date);
     var formattedDateParts = formattedDate.split(" ");
@@ -119,9 +120,11 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     var user = userModel.getUserById(widget.data.paidByUserId.toString());
     var amount = double.parse(widget.data.amount);
     var formattedAmount = formatCurrency(amount);
+    var formattedDate =
+        formatDate(defaultDateFormat, DateTime.parse(widget.data.date));
 
     return Text(
-        "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText}");
+        "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText} on ${formattedDate}");
   }
 
   Widget buildListTile() {
@@ -133,7 +136,6 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         subtitle: getSubtitleText(),
         leading: getLeadingWidget(),
         trailing: getStatusText(),
-        contentPadding: EdgeInsets.zero,
         onTap: () => navigateToReceipt(WranglerFormState.view));
   }
 
