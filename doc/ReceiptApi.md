@@ -420,7 +420,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateReceipt**
-> updateReceipt(receiptId, upsertReceiptCommand)
+> Receipt updateReceipt(receiptId, upsertReceiptCommand)
 
 Update receipt
 
@@ -441,7 +441,8 @@ final receiptId = 56; // int | Id of receipt to get
 final upsertReceiptCommand = UpsertReceiptCommand(); // UpsertReceiptCommand | Receipt to update
 
 try {
-    api_instance.updateReceipt(receiptId, upsertReceiptCommand);
+    final result = api_instance.updateReceipt(receiptId, upsertReceiptCommand);
+    print(result);
 } catch (e) {
     print('Exception when calling ReceiptApi->updateReceipt: $e\n');
 }
@@ -456,7 +457,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**Receipt**](Receipt.md)
 
 ### Authorization
 
@@ -465,7 +466,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
