@@ -19,7 +19,7 @@ Widget amountField(
   var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
   var amountMask = new CurrencyTextInputFormatter(
-      NumberFormat.compactCurrency(decimalDigits: 2),
+      NumberFormat.decimalPatternDigits(decimalDigits: 2),
       enableNegative: false);
   return FormBuilderTextField(
     name: fieldName,
