@@ -7,7 +7,7 @@ import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amountField.dart';
+import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -16,8 +16,10 @@ import '../../models/category_model.dart';
 import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
+import '../../shared/functions/forms.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/functions/status_field.dart';
+import '../../shared/widgets/audit_detail_section.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -51,6 +53,14 @@ class _ReceiptForm extends State<ReceiptForm> {
     groupId = modifiedReceipt.groupId;
   }
 
+  Widget buildAuditDetailSection() {
+    if (formState == WranglerFormState.add) {
+      return SizedBox.shrink();
+    }
+
+    return AuditDetailSection(entity: receipt);
+  }
+
   Widget buildNameField() {
     return FormBuilderTextField(
       name: "name",
@@ -62,8 +72,8 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAmountField() {
-    return amountField(
-        "Amount", "amount", modifiedReceipt.amount.toString(), formState);
+    return amountField(context, "Amount", "amount",
+        modifiedReceipt.amount.toString(), formState);
   }
 
   Widget buildDateField() {
@@ -209,16 +219,6 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildHeaderText(String headerText) {
-    return Text(
-      headerText,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
   Widget buildDetailsHeader() {
     return Row(
       children: [
@@ -294,7 +294,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                       validator: FormBuilderValidators.required(),
                     ),
                     textFieldSpacing,
-                    amountField("Amount", "amount", "", formState),
+                    amountField(context, "Amount", "amount", "", formState),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -364,6 +364,8 @@ class _ReceiptForm extends State<ReceiptForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          buildAuditDetailSection(),
+          textFieldSpacing,
           buildDetailsHeader(),
           textFieldSpacing,
           buildNameField(),

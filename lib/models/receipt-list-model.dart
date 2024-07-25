@@ -1,23 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:receipt_wrangler_mobile/constants/receipts.dart';
 
 class ReceiptListModel extends ChangeNotifier {
-  ReceiptPagedRequestCommand _receiptPagedRequestCommand =
-      ReceiptPagedRequestCommand(
-    page: 1,
-    pageSize: 10,
-    orderBy: "date",
-    sortDirection: SortDirection.desc,
-    filter: ReceiptPagedRequestFilter(),
-  );
+  String _orderBy = receiptSortOptions.first.columnName;
+
+  String get orderBy => _orderBy;
+
+  int _page = 1;
+
+  int get page => _page;
+
+  SortDirection _sortDirection = SortDirection.desc;
+
+  SortDirection get sortDirection => _sortDirection;
 
   ReceiptPagedRequestCommand get receiptPagedRequestCommand =>
-      _receiptPagedRequestCommand;
+      ReceiptPagedRequestCommand(
+          page: _page,
+          pageSize: 10,
+          orderBy: _orderBy,
+          sortDirection: _sortDirection,
+          filter: ReceiptPagedRequestFilter());
 
-  void setReceiptPagedRequestCommand(
-      ReceiptPagedRequestCommand command, bool notify) {
-    _receiptPagedRequestCommand = command;
+  void setOrderBy(String orderBy, bool notify) {
+    _orderBy = orderBy;
+    if (notify) {
+      notifyListeners();
+    }
+  }
 
+  void setPage(int page, bool notify) {
+    _page = page;
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void setSortDirection(SortDirection sortDirection, bool notify) {
+    _sortDirection = sortDirection;
     if (notify) {
       notifyListeners();
     }

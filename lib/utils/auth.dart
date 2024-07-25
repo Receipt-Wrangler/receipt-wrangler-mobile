@@ -7,6 +7,8 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 
+import '../models/system_settings_model.dart';
+
 Future<bool> refreshTokens(
     AuthModel authModel,
     GroupModel groupModel,
@@ -14,6 +16,7 @@ Future<bool> refreshTokens(
     UserPreferencesModel userPreferencesModel,
     CategoryModel categoryModel,
     TagModel tagModel,
+    SystemSettingsModel systemSettingsModel,
     {bool force = false}) async {
   var jwt = await authModel.getJwt();
   var refreshToken = await authModel.getRefreshToken();
@@ -59,7 +62,7 @@ Future<bool> refreshTokens(
     try {
       var appData = await UserApi().getAppData() as AppData;
       await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
-          categoryModel, tagModel, appData);
+          categoryModel, tagModel, systemSettingsModel, appData);
     } catch (e) {
       print(e);
       print("failed to set token");
@@ -101,6 +104,7 @@ Future<void> storeAppData(
     UserPreferencesModel userPreferencesModel,
     CategoryModel categoryModel,
     TagModel tagModel,
+    SystemSettingsModel systemSettingsModel,
     AppData appData) async {
   if (appData!.jwt!.isNotEmpty) {
     await authModel.setJwt(appData.jwt);
@@ -117,4 +121,5 @@ Future<void> storeAppData(
   userPreferencesModel.setUserPreferences(appData.userPreferences);
   categoryModel.setCategories(appData.categories);
   tagModel.setTags(appData.tags);
+  systemSettingsModel.setCurrencyDisplay(appData.currencyDisplay);
 }
