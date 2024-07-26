@@ -245,8 +245,11 @@ class ReceiptBottomSheetBuilder {
 
   Future<void> updateReceipt(api.UpsertReceiptCommand receiptToUpdate) async {
     var receipt = receiptModel.receipt;
-    await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
+    var updatedReceipt =
+        await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
     showSuccessSnackbar(context, "Receipt updated successfully");
+
+    receiptModel.setReceipt(updatedReceipt as api.Receipt, true);
     context.go("/receipts/${receipt.id}/view");
   }
 
