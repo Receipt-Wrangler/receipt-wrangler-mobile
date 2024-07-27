@@ -9,19 +9,16 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import '../../models/system_settings_model.dart';
 import '../../utils/forms.dart';
 
-Widget amountField(
-  BuildContext context,
-  String label,
-  String fieldName,
-  String initialAmount,
-  WranglerFormState formState,
-) {
+Widget amountField(BuildContext context, String label, String fieldName,
+    String initialAmount, WranglerFormState formState,
+    {Key? key}) {
   var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
   var amountMask = new CurrencyTextInputFormatter(
       NumberFormat.decimalPatternDigits(decimalDigits: 2),
       enableNegative: false);
   return FormBuilderTextField(
+    key: key,
     name: fieldName,
     decoration: InputDecoration(
         labelText: label, prefixText: systemSettingsModel.currencyDisplay),

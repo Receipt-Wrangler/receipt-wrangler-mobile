@@ -1,8 +1,10 @@
+// TODO: fix delete, and fix adding new items, fix broken amount owed
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
@@ -27,6 +29,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   var expandedUserMap = <int, bool>{};
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+  late final formKey =
+      Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
   Map<int, List<api.Item>> getUserItemMap() {
     var itemMap = <int, List<api.Item>>{};
@@ -84,7 +88,27 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     List<Widget> itemWidgets = [];
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
-      itemWidgets.add(buildItemRow(items[i]));
+      itemWidgets.add(buildItemRow(items[i], i));
+    }
+
+    if (formState != WranglerFormState.view) {
+      itemWidgets.add(textFieldSpacing);
+      itemWidgets.add(
+        ElevatedButton(
+          onPressed: () {
+            var newItems = [...widget.items];
+            newItems.add(api.Item(
+              name: "",
+              amount: "0.00",
+              chargedToUserId: items[0].chargedToUserId,
+              receiptId: receiptModel.receipt.id,
+              status: api.ItemStatus.OPEN,
+            ));
+            receiptModel.setItems(newItems);
+          },
+          child: const Text("Add Item"),
+        ),
+      );
     }
 
     return Column(
@@ -92,21 +116,31 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     );
   }
 
-  Widget buildItemRow(api.Item item) {
-    var index = widget.items.indexWhere((element) => element == item);
+  Widget buildItemRow(api.Item item, int index) {
     var itemName = "items.$index.name";
     var amountName = "items.$index.amount";
     var statusName = "items.$index.status";
 
+    var initialName =
+        formKey.currentState?.fields[itemName]?.value ?? item.name;
+    var initialAmount =
+        formKey.currentState?.fields[amountName]?.value ?? item.amount;
+    var initialStatus =
+        formKey.currentState?.fields[statusName]?.value ?? item.status;
+
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
+      var itemIndex = widget.items.indexOf(item);
+
       iconButton = IconButton(
           icon: Icon(Icons.delete, color: Colors.red),
           onPressed: () {
             var newItems = [...widget.items];
-            newItems.removeAt(index);
+            newItems.removeAt(itemIndex);
 
-            receiptModel.setItems(newItems);
+            setState(() {
+              receiptModel.setItems(newItems);
+            });
           });
     }
 
@@ -115,16 +149,21 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         Expanded(
           child: FormBuilderTextField(
             name: itemName,
-            initialValue: item.name,
+            initialValue: initialName,
             decoration: const InputDecoration(label: Text("Name")),
             readOnly: isFieldReadOnly(formState),
           ),
         ),
         Expanded(
             child: amountField(
-                context, "Amount", amountName, item.amount, formState)),
+                context, "Amount", amountName, initialAmount, formState)),
         Expanded(
-          child: itemStatusField("Status", statusName, item.status, formState),
+          child: itemStatusField(
+            "Status",
+            statusName,
+            initialStatus,
+            formState,
+          ),
         ),
         iconButton
       ],

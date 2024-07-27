@@ -22,13 +22,11 @@ Widget receiptStatusField(
   );
 }
 
-Widget itemStatusField(
-  String label,
-  String fieldName,
-  api.ItemStatus initialValue,
-  WranglerFormState formState,
-) {
+Widget itemStatusField(String label, String fieldName,
+    api.ItemStatus initialValue, WranglerFormState formState,
+    {Key? key}) {
   return FormBuilderDropdown(
+    key: key,
     name: fieldName,
     decoration: InputDecoration(labelText: label),
     items: buildItemStatusDropDownMenuItems(),

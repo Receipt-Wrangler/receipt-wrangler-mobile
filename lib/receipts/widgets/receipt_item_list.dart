@@ -11,7 +11,6 @@ class ReceiptItemField extends FormBuilderField<List<api.Item>> {
   }) : super(
           key: Key(name),
           name: name,
-          initialValue: initialValue ?? [],
           builder: (FormFieldState<List<api.Item>?> field) {
             return InputDecorator(
               decoration: InputDecoration(labelText: label),
