@@ -209,14 +209,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildReceiptItemList() {
-    return Consumer<ReceiptModel>(
-      builder: (context, consumerModel, child) {
-        return ReceiptItemField(
-            name: "items",
-            label: "Shared With",
-            initialValue: consumerModel.items);
-      },
-    );
+    return ReceiptItemField();
   }
 
   Widget buildDetailsHeader() {
