@@ -354,6 +354,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: formKey,
+      clearValueOnUnregister: true,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
