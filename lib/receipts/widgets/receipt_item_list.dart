@@ -46,7 +46,7 @@ class _ReceiptItemFieldState extends State<ReceiptItemField> {
     return Consumer<ReceiptModel>(
       builder: (context, consumerModel, child) {
         return InputDecorator(
-          decoration: InputDecoration(labelText: "Shared With"),
+          decoration: const InputDecoration(labelText: "Shared With"),
           child: ReceiptItemItems(
             items: consumerModel.items ?? [],
           ),
