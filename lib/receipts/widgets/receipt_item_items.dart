@@ -37,6 +37,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.items.length != widget.items.length) {
+      // TODO: need a better way to uniquely identify items... index based is not reliable
       for (var i = 0; i < widget.items.length; i++) {
         var item = widget.items[i];
         var itemName = "items.$i.name";
@@ -118,6 +119,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       itemWidgets.add(
         ElevatedButton(
           onPressed: () {
+            formKey.currentState?.save();
             var newItems = [...widget.items];
             newItems.add(api.Item(
               name: "",
@@ -126,7 +128,10 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               receiptId: receiptModel.receipt.id,
               status: api.ItemStatus.OPEN,
             ));
-            receiptModel.setItems(newItems);
+
+            setState(() {
+              receiptModel.setItems(newItems);
+            });
           },
           child: const Text("Add Item"),
         ),
@@ -150,6 +155,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var initialStatus =
         formKey.currentState?.fields[statusName]?.value ?? item.status;
 
+    print("initialAmount: $initialAmount");
+
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
       iconButton = IconButton(
@@ -168,7 +175,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       children: [
         Expanded(
           child: FormBuilderTextField(
-            key: UniqueKey(),
             name: itemName,
             initialValue: initialName,
             decoration: const InputDecoration(label: Text("Name")),
@@ -177,14 +183,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ),
         Expanded(
             child: amountField(
-                key: UniqueKey(),
-                context,
-                "Amount",
-                amountName,
-                initialAmount,
-                formState)),
+                context, "Amount", amountName, initialAmount, formState)),
         Expanded(
-          key: UniqueKey(),
           child: itemStatusField(
             "Status",
             statusName,
