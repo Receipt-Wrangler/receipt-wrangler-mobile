@@ -32,6 +32,25 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
+  @override
+  didUpdateWidget(ReceiptItemItems oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.items.length != widget.items.length) {
+      for (var i = 0; i < widget.items.length; i++) {
+        var item = widget.items[i];
+        var itemName = "items.$i.name";
+        var amountName = "items.$i.amount";
+        var statusName = "items.$i.status";
+
+        formKey.currentState?.fields[itemName]?.setValue(item.name);
+        formKey.currentState?.fields[amountName]?.setValue(item.amount);
+        formKey.currentState?.fields[statusName]?.setValue(item.status);
+        setState(() {});
+      }
+    }
+  }
+
   Map<int, List<api.Item>> getUserItemMap() {
     var itemMap = <int, List<api.Item>>{};
     for (var item in widget.items) {
@@ -88,7 +107,10 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     List<Widget> itemWidgets = [];
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
-      itemWidgets.add(buildItemRow(items[i], i));
+
+      var itemIndex = widget.items.indexOf(items[i]);
+
+      itemWidgets.add(buildItemRow(items[i], itemIndex));
     }
 
     if (formState != WranglerFormState.view) {
@@ -130,13 +152,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
-      var itemIndex = widget.items.indexOf(item);
-
       iconButton = IconButton(
           icon: Icon(Icons.delete, color: Colors.red),
           onPressed: () {
             var newItems = [...widget.items];
-            newItems.removeAt(itemIndex);
+            newItems.removeAt(index);
 
             setState(() {
               receiptModel.setItems(newItems);
@@ -148,6 +168,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       children: [
         Expanded(
           child: FormBuilderTextField(
+            key: UniqueKey(),
             name: itemName,
             initialValue: initialName,
             decoration: const InputDecoration(label: Text("Name")),
@@ -156,8 +177,14 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ),
         Expanded(
             child: amountField(
-                context, "Amount", amountName, initialAmount, formState)),
+                key: UniqueKey(),
+                context,
+                "Amount",
+                amountName,
+                initialAmount,
+                formState)),
         Expanded(
+          key: UniqueKey(),
           child: itemStatusField(
             "Status",
             statusName,
