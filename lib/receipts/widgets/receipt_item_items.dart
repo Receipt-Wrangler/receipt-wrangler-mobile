@@ -116,7 +116,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               receiptModel.setItems(newItems);
             });
           },
-          child: const Text("Add Item"),
+          child: const Text("Add Share"),
         ),
       );
     }
