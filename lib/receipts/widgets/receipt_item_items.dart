@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 
+import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
@@ -18,7 +19,7 @@ class ReceiptItemItems extends StatefulWidget {
     required this.items,
   });
 
-  final List<api.Item> items;
+  final List<FormItem> items;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -40,9 +41,9 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       // TODO: need a better way to uniquely identify items... index based is not reliable
       for (var i = 0; i < widget.items.length; i++) {
         var item = widget.items[i];
-        var itemName = "items.$i.name";
-        var amountName = "items.$i.amount";
-        var statusName = "items.$i.status";
+        var itemName = FormItem.buildItemNameName(item);
+        var amountName = FormItem.buildItemAmountName(item);
+        var statusName = FormItem.buildItemStatusName(item);
 
         formKey.currentState?.fields[itemName]?.setValue(item.name);
         formKey.currentState?.fields[amountName]?.setValue(item.amount);
@@ -52,8 +53,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     }
   }
 
-  Map<int, List<api.Item>> getUserItemMap() {
-    var itemMap = <int, List<api.Item>>{};
+  Map<int, List<FormItem>> getUserItemMap() {
+    var itemMap = <int, List<FormItem>>{};
     for (var item in widget.items) {
       if (itemMap.containsKey(item.chargedToUserId)) {
         itemMap[item.chargedToUserId]!.add(item);
@@ -65,7 +66,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return itemMap;
   }
 
-  Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
+  Widget buildUserExpansionList(Map<int, List<FormItem>> userItemMap) {
     var expansionList = ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
@@ -82,7 +83,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return expansionList;
   }
 
-  ExpansionPanel buildExpansionPanel(int userId, List<api.Item> items) {
+  ExpansionPanel buildExpansionPanel(int userId, List<FormItem> items) {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
@@ -104,7 +105,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ));
   }
 
-  Widget buildExpansionPanelBody(List<api.Item> items) {
+  Widget buildExpansionPanelBody(List<FormItem> items) {
     List<Widget> itemWidgets = [];
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
@@ -121,13 +122,14 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           onPressed: () {
             formKey.currentState?.save();
             var newItems = [...widget.items];
-            newItems.add(api.Item(
+            var newItem = api.Item(
               name: "",
               amount: "0.00",
               chargedToUserId: items[0].chargedToUserId,
               receiptId: receiptModel.receipt.id,
               status: api.ItemStatus.OPEN,
-            ));
+            );
+            newItems.add(FormItem.fromItem(newItem));
 
             setState(() {
               receiptModel.setItems(newItems);
@@ -143,10 +145,10 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     );
   }
 
-  Widget buildItemRow(api.Item item, int index) {
-    var itemName = "items.$index.name";
-    var amountName = "items.$index.amount";
-    var statusName = "items.$index.status";
+  Widget buildItemRow(FormItem item, int index) {
+    var itemName = FormItem.buildItemNameName(item);
+    var amountName = FormItem.buildItemAmountName(item);
+    var statusName = FormItem.buildItemStatusName(item);
 
     var initialName =
         formKey.currentState?.fields[itemName]?.value ?? item.name;
@@ -170,10 +172,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             });
           });
     }
-
+    // TODO: need to fix new item data being wiped out when adding
     return Row(
       children: [
         Expanded(
+          key: Key(itemName),
           child: FormBuilderTextField(
             name: itemName,
             initialValue: initialName,
@@ -182,9 +185,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           ),
         ),
         Expanded(
+            key: Key(amountName),
             child: amountField(
                 context, "Amount", amountName, initialAmount, formState)),
         Expanded(
+          key: Key(statusName),
           child: itemStatusField(
             "Status",
             statusName,
