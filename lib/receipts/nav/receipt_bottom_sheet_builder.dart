@@ -4,6 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/interfaces/form_item.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api.dart' as api;
@@ -171,12 +172,16 @@ class ReceiptBottomSheetBuilder {
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
 
+      var itemName = FormItem.buildItemNameName(item);
+      var amountName = FormItem.buildItemAmountName(item);
+      var statusName = FormItem.buildItemStatusName(item);
+
       var command = api.UpsertItemCommand(
-        amount: form["items.${i.toString()}.amount"],
+        amount: form[amountName],
         chargedToUserId: item.chargedToUserId,
-        name: form["items.${i.toString()}.name"],
+        name: form[itemName],
         receiptId: item?.receiptId ?? 0,
-        status: form["items.${i.toString()}.status"],
+        status: form[statusName],
       );
 
       upsertItems.add(command);
