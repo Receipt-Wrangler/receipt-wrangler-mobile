@@ -33,26 +33,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
-  @override
-  didUpdateWidget(ReceiptItemItems oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.items.length != widget.items.length) {
-      // TODO: need a better way to uniquely identify items... index based is not reliable
-      for (var i = 0; i < widget.items.length; i++) {
-        var item = widget.items[i];
-        var itemName = FormItem.buildItemNameName(item);
-        var amountName = FormItem.buildItemAmountName(item);
-        var statusName = FormItem.buildItemStatusName(item);
-
-        formKey.currentState?.fields[itemName]?.setValue(item.name);
-        formKey.currentState?.fields[amountName]?.setValue(item.amount);
-        formKey.currentState?.fields[statusName]?.setValue(item.status);
-        setState(() {});
-      }
-    }
-  }
-
   Map<int, List<FormItem>> getUserItemMap() {
     var itemMap = <int, List<FormItem>>{};
     for (var item in widget.items) {
@@ -110,7 +90,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
 
-      var itemIndex = widget.items.indexOf(items[i]);
+      var itemIndex =
+          widget.items.indexWhere((item) => item.formId == items[i].formId);
 
       itemWidgets.add(buildItemRow(items[i], itemIndex));
     }
@@ -157,8 +138,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var initialStatus =
         formKey.currentState?.fields[statusName]?.value ?? item.status;
 
-    print("initialAmount: $initialAmount");
-
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
       iconButton = IconButton(
@@ -166,6 +145,9 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           onPressed: () {
             var newItems = [...widget.items];
             newItems.removeAt(index);
+
+            print(index);
+            print(newItems);
 
             setState(() {
               receiptModel.setItems(newItems);
