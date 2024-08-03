@@ -12,6 +12,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
+import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/context_model.dart';
 import '../../models/receipt_model.dart';
@@ -209,14 +210,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildReceiptItemList() {
-    return Consumer<ReceiptModel>(
-      builder: (context, consumerModel, child) {
-        return ReceiptItemField(
-            name: "items",
-            label: "Shared With",
-            initialValue: consumerModel.items);
-      },
-    );
+    return ReceiptItemField();
   }
 
   Widget buildDetailsHeader() {
@@ -308,7 +302,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                               }
 
                               var items = [...receiptModel.items];
-                              items.add(api.Item(
+                              var newItem = api.Item(
                                 name: addSharesFormKey
                                     .currentState!.fields["name"]!.value,
                                 amount: addSharesFormKey
@@ -317,7 +311,9 @@ class _ReceiptForm extends State<ReceiptForm> {
                                     .fields["chargedToUserId"]!.value,
                                 receiptId: receipt?.id ?? 0,
                                 status: api.ItemStatus.OPEN,
-                              ));
+                              );
+
+                              items.add(FormItem.fromItem(newItem));
 
                               receiptModel.setItems(items);
                               setState(() {

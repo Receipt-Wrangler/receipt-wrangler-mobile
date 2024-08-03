@@ -35,7 +35,7 @@ class _AuditDetailSectionState extends State<AuditDetailSection> {
 
   Widget buildAddedByRow() {
     var id = widget.entity.createdBy;
-    if (id == null) {
+    if (id == null || id == 0) {
       return SizedBox.shrink();
     }
 

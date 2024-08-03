@@ -1,12 +1,15 @@
+// TODO: fix delete, and fix adding new items, fix broken amount owed
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 
+import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
@@ -16,7 +19,7 @@ class ReceiptItemItems extends StatefulWidget {
     required this.items,
   });
 
-  final List<api.Item> items;
+  final List<FormItem> items;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -27,9 +30,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   var expandedUserMap = <int, bool>{};
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+  late final formKey =
+      Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
-  Map<int, List<api.Item>> getUserItemMap() {
-    var itemMap = <int, List<api.Item>>{};
+  Map<int, List<FormItem>> getUserItemMap() {
+    var itemMap = <int, List<FormItem>>{};
     for (var item in widget.items) {
       if (itemMap.containsKey(item.chargedToUserId)) {
         itemMap[item.chargedToUserId]!.add(item);
@@ -41,7 +46,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return itemMap;
   }
 
-  Widget buildUserExpansionList(Map<int, List<api.Item>> userItemMap) {
+  Widget buildUserExpansionList(Map<int, List<FormItem>> userItemMap) {
     var expansionList = ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
@@ -58,7 +63,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return expansionList;
   }
 
-  ExpansionPanel buildExpansionPanel(int userId, List<api.Item> items) {
+  ExpansionPanel buildExpansionPanel(int userId, List<FormItem> items) {
     var userModel = Provider.of<UserModel>(context, listen: false);
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
@@ -80,11 +85,40 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ));
   }
 
-  Widget buildExpansionPanelBody(List<api.Item> items) {
+  Widget buildExpansionPanelBody(List<FormItem> items) {
     List<Widget> itemWidgets = [];
     for (var i = 0; i < items.length; i++) {
       itemWidgets.add(textFieldSpacing);
-      itemWidgets.add(buildItemRow(items[i]));
+
+      var itemIndex =
+          widget.items.indexWhere((item) => item.formId == items[i].formId);
+
+      itemWidgets.add(buildItemRow(items[i], itemIndex));
+    }
+
+    if (formState != WranglerFormState.view) {
+      itemWidgets.add(textFieldSpacing);
+      itemWidgets.add(
+        ElevatedButton(
+          onPressed: () {
+            formKey.currentState?.save();
+            var newItems = [...widget.items];
+            var newItem = api.Item(
+              name: "",
+              amount: "0.00",
+              chargedToUserId: items[0].chargedToUserId,
+              receiptId: receiptModel.receipt.id,
+              status: api.ItemStatus.OPEN,
+            );
+            newItems.add(FormItem.fromItem(newItem));
+
+            setState(() {
+              receiptModel.setItems(newItems);
+            });
+          },
+          child: const Text("Add Item"),
+        ),
+      );
     }
 
     return Column(
@@ -92,11 +126,17 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     );
   }
 
-  Widget buildItemRow(api.Item item) {
-    var index = widget.items.indexWhere((element) => element == item);
-    var itemName = "items.$index.name";
-    var amountName = "items.$index.amount";
-    var statusName = "items.$index.status";
+  Widget buildItemRow(FormItem item, int index) {
+    var itemName = FormItem.buildItemNameName(item);
+    var amountName = FormItem.buildItemAmountName(item);
+    var statusName = FormItem.buildItemStatusName(item);
+
+    var initialName =
+        formKey.currentState?.fields[itemName]?.value ?? item.name;
+    var initialAmount =
+        formKey.currentState?.fields[amountName]?.value ?? item.amount;
+    var initialStatus =
+        formKey.currentState?.fields[statusName]?.value ?? item.status;
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
@@ -106,25 +146,38 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             var newItems = [...widget.items];
             newItems.removeAt(index);
 
-            receiptModel.setItems(newItems);
+            print(index);
+            print(newItems);
+
+            setState(() {
+              receiptModel.setItems(newItems);
+            });
           });
     }
-
+    // TODO: need to fix new item data being wiped out when adding
     return Row(
       children: [
         Expanded(
+          key: Key(itemName),
           child: FormBuilderTextField(
             name: itemName,
-            initialValue: item.name,
+            initialValue: initialName,
             decoration: const InputDecoration(label: Text("Name")),
             readOnly: isFieldReadOnly(formState),
           ),
         ),
         Expanded(
+            key: Key(amountName),
             child: amountField(
-                context, "Amount", amountName, item.amount, formState)),
+                context, "Amount", amountName, initialAmount, formState)),
         Expanded(
-          child: itemStatusField("Status", statusName, item.status, formState),
+          key: Key(statusName),
+          child: itemStatusField(
+            "Status",
+            statusName,
+            initialStatus,
+            formState,
+          ),
         ),
         iconButton
       ],
