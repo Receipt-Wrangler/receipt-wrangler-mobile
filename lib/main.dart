@@ -33,6 +33,7 @@ import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dar
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
 import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
 import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
+import 'package:receipt_wrangler_mobile/search/widgets/searchbar.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -218,6 +219,7 @@ final _router = GoRouter(
               ? const GroupBottomNav()
               : const GroupSelectBottomNav(),
           child: child,
+          bottomSheetWidget: const WranglerSearchBar(),
         );
       },
       routes: [
