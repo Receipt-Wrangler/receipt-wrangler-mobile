@@ -78,7 +78,6 @@ class _GroupBottomNav extends State<GroupBottomNav> {
       const NavigationDestination(
         icon: Icon(Icons.search),
         label: "Search",
-        enabled: false,
       ),
     ];
 

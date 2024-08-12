@@ -31,6 +31,7 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builde
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
+import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -204,6 +205,19 @@ final _router = GoRouter(
             builder: (context, state) => const ReceiptFormScreen(),
           ),
         ]),
+    ShellRoute(
+      builder: (context, state, child) {
+        return ScreenWrapper(
+          child: child,
+        );
+      },
+      routes: [
+        GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchScreen(),
+        ),
+      ],
+    )
   ],
 );
 
