@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:receipt_wrangler_mobile/constants/search.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
@@ -34,7 +35,7 @@ class _GroupBottomNav extends State<GroupBottomNav> {
           context.go("/groups/$groupId/receipts");
           break;
         case 3:
-          context.go("/search");
+          context.go("/search", extra: {"from": fromGroupBottomNav});
           break;
         default:
           context.go("/groups");

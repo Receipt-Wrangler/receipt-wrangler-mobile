@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 
+import '../../../constants/search.dart';
 import '../../../shared/functions/show_add_menu.dart';
 
 class GroupSelectBottomNav extends StatefulWidget {
@@ -28,7 +29,7 @@ class _GroupSelectBottomNav extends State<GroupSelectBottomNav> {
           showAddMenu(context, addButtonKey);
           break;
         case 2:
-          context.go("/search");
+          context.go("/search", extra: {"from": fromGroupSelectBottomNav});
           break;
         default:
           context.go("/groups");

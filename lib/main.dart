@@ -31,6 +31,7 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builde
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
+import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
 import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
@@ -39,6 +40,7 @@ import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import 'api.dart' as api;
+import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
 
@@ -207,7 +209,14 @@ final _router = GoRouter(
         ]),
     ShellRoute(
       builder: (context, state, child) {
+        var extra = state.extra as Map<String, dynamic>;
+        var from = extra["from"];
+
         return ScreenWrapper(
+          appBarWidget: SearchAppBar(),
+          bottomNavigationBarWidget: from == fromGroupBottomNav
+              ? const GroupBottomNav()
+              : const GroupSelectBottomNav(),
           child: child,
         );
       },
