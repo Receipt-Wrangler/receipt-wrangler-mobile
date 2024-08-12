@@ -20,6 +20,7 @@ import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/models/search.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
@@ -59,6 +60,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => LoadingModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => SearchModel()),
       ChangeNotifierProvider(create: (_) => SystemSettingsModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
@@ -210,6 +212,9 @@ final _router = GoRouter(
         ]),
     ShellRoute(
       builder: (context, state, child) {
+        var searchModel = Provider.of<SearchModel>(context, listen: false);
+        searchModel.searchTermBehaviorSubject.add("");
+
         var extra = state.extra as Map<String, dynamic>;
         var from = extra["from"];
 
