@@ -24,6 +24,7 @@ class ReceiptProcessingSettings {
     this.url,
     this.key,
     this.model,
+    this.isVisionModel,
     this.ocrEngine,
     this.prompt,
     this.promptId,
@@ -93,6 +94,15 @@ class ReceiptProcessingSettings {
   ///
   String? model;
 
+  /// Is vision model
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isVisionModel;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -131,6 +141,7 @@ class ReceiptProcessingSettings {
      other.url == url &&
      other.key == key &&
      other.model == model &&
+     other.isVisionModel == isVisionModel &&
      other.ocrEngine == ocrEngine &&
      other.prompt == prompt &&
      other.promptId == promptId;
@@ -149,12 +160,13 @@ class ReceiptProcessingSettings {
     (url == null ? 0 : url!.hashCode) +
     (key == null ? 0 : key!.hashCode) +
     (model == null ? 0 : model!.hashCode) +
+    (isVisionModel == null ? 0 : isVisionModel!.hashCode) +
     (ocrEngine == null ? 0 : ocrEngine!.hashCode) +
     (prompt == null ? 0 : prompt!.hashCode) +
     (promptId == null ? 0 : promptId!.hashCode);
 
   @override
-  String toString() => 'ReceiptProcessingSettings[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, name=$name, description=$description, aiType=$aiType, url=$url, key=$key, model=$model, ocrEngine=$ocrEngine, prompt=$prompt, promptId=$promptId]';
+  String toString() => 'ReceiptProcessingSettings[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, name=$name, description=$description, aiType=$aiType, url=$url, key=$key, model=$model, isVisionModel=$isVisionModel, ocrEngine=$ocrEngine, prompt=$prompt, promptId=$promptId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -192,6 +204,11 @@ class ReceiptProcessingSettings {
       json[r'model'] = this.model;
     } else {
       json[r'model'] = null;
+    }
+    if (this.isVisionModel != null) {
+      json[r'isVisionModel'] = this.isVisionModel;
+    } else {
+      json[r'isVisionModel'] = null;
     }
     if (this.ocrEngine != null) {
       json[r'ocrEngine'] = this.ocrEngine;
@@ -241,6 +258,7 @@ class ReceiptProcessingSettings {
         url: mapValueOfType<String>(json, r'url'),
         key: mapValueOfType<String>(json, r'key'),
         model: mapValueOfType<String>(json, r'model'),
+        isVisionModel: mapValueOfType<bool>(json, r'isVisionModel'),
         ocrEngine: OcrEngine.fromJson(json[r'ocrEngine']),
         prompt: Prompt.fromJson(json[r'prompt']),
         promptId: mapValueOfType<int>(json, r'promptId'),

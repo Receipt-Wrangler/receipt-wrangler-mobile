@@ -23,11 +23,13 @@ class SystemTaskType {
 
   String toJson() => value;
 
+  static const META_ASSOCIATE_TASKS_TO_RECEIPT = SystemTaskType._(r'META_ASSOCIATE_TASKS_TO_RECEIPT');
   static const OCR_PROCESSING = SystemTaskType._(r'OCR_PROCESSING');
   static const CHAT_COMPLETION = SystemTaskType._(r'CHAT_COMPLETION');
   static const MAGIC_FILL = SystemTaskType._(r'MAGIC_FILL');
   static const QUICK_SCAN = SystemTaskType._(r'QUICK_SCAN');
   static const EMAIL_READ = SystemTaskType._(r'EMAIL_READ');
+  static const META_COMBINE_QUICK_SCAN = SystemTaskType._(r'META_COMBINE_QUICK_SCAN');
   static const EMAIL_UPLOAD = SystemTaskType._(r'EMAIL_UPLOAD');
   static const SYSTEM_EMAIL_CONNECTIVITY_CHECK = SystemTaskType._(r'SYSTEM_EMAIL_CONNECTIVITY_CHECK');
   static const RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK = SystemTaskType._(r'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK');
@@ -36,11 +38,13 @@ class SystemTaskType {
 
   /// List of all possible values in this [enum][SystemTaskType].
   static const values = <SystemTaskType>[
+    META_ASSOCIATE_TASKS_TO_RECEIPT,
     OCR_PROCESSING,
     CHAT_COMPLETION,
     MAGIC_FILL,
     QUICK_SCAN,
     EMAIL_READ,
+    META_COMBINE_QUICK_SCAN,
     EMAIL_UPLOAD,
     SYSTEM_EMAIL_CONNECTIVITY_CHECK,
     RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,
@@ -84,11 +88,13 @@ class SystemTaskTypeTypeTransformer {
   SystemTaskType? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
+        case r'META_ASSOCIATE_TASKS_TO_RECEIPT': return SystemTaskType.META_ASSOCIATE_TASKS_TO_RECEIPT;
         case r'OCR_PROCESSING': return SystemTaskType.OCR_PROCESSING;
         case r'CHAT_COMPLETION': return SystemTaskType.CHAT_COMPLETION;
         case r'MAGIC_FILL': return SystemTaskType.MAGIC_FILL;
         case r'QUICK_SCAN': return SystemTaskType.QUICK_SCAN;
         case r'EMAIL_READ': return SystemTaskType.EMAIL_READ;
+        case r'META_COMBINE_QUICK_SCAN': return SystemTaskType.META_COMBINE_QUICK_SCAN;
         case r'EMAIL_UPLOAD': return SystemTaskType.EMAIL_UPLOAD;
         case r'SYSTEM_EMAIL_CONNECTIVITY_CHECK': return SystemTaskType.SYSTEM_EMAIL_CONNECTIVITY_CHECK;
         case r'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK': return SystemTaskType.RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK;

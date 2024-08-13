@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **url** | **String** | URL for custom endpoints | [optional] 
 **key** | **String** | Key for endpoints that require authentication | [optional] 
 **model** | **String** | LLM model | [optional] 
+**isVisionModel** | **bool** | Is vision model | [optional] 
 **ocrEngine** | [**OcrEngine**](OcrEngine.md) |  | [optional] 
 **prompt** | [**Prompt**](Prompt.md) |  | [optional] 
 **promptId** | **int** | Prompt foreign key | [optional] 

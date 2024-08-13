@@ -18,6 +18,10 @@ class SearchResult {
     required this.type,
     required this.groupId,
     required this.date,
+    this.amount,
+    this.receiptStatus,
+    this.paidByUserId,
+    required this.createdAt,
   });
 
   int id;
@@ -30,13 +34,43 @@ class SearchResult {
 
   String date;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? amount;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ReceiptStatus? receiptStatus;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? paidByUserId;
+
+  String createdAt;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is SearchResult &&
      other.id == id &&
      other.name == name &&
      other.type == type &&
      other.groupId == groupId &&
-     other.date == date;
+     other.date == date &&
+     other.amount == amount &&
+     other.receiptStatus == receiptStatus &&
+     other.paidByUserId == paidByUserId &&
+     other.createdAt == createdAt;
 
   @override
   int get hashCode =>
@@ -45,10 +79,14 @@ class SearchResult {
     (name.hashCode) +
     (type.hashCode) +
     (groupId.hashCode) +
-    (date.hashCode);
+    (date.hashCode) +
+    (amount == null ? 0 : amount!.hashCode) +
+    (receiptStatus == null ? 0 : receiptStatus!.hashCode) +
+    (paidByUserId == null ? 0 : paidByUserId!.hashCode) +
+    (createdAt.hashCode);
 
   @override
-  String toString() => 'SearchResult[id=$id, name=$name, type=$type, groupId=$groupId, date=$date]';
+  String toString() => 'SearchResult[id=$id, name=$name, type=$type, groupId=$groupId, date=$date, amount=$amount, receiptStatus=$receiptStatus, paidByUserId=$paidByUserId, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -57,6 +95,22 @@ class SearchResult {
       json[r'type'] = this.type;
       json[r'groupId'] = this.groupId;
       json[r'date'] = this.date;
+    if (this.amount != null) {
+      json[r'amount'] = this.amount;
+    } else {
+      json[r'amount'] = null;
+    }
+    if (this.receiptStatus != null) {
+      json[r'receiptStatus'] = this.receiptStatus;
+    } else {
+      json[r'receiptStatus'] = null;
+    }
+    if (this.paidByUserId != null) {
+      json[r'paidByUserId'] = this.paidByUserId;
+    } else {
+      json[r'paidByUserId'] = null;
+    }
+      json[r'createdAt'] = this.createdAt;
     return json;
   }
 
@@ -84,6 +138,10 @@ class SearchResult {
         type: mapValueOfType<String>(json, r'type')!,
         groupId: mapValueOfType<int>(json, r'groupId')!,
         date: mapValueOfType<String>(json, r'date')!,
+        amount: mapValueOfType<String>(json, r'amount'),
+        receiptStatus: ReceiptStatus.fromJson(json[r'receiptStatus']),
+        paidByUserId: mapValueOfType<int>(json, r'paidByUserId'),
+        createdAt: mapValueOfType<String>(json, r'createdAt')!,
       );
     }
     return null;
@@ -138,6 +196,7 @@ class SearchResult {
     'type',
     'groupId',
     'date',
+    'createdAt',
   };
 }
 

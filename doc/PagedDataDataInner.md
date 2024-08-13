@@ -25,7 +25,7 @@ Name | Type | Description | Notes
 **tags** | [**List<Tag>**](Tag.md) | Tags associated to receipt | [optional] [default to const []]
 **updatedAt** | **String** |  | [optional] 
 **createdByString** | **String** | Created by string, which is anything that is not a user | [optional] 
-**description** | **String** | Description of the category | [optional] 
+**description** | **String** | Tag description | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
