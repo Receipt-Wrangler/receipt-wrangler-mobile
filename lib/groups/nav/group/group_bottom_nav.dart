@@ -35,7 +35,8 @@ class _GroupBottomNav extends State<GroupBottomNav> {
           context.go("/groups/$groupId/receipts");
           break;
         case 3:
-          context.go("/search", extra: {"from": fromGroupBottomNav});
+          context.go("/search",
+              extra: {"from": fromGroupBottomNav, "groupId": groupId});
           break;
         default:
           context.go("/groups");
