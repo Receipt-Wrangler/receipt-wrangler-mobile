@@ -15,9 +15,12 @@ import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
 
 class ReceiptListItem extends StatefulWidget {
-  const ReceiptListItem({super.key, required this.data});
+  const ReceiptListItem(
+      {super.key, required this.data, this.displayGroup = false});
 
   final api.PagedDataDataInner data;
+
+  final bool displayGroup;
 
   @override
   State<ReceiptListItem> createState() => _ReceiptListItem();
@@ -128,9 +131,16 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   Widget buildListTile() {
+    var titleText = widget.data.name;
+
+    if (widget.displayGroup) {
+      var group = groupModel.getGroupById(widget.data.groupId.toString());
+      titleText = "${widget.data.name}\n(${group?.name})";
+    }
+
     return ListTile(
         title: Text(
-          widget.data.name,
+          titleText,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: getSubtitleText(),
