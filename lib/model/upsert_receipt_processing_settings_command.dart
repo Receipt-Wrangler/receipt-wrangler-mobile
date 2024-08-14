@@ -19,6 +19,7 @@ class UpsertReceiptProcessingSettingsCommand {
     this.url,
     this.key,
     this.model,
+    this.isVisionModel,
     required this.ocrEngine,
     required this.promptId,
   });
@@ -64,6 +65,15 @@ class UpsertReceiptProcessingSettingsCommand {
   ///
   String? model;
 
+  /// Is vision model
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isVisionModel;
+
   OcrEngine ocrEngine;
 
   /// Prompt foreign key
@@ -77,6 +87,7 @@ class UpsertReceiptProcessingSettingsCommand {
      other.url == url &&
      other.key == key &&
      other.model == model &&
+     other.isVisionModel == isVisionModel &&
      other.ocrEngine == ocrEngine &&
      other.promptId == promptId;
 
@@ -89,11 +100,12 @@ class UpsertReceiptProcessingSettingsCommand {
     (url == null ? 0 : url!.hashCode) +
     (key == null ? 0 : key!.hashCode) +
     (model == null ? 0 : model!.hashCode) +
+    (isVisionModel == null ? 0 : isVisionModel!.hashCode) +
     (ocrEngine.hashCode) +
     (promptId.hashCode);
 
   @override
-  String toString() => 'UpsertReceiptProcessingSettingsCommand[name=$name, description=$description, aiType=$aiType, url=$url, key=$key, model=$model, ocrEngine=$ocrEngine, promptId=$promptId]';
+  String toString() => 'UpsertReceiptProcessingSettingsCommand[name=$name, description=$description, aiType=$aiType, url=$url, key=$key, model=$model, isVisionModel=$isVisionModel, ocrEngine=$ocrEngine, promptId=$promptId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -118,6 +130,11 @@ class UpsertReceiptProcessingSettingsCommand {
       json[r'model'] = this.model;
     } else {
       json[r'model'] = null;
+    }
+    if (this.isVisionModel != null) {
+      json[r'isVisionModel'] = this.isVisionModel;
+    } else {
+      json[r'isVisionModel'] = null;
     }
       json[r'ocrEngine'] = this.ocrEngine;
       json[r'promptId'] = this.promptId;
@@ -149,6 +166,7 @@ class UpsertReceiptProcessingSettingsCommand {
         url: mapValueOfType<String>(json, r'url'),
         key: mapValueOfType<String>(json, r'key'),
         model: mapValueOfType<String>(json, r'model'),
+        isVisionModel: mapValueOfType<bool>(json, r'isVisionModel'),
         ocrEngine: OcrEngine.fromJson(json[r'ocrEngine'])!,
         promptId: mapValueOfType<int>(json, r'promptId')!,
       );

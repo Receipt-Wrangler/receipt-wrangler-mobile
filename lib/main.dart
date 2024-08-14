@@ -20,6 +20,7 @@ import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
+import 'package:receipt_wrangler_mobile/models/search_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
@@ -31,6 +32,9 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builde
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
+import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
+import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
+import 'package:receipt_wrangler_mobile/search/widgets/searchbar.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
@@ -38,6 +42,7 @@ import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import 'api.dart' as api;
+import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
 
@@ -55,6 +60,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => LoadingModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
       ChangeNotifierProvider(create: (_) => ReceiptModel()),
+      ChangeNotifierProvider(create: (_) => SearchModel()),
       ChangeNotifierProvider(create: (_) => SystemSettingsModel()),
       ChangeNotifierProvider(create: (_) => TagModel()),
       ChangeNotifierProvider(create: (_) => UserModel()),
@@ -204,6 +210,32 @@ final _router = GoRouter(
             builder: (context, state) => const ReceiptFormScreen(),
           ),
         ]),
+    ShellRoute(
+      builder: (context, state, child) {
+        var searchModel = Provider.of<SearchModel>(context, listen: false);
+        searchModel.searchTermBehaviorSubject.add("");
+        searchModel.setSearchResults([], notify: false);
+
+        var extra = state.extra as Map<String, dynamic>;
+        var from = extra["from"];
+
+        return ScreenWrapper(
+          appBarWidget: SearchAppBar(),
+          bodyPadding: const EdgeInsets.all(0),
+          bottomNavigationBarWidget: from == fromGroupBottomNav
+              ? const GroupBottomNav()
+              : const GroupSelectBottomNav(),
+          child: child,
+          bottomSheetWidget: const WranglerSearchBar(),
+        );
+      },
+      routes: [
+        GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchScreen(),
+        ),
+      ],
+    )
   ],
 );
 

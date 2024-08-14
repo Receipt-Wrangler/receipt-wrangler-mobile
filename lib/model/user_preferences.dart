@@ -22,6 +22,7 @@ class UserPreferences {
     this.quickScanDefaultGroupId = 0,
     this.quickScanDefaultPaidById = 0,
     this.quickScanDefaultStatus,
+    this.showLargeImagePreviews = false,
   });
 
   /// User preferences id
@@ -53,6 +54,9 @@ class UserPreferences {
   ///
   ReceiptStatus? quickScanDefaultStatus;
 
+  /// Whether to show large image previews
+  bool showLargeImagePreviews;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is UserPreferences &&
      other.id == id &&
@@ -63,7 +67,8 @@ class UserPreferences {
      other.userId == userId &&
      other.quickScanDefaultGroupId == quickScanDefaultGroupId &&
      other.quickScanDefaultPaidById == quickScanDefaultPaidById &&
-     other.quickScanDefaultStatus == quickScanDefaultStatus;
+     other.quickScanDefaultStatus == quickScanDefaultStatus &&
+     other.showLargeImagePreviews == showLargeImagePreviews;
 
   @override
   int get hashCode =>
@@ -76,10 +81,11 @@ class UserPreferences {
     (userId.hashCode) +
     (quickScanDefaultGroupId.hashCode) +
     (quickScanDefaultPaidById.hashCode) +
-    (quickScanDefaultStatus == null ? 0 : quickScanDefaultStatus!.hashCode);
+    (quickScanDefaultStatus == null ? 0 : quickScanDefaultStatus!.hashCode) +
+    (showLargeImagePreviews.hashCode);
 
   @override
-  String toString() => 'UserPreferences[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, userId=$userId, quickScanDefaultGroupId=$quickScanDefaultGroupId, quickScanDefaultPaidById=$quickScanDefaultPaidById, quickScanDefaultStatus=$quickScanDefaultStatus]';
+  String toString() => 'UserPreferences[id=$id, createdAt=$createdAt, createdBy=$createdBy, createdByString=$createdByString, updatedAt=$updatedAt, userId=$userId, quickScanDefaultGroupId=$quickScanDefaultGroupId, quickScanDefaultPaidById=$quickScanDefaultPaidById, quickScanDefaultStatus=$quickScanDefaultStatus, showLargeImagePreviews=$showLargeImagePreviews]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -96,6 +102,7 @@ class UserPreferences {
     } else {
       json[r'quickScanDefaultStatus'] = null;
     }
+      json[r'showLargeImagePreviews'] = this.showLargeImagePreviews;
     return json;
   }
 
@@ -127,6 +134,7 @@ class UserPreferences {
         quickScanDefaultGroupId: mapValueOfType<int>(json, r'quickScanDefaultGroupId') ?? 0,
         quickScanDefaultPaidById: mapValueOfType<int>(json, r'quickScanDefaultPaidById') ?? 0,
         quickScanDefaultStatus: ReceiptStatus.fromJson(json[r'quickScanDefaultStatus']),
+        showLargeImagePreviews: mapValueOfType<bool>(json, r'showLargeImagePreviews') ?? false,
       );
     }
     return null;

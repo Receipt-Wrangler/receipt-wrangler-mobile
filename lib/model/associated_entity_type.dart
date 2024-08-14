@@ -23,12 +23,16 @@ class AssociatedEntityType {
 
   String toJson() => value;
 
+  static const NOOP_ENTITY_TYPE = AssociatedEntityType._(r'NOOP_ENTITY_TYPE');
+  static const RECEIPT = AssociatedEntityType._(r'RECEIPT');
   static const SYSTEM_EMAIL = AssociatedEntityType._(r'SYSTEM_EMAIL');
   static const RECEIPT_PROCESSING_SETTINGS = AssociatedEntityType._(r'RECEIPT_PROCESSING_SETTINGS');
   static const PROMPT = AssociatedEntityType._(r'PROMPT');
 
   /// List of all possible values in this [enum][AssociatedEntityType].
   static const values = <AssociatedEntityType>[
+    NOOP_ENTITY_TYPE,
+    RECEIPT,
     SYSTEM_EMAIL,
     RECEIPT_PROCESSING_SETTINGS,
     PROMPT,
@@ -70,6 +74,8 @@ class AssociatedEntityTypeTypeTransformer {
   AssociatedEntityType? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
+        case r'NOOP_ENTITY_TYPE': return AssociatedEntityType.NOOP_ENTITY_TYPE;
+        case r'RECEIPT': return AssociatedEntityType.RECEIPT;
         case r'SYSTEM_EMAIL': return AssociatedEntityType.SYSTEM_EMAIL;
         case r'RECEIPT_PROCESSING_SETTINGS': return AssociatedEntityType.RECEIPT_PROCESSING_SETTINGS;
         case r'PROMPT': return AssociatedEntityType.PROMPT;
