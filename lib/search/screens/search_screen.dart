@@ -28,16 +28,17 @@ class _SearchScreen extends State<SearchScreen> {
         var searchResult = searchResults[index];
 
         return ReceiptListItem(
+            displayGroup: true,
             data: new api.PagedDataDataInner(
-          amount: searchResult.amount ?? "",
-          date: searchResult.date ?? "",
-          groupId: searchResult.groupId ?? 0,
-          id: searchResult.id ?? 0,
-          name: searchResult.name ?? "",
-          paidByUserId: searchResult.paidByUserId ?? 0,
-          status: searchResult.receiptStatus ?? api.ReceiptStatus.DRAFT,
-          createdAt: searchResult.createdAt ?? "",
-        ));
+              amount: searchResult.amount ?? "",
+              date: searchResult.date ?? "",
+              groupId: searchResult.groupId ?? 0,
+              id: searchResult.id ?? 0,
+              name: searchResult.name ?? "",
+              paidByUserId: searchResult.paidByUserId ?? 0,
+              status: searchResult.receiptStatus ?? api.ReceiptStatus.DRAFT,
+              createdAt: searchResult.createdAt ?? "",
+            ));
       },
     );
   }
