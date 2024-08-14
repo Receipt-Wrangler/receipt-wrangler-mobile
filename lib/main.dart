@@ -221,6 +221,7 @@ final _router = GoRouter(
 
         return ScreenWrapper(
           appBarWidget: SearchAppBar(),
+          bodyPadding: const EdgeInsets.all(0),
           bottomNavigationBarWidget: from == fromGroupBottomNav
               ? const GroupBottomNav()
               : const GroupSelectBottomNav(),

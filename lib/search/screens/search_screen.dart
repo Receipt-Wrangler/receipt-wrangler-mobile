@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/receipt_list_item.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
-import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 import '../../api.dart' as api;
 import '../../models/search_model.dart';
@@ -27,17 +26,18 @@ class _SearchScreen extends State<SearchScreen> {
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
         var searchResult = searchResults[index];
-        var group = groupModel.getGroupById(searchResult.groupId.toString());
-        var formattedDate =
-            formatDate("MMM d, yyyy", DateTime.parse(searchResult.date));
 
-        var title = "${formattedDate} - ${searchResult.name} (${group?.name})";
-        return ListTile(
-          title: Text(title),
-          onTap: () {
-            context.go('/receipts/${searchResult.id}/view');
-          },
-        );
+        return ReceiptListItem(
+            data: new api.PagedDataDataInner(
+          amount: searchResult.amount ?? "",
+          date: searchResult.date ?? "",
+          groupId: searchResult.groupId ?? 0,
+          id: searchResult.id ?? 0,
+          name: searchResult.name ?? "",
+          paidByUserId: searchResult.paidByUserId ?? 0,
+          status: searchResult.receiptStatus ?? api.ReceiptStatus.DRAFT,
+          createdAt: searchResult.createdAt ?? "",
+        ));
       },
     );
   }
