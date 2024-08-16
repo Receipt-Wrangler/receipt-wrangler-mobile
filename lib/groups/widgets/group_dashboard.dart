@@ -64,7 +64,9 @@ class _GroupDashboard extends State<GroupDashboard> {
       for (var widget in dashboard.widgets) {
         switch (widget.widgetType) {
           case api.WidgetType.FILTERED_RECEIPTS:
-            widgets.add(const FilteredReceipts());
+            widgets.add(FilteredReceipts(
+              dashboardWidget: widget,
+            ));
             break;
           case api.WidgetType.GROUP_SUMMARY:
             widgets.add(const GroupSummary());

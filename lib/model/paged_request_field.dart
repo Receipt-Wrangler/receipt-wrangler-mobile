@@ -13,13 +13,25 @@ part of openapi.api;
 class PagedRequestField {
   /// Returns a new [PagedRequestField] instance.
   PagedRequestField({
-    required this.operation,
-    required this.value,
+    this.operation,
+    this.value,
   });
 
-  FilterOperation operation;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  FilterOperation? operation;
 
-  PagedRequestFieldValue value;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  PagedRequestFieldValue? value;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PagedRequestField &&
@@ -29,16 +41,24 @@ class PagedRequestField {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (operation.hashCode) +
-    (value.hashCode);
+    (operation == null ? 0 : operation!.hashCode) +
+    (value == null ? 0 : value!.hashCode);
 
   @override
   String toString() => 'PagedRequestField[operation=$operation, value=$value]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.operation != null) {
       json[r'operation'] = this.operation;
+    } else {
+      json[r'operation'] = null;
+    }
+    if (this.value != null) {
       json[r'value'] = this.value;
+    } else {
+      json[r'value'] = null;
+    }
     return json;
   }
 
@@ -61,8 +81,8 @@ class PagedRequestField {
       }());
 
       return PagedRequestField(
-        operation: FilterOperation.fromJson(json[r'operation'])!,
-        value: PagedRequestFieldValue.fromJson(json[r'value'])!,
+        operation: FilterOperation.fromJson(json[r'operation']),
+        value: PagedRequestFieldValue.fromJson(json[r'value']),
       );
     }
     return null;
@@ -112,8 +132,6 @@ class PagedRequestField {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'operation',
-    'value',
   };
 }
 

@@ -41,3 +41,9 @@ double getImagePreviewHeight(BuildContext context) {
 EdgeInsets getImageDataPadding() {
   return const EdgeInsets.all(26);
 }
+
+ReceiptPagedRequestFilter dashboardConfigurationToFilter(
+    Map<String, Object> configuration) {
+  return ReceiptPagedRequestFilter.fromJson(configuration) ??
+      ReceiptPagedRequestFilter();
+}
