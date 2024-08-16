@@ -37,7 +37,7 @@ class _GroupSummary extends State<GroupSummary> {
     var userModel = Provider.of<UserModel>(context, listen: false);
 
     userData.entries.forEach((element) {
-      widgets.add(Row(
+      widgets.add(Wrap(
         children: [
           UserAvatar(userId: element.key),
           const SizedBox(width: 10),
