@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart';
 import 'package:rxdart/rxdart.dart';
-
-import '../api.dart';
 
 class SearchModel extends ChangeNotifier {
   BehaviorSubject<String> _searchTermBehaviorSubject =

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/constants/receipts.dart';
 
 class ReceiptListModel extends ChangeNotifier {
@@ -16,12 +16,13 @@ class ReceiptListModel extends ChangeNotifier {
   SortDirection get sortDirection => _sortDirection;
 
   ReceiptPagedRequestCommand get receiptPagedRequestCommand =>
-      ReceiptPagedRequestCommand(
-          page: _page,
-          pageSize: 10,
-          orderBy: _orderBy,
-          sortDirection: _sortDirection,
-          filter: ReceiptPagedRequestFilter());
+      (ReceiptPagedRequestCommandBuilder()
+            ..page = _page
+            ..pageSize = 10
+            ..orderBy = _orderBy
+            ..sortDirection = _sortDirection
+            ..filter = ReceiptPagedRequestFilterBuilder())
+          .build();
 
   void setOrderBy(String orderBy, bool notify) {
     _orderBy = orderBy;

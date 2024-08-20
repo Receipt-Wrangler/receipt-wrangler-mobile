@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-
-import '../api.dart';
 
 class AuthModel extends ChangeNotifier {
   api.Claims? _claims;
@@ -25,16 +23,18 @@ class AuthModel extends ChangeNotifier {
   String get basePath =>
       GlobalSharedPreferences.instance.getString(_basePathKey) ?? "";
 
-  FeatureConfig _featureConfig =
-      FeatureConfig(aiPoweredReceipts: false, enableLocalSignUp: false);
+  api.FeatureConfig _featureConfig = (api.FeatureConfigBuilder()
+        ..aiPoweredReceipts = false
+        ..enableLocalSignUp = false)
+      .build();
 
-  FeatureConfig get featureConfig => _featureConfig;
+  api.FeatureConfig get featureConfig => _featureConfig;
 
   void initializeAuth() {
     _updateDefaultApiClient();
   }
 
-  void setClaims(Claims claims) {
+  void setClaims(api.Claims claims) {
     _claims = claims;
 
     notifyListeners();
@@ -78,7 +78,7 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setFeatureConfig(FeatureConfig? featureConfig) {
+  void setFeatureConfig(api.FeatureConfig? featureConfig) {
     if (featureConfig == null) {
       return;
     } else {
