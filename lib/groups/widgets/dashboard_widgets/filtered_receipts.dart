@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 import '../../../api.dart' as api;
@@ -15,33 +17,37 @@ class FilteredReceipts extends StatefulWidget {
 
 class _FilteredReceipts extends State<FilteredReceipts> {
   late final groupId = getGroupId(context);
-  late final filteredDataFuture = api.ReceiptApi().getReceiptsForGroup(
-      int.parse(groupId ?? "0"),
-      api.ReceiptPagedRequestCommand(
-          page: 1,
-          pageSize: 10,
-          orderBy: "date",
-          sortDirection: api.SortDirection.desc,
-          filter: dashboardConfigurationToFilter(
-              widget.dashboardWidget.configuration)));
+  final PagingController<int, api.PagedDataDataInner> _pagingController =
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Look into refactoring the infinite scroll widget to b more generic. We could use that here
     // TODO: In search, add the number of results too
-    print(widget.dashboardWidget.configuration);
     return SizedBox(
-        child: FutureBuilder(
-      future: filteredDataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
+      child: Column(
+        children: [
+          Text(widget.dashboardWidget.name ?? ""),
+          ReceiptList(
+              pagingController: _pagingController,
+              getPagedReceiptFuture: (page) {
+                return api.ReceiptApi().getReceiptsForGroup(
+                    int.parse(groupId),
+                    api.ReceiptPagedRequestCommand(
+                        page: page,
+                        pageSize: 10,
+                        orderBy: "date",
+                        sortDirection: api.SortDirection.desc,
+                        filter: dashboardConfigurationToFilter(
+                            widget.dashboardWidget.configuration)));
+              })
+        ],
+      ),
+    );
+  }
 
-        return Column(
-          children: [Text(widget.dashboardWidget.name ?? "")],
-        );
-      },
-    ));
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 }

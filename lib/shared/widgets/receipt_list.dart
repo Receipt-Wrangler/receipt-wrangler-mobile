@@ -61,10 +61,4 @@ class _ReceiptListState extends State<ReceiptList> {
               },
             )));
   }
-
-  @override
-  void dispose() {
-    widget.pagingController.dispose();
-    super.dispose();
-  }
 }

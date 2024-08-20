@@ -43,7 +43,19 @@ EdgeInsets getImageDataPadding() {
 }
 
 ReceiptPagedRequestFilter dashboardConfigurationToFilter(
-    Map<String, Object> configuration) {
-  return ReceiptPagedRequestFilter.fromJson(configuration) ??
-      ReceiptPagedRequestFilter();
+    Map<String, dynamic> configuration) {
+  //print(configuration["status"]["value"]);
+  //print(configuration["status"]["operation"]);
+  //print(configuration["date"]);
+
+  var test = ReceiptPagedRequestFilter(
+    status: PagedRequestField(
+      value: PagedRequestFieldValue.fromJson(configuration["status"]["value"]),
+      operation: FilterOperation.CONTAINS,
+    ),
+  );
+
+  print(test);
+
+  return test;
 }
