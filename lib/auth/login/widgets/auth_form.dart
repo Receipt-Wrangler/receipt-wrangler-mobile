@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/client/client.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
@@ -33,7 +34,7 @@ class _Login extends State<AuthForm> {
 
     if (_formKey.currentState!.validate()) {
       if (_isSignUp()) {
-        api.Openapi()
+        OpenApiClient.client
             .getAuthApi()
             .signUp(
                 signUpCommand: (api.SignUpCommandBuilder()
@@ -52,8 +53,9 @@ class _Login extends State<AuthForm> {
               ..password = form["password"])
             .build();
         try {
-          var appData =
-              await api.Openapi().getAuthApi().login(loginCommand: command);
+          var appData = await OpenApiClient.client
+              .getAuthApi()
+              .login(loginCommand: command);
           await _onLoginSuccess(appData as api.AppData);
         } catch (e) {
           showApiErrorSnackbar(context, e as dynamic);

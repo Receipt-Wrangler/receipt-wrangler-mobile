@@ -14,17 +14,18 @@ part 'user_preferences.g.dart';
 ///
 /// Properties:
 /// * [id] - User preferences id
-/// * [createdAt] 
-/// * [createdBy] 
+/// * [createdAt]
+/// * [createdBy]
 /// * [createdByString] - Created by entity's name
-/// * [updatedAt] 
+/// * [updatedAt]
 /// * [userId] - User foreign key
 /// * [quickScanDefaultGroupId] - Group foreign key
 /// * [quickScanDefaultPaidById] - User foreign key
 /// * [quickScanDefaultStatus] - Default quick scan status
 /// * [showLargeImagePreviews] - Whether to show large image previews
 @BuiltValue()
-abstract class UserPreferences implements BaseModel, Built<UserPreferences, UserPreferencesBuilder> {
+abstract class UserPreferences
+    implements BaseModel, Built<UserPreferences, UserPreferencesBuilder> {
   /// Default quick scan status
   @BuiltValueField(wireName: r'quickScanDefaultStatus')
   ReceiptStatus? get quickScanDefaultStatus;
@@ -48,23 +49,26 @@ abstract class UserPreferences implements BaseModel, Built<UserPreferences, User
 
   UserPreferences._();
 
-  factory UserPreferences([void updates(UserPreferencesBuilder b)]) = _$UserPreferences;
+  factory UserPreferences([void updates(UserPreferencesBuilder b)]) =
+      _$UserPreferences;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(UserPreferencesBuilder b) => b
-      ..quickScanDefaultStatus = 'OPEN'
-      ..createdBy = 0
-      ..showLargeImagePreviews = false
-      ..quickScanDefaultGroupId = 0
-      ..quickScanDefaultPaidById = 0
-      ..createdByString = ''
-      ..updatedAt = '';
+    ..quickScanDefaultStatus = ReceiptStatus.OPEN
+    ..createdBy = 0
+    ..showLargeImagePreviews = false
+    ..quickScanDefaultGroupId = 0
+    ..quickScanDefaultPaidById = 0
+    ..createdByString = ''
+    ..updatedAt = '';
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<UserPreferences> get serializer => _$UserPreferencesSerializer();
+  static Serializer<UserPreferences> get serializer =>
+      _$UserPreferencesSerializer();
 }
 
-class _$UserPreferencesSerializer implements PrimitiveSerializer<UserPreferences> {
+class _$UserPreferencesSerializer
+    implements PrimitiveSerializer<UserPreferences> {
   @override
   final Iterable<Type> types = const [UserPreferences, _$UserPreferences];
 
@@ -148,7 +152,9 @@ class _$UserPreferencesSerializer implements PrimitiveSerializer<UserPreferences
     UserPreferences object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -261,4 +267,3 @@ class _$UserPreferencesSerializer implements PrimitiveSerializer<UserPreferences
     return result.build();
   }
 }
-
