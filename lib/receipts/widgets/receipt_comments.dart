@@ -7,6 +7,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.da
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
+import '../../client/client.dart';
 import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -62,7 +63,7 @@ class _ReceiptComments extends State<ReceiptComments> {
 
     if (formState == WranglerFormState.edit) {
       var commentId = widget.comments[index].id;
-      api.Openapi()
+      OpenApiClient.client
           .getCommentApi()
           .deleteComment(commentId: commentId)
           .then((value) {

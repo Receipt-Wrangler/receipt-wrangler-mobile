@@ -15,6 +15,7 @@ import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../client/client.dart';
 import '../../utils/bottom_sheet.dart';
 
 Widget _getUploadIcon(
@@ -91,7 +92,7 @@ Future<void> _submitQuickScan(
 
   try {
     setLoadingBarState(context, true);
-    var response = await api.Openapi().getReceiptApi().quickScanReceipt(
+    var response = await OpenApiClient.client.getReceiptApi().quickScanReceipt(
         files: files.toBuiltList(),
         groupIds: groupIds.toBuiltList(),
         paidByUserIds: paidByUserIds.toBuiltList(),

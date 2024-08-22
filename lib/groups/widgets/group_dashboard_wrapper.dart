@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
+
+import '../../client/client.dart';
 
 class GroupDashboardWrapper extends StatefulWidget {
   const GroupDashboardWrapper({super.key});
@@ -15,7 +16,7 @@ class _GroupDashboardWrapper extends State<GroupDashboardWrapper> {
   @override
   Widget build(BuildContext context) {
     var groupId = getGroupId(context);
-    var dashboardFuture = api.Openapi()
+    var dashboardFuture = OpenApiClient.client
         .getDashboardApi()
         .getDashboardsForUserByGroupId(groupId: groupId ?? "");
 

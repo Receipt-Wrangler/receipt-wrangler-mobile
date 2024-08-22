@@ -8,6 +8,8 @@ import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
+import '../../client/client.dart';
+
 class GroupReceiptsList extends StatefulWidget {
   const GroupReceiptsList({super.key});
 
@@ -114,7 +116,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
             model.setPage(pageKey, false);
             var command = model.receiptPagedRequestCommand;
 
-            return api.Openapi().getReceiptApi().getReceiptsForGroup(
+            return OpenApiClient.client.getReceiptApi().getReceiptsForGroup(
                   groupId: int.parse(getGroupId(context)),
                   receiptPagedRequestCommand: command,
                 );

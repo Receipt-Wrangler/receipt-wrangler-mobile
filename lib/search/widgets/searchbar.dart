@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 
+import '../../client/client.dart';
 import '../../models/search_model.dart';
 
 class WranglerSearchBar extends StatefulWidget {
@@ -24,7 +24,7 @@ class _WranglerSearchBar extends State<WranglerSearchBar> {
         onChanged: (value) {
           var searchText = value ?? "";
           searchModel.searchTermBehaviorSubject.add(searchText);
-          api.Openapi()
+          OpenApiClient.client
               .getSearchApi()
               .receiptSearch(searchTerm: searchText)
               .then((value) {

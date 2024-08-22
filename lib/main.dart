@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
@@ -40,9 +41,8 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
-import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
-import 'package:openapi/openapi.dart' as api;
+import 'client/client.dart';
 import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
@@ -152,7 +152,7 @@ final _router = GoRouter(
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
           if (idsAreDifferent && receiptId.isNotEmpty) {
-            future = api.Openapi().getReceiptApi().getReceiptById(
+            future = OpenApiClient.client.getReceiptApi().getReceiptById(
                 receiptId:
                     int.parse(state.pathParameters['receiptId'] as String));
           }

@@ -4,6 +4,8 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
+import '../../../client/client.dart';
+
 class FilteredReceipts extends StatefulWidget {
   const FilteredReceipts({super.key, required api.Widget this.dashboardWidget});
 
@@ -29,7 +31,7 @@ class _FilteredReceipts extends State<FilteredReceipts> {
           ReceiptList(
               pagingController: _pagingController,
               getPagedReceiptFuture: (page) {
-                return api.Openapi().getReceiptApi().getReceiptsForGroup(
+                return OpenApiClient.client.getReceiptApi().getReceiptsForGroup(
                     groupId: int.parse(groupId),
                     receiptPagedRequestCommand:
                         (api.ReceiptPagedRequestCommandBuilder()

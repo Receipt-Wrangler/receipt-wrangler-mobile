@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../client/client.dart';
 import '../../enums/upload_method.dart';
 import '../../interfaces/upload_multipart_file_data.dart';
 import '../../models/loading_model.dart';
@@ -150,7 +151,7 @@ class ReceiptAppBarActionBuilder {
   Future<void> deleteImageViaApi() async {
     try {
       var index = receiptModel.infiniteScrollController.selectedItem;
-      await api.Openapi().getReceiptImageApi().deleteReceiptImageById(
+      await OpenApiClient.client.getReceiptImageApi().deleteReceiptImageById(
           receiptImageId: receiptModel.imageBehaviorSubject.value[index]!.id);
       var currentImages =
           List<api.FileDataView?>.from(receiptModel.imageBehaviorSubject.value);
@@ -210,7 +211,7 @@ class ReceiptAppBarActionBuilder {
       }
 
       for (var image in imagesToUpload) {
-        var uploadedImage = await api.Openapi()
+        var uploadedImage = await OpenApiClient.client
             .getReceiptImageApi()
             .uploadReceiptImage(
                 file: image.multipartFile, receiptId: receiptModel.receipt.id);

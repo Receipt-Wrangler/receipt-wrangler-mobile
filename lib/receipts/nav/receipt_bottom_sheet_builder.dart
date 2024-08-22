@@ -1,15 +1,16 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dio/dio.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/interfaces/form_item.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../client/client.dart';
 import '../../models/auth_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
@@ -131,7 +132,7 @@ class ReceiptBottomSheetBuilder {
           ..receiptId = receiptId)
         .build();
 
-    api.Openapi()
+    OpenApiClient.client
         .getCommentApi()
         .addComment(upsertCommentCommand: command)
         .then((value) {
@@ -246,7 +247,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   Future<void> addReceipt(api.UpsertReceiptCommand receiptToAdd) async {
-    var receiptResponse = await api.Openapi()
+    var receiptResponse = await OpenApiClient.client
         .getReceiptApi()
         .createReceipt(upsertReceiptCommand: receiptToAdd);
     showSuccessSnackbar(context, "Receipt added successfully");
@@ -255,7 +256,7 @@ class ReceiptBottomSheetBuilder {
     List<Future<Response<api.FileDataView?>>> imageFutures = [];
 
     for (var image in images) {
-      var future = api.Openapi().getReceiptImageApi().uploadReceiptImage(
+      var future = OpenApiClient.client.getReceiptImageApi().uploadReceiptImage(
           file: image.multipartFile, receiptId: receiptResponse.data!.id);
       imageFutures.add(future);
     }
@@ -266,7 +267,7 @@ class ReceiptBottomSheetBuilder {
 
   Future<void> updateReceipt(api.UpsertReceiptCommand receiptToUpdate) async {
     var receipt = receiptModel.receipt;
-    var updatedReceiptResponse = await api.Openapi()
+    var updatedReceiptResponse = await OpenApiClient.client
         .getReceiptApi()
         .updateReceipt(
             receiptId: receipt.id, upsertReceiptCommand: receiptToUpdate);

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
+
+import '../../../client/client.dart';
 
 class GroupSummary extends StatefulWidget {
   const GroupSummary({super.key});
@@ -53,9 +54,10 @@ class _GroupSummary extends State<GroupSummary> {
   @override
   Widget build(BuildContext context) {
     var groupId = int.tryParse(getGroupId(context) ?? "");
-    var groupSummaryFuture = api.Openapi().getUserApi().getAmountOwedForUser(
-          groupId: groupId ?? 0,
-        );
+    var groupSummaryFuture =
+        OpenApiClient.client.getUserApi().getAmountOwedForUser(
+              groupId: groupId ?? 0,
+            );
 
     return FutureBuilder(
         future: groupSummaryFuture,

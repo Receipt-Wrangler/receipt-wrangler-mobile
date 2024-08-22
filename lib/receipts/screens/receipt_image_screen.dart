@@ -6,6 +6,7 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../client/client.dart';
 import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
@@ -55,12 +56,12 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     } else {
       List<Future<Response<api.FileDataView?>>> imageFutures = [];
 
-      return api.Openapi()
+      return OpenApiClient.client
           .getReceiptApi()
           .getReceiptById(receiptId: receipt.id)
           .then((receiptResponse) {
         for (var image in receiptResponse.data?.imageFiles?.toList() ?? []) {
-          var future = api.Openapi()
+          var future = OpenApiClient.client
               .getReceiptImageApi()
               .getReceiptImageById(receiptImageId: image.id);
           imageFutures.add(future);
