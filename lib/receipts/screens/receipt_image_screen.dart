@@ -1,10 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../api.dart' as api;
 import '../../models/receipt_model.dart';
 import '../../utils/forms.dart';
 
@@ -34,7 +35,12 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     super.didChangeDependencies();
 
     future.then((value) {
-      receiptModel.imageBehaviorSubject.add(value);
+      var images = <api.FileDataView?>[];
+
+      value.forEach((response) {
+        images.add(response.data);
+      });
+      receiptModel.imageBehaviorSubject.add(images);
       isLoadingBehaviorSubject.add(false);
     }).catchError((err) {
       isLoadingBehaviorSubject.add(false);
@@ -42,15 +48,22 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
     });
   }
 
-  Future<List<api.FileDataView?>> getReceiptImageFutures(api.Receipt receipt) {
+  Future<List<Response<api.FileDataView?>>> getReceiptImageFutures(
+      api.Receipt receipt) {
     if (formState == WranglerFormState.add) {
       return Future.wait([]);
     } else {
-      List<Future<api.FileDataView?>> imageFutures = [];
+      List<Future<Response<api.FileDataView?>>> imageFutures = [];
 
-      return api.ReceiptApi().getReceiptById(receipt.id).then((receipt) {
-        for (var image in receipt?.imageFiles ?? []) {
-          imageFutures.add(api.ReceiptImageApi().getReceiptImageById(image.id));
+      return api.Openapi()
+          .getReceiptApi()
+          .getReceiptById(receiptId: receipt.id)
+          .then((receiptResponse) {
+        for (var image in receiptResponse.data?.imageFiles?.toList() ?? []) {
+          var future = api.Openapi()
+              .getReceiptImageApi()
+              .getReceiptImageById(receiptImageId: image.id);
+          imageFutures.add(future);
         }
 
         return Future.wait(imageFutures);

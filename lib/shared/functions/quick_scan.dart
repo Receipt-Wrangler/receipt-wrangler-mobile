@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
@@ -90,12 +91,16 @@ Future<void> _submitQuickScan(
 
   try {
     setLoadingBarState(context, true);
-    var receipts = await api.ReceiptApi()
-        .quickScanReceipt(files, groupIds, paidByUserIds, statuses);
+    var response = await api.Openapi().getReceiptApi().quickScanReceipt(
+        files: files.toBuiltList(),
+        groupIds: groupIds.toBuiltList(),
+        paidByUserIds: paidByUserIds.toBuiltList(),
+        statuses: statuses.toBuiltList());
+
     setLoadingBarState(context, false);
     showSuccessSnackbar(
       context,
-      "Quick scan successfully uploaded ${receipts?.length} receipts",
+      "Quick scan successfully uploaded ${response?.data?.length} receipts",
     );
   } catch (e) {
     print(e);

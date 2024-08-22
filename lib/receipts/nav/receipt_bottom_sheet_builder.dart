@@ -1,13 +1,15 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/interfaces/form_item.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../api.dart' as api;
 import '../../models/auth_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
@@ -106,12 +108,13 @@ class ReceiptBottomSheetBuilder {
     var userId =
         Provider.of<AuthModel>(context, listen: false).claims?.userId ?? 0;
 
-    var comment = api.Comment(
-        id: 0,
-        comment: commentText,
-        receiptId: 0,
-        userId: userId,
-        createdAt: new DateTime.now().toString());
+    var comment = (api.CommentBuilder()
+          ..id = 0
+          ..comment = commentText
+          ..receiptId = 0
+          ..userId = userId
+          ..createdAt = DateTime.now().toString())
+        .build();
 
     var comments = [...receiptModel.comments];
     comments.add(comment);
@@ -123,10 +126,15 @@ class ReceiptBottomSheetBuilder {
     var comment = formKey.currentState?.value['comment'];
     var receiptId = int.parse(getReceiptId(context) ?? "0");
 
-    var command =
-        api.UpsertCommentCommand(comment: comment, receiptId: receiptId);
+    var command = (api.UpsertCommentCommandBuilder()
+          ..comment = comment
+          ..receiptId = receiptId)
+        .build();
 
-    api.CommentApi().addComment(command).then((value) {
+    api.Openapi()
+        .getCommentApi()
+        .addComment(upsertCommentCommand: command)
+        .then((value) {
       var comments = [...receiptModel.comments];
       comments.add(value as api.Comment);
 
@@ -145,10 +153,11 @@ class ReceiptBottomSheetBuilder {
         form["categories"].map((item) => item as api.Category));
 
     return categories
-        .map((category) => api.UpsertCategoryCommand(
-            id: category.id,
-            name: category.name ?? "",
-            description: category.description ?? ""))
+        .map((category) => (api.UpsertCategoryCommandBuilder()
+              ..id = category.id
+              ..name = category.name ?? ""
+              ..description = category.description ?? "")
+            .build())
         .toList();
   }
 
@@ -157,10 +166,11 @@ class ReceiptBottomSheetBuilder {
     var tags = List<api.Tag>.from(form["tags"].map((item) => item as api.Tag));
 
     return tags
-        .map((tag) => api.UpsertTagCommand(
-            id: tag.id,
-            name: tag.name ?? "",
-            description: tag.description ?? ""))
+        .map((tag) => (api.UpsertTagCommandBuilder()
+              ..id = tag.id
+              ..name = tag.name ?? ""
+              ..description = tag.description ?? "")
+            .build())
         .toList();
   }
 
@@ -176,13 +186,13 @@ class ReceiptBottomSheetBuilder {
       var amountName = FormItem.buildItemAmountName(item);
       var statusName = FormItem.buildItemStatusName(item);
 
-      var command = api.UpsertItemCommand(
-        amount: form[amountName],
-        chargedToUserId: item.chargedToUserId,
-        name: form[itemName],
-        receiptId: item?.receiptId ?? 0,
-        status: form[statusName],
-      );
+      var command = (api.UpsertItemCommandBuilder()
+            ..amount = form[amountName]
+            ..chargedToUserId = item.chargedToUserId
+            ..name = form[itemName]
+            ..receiptId = item?.receiptId ?? 0
+            ..status = form[statusName])
+          .build();
 
       upsertItems.add(command);
     }
@@ -197,11 +207,11 @@ class ReceiptBottomSheetBuilder {
     for (var i = 0; i < comments.length; i++) {
       var comment = comments[i];
 
-      var command = api.UpsertCommentCommand(
-        receiptId: comment.receiptId,
-        userId: comment.userId,
-        comment: comment.comment,
-      );
+      var command = (api.UpsertCommentCommandBuilder()
+            ..receiptId = comment.receiptId
+            ..userId = comment.userId
+            ..comment = comment.comment)
+          .build();
 
       upsertComments.add(command);
     }
@@ -216,45 +226,53 @@ class ReceiptBottomSheetBuilder {
     form["date"] = formatDate(zuluDateFormat, date);
 
     var status = form["status"] as api.ReceiptStatus;
-    form["status"] = status.value;
+    form["status"] = status.name;
 
-    var receiptToUpdate =
-        api.UpsertReceiptCommand.fromJson(form) as api.UpsertReceiptCommand;
+    var command =
+        api.serializers.serializeWith(api.UpsertReceiptCommand.serializer, form)
+            as api.UpsertReceiptCommand;
+    var receiptToUpdate = api.UpsertReceiptCommandBuilder();
+    receiptToUpdate.replace(command);
 
-    receiptToUpdate.categories = buildUpsertCategoryCommand(form);
-    receiptToUpdate.tags = buildUpsertTagCommand(form);
-    receiptToUpdate.receiptItems = buildUpsertItemCommand(form);
+    receiptToUpdate.categories = ListBuilder(buildUpsertCategoryCommand(form));
+    receiptToUpdate.tags = ListBuilder(buildUpsertTagCommand(form));
+    receiptToUpdate.receiptItems = ListBuilder(buildUpsertItemCommand(form));
 
     if (formState == WranglerFormState.add) {
-      receiptToUpdate.comments = buildCommentUpsertCommand();
+      receiptToUpdate.comments = ListBuilder(buildCommentUpsertCommand());
     }
 
-    return receiptToUpdate;
+    return receiptToUpdate.build();
   }
 
   Future<void> addReceipt(api.UpsertReceiptCommand receiptToAdd) async {
-    var receipt = await api.ReceiptApi().createReceipt(receiptToAdd);
+    var receiptResponse = await api.Openapi()
+        .getReceiptApi()
+        .createReceipt(upsertReceiptCommand: receiptToAdd);
     showSuccessSnackbar(context, "Receipt added successfully");
 
     var images = receiptModel.imagesToUploadBehaviorSubject.value;
-    List<Future<api.FileDataView?>> imageFutures = [];
+    List<Future<Response<api.FileDataView?>>> imageFutures = [];
 
     for (var image in images) {
-      imageFutures.add(api.ReceiptImageApi()
-          .uploadReceiptImage(image.multipartFile, receipt!.id));
+      var future = api.Openapi().getReceiptImageApi().uploadReceiptImage(
+          file: image.multipartFile, receiptId: receiptResponse.data!.id);
+      imageFutures.add(future);
     }
     await Future.wait(imageFutures);
 
-    context.go("/receipts/${receipt!.id}/view");
+    context.go("/receipts/${receiptResponse.data!.id}/view");
   }
 
   Future<void> updateReceipt(api.UpsertReceiptCommand receiptToUpdate) async {
     var receipt = receiptModel.receipt;
-    var updatedReceipt =
-        await api.ReceiptApi().updateReceipt(receipt.id, receiptToUpdate);
+    var updatedReceiptResponse = await api.Openapi()
+        .getReceiptApi()
+        .updateReceipt(
+            receiptId: receipt.id, upsertReceiptCommand: receiptToUpdate);
     showSuccessSnackbar(context, "Receipt updated successfully");
 
-    receiptModel.setReceipt(updatedReceipt as api.Receipt, true);
+    receiptModel.setReceipt(updatedReceiptResponse.data as api.Receipt, true);
     context.go("/receipts/${receipt.id}/view");
   }
 

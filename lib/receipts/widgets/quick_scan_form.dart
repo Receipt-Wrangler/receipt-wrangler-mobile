@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
@@ -30,14 +30,14 @@ class _QuickScanForm extends State<QuickScanForm> {
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
 
-    groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId;
+    groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId ?? 0;
   }
 
   // TODO: refactor to a common Widget to use in receipt form
   Widget _buildGroupField() {
     int? initialValue = null;
 
-    if (userPreferences.quickScanDefaultGroupId > 0) {
+    if ((userPreferences.quickScanDefaultGroupId ?? 0) > 0) {
       initialValue = userPreferences.quickScanDefaultGroupId;
     }
 

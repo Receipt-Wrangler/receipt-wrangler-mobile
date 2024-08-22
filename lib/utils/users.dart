@@ -8,13 +8,7 @@ List<UserView> getUsersInGroup(
   if (group != null) {
     return group.groupMembers.map((member) {
       return userModel.getUserById(member.userId.toString()) ??
-          UserView(
-            id: 0,
-            displayName: "Unknown User",
-            userRole: UserRole.ADMIN,
-            username: "",
-            isDummyUser: false,
-          );
+          UserViewBuilder().build();
     }).toList();
   }
   return [];

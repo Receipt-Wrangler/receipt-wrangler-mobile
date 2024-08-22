@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
-import 'api.dart' as api;
+import 'package:openapi/openapi.dart' as api;
 import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
@@ -144,14 +145,16 @@ final _router = GoRouter(
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
 
-          Future<api.Receipt?> future = Future.value(getDefaultReceipt());
+          Future<Response<api.Receipt?>> future =
+              Future.value(Future.value(null));
 
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
           if (idsAreDifferent && receiptId.isNotEmpty) {
-            future = api.ReceiptApi().getReceiptById(
-                int.parse(state.pathParameters['receiptId'] as String));
+            future = api.Openapi().getReceiptApi().getReceiptById(
+                receiptId:
+                    int.parse(state.pathParameters['receiptId'] as String));
           }
 
           contextModel.setShellContext(context);

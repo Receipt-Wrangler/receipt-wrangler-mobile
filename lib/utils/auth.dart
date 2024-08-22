@@ -77,11 +77,14 @@ Future<void> getAndSetTokens(AuthModel authModel) async {
   var refreshToken = await authModel.getRefreshToken() ?? "";
   var logoutCommand =
       (LogoutCommandBuilder()..refreshToken = refreshToken).build();
-  var tokenPair = await Openapi()
+  var tokenPairResponse = await Openapi()
       .getAuthApi()
       .getNewRefreshToken(logoutCommand: logoutCommand);
-  authModel.setJwt(tokenPair!.jwt);
-  authModel.setRefreshToken(tokenPair!.refreshToken);
+
+  var tokenPair = tokenPairResponse.data as TokenPair;
+
+  authModel.setJwt(tokenPair.jwt);
+  authModel.setRefreshToken(tokenPair.refreshToken);
 
   return;
 }
@@ -118,10 +121,10 @@ Future<void> storeAppData(
 
   authModel.setClaims(appData.claims);
   authModel.setFeatureConfig(appData.featureConfig);
-  groupModel.setGroups(appData.groups);
-  userModel.setUsers(appData.users);
+  groupModel.setGroups(appData.groups.toList());
+  userModel.setUsers(appData.users.toList());
   userPreferencesModel.setUserPreferences(appData.userPreferences);
-  categoryModel.setCategories(appData.categories);
-  tagModel.setTags(appData.tags);
+  categoryModel.setCategories(appData.categories.toList());
+  tagModel.setTags(appData.tags.toList());
   systemSettingsModel.setCurrencyDisplay(appData.currencyDisplay);
 }

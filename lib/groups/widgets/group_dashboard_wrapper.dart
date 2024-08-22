@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/group_dashboard.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
@@ -15,15 +15,16 @@ class _GroupDashboardWrapper extends State<GroupDashboardWrapper> {
   @override
   Widget build(BuildContext context) {
     var groupId = getGroupId(context);
-    var dashboardFuture =
-        api.DashboardApi().getDashboardsForUserByGroupId(groupId ?? "");
+    var dashboardFuture = api.Openapi()
+        .getDashboardApi()
+        .getDashboardsForUserByGroupId(groupId: groupId ?? "");
 
     return FutureBuilder(
         future: dashboardFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return GroupDashboard(
-              dashboards: snapshot.data ?? [],
+              dashboards: snapshot.data?.data?.toList() ?? [],
             );
           }
 

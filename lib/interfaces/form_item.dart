@@ -1,8 +1,13 @@
-import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:uuid/uuid.dart';
 
-class FormItem extends api.Item {
+class FormItem {
   final String formId;
+  final String name;
+  final String amount;
+  final int chargedToUserId;
+  final int receiptId;
+  final api.ItemStatus status;
 
   FormItem({
     required this.formId,
@@ -11,13 +16,11 @@ class FormItem extends api.Item {
     required int chargedToUserId,
     required int receiptId,
     required api.ItemStatus status,
-  }) : super(
-          name: name,
-          amount: amount,
-          chargedToUserId: chargedToUserId,
-          receiptId: receiptId,
-          status: status,
-        );
+  })  : name = name,
+        amount = amount,
+        chargedToUserId = chargedToUserId,
+        receiptId = receiptId,
+        status = status;
 
   static FormItem fromItem(api.Item item) {
     return FormItem(

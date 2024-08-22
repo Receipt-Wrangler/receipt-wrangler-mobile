@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
@@ -53,8 +53,9 @@ class _GroupSummary extends State<GroupSummary> {
   @override
   Widget build(BuildContext context) {
     var groupId = int.tryParse(getGroupId(context) ?? "");
-    var groupSummaryFuture =
-        api.UserApi().getAmountOwedForUser(groupId: groupId);
+    var groupSummaryFuture = api.Openapi().getUserApi().getAmountOwedForUser(
+          groupId: groupId ?? 0,
+        );
 
     return FutureBuilder(
         future: groupSummaryFuture,
@@ -70,7 +71,7 @@ class _GroupSummary extends State<GroupSummary> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
-                ...buildSummaryLineWidgets(snapshot.data),
+                ...buildSummaryLineWidgets(snapshot.data?.data?.toMap() ?? {}),
               ],
             );
           }

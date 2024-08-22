@@ -1,6 +1,7 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
@@ -9,17 +10,17 @@ String? getReceiptId(BuildContext context) {
 }
 
 Receipt getDefaultReceipt() {
-  return Receipt(
-    id: 0,
-    date: DateTime.now().toIso8601String(),
-    groupId: 0,
-    paidByUserId: 0,
-    amount: "0",
-    name: "",
-    status: ReceiptStatus.OPEN,
-    categories: [],
-    tags: [],
-  );
+  return (ReceiptBuilder()
+        ..id = 0
+        ..date = DateTime.now().toIso8601String()
+        ..groupId = 0
+        ..paidByUserId = 0
+        ..amount = "0"
+        ..name = ""
+        ..status = ReceiptStatus.OPEN
+        ..categories = ListBuilder<Category>([])
+        ..tags = ListBuilder<Tag>([]))
+      .build();
 }
 
 String getTitleText(WranglerFormState formState, String receiptName) {
@@ -47,6 +48,7 @@ ReceiptPagedRequestFilter dashboardConfigurationToFilter(
   //print(configuration["status"]["value"]);
   //print(configuration["status"]["operation"]);
   //print(configuration["date"]);
+/*
 
   var test = ReceiptPagedRequestFilter(
     status: PagedRequestField(
@@ -58,4 +60,8 @@ ReceiptPagedRequestFilter dashboardConfigurationToFilter(
   print(test);
 
   return test;
+  */
+
+// TODO: fix
+  return {} as dynamic;
 }

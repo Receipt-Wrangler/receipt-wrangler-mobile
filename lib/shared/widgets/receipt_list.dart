@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:openapi/openapi.dart' as api;
+import 'package:built_collection/built_collection.dart';
 
-import '../../api.dart' as api;
 import '../../groups/widgets/receipt_list_item.dart';
 
 class ReceiptList extends StatefulWidget {
@@ -9,12 +11,13 @@ class ReceiptList extends StatefulWidget {
     super.key,
     required PagingController<int, api.PagedDataDataInner>
         this.pagingController,
-    required Future<api.PagedData?> Function(int) this.getPagedReceiptFuture,
+    required Future<Response<api.PagedData>> Function(int)
+        this.getPagedReceiptFuture,
   });
 
   final PagingController<int, api.PagedDataDataInner> pagingController;
 
-  final Future<api.PagedData?> Function(int) getPagedReceiptFuture;
+  final Future<Response<api.PagedData>> Function(int) getPagedReceiptFuture;
 
   @override
   _ReceiptListState createState() {
@@ -35,14 +38,15 @@ class _ReceiptListState extends State<ReceiptList> {
     try {
       final receipts = await widget.getPagedReceiptFuture(pageKey);
 
-      if (receipts?.data != null) {
+      if (receipts.data != null) {
         var length = widget.pagingController.itemList?.length ?? 0;
-        var newReceipts = receipts?.data ?? [];
+        var newReceipts =
+            receipts.data?.data ?? BuiltList<api.PagedDataDataInner>([]);
 
-        if (length == receipts?.totalCount) {
-          widget.pagingController.appendLastPage(newReceipts);
+        if (length == (receipts.data?.totalCount ?? 0)) {
+          widget.pagingController.appendLastPage(newReceipts.toList());
         } else {
-          widget.pagingController.appendPage(newReceipts, pageKey + 1);
+          widget.pagingController.appendPage(newReceipts.toList(), pageKey + 1);
         }
       }
     } catch (error) {

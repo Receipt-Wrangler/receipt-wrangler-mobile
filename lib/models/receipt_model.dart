@@ -53,9 +53,9 @@ class ReceiptModel extends ChangeNotifier {
 
     _modifiedReceipt = receipt;
 
-    _comments = receipt.comments;
+    _comments = (receipt.comments)?.toList() ?? [];
 
-    _items = FormItem.fromItems(receipt.receiptItems);
+    _items = FormItem.fromItems((receipt.receiptItems)?.toList() ?? []);
 
     _imageBehaviorSubject = BehaviorSubject<List<FileDataView?>>.seeded([]);
 

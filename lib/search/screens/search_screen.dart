@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/receipt_list_item.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 
-import '../../api.dart' as api;
 import '../../models/search_model.dart';
 
 class SearchScreen extends StatefulWidget {

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
@@ -33,21 +33,27 @@ class _Login extends State<AuthForm> {
 
     if (_formKey.currentState!.validate()) {
       if (_isSignUp()) {
-        var command = api.SignUpCommand(
-            username: form["username"],
-            password: form["password"],
-            displayName: form["displayName"]);
-
-        api.AuthApi()
-            .signUp(command)
-            .then((data) => showSuccessSnackbar(
-                context, "${form["username"]} successfully signed up!"))
+        api.Openapi()
+            .getAuthApi()
+            .signUp(
+                signUpCommand: (api.SignUpCommandBuilder()
+                      ..username = form["username"]
+                      ..password = form["password"]
+                      ..displayName = form["displayName"])
+                    .build())
+            .then((data) => {
+                  showSuccessSnackbar(
+                      context, "${form["username"]} successfully signed up!")
+                })
             .catchError((err) => showApiErrorSnackbar(context, err));
       } else {
-        var command = api.LoginCommand(
-            username: form["username"], password: form["password"]);
+        var command = (api.LoginCommandBuilder()
+              ..username = form["username"]
+              ..password = form["password"])
+            .build();
         try {
-          var appData = await api.AuthApi().login(command);
+          var appData =
+              await api.Openapi().getAuthApi().login(loginCommand: command);
           await _onLoginSuccess(appData as api.AppData);
         } catch (e) {
           showApiErrorSnackbar(context, e as dynamic);

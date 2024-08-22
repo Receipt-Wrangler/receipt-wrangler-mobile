@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:http/http.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 
@@ -29,8 +30,11 @@ Future<List<UploadMultipartFileData>> scanImagesMultiPart(
         await MultipartFile.fromPath(getFieldName(multiple), filePath);
     var bytes = await File(filePath).readAsBytes();
 
+    var dioMultipartFile =
+        dio.MultipartFile.fromBytes(bytes, filename: multipartFile.filename);
+
     files.add(
-        UploadMultipartFileData(multipartFile: multipartFile, bytes: bytes));
+        UploadMultipartFileData(multipartFile: dioMultipartFile, bytes: bytes));
   }
 
   return files;
@@ -59,8 +63,11 @@ Future<List<UploadMultipartFileData>> getGalleryImages(
     var multipartFile = await MultipartFile.fromBytes(
         getFieldName(multiple), bytes,
         filename: file.name);
+
+    var dioMultipartFile =
+        dio.MultipartFile.fromBytes(bytes, filename: multipartFile.filename);
     files.add(
-        UploadMultipartFileData(multipartFile: multipartFile, bytes: bytes));
+        UploadMultipartFileData(multipartFile: dioMultipartFile, bytes: bytes));
   }
 
   return files;

@@ -90,15 +90,11 @@ class AuthModel extends ChangeNotifier {
   Future<void> _updateDefaultApiClient() async {
     var jwt = await getJwt();
     if (jwt != null) {
-      var bearer = api.HttpBearerAuth();
-      bearer.accessToken = jwt;
-
-      api.defaultApiClient =
-          ApiClient(basePath: basePath, authentication: bearer);
+      api.Openapi().setBearerAuth("name", jwt);
       return;
     }
 
-    api.defaultApiClient = ApiClient(basePath: basePath);
+    api.Openapi().dio.options.baseUrl = basePath;
     return;
   }
 }

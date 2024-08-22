@@ -1,4 +1,4 @@
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 
 Future<List<FileDataView>> uploadImagesToReceipt(String receiptId) async {
@@ -7,8 +7,10 @@ Future<List<FileDataView>> uploadImagesToReceipt(String receiptId) async {
     List<FileDataView> filesUploaded = [];
     var multiPartFileUploadData = await scanImagesMultiPart(5) ?? [];
     for (var file in multiPartFileUploadData) {
-      var fileDataView = await ReceiptImageApi()
-          .uploadReceiptImage(file.multipartFile, int.parse(receiptId));
+      var fileDataView = await Openapi()
+          .getReceiptImageApi()
+          .uploadReceiptImage(
+              file: file.multipartFile, receiptId: int.parse(receiptId));
       filesUploaded.add(fileDataView as FileDataView);
     }
     return filesUploaded;

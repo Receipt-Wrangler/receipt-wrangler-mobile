@@ -1,4 +1,4 @@
-import '../../api.dart';
+import 'package:openapi/openapi.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 

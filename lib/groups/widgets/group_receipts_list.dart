@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/receipts.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/receipt_list_item.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
@@ -113,10 +113,10 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
             model.setPage(pageKey, false);
             var command = model.receiptPagedRequestCommand;
 
-            return api.ReceiptApi().getReceiptsForGroup(
-              int.parse(getGroupId(context)),
-              command,
-            );
+            return api.Openapi().getReceiptApi().getReceiptsForGroup(
+                  groupId: int.parse(getGroupId(context)),
+                  receiptPagedRequestCommand: command,
+                );
           },
         ),
       ],

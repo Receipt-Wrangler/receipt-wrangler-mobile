@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
 
 import 'dashboard_widgets/filtered_receipts.dart';
@@ -61,7 +61,7 @@ class _GroupDashboard extends State<GroupDashboard> {
     var widgets = <Widget>[];
 
     if (dashboard != null) {
-      for (var widget in dashboard.widgets) {
+      for (var widget in (dashboard.widgets)?.toList() ?? []) {
         switch (widget.widgetType) {
           case api.WidgetType.FILTERED_RECEIPTS:
             widgets.add(FilteredReceipts(

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -115,7 +116,7 @@ setLoadingBarState(BuildContext context, bool isLoading) {
 }
 
 handleApiError(BuildContext context, dynamic e) {
-  if (e is ApiException) {
+  if (e is DioException) {
     showApiErrorSnackbar(context, e);
     return;
   }
