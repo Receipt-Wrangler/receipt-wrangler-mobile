@@ -96,7 +96,8 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
             pagingController: _pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
               itemBuilder: (context, item, index) {
-                return ReceiptListItem(data: item);
+                var receipt = item.oneOf.value as api.Receipt;
+                return ReceiptListItem(receipt: receipt);
               },
             )));
   }

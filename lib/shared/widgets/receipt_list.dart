@@ -1,8 +1,8 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
-import 'package:built_collection/built_collection.dart';
 
 import '../../groups/widgets/receipt_list_item.dart';
 
@@ -61,7 +61,7 @@ class _ReceiptListState extends State<ReceiptList> {
             pagingController: widget.pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
               itemBuilder: (context, item, index) {
-                return ReceiptListItem(data: item);
+                return ReceiptListItem(receipt: item as api.Receipt);
               },
             )));
   }
