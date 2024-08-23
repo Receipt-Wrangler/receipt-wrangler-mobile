@@ -2,11 +2,11 @@
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 // ignore_for_file: unused_element
 import 'package:openapi/src/model/base_model.dart';
 import 'package:openapi/src/model/receipt_status.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
 
 part 'user_preferences.g.dart';
 
@@ -29,7 +29,7 @@ abstract class UserPreferences
   /// Default quick scan status
   @BuiltValueField(wireName: r'quickScanDefaultStatus')
   ReceiptStatus? get quickScanDefaultStatus;
-  // enum quickScanDefaultStatusEnum {  OPEN,  NEEDS_ATTENTION,  RESOLVED,  DRAFT,  };
+  // enum quickScanDefaultStatusEnum {  OPEN,  NEEDS_ATTENTION,  RESOLVED,  DRAFT,  ,  };
 
   /// Whether to show large image previews
   @BuiltValueField(wireName: r'showLargeImagePreviews')

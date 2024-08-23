@@ -23,6 +23,9 @@ class ReceiptStatus extends EnumClass {
   /// Status of a receipt
   @BuiltValueEnumConst(wireName: r'DRAFT')
   static const ReceiptStatus DRAFT = _$DRAFT;
+  /// Status of a receipt
+  @BuiltValueEnumConst(wireName: r'')
+  static const ReceiptStatus empty = _$empty;
 
   static Serializer<ReceiptStatus> get serializer => _$receiptStatusSerializer;
 

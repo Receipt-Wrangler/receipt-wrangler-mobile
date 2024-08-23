@@ -88,7 +88,7 @@ abstract class Receipt implements Built<Receipt, ReceiptBuilder> {
 
   @BuiltValueField(wireName: r'status')
   ReceiptStatus get status;
-  // enum statusEnum {  OPEN,  NEEDS_ATTENTION,  RESOLVED,  DRAFT,  };
+  // enum statusEnum {  OPEN,  NEEDS_ATTENTION,  RESOLVED,  DRAFT,  ,  };
 
   /// Tags associated to receipt
   @BuiltValueField(wireName: r'tags')
