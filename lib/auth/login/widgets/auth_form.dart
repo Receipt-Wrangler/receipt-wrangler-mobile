@@ -53,10 +53,10 @@ class _Login extends State<AuthForm> {
               ..password = form["password"])
             .build();
         try {
-          var appData = await OpenApiClient.client
+          var appDataResponse = await OpenApiClient.client
               .getAuthApi()
               .login(loginCommand: command);
-          await _onLoginSuccess(appData as api.AppData);
+          await _onLoginSuccess(appDataResponse.data as api.AppData);
         } catch (e) {
           print(e);
           showApiErrorSnackbar(context, e as dynamic);

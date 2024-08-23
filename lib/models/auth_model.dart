@@ -93,7 +93,7 @@ class AuthModel extends ChangeNotifier {
     var jwt = await getJwt();
     var newClient = api.Openapi(basePathOverride: basePath);
     if (jwt != null) {
-      newClient.setBearerAuth("name", jwt);
+      newClient.setBearerAuth("bearerAuth", jwt);
     }
 
     OpenApiClient.client = newClient;
