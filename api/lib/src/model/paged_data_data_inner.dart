@@ -13,7 +13,7 @@ import 'package:openapi/src/model/receipt.dart';
 import 'package:openapi/src/model/item.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:one_of/one_of.dart';
+import 'package:one_of/any_of.dart';
 
 part 'paged_data_data_inner.g.dart';
 
@@ -40,8 +40,8 @@ part 'paged_data_data_inner.g.dart';
 /// * [description] - Tag description
 @BuiltValue()
 abstract class PagedDataDataInner implements Built<PagedDataDataInner, PagedDataDataInnerBuilder> {
-  /// One Of [Category], [Receipt], [Tag]
-  OneOf get oneOf;
+  /// Any Of [Category], [Receipt], [Tag]
+  AnyOf get anyOf;
 
   PagedDataDataInner._();
 
@@ -74,8 +74,8 @@ class _$PagedDataDataInnerSerializer implements PrimitiveSerializer<PagedDataDat
     PagedDataDataInner object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final oneOf = object.oneOf;
-    return serializers.serialize(oneOf.value, specifiedType: FullType(oneOf.valueType))!;
+    final anyOf = object.anyOf;
+    return serializers.serialize(anyOf, specifiedType: FullType(AnyOf, anyOf.valueTypes.map((type) => FullType(type)).toList()))!;
   }
 
   @override
@@ -85,10 +85,10 @@ class _$PagedDataDataInnerSerializer implements PrimitiveSerializer<PagedDataDat
     FullType specifiedType = FullType.unspecified,
   }) {
     final result = PagedDataDataInnerBuilder();
-    Object? oneOfDataSrc;
-    final targetType = const FullType(OneOf, [FullType(Receipt), FullType(Category), FullType(Tag), ]);
-    oneOfDataSrc = serialized;
-    result.oneOf = serializers.deserialize(oneOfDataSrc, specifiedType: targetType) as OneOf;
+    Object? anyOfDataSrc;
+    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), ]);
+    anyOfDataSrc = serialized;
+    result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
     return result.build();
   }
 }

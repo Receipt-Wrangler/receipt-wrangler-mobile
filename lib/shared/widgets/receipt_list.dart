@@ -50,6 +50,7 @@ class _ReceiptListState extends State<ReceiptList> {
         }
       }
     } catch (error) {
+      print(error);
       widget.pagingController.error = error;
     }
   }
@@ -61,7 +62,8 @@ class _ReceiptListState extends State<ReceiptList> {
             pagingController: widget.pagingController,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
               itemBuilder: (context, item, index) {
-                return ReceiptListItem(receipt: item as api.Receipt);
+                return ReceiptListItem(
+                    receipt: item.anyOf.values[0] as api.Receipt);
               },
             )));
   }
