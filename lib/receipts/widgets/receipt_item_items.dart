@@ -146,9 +146,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             var newItems = [...widget.items];
             newItems.removeAt(index);
 
-            print(index);
-            print(newItems);
-
             setState(() {
               receiptModel.setItems(newItems);
             });

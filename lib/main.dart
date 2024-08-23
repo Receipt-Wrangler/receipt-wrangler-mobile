@@ -145,8 +145,9 @@ final _router = GoRouter(
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
 
-          Future<Response<api.Receipt?>> future =
-              Future.value(Future.value(null));
+          Future<Response<api.Receipt?>> future = Future.value(
+              Response<api.Receipt?>(
+                  data: null, requestOptions: RequestOptions()));
 
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
@@ -167,7 +168,8 @@ final _router = GoRouter(
                         snapshot.hasData;
 
                 if (isReady && idsAreDifferent) {
-                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+                  receiptModel.setReceipt(
+                      snapshot.data?.data as api.Receipt, false);
                 }
 
                 return ScreenWrapper(

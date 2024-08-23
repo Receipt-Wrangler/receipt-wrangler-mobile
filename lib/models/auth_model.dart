@@ -96,6 +96,7 @@ class AuthModel extends ChangeNotifier {
       newClient.setBearerAuth("bearerAuth", jwt);
     }
 
+    newClient.dio.options.receiveTimeout = Duration(minutes: 5);
     OpenApiClient.client = newClient;
     return;
   }
