@@ -23,7 +23,7 @@ abstract class UpsertSystemEmailCommand implements Built<UpsertSystemEmailComman
 
   /// IMAP port
   @BuiltValueField(wireName: r'port')
-  int get port;
+  String get port;
 
   /// IMAP username
   @BuiltValueField(wireName: r'username')
@@ -64,7 +64,7 @@ class _$UpsertSystemEmailCommandSerializer implements PrimitiveSerializer<Upsert
     yield r'port';
     yield serializers.serialize(
       object.port,
-      specifiedType: const FullType(int),
+      specifiedType: const FullType(String),
     );
     yield r'username';
     yield serializers.serialize(
@@ -109,8 +109,8 @@ class _$UpsertSystemEmailCommandSerializer implements PrimitiveSerializer<Upsert
         case r'port':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(int),
-          ) as int;
+            specifiedType: const FullType(String),
+          ) as String;
           result.port = valueDes;
           break;
         case r'username':

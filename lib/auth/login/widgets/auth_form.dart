@@ -58,6 +58,7 @@ class _Login extends State<AuthForm> {
               .login(loginCommand: command);
           await _onLoginSuccess(appData as api.AppData);
         } catch (e) {
+          print(e);
           showApiErrorSnackbar(context, e as dynamic);
         }
       }

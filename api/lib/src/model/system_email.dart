@@ -29,7 +29,7 @@ abstract class SystemEmail implements BaseModel, Built<SystemEmail, SystemEmailB
 
   /// IMAP port
   @BuiltValueField(wireName: r'port')
-  int? get port;
+  String? get port;
 
   /// IMAP host
   @BuiltValueField(wireName: r'host')
@@ -81,7 +81,7 @@ class _$SystemEmailSerializer implements PrimitiveSerializer<SystemEmail> {
       yield r'port';
       yield serializers.serialize(
         object.port,
-        specifiedType: const FullType(int),
+        specifiedType: const FullType(String),
       );
     }
     if (object.createdBy != null) {
@@ -164,8 +164,8 @@ class _$SystemEmailSerializer implements PrimitiveSerializer<SystemEmail> {
         case r'port':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(int),
-          ) as int;
+            specifiedType: const FullType(String),
+          ) as String;
           result.port = valueDes;
           break;
         case r'createdBy':

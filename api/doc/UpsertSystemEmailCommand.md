@@ -9,7 +9,7 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **host** | **String** | IMAP host | 
-**port** | **int** | IMAP port | 
+**port** | **String** | IMAP port | 
 **username** | **String** | IMAP username | 
 **password** | **String** | IMAP password | 
 

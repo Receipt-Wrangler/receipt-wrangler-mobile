@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **createdByString** | **String** | Created by entity's name | [optional] [default to '']
 **updatedAt** | **String** |  | [optional] [default to '']
 **host** | **String** | IMAP host | [optional] 
-**port** | **int** | IMAP port | [optional] 
+**port** | **String** | IMAP port | [optional] 
 **username** | **String** | IMAP username | [optional] 
 **password** | **String** | IMAP password | [optional] 
 
