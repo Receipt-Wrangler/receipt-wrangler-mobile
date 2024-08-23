@@ -10,7 +10,7 @@ class _$SystemEmail extends SystemEmail {
   @override
   final String? password;
   @override
-  final int? port;
+  final String? port;
   @override
   final String? host;
   @override
@@ -107,9 +107,9 @@ class SystemEmailBuilder
   String? get password => _$this._password;
   set password(covariant String? password) => _$this._password = password;
 
-  int? _port;
-  int? get port => _$this._port;
-  set port(covariant int? port) => _$this._port = port;
+  String? _port;
+  String? get port => _$this._port;
+  set port(covariant String? port) => _$this._port = port;
 
   String? _host;
   String? get host => _$this._host;

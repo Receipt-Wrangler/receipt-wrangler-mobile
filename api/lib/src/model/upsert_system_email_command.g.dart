@@ -10,7 +10,7 @@ class _$UpsertSystemEmailCommand extends UpsertSystemEmailCommand {
   @override
   final String host;
   @override
-  final int port;
+  final String port;
   @override
   final String username;
   @override
@@ -86,9 +86,9 @@ class UpsertSystemEmailCommandBuilder
   String? get host => _$this._host;
   set host(String? host) => _$this._host = host;
 
-  int? _port;
-  int? get port => _$this._port;
-  set port(int? port) => _$this._port = port;
+  String? _port;
+  String? get port => _$this._port;
+  set port(String? port) => _$this._port = port;
 
   String? _username;
   String? get username => _$this._username;

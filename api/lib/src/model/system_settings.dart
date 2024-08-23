@@ -2,21 +2,21 @@
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
 
-// ignore_for_file: unused_element
-import 'package:openapi/src/model/base_model.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+// ignore_for_file: unused_element
+import 'package:openapi/src/model/base_model.dart';
 
 part 'system_settings.g.dart';
 
 /// SystemSettings
 ///
 /// Properties:
-/// * [id] 
-/// * [createdAt] 
-/// * [createdBy] 
+/// * [id]
+/// * [createdAt]
+/// * [createdBy]
 /// * [createdByString] - Created by entity's name
-/// * [updatedAt] 
+/// * [updatedAt]
 /// * [enableLocalSignUp] - Whether local sign up is enabled
 /// * [currencyDisplay] - Currency display
 /// * [debugOcr] - Debug OCR
@@ -25,7 +25,8 @@ part 'system_settings.g.dart';
 /// * [receiptProcessingSettingsId] - Receipt processing settings foreign key
 /// * [fallbackReceiptProcessingSettingsId] - Fallback receipt processing settings foreign key
 @BuiltValue()
-abstract class SystemSettings implements BaseModel, Built<SystemSettings, SystemSettingsBuilder> {
+abstract class SystemSettings
+    implements BaseModel, Built<SystemSettings, SystemSettingsBuilder> {
   /// Receipt processing settings foreign key
   @BuiltValueField(wireName: r'receiptProcessingSettingsId')
   int? get receiptProcessingSettingsId;
@@ -56,24 +57,27 @@ abstract class SystemSettings implements BaseModel, Built<SystemSettings, System
 
   SystemSettings._();
 
-  factory SystemSettings([void updates(SystemSettingsBuilder b)]) = _$SystemSettings;
+  factory SystemSettings([void updates(SystemSettingsBuilder b)]) =
+      _$SystemSettings;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(SystemSettingsBuilder b) => b
-      ..createdBy = 0
-      ..currencyDisplay = '$'
-      ..emailPollingInterval = 1800
-      ..numWorkers = 1
-      ..enableLocalSignUp = false
-      ..debugOcr = false
-      ..createdByString = ''
-      ..updatedAt = '';
+    ..createdBy = 0
+    ..currencyDisplay = '\$'
+    ..emailPollingInterval = 1800
+    ..numWorkers = 1
+    ..enableLocalSignUp = false
+    ..debugOcr = false
+    ..createdByString = ''
+    ..updatedAt = '';
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<SystemSettings> get serializer => _$SystemSettingsSerializer();
+  static Serializer<SystemSettings> get serializer =>
+      _$SystemSettingsSerializer();
 }
 
-class _$SystemSettingsSerializer implements PrimitiveSerializer<SystemSettings> {
+class _$SystemSettingsSerializer
+    implements PrimitiveSerializer<SystemSettings> {
   @override
   final Iterable<Type> types = const [SystemSettings, _$SystemSettings];
 
@@ -173,7 +177,9 @@ class _$SystemSettingsSerializer implements PrimitiveSerializer<SystemSettings> 
     SystemSettings object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -300,4 +306,3 @@ class _$SystemSettingsSerializer implements PrimitiveSerializer<SystemSettings> 
     return result.build();
   }
 }
-
