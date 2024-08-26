@@ -35,10 +35,10 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    future.then((value) {
+    future.then((responses) {
       var images = <api.FileDataView?>[];
 
-      value.forEach((response) {
+      responses.toList().forEach((response) {
         images.add(response.data);
       });
       receiptModel.imageBehaviorSubject.add(images);
@@ -55,20 +55,14 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
       return Future.wait([]);
     } else {
       List<Future<Response<api.FileDataView?>>> imageFutures = [];
+      for (var image in receiptModel.receipt.imageFiles?.toList() ?? []) {
+        var future = OpenApiClient.client
+            .getReceiptImageApi()
+            .getReceiptImageById(receiptImageId: image.id);
+        imageFutures.add(future);
+      }
 
-      return OpenApiClient.client
-          .getReceiptApi()
-          .getReceiptById(receiptId: receipt.id)
-          .then((receiptResponse) {
-        for (var image in receiptResponse.data?.imageFiles?.toList() ?? []) {
-          var future = OpenApiClient.client
-              .getReceiptImageApi()
-              .getReceiptImageById(receiptImageId: image.id);
-          imageFutures.add(future);
-        }
-
-        return Future.wait(imageFutures);
-      });
+      return Future.wait(imageFutures);
     }
   }
 
