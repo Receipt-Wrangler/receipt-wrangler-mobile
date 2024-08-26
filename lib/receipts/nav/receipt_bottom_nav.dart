@@ -50,7 +50,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           ..paidByUserId = int.parse((form["paidByUserId"] ?? "0").toString())
           ..status = form["status"] as api.ReceiptStatus
           ..comments = ListBuilder(receiptModel.comments ?? [])
-          ..receiptItems = ListBuilder(receiptModel.items ?? [])
           ..categories = ListBuilder(List<api.Category>.from(
               (form["categories"] ?? []).map((item) => item as api.Category)))
           ..tags = ListBuilder(List<api.Tag>.from(
