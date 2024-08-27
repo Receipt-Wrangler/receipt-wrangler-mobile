@@ -61,6 +61,8 @@ class AuthModel extends ChangeNotifier {
     await _storage.delete(key: _jwtKey);
     await _storage.delete(key: _refreshTokenKey);
 
+    await _updateDefaultApiClient();
+
     notifyListeners();
   }
 

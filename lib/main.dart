@@ -284,7 +284,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Timer.periodic(const Duration(minutes: 15), (timer) async {
+    Timer.periodic(const Duration(minutes: 1), (timer) async {
       await refreshTokens(authModel, groupModel, userModel,
           userPreferencesModel, categoryModel, tagModel, systemSettingsModel,
           force: true);

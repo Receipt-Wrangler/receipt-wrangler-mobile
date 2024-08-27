@@ -1,5 +1,6 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:openapi/openapi.dart';
+import 'package:receipt_wrangler_mobile/client/client.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
@@ -60,7 +61,8 @@ Future<bool> refreshTokens(
   // If user is authenticated, but data does not exist yet
   if (isAuthenticated && groupModel.groups.isEmpty) {
     try {
-      var appData = await Openapi().getUserApi().getAppData() as AppData;
+      var appData =
+          await OpenApiClient.client.getUserApi().getAppData() as AppData;
       await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
           categoryModel, tagModel, systemSettingsModel, appData);
     } catch (e) {
@@ -77,11 +79,11 @@ Future<void> getAndSetTokens(AuthModel authModel) async {
   var refreshToken = await authModel.getRefreshToken() ?? "";
   var logoutCommand =
       (LogoutCommandBuilder()..refreshToken = refreshToken).build();
-  var tokenPairResponse = await Openapi()
+  var tokenPairResponse = await OpenApiClient.client
       .getAuthApi()
       .getNewRefreshToken(logoutCommand: logoutCommand);
 
-  var tokenPair = tokenPairResponse.data as TokenPair;
+  var tokenPair = tokenPairResponse.data?.oneOf.value as TokenPair;
 
   authModel.setJwt(tokenPair.jwt);
   authModel.setRefreshToken(tokenPair.refreshToken);
