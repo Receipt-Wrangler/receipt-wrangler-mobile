@@ -83,7 +83,7 @@ Future<void> getAndSetTokens(AuthModel authModel) async {
       .getAuthApi()
       .getNewRefreshToken(logoutCommand: logoutCommand);
 
-  var tokenPair = tokenPairResponse.data?.oneOf.value as TokenPair;
+  var tokenPair = tokenPairResponse.data?.anyOf.values[0] as TokenPair;
 
   authModel.setJwt(tokenPair.jwt);
   authModel.setRefreshToken(tokenPair.refreshToken);

@@ -8,15 +8,15 @@ part of 'get_new_refresh_token200_response.dart';
 
 class _$GetNewRefreshToken200Response extends GetNewRefreshToken200Response {
   @override
-  final OneOf oneOf;
+  final AnyOf anyOf;
 
   factory _$GetNewRefreshToken200Response(
           [void Function(GetNewRefreshToken200ResponseBuilder)? updates]) =>
       (new GetNewRefreshToken200ResponseBuilder()..update(updates))._build();
 
-  _$GetNewRefreshToken200Response._({required this.oneOf}) : super._() {
+  _$GetNewRefreshToken200Response._({required this.anyOf}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        oneOf, r'GetNewRefreshToken200Response', 'oneOf');
+        anyOf, r'GetNewRefreshToken200Response', 'anyOf');
   }
 
   @override
@@ -31,13 +31,13 @@ class _$GetNewRefreshToken200Response extends GetNewRefreshToken200Response {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is GetNewRefreshToken200Response && oneOf == other.oneOf;
+    return other is GetNewRefreshToken200Response && anyOf == other.anyOf;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, oneOf.hashCode);
+    _$hash = $jc(_$hash, anyOf.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -45,7 +45,7 @@ class _$GetNewRefreshToken200Response extends GetNewRefreshToken200Response {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'GetNewRefreshToken200Response')
-          ..add('oneOf', oneOf))
+          ..add('anyOf', anyOf))
         .toString();
   }
 }
@@ -56,9 +56,9 @@ class GetNewRefreshToken200ResponseBuilder
             GetNewRefreshToken200ResponseBuilder> {
   _$GetNewRefreshToken200Response? _$v;
 
-  OneOf? _oneOf;
-  OneOf? get oneOf => _$this._oneOf;
-  set oneOf(OneOf? oneOf) => _$this._oneOf = oneOf;
+  AnyOf? _anyOf;
+  AnyOf? get anyOf => _$this._anyOf;
+  set anyOf(AnyOf? anyOf) => _$this._anyOf = anyOf;
 
   GetNewRefreshToken200ResponseBuilder() {
     GetNewRefreshToken200Response._defaults(this);
@@ -67,7 +67,7 @@ class GetNewRefreshToken200ResponseBuilder
   GetNewRefreshToken200ResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _oneOf = $v.oneOf;
+      _anyOf = $v.anyOf;
       _$v = null;
     }
     return this;
@@ -90,8 +90,8 @@ class GetNewRefreshToken200ResponseBuilder
   _$GetNewRefreshToken200Response _build() {
     final _$result = _$v ??
         new _$GetNewRefreshToken200Response._(
-            oneOf: BuiltValueNullFieldError.checkNotNull(
-                oneOf, r'GetNewRefreshToken200Response', 'oneOf'));
+            anyOf: BuiltValueNullFieldError.checkNotNull(
+                anyOf, r'GetNewRefreshToken200Response', 'anyOf'));
     replace(_$result);
     return _$result;
   }

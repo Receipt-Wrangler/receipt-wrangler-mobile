@@ -9,7 +9,7 @@ import 'package:openapi/src/model/token_pair.dart';
 import 'package:openapi/src/model/user_role.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:one_of/one_of.dart';
+import 'package:one_of/any_of.dart';
 
 part 'get_new_refresh_token200_response.g.dart';
 
@@ -32,8 +32,8 @@ part 'get_new_refresh_token200_response.g.dart';
 /// * [jti] - JWT ID
 @BuiltValue()
 abstract class GetNewRefreshToken200Response implements Built<GetNewRefreshToken200Response, GetNewRefreshToken200ResponseBuilder> {
-  /// One Of [Claims], [TokenPair]
-  OneOf get oneOf;
+  /// Any Of [Claims], [TokenPair]
+  AnyOf get anyOf;
 
   GetNewRefreshToken200Response._();
 
@@ -66,8 +66,8 @@ class _$GetNewRefreshToken200ResponseSerializer implements PrimitiveSerializer<G
     GetNewRefreshToken200Response object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final oneOf = object.oneOf;
-    return serializers.serialize(oneOf.value, specifiedType: FullType(oneOf.valueType))!;
+    final anyOf = object.anyOf;
+    return serializers.serialize(anyOf, specifiedType: FullType(AnyOf, anyOf.valueTypes.map((type) => FullType(type)).toList()))!;
   }
 
   @override
@@ -77,10 +77,10 @@ class _$GetNewRefreshToken200ResponseSerializer implements PrimitiveSerializer<G
     FullType specifiedType = FullType.unspecified,
   }) {
     final result = GetNewRefreshToken200ResponseBuilder();
-    Object? oneOfDataSrc;
-    final targetType = const FullType(OneOf, [FullType(TokenPair), FullType(Claims), ]);
-    oneOfDataSrc = serialized;
-    result.oneOf = serializers.deserialize(oneOfDataSrc, specifiedType: targetType) as OneOf;
+    Object? anyOfDataSrc;
+    final targetType = const FullType(AnyOf, [FullType(TokenPair), FullType(Claims), ]);
+    anyOfDataSrc = serialized;
+    result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
     return result.build();
   }
 }
