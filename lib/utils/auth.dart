@@ -61,10 +61,17 @@ Future<bool> refreshTokens(
   // If user is authenticated, but data does not exist yet
   if (isAuthenticated && groupModel.groups.isEmpty) {
     try {
-      var appData =
-          await OpenApiClient.client.getUserApi().getAppData() as AppData;
-      await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
-          categoryModel, tagModel, systemSettingsModel, appData);
+      var appDataResponse =
+          await OpenApiClient.client.getUserApi().getAppData();
+      await storeAppData(
+          authModel,
+          groupModel,
+          userModel,
+          userPreferencesModel,
+          categoryModel,
+          tagModel,
+          systemSettingsModel,
+          appDataResponse.data as AppData);
     } catch (e) {
       print(e);
       print("failed to set token");
