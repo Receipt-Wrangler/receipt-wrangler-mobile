@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart';
@@ -43,8 +44,37 @@ EdgeInsets getImageDataPadding() {
   return const EdgeInsets.all(26);
 }
 
-ReceiptPagedRequestFilter dashboardConfigurationToFilter(
-    Map<String, dynamic> configuration) {
+ReceiptPagedRequestFilterBuilder dashboardConfigurationToFilter(
+    BuiltMap<String, JsonObject?>? configuration) {
+  var filter = ReceiptPagedRequestFilterBuilder();
+
+  if (configuration == null) {
+    return filter;
+  }
+
+  //print("config");
+  //print(configuration);
+
+  configuration.forEach((key, value) {
+    //print("key: " + key);
+    //print("value: " + value.toString());
+    if (value.toString().length == 0) {
+      return;
+    }
+
+    var valueMap = value!.asMap;
+    print(valueMap["operation"]);
+
+    var valueBuilder = (PagedRequestFieldBuilder()
+      ..value = PagedRequestFieldValueBuilder()
+      ..operation = FilterOperation.valueOf(valueMap["operation"]));
+
+    switch (key) {
+      case 'name':
+        break;
+    }
+  });
+
   //print(configuration["status"]["value"]);
   //print(configuration["status"]["operation"]);
   //print(configuration["date"]);
@@ -63,5 +93,5 @@ ReceiptPagedRequestFilter dashboardConfigurationToFilter(
   */
 
 // TODO: fix
-  return {} as dynamic;
+  return ReceiptPagedRequestFilterBuilder();
 }

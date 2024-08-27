@@ -3,6 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import '../../../client/client.dart';
 
@@ -38,7 +39,9 @@ class _FilteredReceipts extends State<FilteredReceipts> {
                               ..page = page
                               ..pageSize = 10
                               ..orderBy = "date"
-                              ..sortDirection = api.SortDirection.desc)
+                              ..sortDirection = api.SortDirection.desc
+                              ..filter = dashboardConfigurationToFilter(
+                                  widget.dashboardWidget.configuration))
                             .build());
               })
         ],
