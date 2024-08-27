@@ -226,14 +226,14 @@ class ReceiptBottomSheetBuilder {
     var date = form["date"] as DateTime;
     form["date"] = formatDate(zuluDateFormat, date);
 
-    var status = form["status"] as api.ReceiptStatus;
-    form["status"] = status.name;
-
-    var command =
-        api.serializers.serializeWith(api.UpsertReceiptCommand.serializer, form)
-            as api.UpsertReceiptCommand;
-    var receiptToUpdate = api.UpsertReceiptCommandBuilder();
-    receiptToUpdate.replace(command);
+    var receiptToUpdate = (api.UpsertReceiptCommandBuilder()
+      ..name = form["name"]
+      ..date = form["date"]
+      ..amount = form["amount"]
+      ..status = form["status"]
+      ..groupId = form["groupId"]
+      ..paidByUserId = form["paidByUserId"]
+      ..status = form["status"]);
 
     receiptToUpdate.categories = ListBuilder(buildUpsertCategoryCommand(form));
     receiptToUpdate.tags = ListBuilder(buildUpsertTagCommand(form));
