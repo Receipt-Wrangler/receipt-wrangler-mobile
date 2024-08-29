@@ -19,6 +19,8 @@ class FilterOperation extends EnumClass {
   static const FilterOperation GREATER_THAN = _$GREATER_THAN;
   @BuiltValueEnumConst(wireName: r'LESS_THAN')
   static const FilterOperation LESS_THAN = _$LESS_THAN;
+  @BuiltValueEnumConst(wireName: r'')
+  static const FilterOperation empty = _$empty;
 
   static Serializer<FilterOperation> get serializer => _$filterOperationSerializer;
 

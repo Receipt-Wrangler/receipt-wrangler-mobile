@@ -10,6 +10,7 @@ const FilterOperation _$CONTAINS = const FilterOperation._('CONTAINS');
 const FilterOperation _$EQUALS = const FilterOperation._('EQUALS');
 const FilterOperation _$GREATER_THAN = const FilterOperation._('GREATER_THAN');
 const FilterOperation _$LESS_THAN = const FilterOperation._('LESS_THAN');
+const FilterOperation _$empty = const FilterOperation._('empty');
 
 FilterOperation _$valueOf(String name) {
   switch (name) {
@@ -21,6 +22,8 @@ FilterOperation _$valueOf(String name) {
       return _$GREATER_THAN;
     case 'LESS_THAN':
       return _$LESS_THAN;
+    case 'empty':
+      return _$empty;
     default:
       throw new ArgumentError(name);
   }
@@ -32,6 +35,7 @@ final BuiltSet<FilterOperation> _$values =
   _$EQUALS,
   _$GREATER_THAN,
   _$LESS_THAN,
+  _$empty,
 ]);
 
 class _$FilterOperationMeta {
@@ -40,6 +44,7 @@ class _$FilterOperationMeta {
   FilterOperation get EQUALS => _$EQUALS;
   FilterOperation get GREATER_THAN => _$GREATER_THAN;
   FilterOperation get LESS_THAN => _$LESS_THAN;
+  FilterOperation get empty => _$empty;
   FilterOperation valueOf(String name) => _$valueOf(name);
   BuiltSet<FilterOperation> get values => _$values;
 }
@@ -59,12 +64,14 @@ class _$FilterOperationSerializer
     'EQUALS': 'EQUALS',
     'GREATER_THAN': 'GREATER_THAN',
     'LESS_THAN': 'LESS_THAN',
+    'empty': '',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'CONTAINS': 'CONTAINS',
     'EQUALS': 'EQUALS',
     'GREATER_THAN': 'GREATER_THAN',
     'LESS_THAN': 'LESS_THAN',
+    '': 'empty',
   };
 
   @override

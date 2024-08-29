@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:one_of/one_of.dart';
 import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -46,52 +47,44 @@ EdgeInsets getImageDataPadding() {
 
 ReceiptPagedRequestFilterBuilder dashboardConfigurationToFilter(
     BuiltMap<String, JsonObject?>? configuration) {
-  var filter = ReceiptPagedRequestFilterBuilder();
-
+  var filter = (ReceiptPagedRequestFilterBuilder());
   if (configuration == null) {
     return filter;
   }
 
-  //print("config");
-  //print(configuration);
-
   configuration.forEach((key, value) {
-    //print("key: " + key);
-    //print("value: " + value.toString());
     if (value.toString().length == 0) {
       return;
     }
 
-    var valueMap = value!.asMap;
-    print(valueMap["operation"]);
-
-    var valueBuilder = (PagedRequestFieldBuilder()
-      ..value = PagedRequestFieldValueBuilder()
-      ..operation = FilterOperation.valueOf(valueMap["operation"]));
-
     switch (key) {
       case 'name':
         break;
+      case 'status':
+        filter.status = buildPagedRequestField(key, value);
+        break;
     }
   });
+  return filter;
+}
 
-  //print(configuration["status"]["value"]);
-  //print(configuration["status"]["operation"]);
-  //print(configuration["date"]);
-/*
+PagedRequestFieldBuilder buildPagedRequestField(String key, JsonObject? value) {
+  var valueMap = value!.asMap;
 
-  var test = ReceiptPagedRequestFilter(
-    status: PagedRequestField(
-      value: PagedRequestFieldValue.fromJson(configuration["status"]["value"]),
-      operation: FilterOperation.CONTAINS,
-    ),
-  );
+  FilterOperation operation = FilterOperation.empty;
+  if (valueMap["operation"].toString().length > 0) {
+    operation = FilterOperation.valueOf(valueMap["operation"]);
+  }
 
-  print(test);
+  dynamic filterValue =
+      (valueMap["value"] as List<dynamic>).map((e) => e.toString()).toList();
+  var filterValueBuilder = (PagedRequestFieldValueBuilder());
+  filterValueBuilder.oneOf =
+      OneOf.fromValue7(value: filterValue, type: List<String>);
 
-  return test;
-  */
+  var valueBuilder = (PagedRequestFieldBuilder()
+    ..operation = operation
+    ..value = filterValueBuilder);
 
-// TODO: fix
-  return ReceiptPagedRequestFilterBuilder();
+  return valueBuilder;
 }

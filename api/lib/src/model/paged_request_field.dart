@@ -20,7 +20,7 @@ abstract class PagedRequestField implements Built<PagedRequestField, PagedReques
   /// Filter operation
   @BuiltValueField(wireName: r'operation')
   FilterOperation? get operation;
-  // enum operationEnum {  CONTAINS,  EQUALS,  GREATER_THAN,  LESS_THAN,  };
+  // enum operationEnum {  CONTAINS,  EQUALS,  GREATER_THAN,  LESS_THAN,  ,  };
 
   @BuiltValueField(wireName: r'value')
   PagedRequestFieldValue? get value;
