@@ -8,15 +8,15 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**date** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**amount** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**name** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**paidBy** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**categories** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**tags** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**status** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**resolvedDate** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
-**createdAt** | [**PagedRequestField**](PagedRequestField.md) |  | [optional] 
+**date** | [**JsonObject**](.md) |  | [optional] 
+**amount** | [**JsonObject**](.md) |  | [optional] 
+**name** | [**JsonObject**](.md) |  | [optional] 
+**paidBy** | [**JsonObject**](.md) |  | [optional] 
+**categories** | [**JsonObject**](.md) |  | [optional] 
+**tags** | [**JsonObject**](.md) |  | [optional] 
+**status** | [**JsonObject**](.md) |  | [optional] 
+**resolvedDate** | [**JsonObject**](.md) |  | [optional] 
+**createdAt** | [**JsonObject**](.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

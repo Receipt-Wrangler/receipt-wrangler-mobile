@@ -53,8 +53,6 @@ import 'package:openapi/src/model/paged_data.dart';
 import 'package:openapi/src/model/paged_data_data_inner.dart';
 import 'package:openapi/src/model/paged_group_request_command.dart';
 import 'package:openapi/src/model/paged_request_command.dart';
-import 'package:openapi/src/model/paged_request_field.dart';
-import 'package:openapi/src/model/paged_request_field_value.dart';
 import 'package:openapi/src/model/prompt.dart';
 import 'package:openapi/src/model/receipt.dart';
 import 'package:openapi/src/model/receipt_paged_request_command.dart';
@@ -136,8 +134,6 @@ part 'serializers.g.dart';
   PagedDataDataInner,
   PagedGroupRequestCommand,
   PagedRequestCommand,$PagedRequestCommand,
-  PagedRequestField,
-  PagedRequestFieldValue,
   Prompt,
   Receipt,
   ReceiptPagedRequestCommand,

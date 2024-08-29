@@ -69,8 +69,6 @@ export 'package:openapi/src/model/paged_data.dart';
 export 'package:openapi/src/model/paged_data_data_inner.dart';
 export 'package:openapi/src/model/paged_group_request_command.dart';
 export 'package:openapi/src/model/paged_request_command.dart';
-export 'package:openapi/src/model/paged_request_field.dart';
-export 'package:openapi/src/model/paged_request_field_value.dart';
 export 'package:openapi/src/model/prompt.dart';
 export 'package:openapi/src/model/receipt.dart';
 export 'package:openapi/src/model/receipt_paged_request_command.dart';

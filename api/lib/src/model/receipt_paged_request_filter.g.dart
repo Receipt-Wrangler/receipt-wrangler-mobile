@@ -8,23 +8,23 @@ part of 'receipt_paged_request_filter.dart';
 
 class _$ReceiptPagedRequestFilter extends ReceiptPagedRequestFilter {
   @override
-  final PagedRequestField? date;
+  final JsonObject? date;
   @override
-  final PagedRequestField? amount;
+  final JsonObject? amount;
   @override
-  final PagedRequestField? name;
+  final JsonObject? name;
   @override
-  final PagedRequestField? paidBy;
+  final JsonObject? paidBy;
   @override
-  final PagedRequestField? categories;
+  final JsonObject? categories;
   @override
-  final PagedRequestField? tags;
+  final JsonObject? tags;
   @override
-  final PagedRequestField? status;
+  final JsonObject? status;
   @override
-  final PagedRequestField? resolvedDate;
+  final JsonObject? resolvedDate;
   @override
-  final PagedRequestField? createdAt;
+  final JsonObject? createdAt;
 
   factory _$ReceiptPagedRequestFilter(
           [void Function(ReceiptPagedRequestFilterBuilder)? updates]) =>
@@ -103,53 +103,42 @@ class ReceiptPagedRequestFilterBuilder
         Builder<ReceiptPagedRequestFilter, ReceiptPagedRequestFilterBuilder> {
   _$ReceiptPagedRequestFilter? _$v;
 
-  PagedRequestFieldBuilder? _date;
-  PagedRequestFieldBuilder get date =>
-      _$this._date ??= new PagedRequestFieldBuilder();
-  set date(PagedRequestFieldBuilder? date) => _$this._date = date;
+  JsonObject? _date;
+  JsonObject? get date => _$this._date;
+  set date(JsonObject? date) => _$this._date = date;
 
-  PagedRequestFieldBuilder? _amount;
-  PagedRequestFieldBuilder get amount =>
-      _$this._amount ??= new PagedRequestFieldBuilder();
-  set amount(PagedRequestFieldBuilder? amount) => _$this._amount = amount;
+  JsonObject? _amount;
+  JsonObject? get amount => _$this._amount;
+  set amount(JsonObject? amount) => _$this._amount = amount;
 
-  PagedRequestFieldBuilder? _name;
-  PagedRequestFieldBuilder get name =>
-      _$this._name ??= new PagedRequestFieldBuilder();
-  set name(PagedRequestFieldBuilder? name) => _$this._name = name;
+  JsonObject? _name;
+  JsonObject? get name => _$this._name;
+  set name(JsonObject? name) => _$this._name = name;
 
-  PagedRequestFieldBuilder? _paidBy;
-  PagedRequestFieldBuilder get paidBy =>
-      _$this._paidBy ??= new PagedRequestFieldBuilder();
-  set paidBy(PagedRequestFieldBuilder? paidBy) => _$this._paidBy = paidBy;
+  JsonObject? _paidBy;
+  JsonObject? get paidBy => _$this._paidBy;
+  set paidBy(JsonObject? paidBy) => _$this._paidBy = paidBy;
 
-  PagedRequestFieldBuilder? _categories;
-  PagedRequestFieldBuilder get categories =>
-      _$this._categories ??= new PagedRequestFieldBuilder();
-  set categories(PagedRequestFieldBuilder? categories) =>
-      _$this._categories = categories;
+  JsonObject? _categories;
+  JsonObject? get categories => _$this._categories;
+  set categories(JsonObject? categories) => _$this._categories = categories;
 
-  PagedRequestFieldBuilder? _tags;
-  PagedRequestFieldBuilder get tags =>
-      _$this._tags ??= new PagedRequestFieldBuilder();
-  set tags(PagedRequestFieldBuilder? tags) => _$this._tags = tags;
+  JsonObject? _tags;
+  JsonObject? get tags => _$this._tags;
+  set tags(JsonObject? tags) => _$this._tags = tags;
 
-  PagedRequestFieldBuilder? _status;
-  PagedRequestFieldBuilder get status =>
-      _$this._status ??= new PagedRequestFieldBuilder();
-  set status(PagedRequestFieldBuilder? status) => _$this._status = status;
+  JsonObject? _status;
+  JsonObject? get status => _$this._status;
+  set status(JsonObject? status) => _$this._status = status;
 
-  PagedRequestFieldBuilder? _resolvedDate;
-  PagedRequestFieldBuilder get resolvedDate =>
-      _$this._resolvedDate ??= new PagedRequestFieldBuilder();
-  set resolvedDate(PagedRequestFieldBuilder? resolvedDate) =>
+  JsonObject? _resolvedDate;
+  JsonObject? get resolvedDate => _$this._resolvedDate;
+  set resolvedDate(JsonObject? resolvedDate) =>
       _$this._resolvedDate = resolvedDate;
 
-  PagedRequestFieldBuilder? _createdAt;
-  PagedRequestFieldBuilder get createdAt =>
-      _$this._createdAt ??= new PagedRequestFieldBuilder();
-  set createdAt(PagedRequestFieldBuilder? createdAt) =>
-      _$this._createdAt = createdAt;
+  JsonObject? _createdAt;
+  JsonObject? get createdAt => _$this._createdAt;
+  set createdAt(JsonObject? createdAt) => _$this._createdAt = createdAt;
 
   ReceiptPagedRequestFilterBuilder() {
     ReceiptPagedRequestFilter._defaults(this);
@@ -158,15 +147,15 @@ class ReceiptPagedRequestFilterBuilder
   ReceiptPagedRequestFilterBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _date = $v.date?.toBuilder();
-      _amount = $v.amount?.toBuilder();
-      _name = $v.name?.toBuilder();
-      _paidBy = $v.paidBy?.toBuilder();
-      _categories = $v.categories?.toBuilder();
-      _tags = $v.tags?.toBuilder();
-      _status = $v.status?.toBuilder();
-      _resolvedDate = $v.resolvedDate?.toBuilder();
-      _createdAt = $v.createdAt?.toBuilder();
+      _date = $v.date;
+      _amount = $v.amount;
+      _name = $v.name;
+      _paidBy = $v.paidBy;
+      _categories = $v.categories;
+      _tags = $v.tags;
+      _status = $v.status;
+      _resolvedDate = $v.resolvedDate;
+      _createdAt = $v.createdAt;
       _$v = null;
     }
     return this;
@@ -187,46 +176,17 @@ class ReceiptPagedRequestFilterBuilder
   ReceiptPagedRequestFilter build() => _build();
 
   _$ReceiptPagedRequestFilter _build() {
-    _$ReceiptPagedRequestFilter _$result;
-    try {
-      _$result = _$v ??
-          new _$ReceiptPagedRequestFilter._(
-              date: _date?.build(),
-              amount: _amount?.build(),
-              name: _name?.build(),
-              paidBy: _paidBy?.build(),
-              categories: _categories?.build(),
-              tags: _tags?.build(),
-              status: _status?.build(),
-              resolvedDate: _resolvedDate?.build(),
-              createdAt: _createdAt?.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'date';
-        _date?.build();
-        _$failedField = 'amount';
-        _amount?.build();
-        _$failedField = 'name';
-        _name?.build();
-        _$failedField = 'paidBy';
-        _paidBy?.build();
-        _$failedField = 'categories';
-        _categories?.build();
-        _$failedField = 'tags';
-        _tags?.build();
-        _$failedField = 'status';
-        _status?.build();
-        _$failedField = 'resolvedDate';
-        _resolvedDate?.build();
-        _$failedField = 'createdAt';
-        _createdAt?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            r'ReceiptPagedRequestFilter', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$ReceiptPagedRequestFilter._(
+            date: date,
+            amount: amount,
+            name: name,
+            paidBy: paidBy,
+            categories: categories,
+            tags: tags,
+            status: status,
+            resolvedDate: resolvedDate,
+            createdAt: createdAt);
     replace(_$result);
     return _$result;
   }

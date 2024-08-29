@@ -3,9 +3,9 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
-import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
 import '../../../client/client.dart';
+import '../../../utils/receipts.dart';
 
 class FilteredReceipts extends StatefulWidget {
   const FilteredReceipts({super.key, required api.Widget this.dashboardWidget});

@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:openapi/src/model/paged_request_field.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -24,31 +24,31 @@ part 'receipt_paged_request_filter.g.dart';
 @BuiltValue()
 abstract class ReceiptPagedRequestFilter implements Built<ReceiptPagedRequestFilter, ReceiptPagedRequestFilterBuilder> {
   @BuiltValueField(wireName: r'date')
-  PagedRequestField? get date;
+  JsonObject? get date;
 
   @BuiltValueField(wireName: r'amount')
-  PagedRequestField? get amount;
+  JsonObject? get amount;
 
   @BuiltValueField(wireName: r'name')
-  PagedRequestField? get name;
+  JsonObject? get name;
 
   @BuiltValueField(wireName: r'paidBy')
-  PagedRequestField? get paidBy;
+  JsonObject? get paidBy;
 
   @BuiltValueField(wireName: r'categories')
-  PagedRequestField? get categories;
+  JsonObject? get categories;
 
   @BuiltValueField(wireName: r'tags')
-  PagedRequestField? get tags;
+  JsonObject? get tags;
 
   @BuiltValueField(wireName: r'status')
-  PagedRequestField? get status;
+  JsonObject? get status;
 
   @BuiltValueField(wireName: r'resolvedDate')
-  PagedRequestField? get resolvedDate;
+  JsonObject? get resolvedDate;
 
   @BuiltValueField(wireName: r'createdAt')
-  PagedRequestField? get createdAt;
+  JsonObject? get createdAt;
 
   ReceiptPagedRequestFilter._();
 
@@ -77,63 +77,63 @@ class _$ReceiptPagedRequestFilterSerializer implements PrimitiveSerializer<Recei
       yield r'date';
       yield serializers.serialize(
         object.date,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.amount != null) {
       yield r'amount';
       yield serializers.serialize(
         object.amount,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.name != null) {
       yield r'name';
       yield serializers.serialize(
         object.name,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.paidBy != null) {
       yield r'paidBy';
       yield serializers.serialize(
         object.paidBy,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.categories != null) {
       yield r'categories';
       yield serializers.serialize(
         object.categories,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.tags != null) {
       yield r'tags';
       yield serializers.serialize(
         object.tags,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.status != null) {
       yield r'status';
       yield serializers.serialize(
         object.status,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.resolvedDate != null) {
       yield r'resolvedDate';
       yield serializers.serialize(
         object.resolvedDate,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
     if (object.createdAt != null) {
       yield r'createdAt';
       yield serializers.serialize(
         object.createdAt,
-        specifiedType: const FullType(PagedRequestField),
+        specifiedType: const FullType(JsonObject),
       );
     }
   }
@@ -162,65 +162,65 @@ class _$ReceiptPagedRequestFilterSerializer implements PrimitiveSerializer<Recei
         case r'date':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.date.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.date = valueDes;
           break;
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.amount.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.amount = valueDes;
           break;
         case r'name':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.name.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.name = valueDes;
           break;
         case r'paidBy':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.paidBy.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.paidBy = valueDes;
           break;
         case r'categories':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.categories.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.categories = valueDes;
           break;
         case r'tags':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.tags.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.tags = valueDes;
           break;
         case r'status':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.status.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.status = valueDes;
           break;
         case r'resolvedDate':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.resolvedDate.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.resolvedDate = valueDes;
           break;
         case r'createdAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PagedRequestField),
-          ) as PagedRequestField;
-          result.createdAt.replace(valueDes);
+            specifiedType: const FullType(JsonObject),
+          ) as JsonObject;
+          result.createdAt = valueDes;
           break;
         default:
           unhandled.add(key);

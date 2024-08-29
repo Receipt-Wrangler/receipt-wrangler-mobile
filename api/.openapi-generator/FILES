@@ -48,8 +48,6 @@ doc/PagedData.md
 doc/PagedDataDataInner.md
 doc/PagedGroupRequestCommand.md
 doc/PagedRequestCommand.md
-doc/PagedRequestField.md
-doc/PagedRequestFieldValue.md
 doc/Prompt.md
 doc/PromptApi.md
 doc/Receipt.md
@@ -167,8 +165,6 @@ lib/src/model/paged_data.dart
 lib/src/model/paged_data_data_inner.dart
 lib/src/model/paged_group_request_command.dart
 lib/src/model/paged_request_command.dart
-lib/src/model/paged_request_field.dart
-lib/src/model/paged_request_field_value.dart
 lib/src/model/prompt.dart
 lib/src/model/receipt.dart
 lib/src/model/receipt_paged_request_command.dart

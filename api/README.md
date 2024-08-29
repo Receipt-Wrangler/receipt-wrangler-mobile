@@ -195,8 +195,6 @@ Class | Method | HTTP request | Description
  - [PagedDataDataInner](doc/PagedDataDataInner.md)
  - [PagedGroupRequestCommand](doc/PagedGroupRequestCommand.md)
  - [PagedRequestCommand](doc/PagedRequestCommand.md)
- - [PagedRequestField](doc/PagedRequestField.md)
- - [PagedRequestFieldValue](doc/PagedRequestFieldValue.md)
  - [Prompt](doc/Prompt.md)
  - [Receipt](doc/Receipt.md)
  - [ReceiptPagedRequestCommand](doc/ReceiptPagedRequestCommand.md)

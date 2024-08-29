@@ -2,7 +2,6 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:one_of/one_of.dart';
 import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -57,34 +56,43 @@ ReceiptPagedRequestFilterBuilder dashboardConfigurationToFilter(
       return;
     }
 
+    var valueMap =
+        (value?.asMap as Map<String, dynamic>) ?? Map<String, dynamic>();
+    var filterObject = JsonObject({
+      "operation": valueMap["operation"] ?? "",
+      "value": valueMap["value"] ?? null,
+    });
+
     switch (key) {
+      case 'date':
+        filter.date = filterObject;
+        break;
+      case 'amount':
+        filter.amount = filterObject;
+        break;
       case 'name':
+        filter.name = filterObject;
+        break;
+      case 'paidBy':
+        filter.paidBy = filterObject;
+        break;
+      case 'categories':
+        filter.categories = filterObject;
+        break;
+      case 'tags':
+        filter.tags = filterObject;
         break;
       case 'status':
-        filter.status = buildPagedRequestField(key, value);
+        filter.status = filterObject;
+        break;
+      case 'resolvedDate':
+        filter.resolvedDate = filterObject;
+        break;
+      case 'createdAt':
+        filter.createdAt = filterObject;
         break;
     }
   });
+
   return filter;
-}
-
-PagedRequestFieldBuilder buildPagedRequestField(String key, JsonObject? value) {
-  var valueMap = value!.asMap;
-
-  FilterOperation operation = FilterOperation.empty;
-  if (valueMap["operation"].toString().length > 0) {
-    operation = FilterOperation.valueOf(valueMap["operation"]);
-  }
-
-  dynamic filterValue =
-      (valueMap["value"] as List<dynamic>).map((e) => e.toString()).toList();
-  var filterValueBuilder = (PagedRequestFieldValueBuilder());
-  filterValueBuilder.oneOf =
-      OneOf.fromValue7(value: filterValue, type: List<String>);
-
-  var valueBuilder = (PagedRequestFieldBuilder()
-    ..operation = operation
-    ..value = filterValueBuilder);
-
-  return valueBuilder;
 }
