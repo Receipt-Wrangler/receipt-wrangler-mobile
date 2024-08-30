@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
@@ -16,9 +16,9 @@ import '../../shared/functions/permissions.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem(
-      {super.key, required this.data, this.displayGroup = false});
+      {super.key, required this.receipt, this.displayGroup = false});
 
-  final api.PagedDataDataInner data;
+  final api.Receipt receipt;
 
   final bool displayGroup;
 
@@ -32,7 +32,8 @@ class _ReceiptListItem extends State<ReceiptListItem> {
 
   Widget getStatusText() {
     var text = "";
-    switch (widget.data.status) {
+
+    switch (widget.receipt.status) {
       case api.ReceiptStatus.DRAFT:
         text = "Draft";
       case api.ReceiptStatus.NEEDS_ATTENTION:
@@ -42,7 +43,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       case api.ReceiptStatus.RESOLVED:
         text = "Resolved";
       default:
-        throw Exception("Unknown status: ${widget.data.status}");
+        throw Exception("Unknown status: ${widget.receipt.status}");
     }
 
     Color backgroundColor = Theme.of(context).colorScheme.background;
@@ -80,7 +81,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   Color getStatusColor() {
-    switch (widget.data.status) {
+    switch (widget.receipt.status) {
       case api.ReceiptStatus.DRAFT:
         return const Color.fromRGBO(224, 224, 224, 1);
       case api.ReceiptStatus.NEEDS_ATTENTION:
@@ -90,12 +91,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       case api.ReceiptStatus.RESOLVED:
         return const Color.fromRGBO(144, 238, 144, 1);
       default:
-        throw Exception("Unknown status: ${widget.data.status}");
+        throw Exception("Unknown status: ${widget.receipt.status}");
     }
   }
 
   Widget getDateText() {
-    var date = DateTime.parse(widget.data.createdAt ?? "");
+    var date = DateTime.parse(widget.receipt.createdAt ?? "");
     DateFormat format = DateFormat("MMM d");
     var formattedDate = format.format(date);
     var formattedDateParts = formattedDate.split(" ");
@@ -120,22 +121,22 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     var userNotFoundText = "User not found!";
     var userModel = Provider.of<UserModel>(context, listen: false);
 
-    var user = userModel.getUserById(widget.data.paidByUserId.toString());
-    var amount = double.parse(widget.data.amount);
+    var user = userModel.getUserById(widget.receipt.paidByUserId.toString());
+    var amount = double.parse(widget.receipt.amount);
     var formattedAmount = formatCurrency(context, amount);
     var formattedDate =
-        formatDate(defaultDateFormat, DateTime.parse(widget.data.date));
+        formatDate(defaultDateFormat, DateTime.parse(widget.receipt.date));
 
     return Text(
         "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText} on ${formattedDate}");
   }
 
   Widget buildListTile() {
-    var titleText = widget.data.name;
+    var titleText = widget.receipt.name;
 
     if (widget.displayGroup) {
-      var group = groupModel.getGroupById(widget.data.groupId.toString());
-      titleText = "${widget.data.name}\n(${group?.name})";
+      var group = groupModel.getGroupById(widget.receipt.groupId.toString());
+      titleText = "${widget.receipt.name}\n(${group?.name})";
     }
 
     return ListTile(
@@ -155,12 +156,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   void navigateToReceipt(WranglerFormState formState) {
-    context.go("/receipts/${widget.data.id}/${formState.name}");
+    context.go("/receipts/${widget.receipt.id}/${formState.name}");
   }
 
   @override
   Widget build(BuildContext context) {
-    var canEdit = canEditReceipt(authModel, groupModel, widget.data.groupId);
+    var canEdit = canEditReceipt(authModel, groupModel, widget.receipt.groupId);
 
     return SlidableWidget(
         slideEnabled: canEdit,

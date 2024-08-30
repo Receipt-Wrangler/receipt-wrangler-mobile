@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/routes.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
@@ -40,20 +41,20 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         date = formatDate(zuluDateFormat, DateTime.parse(zuluDate));
       }
     }
-    var modifiedReceipt = api.Receipt(
-        id: receiptModel.receipt.id,
-        name: form["name"] ?? "",
-        amount: form["amount"] ?? "0",
-        date: date,
-        groupId: int.parse((form["groupId"] ?? "0").toString()),
-        paidByUserId: int.parse((form["paidByUserId"] ?? "0").toString()),
-        status: form["status"] as api.ReceiptStatus,
-        comments: receiptModel.comments ?? [],
-        receiptItems: receiptModel.items ?? [],
-        categories: List<api.Category>.from(
-            (form["categories"] ?? []).map((item) => item as api.Category)),
-        tags: List<api.Tag>.from(
-            (form["tags"] ?? []).map((item) => item as api.Tag)));
+    var modifiedReceipt = (api.ReceiptBuilder()
+          ..id = receiptModel.receipt.id
+          ..name = form["name"] ?? ""
+          ..amount = form["amount"] ?? "0"
+          ..date = date
+          ..groupId = int.parse((form["groupId"] ?? "0").toString())
+          ..paidByUserId = int.parse((form["paidByUserId"] ?? "0").toString())
+          ..status = form["status"] as api.ReceiptStatus
+          ..comments = ListBuilder(receiptModel.comments ?? [])
+          ..categories = ListBuilder(List<api.Category>.from(
+              (form["categories"] ?? []).map((item) => item as api.Category)))
+          ..tags = ListBuilder(List<api.Tag>.from(
+              (form["tags"] ?? []).map((item) => item as api.Tag))))
+        .build();
 
     receiptModel.setModifiedReceipt(modifiedReceipt!);
   }

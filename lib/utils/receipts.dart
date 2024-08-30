@@ -1,6 +1,8 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
@@ -9,17 +11,17 @@ String? getReceiptId(BuildContext context) {
 }
 
 Receipt getDefaultReceipt() {
-  return Receipt(
-    id: 0,
-    date: DateTime.now().toIso8601String(),
-    groupId: 0,
-    paidByUserId: 0,
-    amount: "0",
-    name: "",
-    status: ReceiptStatus.OPEN,
-    categories: [],
-    tags: [],
-  );
+  return (ReceiptBuilder()
+        ..id = 0
+        ..date = DateTime.now().toIso8601String()
+        ..groupId = 0
+        ..paidByUserId = 0
+        ..amount = "0"
+        ..name = ""
+        ..status = ReceiptStatus.OPEN
+        ..categories = ListBuilder<Category>([])
+        ..tags = ListBuilder<Tag>([]))
+      .build();
 }
 
 String getTitleText(WranglerFormState formState, String receiptName) {
@@ -40,4 +42,57 @@ double getImagePreviewHeight(BuildContext context) {
 
 EdgeInsets getImageDataPadding() {
   return const EdgeInsets.all(26);
+}
+
+ReceiptPagedRequestFilterBuilder dashboardConfigurationToFilter(
+    BuiltMap<String, JsonObject?>? configuration) {
+  var filter = (ReceiptPagedRequestFilterBuilder());
+  if (configuration == null) {
+    return filter;
+  }
+
+  configuration.forEach((key, value) {
+    if (value.toString().length == 0) {
+      return;
+    }
+
+    var valueMap =
+        (value?.asMap as Map<String, dynamic>) ?? Map<String, dynamic>();
+    var filterObject = JsonObject({
+      "operation": valueMap["operation"] ?? "",
+      "value": valueMap["value"] ?? null,
+    });
+
+    switch (key) {
+      case 'date':
+        filter.date = filterObject;
+        break;
+      case 'amount':
+        filter.amount = filterObject;
+        break;
+      case 'name':
+        filter.name = filterObject;
+        break;
+      case 'paidBy':
+        filter.paidBy = filterObject;
+        break;
+      case 'categories':
+        filter.categories = filterObject;
+        break;
+      case 'tags':
+        filter.tags = filterObject;
+        break;
+      case 'status':
+        filter.status = filterObject;
+        break;
+      case 'resolvedDate':
+        filter.resolvedDate = filterObject;
+        break;
+      case 'createdAt':
+        filter.createdAt = filterObject;
+        break;
+    }
+  });
+
+  return filter;
 }

@@ -1,8 +1,8 @@
 // TODO: fix delete, and fix adding new items, fix broken amount owed
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
@@ -103,13 +103,13 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           onPressed: () {
             formKey.currentState?.save();
             var newItems = [...widget.items];
-            var newItem = api.Item(
-              name: "",
-              amount: "0.00",
-              chargedToUserId: items[0].chargedToUserId,
-              receiptId: receiptModel.receipt.id,
-              status: api.ItemStatus.OPEN,
-            );
+            var newItem = (api.ItemBuilder()
+                  ..name = ""
+                  ..amount = "0.00"
+                  ..chargedToUserId = items[0].chargedToUserId
+                  ..receiptId = receiptModel.receipt.id
+                  ..status = api.ItemStatus.OPEN)
+                .build();
             newItems.add(FormItem.fromItem(newItem));
 
             setState(() {
@@ -145,9 +145,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           onPressed: () {
             var newItems = [...widget.items];
             newItems.removeAt(index);
-
-            print(index);
-            print(newItems);
 
             setState(() {
               receiptModel.setItems(newItems);

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
+
+import '../../client/client.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TopAppBar(
@@ -47,8 +49,11 @@ class _TopAppBar extends State<TopAppBar> {
     AuthModel authModel = Provider.of<AuthModel>(context, listen: false);
     try {
       var refreshToken = await authModel.getRefreshToken();
-      await api.AuthApi().logout(
-          logoutCommand: api.LogoutCommand(refreshToken: refreshToken ?? ""));
+      await OpenApiClient.client.getAuthApi().logout(
+            logoutCommand: (api.LogoutCommandBuilder()
+                  ..refreshToken = refreshToken ?? "")
+                .build(),
+          );
       await authModel.purgeTokens();
       showSuccessSnackbar(context, "Successfully logged out");
       context.go("/login");

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 
 class GroupModel extends ChangeNotifier {
   List<Group> _groups = [];

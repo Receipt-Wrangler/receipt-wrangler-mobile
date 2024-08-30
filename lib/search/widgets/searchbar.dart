@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
-import '../../api.dart' as api;
+import '../../client/client.dart';
 import '../../models/search_model.dart';
 
 class WranglerSearchBar extends StatefulWidget {
@@ -24,8 +24,11 @@ class _WranglerSearchBar extends State<WranglerSearchBar> {
         onChanged: (value) {
           var searchText = value ?? "";
           searchModel.searchTermBehaviorSubject.add(searchText);
-          api.SearchApi().receiptSearch(searchText).then((value) {
-            searchModel.setSearchResults(value ?? []);
+          OpenApiClient.client
+              .getSearchApi()
+              .receiptSearch(searchTerm: searchText)
+              .then((value) {
+            searchModel.setSearchResults(value.data?.toList() ?? []);
           });
         },
       ),

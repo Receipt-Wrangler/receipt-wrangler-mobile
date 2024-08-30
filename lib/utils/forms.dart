@@ -1,8 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:openapi/openapi.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
@@ -115,7 +116,7 @@ setLoadingBarState(BuildContext context, bool isLoading) {
 }
 
 handleApiError(BuildContext context, dynamic e) {
-  if (e is ApiException) {
+  if (e is DioException) {
     showApiErrorSnackbar(context, e);
     return;
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
+import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
+
+import 'dashboard_widgets/filtered_receipts.dart';
 
 class GroupDashboard extends StatefulWidget {
   GroupDashboard({super.key, required this.dashboards});
@@ -59,12 +61,17 @@ class _GroupDashboard extends State<GroupDashboard> {
     var widgets = <Widget>[];
 
     if (dashboard != null) {
-      for (var widget in dashboard.widgets) {
+      for (var widget in (dashboard.widgets)?.toList() ?? []) {
         switch (widget.widgetType) {
           case api.WidgetType.FILTERED_RECEIPTS:
+            widgets.add(FilteredReceipts(
+              dashboardWidget: widget,
+            ));
             break;
           case api.WidgetType.GROUP_SUMMARY:
-            widgets.add(const GroupSummary());
+            widgets.add(GroupSummary(
+              dashboardWidget: widget,
+            ));
             break;
         }
       }
@@ -84,6 +91,7 @@ class _GroupDashboard extends State<GroupDashboard> {
   @override
   Widget build(BuildContext context) {
     var chipList = buildChoiceChipList(widget.dashboards);
+    var dashboardWidgets = <Widget>[];
     api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
 
     List<Widget> children = [];
@@ -91,13 +99,18 @@ class _GroupDashboard extends State<GroupDashboard> {
     if (widget.dashboards.isEmpty) {
       children.add(const Text("No dashboards to display"));
     } else {
-      children = [chipList, ...buildDashboardWidgets(selectedDashboard)];
+      dashboardWidgets = buildDashboardWidgets(selectedDashboard);
     }
 
     return SizedBox(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: children));
+            children: [
+          chipList,
+          Expanded(
+              child:
+                  GridView.count(crossAxisCount: 1, children: dashboardWidgets))
+        ]));
   }
 }

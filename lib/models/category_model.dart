@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 
 class CategoryModel extends ChangeNotifier {
   List<Category> _categories = [];

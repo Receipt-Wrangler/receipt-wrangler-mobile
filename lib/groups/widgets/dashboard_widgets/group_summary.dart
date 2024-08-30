@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
+import '../../../client/client.dart';
+import '../constants/text_styles.dart';
+
 class GroupSummary extends StatefulWidget {
-  const GroupSummary({super.key});
+  const GroupSummary({super.key, required this.dashboardWidget});
+
+  final api.Widget dashboardWidget;
 
   @override
   State<GroupSummary> createState() => _GroupSummary();
@@ -37,7 +42,7 @@ class _GroupSummary extends State<GroupSummary> {
     var userModel = Provider.of<UserModel>(context, listen: false);
 
     userData.entries.forEach((element) {
-      widgets.add(Row(
+      widgets.add(Wrap(
         children: [
           UserAvatar(userId: element.key),
           const SizedBox(width: 10),
@@ -54,7 +59,9 @@ class _GroupSummary extends State<GroupSummary> {
   Widget build(BuildContext context) {
     var groupId = int.tryParse(getGroupId(context) ?? "");
     var groupSummaryFuture =
-        api.UserApi().getAmountOwedForUser(groupId: groupId);
+        OpenApiClient.client.getUserApi().getAmountOwedForUser(
+              groupId: groupId ?? 0,
+            );
 
     return FutureBuilder(
         future: groupSummaryFuture,
@@ -65,12 +72,12 @@ class _GroupSummary extends State<GroupSummary> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                const Text(
-                  "Group Summary",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Text(
+                  widget.dashboardWidget.name ?? "",
+                  style: dashboardWidgetNameStyle,
                 ),
                 const SizedBox(height: 10),
-                ...buildSummaryLineWidgets(snapshot.data),
+                ...buildSummaryLineWidgets(snapshot.data?.data?.toMap() ?? {}),
               ],
             );
           }

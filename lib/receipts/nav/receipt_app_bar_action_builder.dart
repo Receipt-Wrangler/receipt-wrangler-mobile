@@ -1,10 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../api.dart' as api;
+import '../../client/client.dart';
 import '../../enums/upload_method.dart';
 import '../../interfaces/upload_multipart_file_data.dart';
 import '../../models/loading_model.dart';
@@ -149,8 +151,8 @@ class ReceiptAppBarActionBuilder {
   Future<void> deleteImageViaApi() async {
     try {
       var index = receiptModel.infiniteScrollController.selectedItem;
-      await api.ReceiptImageApi().deleteReceiptImageById(
-          receiptModel.imageBehaviorSubject.value[index]!.id);
+      await OpenApiClient.client.getReceiptImageApi().deleteReceiptImageById(
+          receiptImageId: receiptModel.imageBehaviorSubject.value[index]!.id);
       var currentImages =
           List<api.FileDataView?>.from(receiptModel.imageBehaviorSubject.value);
       currentImages.removeAt(index);
@@ -158,7 +160,7 @@ class ReceiptAppBarActionBuilder {
 
       showSuccessSnackbar(context, "Successfully deleted image");
     } catch (e) {
-      showApiErrorSnackbar(context, e as api.ApiException);
+      showApiErrorSnackbar(context, e as DioException);
     }
   }
 
@@ -209,11 +211,13 @@ class ReceiptAppBarActionBuilder {
       }
 
       for (var image in imagesToUpload) {
-        var uploadedImage = await api.ReceiptImageApi()
-            .uploadReceiptImage(image.multipartFile, receiptModel.receipt.id);
+        var uploadedImage = await OpenApiClient.client
+            .getReceiptImageApi()
+            .uploadReceiptImage(
+                file: image.multipartFile, receiptId: receiptModel.receipt.id);
         var oldImages = List<api.FileDataView?>.from(
             receiptModel.imageBehaviorSubject.value);
-        oldImages.add(uploadedImage);
+        oldImages.add(uploadedImage.data);
         receiptModel.imageBehaviorSubject.add(oldImages);
       }
       Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
@@ -231,7 +235,7 @@ class ReceiptAppBarActionBuilder {
     } catch (e) {
       print(e);
       Provider.of<LoadingModel>(context, listen: false).setIsLoading(false);
-      showApiErrorSnackbar(context, e as api.ApiException);
+      showApiErrorSnackbar(context, e as DioException);
     }
   }
 }

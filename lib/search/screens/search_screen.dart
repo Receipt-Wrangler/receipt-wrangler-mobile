@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/receipt_list_item.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 
-import '../../api.dart' as api;
 import '../../models/search_model.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -26,19 +26,18 @@ class _SearchScreen extends State<SearchScreen> {
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
         var searchResult = searchResults[index];
+        var receipt = (api.ReceiptBuilder()
+              ..amount = searchResult.amount
+              ..date = searchResult.date
+              ..groupId = searchResult.groupId
+              ..id = searchResult.id
+              ..name = searchResult.name
+              ..paidByUserId = searchResult.paidByUserId
+              ..status = searchResult.receiptStatus
+              ..createdAt = searchResult.createdAt)
+            .build();
 
-        return ReceiptListItem(
-            displayGroup: true,
-            data: new api.PagedDataDataInner(
-              amount: searchResult.amount ?? "",
-              date: searchResult.date ?? "",
-              groupId: searchResult.groupId ?? 0,
-              id: searchResult.id ?? 0,
-              name: searchResult.name ?? "",
-              paidByUserId: searchResult.paidByUserId ?? 0,
-              status: searchResult.receiptStatus ?? api.ReceiptStatus.DRAFT,
-              createdAt: searchResult.createdAt ?? "",
-            ));
+        return ReceiptListItem(displayGroup: true, receipt: receipt);
       },
     );
   }

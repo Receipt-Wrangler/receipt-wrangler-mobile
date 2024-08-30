@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import "package:receipt_wrangler_mobile/api.dart" as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
@@ -153,7 +153,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     return MultiSelectField<api.Category>(
         name: "categories",
         label: "Categories",
-        initialValue: modifiedReceipt.categories,
+        initialValue: modifiedReceipt.categories?.toList() ?? [],
         itemDisplayName: (category) => category.name ?? "",
         itemName: "Categories",
         onTap: formState == WranglerFormState.view
@@ -185,7 +185,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     return MultiSelectField<api.Tag>(
         name: "tags",
         label: "Tags",
-        initialValue: modifiedReceipt.tags,
+        initialValue: modifiedReceipt.tags?.toList() ?? [],
         itemDisplayName: (tag) => tag.name ?? "",
         itemName: "Tags",
         onTap: formState == WranglerFormState.view ? null : showTagMultiSelect);
@@ -302,16 +302,18 @@ class _ReceiptForm extends State<ReceiptForm> {
                               }
 
                               var items = [...receiptModel.items];
-                              var newItem = api.Item(
-                                name: addSharesFormKey
-                                    .currentState!.fields["name"]!.value,
-                                amount: addSharesFormKey
-                                    .currentState!.fields["amount"]!.value,
-                                chargedToUserId: addSharesFormKey.currentState!
-                                    .fields["chargedToUserId"]!.value,
-                                receiptId: receipt?.id ?? 0,
-                                status: api.ItemStatus.OPEN,
-                              );
+                              var newItem = (api.ItemBuilder()
+                                    ..name = addSharesFormKey
+                                        .currentState!.fields["name"]!.value
+                                    ..amount = addSharesFormKey
+                                        .currentState!.fields["amount"]!.value
+                                    ..chargedToUserId = addSharesFormKey
+                                        .currentState!
+                                        .fields["chargedToUserId"]!
+                                        .value
+                                    ..receiptId = receipt?.id ?? 0
+                                    ..status = api.ItemStatus.OPEN)
+                                  .build();
 
                               items.add(FormItem.fromItem(newItem));
 

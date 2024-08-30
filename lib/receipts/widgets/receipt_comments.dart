@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/api.dart' as api;
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_delete_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
+import '../../client/client.dart';
 import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -62,7 +63,10 @@ class _ReceiptComments extends State<ReceiptComments> {
 
     if (formState == WranglerFormState.edit) {
       var commentId = widget.comments[index].id;
-      api.CommentApi().deleteComment(commentId).then((value) {
+      OpenApiClient.client
+          .getCommentApi()
+          .deleteComment(commentId: commentId)
+          .then((value) {
         var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
         var comments = new List<api.Comment>.from(receiptModel.comments);
         comments.removeAt(index);

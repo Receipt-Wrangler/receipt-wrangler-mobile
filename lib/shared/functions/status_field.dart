@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:receipt_wrangler_mobile/api.dart' as api;
+import 'package:openapi/openapi.dart' as api;
 
 import '../../enums/form_state.dart';
 import '../../utils/forms.dart';

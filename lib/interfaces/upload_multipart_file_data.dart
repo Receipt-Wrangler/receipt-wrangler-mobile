@@ -1,6 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 
 class UploadMultipartFileData {
   MultipartFile multipartFile;

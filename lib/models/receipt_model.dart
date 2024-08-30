@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
-import 'package:receipt_wrangler_mobile/api.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/interfaces/form_item.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
@@ -53,9 +53,9 @@ class ReceiptModel extends ChangeNotifier {
 
     _modifiedReceipt = receipt;
 
-    _comments = receipt.comments;
+    _comments = (receipt.comments)?.toList() ?? [];
 
-    _items = FormItem.fromItems(receipt.receiptItems);
+    _items = FormItem.fromItems((receipt.receiptItems)?.toList() ?? []);
 
     _imageBehaviorSubject = BehaviorSubject<List<FileDataView?>>.seeded([]);
 

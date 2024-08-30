@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
@@ -39,9 +41,8 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
-import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
-import 'api.dart' as api;
+import 'client/client.dart';
 import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
@@ -144,14 +145,17 @@ final _router = GoRouter(
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
 
-          Future<api.Receipt?> future = Future.value(getDefaultReceipt());
+          Future<Response<api.Receipt?>> future = Future.value(
+              Response<api.Receipt?>(
+                  data: null, requestOptions: RequestOptions()));
 
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
           if (idsAreDifferent && receiptId.isNotEmpty) {
-            future = api.ReceiptApi().getReceiptById(
-                int.parse(state.pathParameters['receiptId'] as String));
+            future = OpenApiClient.client.getReceiptApi().getReceiptById(
+                receiptId:
+                    int.parse(state.pathParameters['receiptId'] as String));
           }
 
           contextModel.setShellContext(context);
@@ -164,7 +168,8 @@ final _router = GoRouter(
                         snapshot.hasData;
 
                 if (isReady && idsAreDifferent) {
-                  receiptModel.setReceipt(snapshot.data as api.Receipt, false);
+                  receiptModel.setReceipt(
+                      snapshot.data?.data as api.Receipt, false);
                 }
 
                 return ScreenWrapper(
