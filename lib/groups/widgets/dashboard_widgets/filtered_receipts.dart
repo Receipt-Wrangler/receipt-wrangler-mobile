@@ -49,7 +49,8 @@ class _FilteredReceipts extends State<FilteredReceipts> {
                               ..filter = dashboardConfigurationToFilter(
                                   widget.dashboardWidget.configuration))
                             .build());
-              })
+              }),
+          SizedBox(height: 50),
         ],
       ),
     );
