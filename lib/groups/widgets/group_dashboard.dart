@@ -69,7 +69,9 @@ class _GroupDashboard extends State<GroupDashboard> {
             ));
             break;
           case api.WidgetType.GROUP_SUMMARY:
-            widgets.add(const GroupSummary());
+            widgets.add(GroupSummary(
+              dashboardWidget: widget,
+            ));
             break;
         }
       }

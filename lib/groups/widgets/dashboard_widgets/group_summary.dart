@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/user_avatar.dart';
@@ -6,9 +7,12 @@ import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 import '../../../client/client.dart';
+import '../constants/text_styles.dart';
 
 class GroupSummary extends StatefulWidget {
-  const GroupSummary({super.key});
+  const GroupSummary({super.key, required this.dashboardWidget});
+
+  final api.Widget dashboardWidget;
 
   @override
   State<GroupSummary> createState() => _GroupSummary();
@@ -68,9 +72,9 @@ class _GroupSummary extends State<GroupSummary> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                const Text(
-                  "Group Summary",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Text(
+                  widget.dashboardWidget.name ?? "",
+                  style: dashboardWidgetNameStyle,
                 ),
                 const SizedBox(height: 10),
                 ...buildSummaryLineWidgets(snapshot.data?.data?.toMap() ?? {}),

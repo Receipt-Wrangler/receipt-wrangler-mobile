@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
+import 'package:receipt_wrangler_mobile/groups/widgets/constants/text_styles.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
@@ -27,8 +28,13 @@ class _FilteredReceipts extends State<FilteredReceipts> {
     // TODO: get filter working with dio
     return SizedBox(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.dashboardWidget.name ?? ""),
+          Text(
+            widget.dashboardWidget.name ?? "",
+            style: dashboardWidgetNameStyle,
+          ),
           ReceiptList(
               pagingController: _pagingController,
               getPagedReceiptFuture: (page) {
