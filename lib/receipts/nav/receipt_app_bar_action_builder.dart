@@ -116,6 +116,7 @@ class ReceiptAppBarActionBuilder {
     var image = await OpenApiClient.client
         .getReceiptImageApi()
         .downloadReceiptImageById(receiptImageId: receiptImage.id);
+    Gal
   }
 
   List<PopupMenuEntry> _buildViewAppBarMenuOptions() {
