@@ -26,6 +26,11 @@ class ReceiptAppBarActionBuilder {
     this.receiptModel = receiptModel;
   }
 
+  api.FileDataView? getCurrentlySelectedImage() {
+    var index = receiptModel.infiniteScrollController.selectedItem;
+    return receiptModel.imageBehaviorSubject.value[index];
+  }
+
   List<Widget> buildAppBarMenu(GoRouterState state) {
     if (state.fullPath!.contains("images")) {
       return [_buildImagesAppBarMenu(state.fullPath!)];
@@ -79,6 +84,8 @@ class ReceiptAppBarActionBuilder {
       options = _buildViewAppBarMenuOptions();
     }
 
+    options.add(buildImageDownloadButton());
+
     var combinedStream = Rx.merge([
       receiptModel.imagesToUploadBehaviorSubject.stream,
       receiptModel.imageBehaviorSubject.stream
@@ -91,6 +98,24 @@ class ReceiptAppBarActionBuilder {
               groupId: receiptModel.receipt.groupId,
               popupMenuChildren: options);
         });
+  }
+
+  PopupMenuItem buildImageDownloadButton() {
+    return PopupMenuItem(
+      child: const Text("Download"),
+      onTap: () async => await downloadImage(),
+    );
+  }
+
+  Future downloadImage() async {
+    var receiptImage = getCurrentlySelectedImage();
+    if (receiptImage == null) {
+      return;
+    }
+
+    var image = await OpenApiClient.client
+        .getReceiptImageApi()
+        .downloadReceiptImageById(receiptImageId: receiptImage.id);
   }
 
   List<PopupMenuEntry> _buildViewAppBarMenuOptions() {
