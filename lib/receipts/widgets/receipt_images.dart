@@ -30,7 +30,7 @@ class _ReceiptImages extends State<ReceiptImages> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: imageStream,
+      stream: imageStream.asBroadcastStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
