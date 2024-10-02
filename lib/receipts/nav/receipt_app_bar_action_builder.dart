@@ -128,8 +128,13 @@ class ReceiptAppBarActionBuilder {
     }
 
     await Gal.putImageBytes(imageBytes).then((value) {
-      showSuccessSnackbar(context, "Image saved to gallery");
-      print("Image saved to gallery");
+      var snackbarAction = SnackBarAction(
+        label: "Open",
+        onPressed: () async => await Gal.open(),
+      );
+
+      showSuccessSnackbar(context, "Image saved to gallery",
+          action: snackbarAction);
       loadingModel.setIsLoading(false);
     }).catchError((e) {
       showErrorSnackbar(context, "Failed to save image to gallery");
