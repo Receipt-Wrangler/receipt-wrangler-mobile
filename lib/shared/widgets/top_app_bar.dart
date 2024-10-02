@@ -45,6 +45,11 @@ class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _TopAppBar extends State<TopAppBar> {
+  late final AuthModel authModel =
+      Provider.of<AuthModel>(context, listen: false);
+  late final LoadingModel loadingModel =
+      Provider.of<LoadingModel>(context, listen: true);
+
   Future<void> _logout() async {
     AuthModel authModel = Provider.of<AuthModel>(context, listen: false);
     try {
@@ -107,9 +112,7 @@ class _TopAppBar extends State<TopAppBar> {
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget? getLoadingIndicator(context) {
-      var isLoading =
-          Provider.of<LoadingModel>(context, listen: true).isLoading;
-      if (isLoading) {
+      if (loadingModel.isLoading) {
         return const PreferredSize(
             preferredSize: Size.square(4), child: LinearProgressIndicator());
       } else {

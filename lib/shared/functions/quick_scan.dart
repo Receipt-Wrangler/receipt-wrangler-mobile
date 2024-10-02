@@ -116,7 +116,7 @@ Future<void> _submitQuickScan(
 Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
     BehaviorSubject<List<QuickScanImage>> imageSubject) {
   return StreamBuilder<List<QuickScanImage>>(
-    stream: imageSubject.stream,
+    stream: imageSubject.stream.asBroadcastStream(),
     builder: (context, snapshot) {
       if (snapshot.hasData && snapshot.data!.isNotEmpty) {
         return DeleteButton(

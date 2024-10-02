@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
@@ -21,9 +22,16 @@ class ReceiptAppBarActionBuilder {
 
   late final BuildContext context;
 
+  late final loadingModel = Provider.of<LoadingModel>(context, listen: false);
+
   ReceiptAppBarActionBuilder(BuildContext context, ReceiptModel receiptModel) {
     this.context = context;
     this.receiptModel = receiptModel;
+  }
+
+  api.FileDataView? getCurrentlySelectedImage() {
+    var index = receiptModel.infiniteScrollController.selectedItem;
+    return receiptModel.imageBehaviorSubject.value[index];
   }
 
   List<Widget> buildAppBarMenu(GoRouterState state) {
@@ -79,10 +87,12 @@ class ReceiptAppBarActionBuilder {
       options = _buildViewAppBarMenuOptions();
     }
 
+    options.add(buildImageDownloadButton());
+
     var combinedStream = Rx.merge([
       receiptModel.imagesToUploadBehaviorSubject.stream,
       receiptModel.imageBehaviorSubject.stream
-    ]);
+    ]).asBroadcastStream();
 
     return StreamBuilder(
         stream: combinedStream,
@@ -91,6 +101,46 @@ class ReceiptAppBarActionBuilder {
               groupId: receiptModel.receipt.groupId,
               popupMenuChildren: options);
         });
+  }
+
+  PopupMenuItem buildImageDownloadButton() {
+    return PopupMenuItem(
+      child: const Text("Download"),
+      onTap: () async => await downloadImage(),
+    );
+  }
+
+  Future downloadImage() async {
+    loadingModel.setIsLoading(true);
+    var receiptImage = getCurrentlySelectedImage();
+    if (receiptImage == null) {
+      return;
+    }
+
+    var imageResponse = await OpenApiClient.client
+        .getReceiptImageApi()
+        .downloadReceiptImageById(receiptImageId: receiptImage.id);
+
+    var imageBytes = imageResponse.data;
+
+    if (imageBytes == null) {
+      loadingModel.setIsLoading(false);
+      return;
+    }
+
+    await Gal.putImageBytes(imageBytes).then((value) {
+      var snackbarAction = SnackBarAction(
+        label: "Open",
+        onPressed: () async => await Gal.open(),
+      );
+
+      showSuccessSnackbar(context, "Image saved to gallery",
+          action: snackbarAction);
+      loadingModel.setIsLoading(false);
+    }).catchError((e) {
+      showErrorSnackbar(context, "Failed to save image to gallery");
+      loadingModel.setIsLoading(false);
+    });
   }
 
   List<PopupMenuEntry> _buildViewAppBarMenuOptions() {
