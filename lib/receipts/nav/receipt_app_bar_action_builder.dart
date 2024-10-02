@@ -22,6 +22,8 @@ class ReceiptAppBarActionBuilder {
 
   late final BuildContext context;
 
+  late final loadingModel = Provider.of<LoadingModel>(context, listen: false);
+
   ReceiptAppBarActionBuilder(BuildContext context, ReceiptModel receiptModel) {
     this.context = context;
     this.receiptModel = receiptModel;
@@ -90,7 +92,7 @@ class ReceiptAppBarActionBuilder {
     var combinedStream = Rx.merge([
       receiptModel.imagesToUploadBehaviorSubject.stream,
       receiptModel.imageBehaviorSubject.stream
-    ]);
+    ]).asBroadcastStream();
 
     return StreamBuilder(
         stream: combinedStream,
@@ -109,7 +111,6 @@ class ReceiptAppBarActionBuilder {
   }
 
   Future downloadImage() async {
-    var loadingModel = Provider.of<LoadingModel>(context, listen: false);
     loadingModel.setIsLoading(true);
     var receiptImage = getCurrentlySelectedImage();
     if (receiptImage == null) {
