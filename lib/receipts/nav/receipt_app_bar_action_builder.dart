@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
@@ -108,15 +109,32 @@ class ReceiptAppBarActionBuilder {
   }
 
   Future downloadImage() async {
+    var loadingModel = Provider.of<LoadingModel>(context, listen: false);
+    loadingModel.setIsLoading(true);
     var receiptImage = getCurrentlySelectedImage();
     if (receiptImage == null) {
       return;
     }
 
-    var image = await OpenApiClient.client
+    var imageResponse = await OpenApiClient.client
         .getReceiptImageApi()
         .downloadReceiptImageById(receiptImageId: receiptImage.id);
-    Gal
+
+    var imageBytes = imageResponse.data;
+
+    if (imageBytes == null) {
+      loadingModel.setIsLoading(false);
+      return;
+    }
+
+    await Gal.putImageBytes(imageBytes).then((value) {
+      showSuccessSnackbar(context, "Image saved to gallery");
+      print("Image saved to gallery");
+      loadingModel.setIsLoading(false);
+    }).catchError((e) {
+      showErrorSnackbar(context, "Failed to save image to gallery");
+      loadingModel.setIsLoading(false);
+    });
   }
 
   List<PopupMenuEntry> _buildViewAppBarMenuOptions() {
