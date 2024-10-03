@@ -18,6 +18,8 @@ class _ImageViewer extends State<ImageViewer> {
     return Stack(children: [
       Center(
         child: InteractiveViewer(
+          minScale: 0.1,
+          maxScale: 10.0,
           transformationController: _transformationController,
           child: widget.image,
         ),
