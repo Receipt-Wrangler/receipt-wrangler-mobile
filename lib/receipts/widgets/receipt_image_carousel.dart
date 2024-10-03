@@ -5,6 +5,7 @@ import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/image_viewer.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 
@@ -31,6 +32,8 @@ class ReceiptImageCarousel extends StatefulWidget {
 class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
   late final controller =
       widget.infiniteScrollController ?? InfiniteScrollController();
+  final TransformationController _transformationController =
+      TransformationController();
 
   int getAdjustedIndex(int index) {
     var isImagesEmpty = (widget.images ?? []).isEmpty;
@@ -98,7 +101,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     }
   }
 
-  Widget getInMemoryImage(int index) {
+  Image getInMemoryImage(int index) {
     var indexToUse = index;
     if ((widget.images ?? []).isNotEmpty) {
       indexToUse = index - (widget.images!.length - 1);
@@ -108,7 +111,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     return Image.memory(image.bytes);
   }
 
-  Widget getImage(int index) {
+  Image getImage(int index) {
     if (index <= (widget.images ?? []).length - 1) {
       return getDecodedImage(index);
     } else {
@@ -116,16 +119,10 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
     }
   }
 
+  // TODO: make shared image widget
   Widget getImageWidget(int index) {
-    var bottomPosition = MediaQuery.of(context).size.height * .0001;
-
-    return Stack(children: [
-      Center(child: getImage(index)),
-/*        Positioned(
-            bottom: bottomPosition,
-            left: 4,
-            child: IconButton(icon: const Icon(Icons.more), onPressed: () {}))*/
-    ]);
+    var image = getImage(index);
+    return ImageViewer(image: image);
   }
 
   Widget buildInfiniteCarousel() {

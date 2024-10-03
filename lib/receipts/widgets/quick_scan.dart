@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan_form.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/image_viewer.dart';
 import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,11 +22,11 @@ class QuickScan extends StatefulWidget {
 
 class _QuickScan extends State<QuickScan> {
   Widget _buildImagePreview(int index) {
+    var image = Image.memory(widget.imageSubject.value[index].bytes);
     return SizedBox(
-      height: getImagePreviewHeight(context),
-      width: getImagePreviewWidth(context),
-      child: Image.memory(widget.imageSubject.value[index].bytes),
-    );
+        height: getImagePreviewHeight(context),
+        width: getImagePreviewWidth(context),
+        child: ImageViewer(image: image));
   }
 
   Widget _buildCarousel() {
