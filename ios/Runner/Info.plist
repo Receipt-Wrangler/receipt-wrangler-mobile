@@ -52,7 +52,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used for uploading images</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Used for uploading images</string>
+	<string>Used for downloading images</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
 </dict>
