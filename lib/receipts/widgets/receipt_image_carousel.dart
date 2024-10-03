@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:openapi/openapi.dart' as api;
@@ -95,7 +93,7 @@ class _ReceiptImageCarousel extends State<ReceiptImageCarousel> {
       return Image.asset("assets/images/placeholder.png");
     } else {
       var base64Image = image?.encodedImage.split(",").last;
-      var bytes = base64Decode(base64Image!);
+      var bytes = getBytesFromEncodedImage(base64Image ?? "");
 
       return Image.memory(bytes);
     }

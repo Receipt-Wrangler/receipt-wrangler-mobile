@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/full_screen_image_viewer.dart';
+import 'package:receipt_wrangler_mobile/utils/receipts.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
@@ -88,6 +90,7 @@ class ReceiptAppBarActionBuilder {
     }
 
     options.add(buildImageDownloadButton());
+    options.add(viewInFullScreenButton());
 
     var combinedStream = Rx.merge([
       receiptModel.imagesToUploadBehaviorSubject.stream,
@@ -100,6 +103,26 @@ class ReceiptAppBarActionBuilder {
           return ReceiptEditPopupMenu(
               groupId: receiptModel.receipt.groupId,
               popupMenuChildren: options);
+        });
+  }
+
+  PopupMenuItem viewInFullScreenButton() {
+    return PopupMenuItem(
+        child: Text("View in full screen"),
+        onTap: () {
+          var selectedIndex =
+              receiptModel.infiniteScrollController.selectedItem;
+          var image = receiptModel
+                  .imageBehaviorSubject.value[selectedIndex]?.encodedImage ??
+              "";
+
+          var bytes = getBytesFromEncodedImage(image);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    FullScreenImageViewer(image: Image.memory(bytes))),
+          );
         });
   }
 
