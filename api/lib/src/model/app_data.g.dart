@@ -27,6 +27,16 @@ class _$AppData extends AppData {
   final String? refreshToken;
   @override
   final String currencyDisplay;
+  @override
+  final CurrencySeparator? currencyThousandthsSeparator;
+  @override
+  final CurrencySeparator? currencyDecimalSeparator;
+  @override
+  final CurrencySymbolPosition? currencySymbolPosition;
+  @override
+  final bool? currencyHideDecimalPlaces;
+  @override
+  final BuiltList<Icon> icons;
 
   factory _$AppData([void Function(AppDataBuilder)? updates]) =>
       (new AppDataBuilder()..update(updates))._build();
@@ -41,7 +51,12 @@ class _$AppData extends AppData {
       required this.tags,
       this.jwt,
       this.refreshToken,
-      required this.currencyDisplay})
+      required this.currencyDisplay,
+      this.currencyThousandthsSeparator,
+      this.currencyDecimalSeparator,
+      this.currencySymbolPosition,
+      this.currencyHideDecimalPlaces,
+      required this.icons})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(claims, r'AppData', 'claims');
     BuiltValueNullFieldError.checkNotNull(groups, r'AppData', 'groups');
@@ -54,6 +69,7 @@ class _$AppData extends AppData {
     BuiltValueNullFieldError.checkNotNull(tags, r'AppData', 'tags');
     BuiltValueNullFieldError.checkNotNull(
         currencyDisplay, r'AppData', 'currencyDisplay');
+    BuiltValueNullFieldError.checkNotNull(icons, r'AppData', 'icons');
   }
 
   @override
@@ -76,7 +92,12 @@ class _$AppData extends AppData {
         tags == other.tags &&
         jwt == other.jwt &&
         refreshToken == other.refreshToken &&
-        currencyDisplay == other.currencyDisplay;
+        currencyDisplay == other.currencyDisplay &&
+        currencyThousandthsSeparator == other.currencyThousandthsSeparator &&
+        currencyDecimalSeparator == other.currencyDecimalSeparator &&
+        currencySymbolPosition == other.currencySymbolPosition &&
+        currencyHideDecimalPlaces == other.currencyHideDecimalPlaces &&
+        icons == other.icons;
   }
 
   @override
@@ -92,6 +113,11 @@ class _$AppData extends AppData {
     _$hash = $jc(_$hash, jwt.hashCode);
     _$hash = $jc(_$hash, refreshToken.hashCode);
     _$hash = $jc(_$hash, currencyDisplay.hashCode);
+    _$hash = $jc(_$hash, currencyThousandthsSeparator.hashCode);
+    _$hash = $jc(_$hash, currencyDecimalSeparator.hashCode);
+    _$hash = $jc(_$hash, currencySymbolPosition.hashCode);
+    _$hash = $jc(_$hash, currencyHideDecimalPlaces.hashCode);
+    _$hash = $jc(_$hash, icons.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -108,7 +134,12 @@ class _$AppData extends AppData {
           ..add('tags', tags)
           ..add('jwt', jwt)
           ..add('refreshToken', refreshToken)
-          ..add('currencyDisplay', currencyDisplay))
+          ..add('currencyDisplay', currencyDisplay)
+          ..add('currencyThousandthsSeparator', currencyThousandthsSeparator)
+          ..add('currencyDecimalSeparator', currencyDecimalSeparator)
+          ..add('currencySymbolPosition', currencySymbolPosition)
+          ..add('currencyHideDecimalPlaces', currencyHideDecimalPlaces)
+          ..add('icons', icons))
         .toString();
   }
 }
@@ -164,6 +195,34 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
   set currencyDisplay(String? currencyDisplay) =>
       _$this._currencyDisplay = currencyDisplay;
 
+  CurrencySeparator? _currencyThousandthsSeparator;
+  CurrencySeparator? get currencyThousandthsSeparator =>
+      _$this._currencyThousandthsSeparator;
+  set currencyThousandthsSeparator(
+          CurrencySeparator? currencyThousandthsSeparator) =>
+      _$this._currencyThousandthsSeparator = currencyThousandthsSeparator;
+
+  CurrencySeparator? _currencyDecimalSeparator;
+  CurrencySeparator? get currencyDecimalSeparator =>
+      _$this._currencyDecimalSeparator;
+  set currencyDecimalSeparator(CurrencySeparator? currencyDecimalSeparator) =>
+      _$this._currencyDecimalSeparator = currencyDecimalSeparator;
+
+  CurrencySymbolPosition? _currencySymbolPosition;
+  CurrencySymbolPosition? get currencySymbolPosition =>
+      _$this._currencySymbolPosition;
+  set currencySymbolPosition(CurrencySymbolPosition? currencySymbolPosition) =>
+      _$this._currencySymbolPosition = currencySymbolPosition;
+
+  bool? _currencyHideDecimalPlaces;
+  bool? get currencyHideDecimalPlaces => _$this._currencyHideDecimalPlaces;
+  set currencyHideDecimalPlaces(bool? currencyHideDecimalPlaces) =>
+      _$this._currencyHideDecimalPlaces = currencyHideDecimalPlaces;
+
+  ListBuilder<Icon>? _icons;
+  ListBuilder<Icon> get icons => _$this._icons ??= new ListBuilder<Icon>();
+  set icons(ListBuilder<Icon>? icons) => _$this._icons = icons;
+
   AppDataBuilder() {
     AppData._defaults(this);
   }
@@ -181,6 +240,11 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
       _jwt = $v.jwt;
       _refreshToken = $v.refreshToken;
       _currencyDisplay = $v.currencyDisplay;
+      _currencyThousandthsSeparator = $v.currencyThousandthsSeparator;
+      _currencyDecimalSeparator = $v.currencyDecimalSeparator;
+      _currencySymbolPosition = $v.currencySymbolPosition;
+      _currencyHideDecimalPlaces = $v.currencyHideDecimalPlaces;
+      _icons = $v.icons.toBuilder();
       _$v = null;
     }
     return this;
@@ -215,7 +279,12 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
               jwt: jwt,
               refreshToken: refreshToken,
               currencyDisplay: BuiltValueNullFieldError.checkNotNull(
-                  currencyDisplay, r'AppData', 'currencyDisplay'));
+                  currencyDisplay, r'AppData', 'currencyDisplay'),
+              currencyThousandthsSeparator: currencyThousandthsSeparator,
+              currencyDecimalSeparator: currencyDecimalSeparator,
+              currencySymbolPosition: currencySymbolPosition,
+              currencyHideDecimalPlaces: currencyHideDecimalPlaces,
+              icons: icons.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -233,6 +302,9 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
         categories.build();
         _$failedField = 'tags';
         tags.build();
+
+        _$failedField = 'icons';
+        icons.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             r'AppData', _$failedField, e.toString());

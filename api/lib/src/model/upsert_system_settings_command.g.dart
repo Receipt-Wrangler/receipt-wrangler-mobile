@@ -12,6 +12,14 @@ class _$UpsertSystemSettingsCommand extends UpsertSystemSettingsCommand {
   @override
   final String? currencyDisplay;
   @override
+  final CurrencySeparator currencyThousandthsSeparator;
+  @override
+  final CurrencySeparator currencyDecimalSeparator;
+  @override
+  final CurrencySymbolPosition currencySymbolPosition;
+  @override
+  final bool currencyHideDecimalPlaces;
+  @override
   final bool? debugOcr;
   @override
   final int? numWorkers;
@@ -29,12 +37,25 @@ class _$UpsertSystemSettingsCommand extends UpsertSystemSettingsCommand {
   _$UpsertSystemSettingsCommand._(
       {this.enableLocalSignUp,
       this.currencyDisplay,
+      required this.currencyThousandthsSeparator,
+      required this.currencyDecimalSeparator,
+      required this.currencySymbolPosition,
+      required this.currencyHideDecimalPlaces,
       this.debugOcr,
       this.numWorkers,
       this.emailPollingInterval,
       this.receiptProcessingSettingsId,
       this.fallbackReceiptProcessingSettingsId})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(currencyThousandthsSeparator,
+        r'UpsertSystemSettingsCommand', 'currencyThousandthsSeparator');
+    BuiltValueNullFieldError.checkNotNull(currencyDecimalSeparator,
+        r'UpsertSystemSettingsCommand', 'currencyDecimalSeparator');
+    BuiltValueNullFieldError.checkNotNull(currencySymbolPosition,
+        r'UpsertSystemSettingsCommand', 'currencySymbolPosition');
+    BuiltValueNullFieldError.checkNotNull(currencyHideDecimalPlaces,
+        r'UpsertSystemSettingsCommand', 'currencyHideDecimalPlaces');
+  }
 
   @override
   UpsertSystemSettingsCommand rebuild(
@@ -51,6 +72,10 @@ class _$UpsertSystemSettingsCommand extends UpsertSystemSettingsCommand {
     return other is UpsertSystemSettingsCommand &&
         enableLocalSignUp == other.enableLocalSignUp &&
         currencyDisplay == other.currencyDisplay &&
+        currencyThousandthsSeparator == other.currencyThousandthsSeparator &&
+        currencyDecimalSeparator == other.currencyDecimalSeparator &&
+        currencySymbolPosition == other.currencySymbolPosition &&
+        currencyHideDecimalPlaces == other.currencyHideDecimalPlaces &&
         debugOcr == other.debugOcr &&
         numWorkers == other.numWorkers &&
         emailPollingInterval == other.emailPollingInterval &&
@@ -64,6 +89,10 @@ class _$UpsertSystemSettingsCommand extends UpsertSystemSettingsCommand {
     var _$hash = 0;
     _$hash = $jc(_$hash, enableLocalSignUp.hashCode);
     _$hash = $jc(_$hash, currencyDisplay.hashCode);
+    _$hash = $jc(_$hash, currencyThousandthsSeparator.hashCode);
+    _$hash = $jc(_$hash, currencyDecimalSeparator.hashCode);
+    _$hash = $jc(_$hash, currencySymbolPosition.hashCode);
+    _$hash = $jc(_$hash, currencyHideDecimalPlaces.hashCode);
     _$hash = $jc(_$hash, debugOcr.hashCode);
     _$hash = $jc(_$hash, numWorkers.hashCode);
     _$hash = $jc(_$hash, emailPollingInterval.hashCode);
@@ -78,6 +107,10 @@ class _$UpsertSystemSettingsCommand extends UpsertSystemSettingsCommand {
     return (newBuiltValueToStringHelper(r'UpsertSystemSettingsCommand')
           ..add('enableLocalSignUp', enableLocalSignUp)
           ..add('currencyDisplay', currencyDisplay)
+          ..add('currencyThousandthsSeparator', currencyThousandthsSeparator)
+          ..add('currencyDecimalSeparator', currencyDecimalSeparator)
+          ..add('currencySymbolPosition', currencySymbolPosition)
+          ..add('currencyHideDecimalPlaces', currencyHideDecimalPlaces)
           ..add('debugOcr', debugOcr)
           ..add('numWorkers', numWorkers)
           ..add('emailPollingInterval', emailPollingInterval)
@@ -103,6 +136,30 @@ class UpsertSystemSettingsCommandBuilder
   String? get currencyDisplay => _$this._currencyDisplay;
   set currencyDisplay(String? currencyDisplay) =>
       _$this._currencyDisplay = currencyDisplay;
+
+  CurrencySeparator? _currencyThousandthsSeparator;
+  CurrencySeparator? get currencyThousandthsSeparator =>
+      _$this._currencyThousandthsSeparator;
+  set currencyThousandthsSeparator(
+          CurrencySeparator? currencyThousandthsSeparator) =>
+      _$this._currencyThousandthsSeparator = currencyThousandthsSeparator;
+
+  CurrencySeparator? _currencyDecimalSeparator;
+  CurrencySeparator? get currencyDecimalSeparator =>
+      _$this._currencyDecimalSeparator;
+  set currencyDecimalSeparator(CurrencySeparator? currencyDecimalSeparator) =>
+      _$this._currencyDecimalSeparator = currencyDecimalSeparator;
+
+  CurrencySymbolPosition? _currencySymbolPosition;
+  CurrencySymbolPosition? get currencySymbolPosition =>
+      _$this._currencySymbolPosition;
+  set currencySymbolPosition(CurrencySymbolPosition? currencySymbolPosition) =>
+      _$this._currencySymbolPosition = currencySymbolPosition;
+
+  bool? _currencyHideDecimalPlaces;
+  bool? get currencyHideDecimalPlaces => _$this._currencyHideDecimalPlaces;
+  set currencyHideDecimalPlaces(bool? currencyHideDecimalPlaces) =>
+      _$this._currencyHideDecimalPlaces = currencyHideDecimalPlaces;
 
   bool? _debugOcr;
   bool? get debugOcr => _$this._debugOcr;
@@ -139,6 +196,10 @@ class UpsertSystemSettingsCommandBuilder
     if ($v != null) {
       _enableLocalSignUp = $v.enableLocalSignUp;
       _currencyDisplay = $v.currencyDisplay;
+      _currencyThousandthsSeparator = $v.currencyThousandthsSeparator;
+      _currencyDecimalSeparator = $v.currencyDecimalSeparator;
+      _currencySymbolPosition = $v.currencySymbolPosition;
+      _currencyHideDecimalPlaces = $v.currencyHideDecimalPlaces;
       _debugOcr = $v.debugOcr;
       _numWorkers = $v.numWorkers;
       _emailPollingInterval = $v.emailPollingInterval;
@@ -169,6 +230,22 @@ class UpsertSystemSettingsCommandBuilder
         new _$UpsertSystemSettingsCommand._(
             enableLocalSignUp: enableLocalSignUp,
             currencyDisplay: currencyDisplay,
+            currencyThousandthsSeparator: BuiltValueNullFieldError.checkNotNull(
+                currencyThousandthsSeparator,
+                r'UpsertSystemSettingsCommand',
+                'currencyThousandthsSeparator'),
+            currencyDecimalSeparator: BuiltValueNullFieldError.checkNotNull(
+                currencyDecimalSeparator,
+                r'UpsertSystemSettingsCommand',
+                'currencyDecimalSeparator'),
+            currencySymbolPosition: BuiltValueNullFieldError.checkNotNull(
+                currencySymbolPosition,
+                r'UpsertSystemSettingsCommand',
+                'currencySymbolPosition'),
+            currencyHideDecimalPlaces: BuiltValueNullFieldError.checkNotNull(
+                currencyHideDecimalPlaces,
+                r'UpsertSystemSettingsCommand',
+                'currencyHideDecimalPlaces'),
             debugOcr: debugOcr,
             numWorkers: numWorkers,
             emailPollingInterval: emailPollingInterval,

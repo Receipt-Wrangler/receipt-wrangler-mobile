@@ -16,6 +16,8 @@ doc/CheckReceiptProcessingSettingsConnectivityCommand.md
 doc/Claims.md
 doc/Comment.md
 doc/CommentApi.md
+doc/CurrencySeparator.md
+doc/CurrencySymbolPosition.md
 doc/Dashboard.md
 doc/DashboardApi.md
 doc/EncodedImage.md
@@ -34,6 +36,7 @@ doc/GroupSettings.md
 doc/GroupSettingsWhiteListEmail.md
 doc/GroupStatus.md
 doc/GroupsApi.md
+doc/Icon.md
 doc/ImportApi.md
 doc/ImportType.md
 doc/Item.md
@@ -94,6 +97,7 @@ doc/UserApi.md
 doc/UserPreferences.md
 doc/UserPreferencesApi.md
 doc/UserRole.md
+doc/UserShortcut.md
 doc/UserView.md
 doc/Widget.md
 doc/WidgetType.md
@@ -137,6 +141,8 @@ lib/src/model/check_email_connectivity_command.dart
 lib/src/model/check_receipt_processing_settings_connectivity_command.dart
 lib/src/model/claims.dart
 lib/src/model/comment.dart
+lib/src/model/currency_separator.dart
+lib/src/model/currency_symbol_position.dart
 lib/src/model/dashboard.dart
 lib/src/model/date.dart
 lib/src/model/encoded_image.dart
@@ -153,6 +159,7 @@ lib/src/model/group_role.dart
 lib/src/model/group_settings.dart
 lib/src/model/group_settings_white_list_email.dart
 lib/src/model/group_status.dart
+lib/src/model/icon.dart
 lib/src/model/import_type.dart
 lib/src/model/item.dart
 lib/src/model/item_status.dart
@@ -200,6 +207,7 @@ lib/src/model/upsert_widget_command.dart
 lib/src/model/user.dart
 lib/src/model/user_preferences.dart
 lib/src/model/user_role.dart
+lib/src/model/user_shortcut.dart
 lib/src/model/user_view.dart
 lib/src/model/widget.dart
 lib/src/model/widget_type.dart

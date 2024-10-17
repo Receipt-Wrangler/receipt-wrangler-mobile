@@ -8,7 +8,10 @@ import 'package:openapi/src/model/user_preferences.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/category.dart';
 import 'package:openapi/src/model/tag.dart';
+import 'package:openapi/src/model/currency_symbol_position.dart';
+import 'package:openapi/src/model/icon.dart';
 import 'package:openapi/src/model/user_view.dart';
+import 'package:openapi/src/model/currency_separator.dart';
 import 'package:openapi/src/model/group.dart';
 import 'package:openapi/src/model/feature_config.dart';
 import 'package:built_value/built_value.dart';
@@ -29,6 +32,11 @@ part 'app_data.g.dart';
 /// * [jwt] - JWT token
 /// * [refreshToken] - Refresh token
 /// * [currencyDisplay] - Currency display
+/// * [currencyThousandthsSeparator] 
+/// * [currencyDecimalSeparator] 
+/// * [currencySymbolPosition] 
+/// * [currencyHideDecimalPlaces] - Whether to hide decimal places
+/// * [icons] - Icons in the system
 @BuiltValue()
 abstract class AppData implements Built<AppData, AppDataBuilder> {
   @BuiltValueField(wireName: r'claims')
@@ -67,6 +75,26 @@ abstract class AppData implements Built<AppData, AppDataBuilder> {
   /// Currency display
   @BuiltValueField(wireName: r'currencyDisplay')
   String get currencyDisplay;
+
+  @BuiltValueField(wireName: r'currencyThousandthsSeparator')
+  CurrencySeparator? get currencyThousandthsSeparator;
+  // enum currencyThousandthsSeparatorEnum {  ,,  .,  };
+
+  @BuiltValueField(wireName: r'currencyDecimalSeparator')
+  CurrencySeparator? get currencyDecimalSeparator;
+  // enum currencyDecimalSeparatorEnum {  ,,  .,  };
+
+  @BuiltValueField(wireName: r'currencySymbolPosition')
+  CurrencySymbolPosition? get currencySymbolPosition;
+  // enum currencySymbolPositionEnum {  START,  END,  };
+
+  /// Whether to hide decimal places
+  @BuiltValueField(wireName: r'currencyHideDecimalPlaces')
+  bool? get currencyHideDecimalPlaces;
+
+  /// Icons in the system
+  @BuiltValueField(wireName: r'icons')
+  BuiltList<Icon> get icons;
 
   AppData._();
 
@@ -144,6 +172,39 @@ class _$AppDataSerializer implements PrimitiveSerializer<AppData> {
     yield serializers.serialize(
       object.currencyDisplay,
       specifiedType: const FullType(String),
+    );
+    if (object.currencyThousandthsSeparator != null) {
+      yield r'currencyThousandthsSeparator';
+      yield serializers.serialize(
+        object.currencyThousandthsSeparator,
+        specifiedType: const FullType(CurrencySeparator),
+      );
+    }
+    if (object.currencyDecimalSeparator != null) {
+      yield r'currencyDecimalSeparator';
+      yield serializers.serialize(
+        object.currencyDecimalSeparator,
+        specifiedType: const FullType(CurrencySeparator),
+      );
+    }
+    if (object.currencySymbolPosition != null) {
+      yield r'currencySymbolPosition';
+      yield serializers.serialize(
+        object.currencySymbolPosition,
+        specifiedType: const FullType(CurrencySymbolPosition),
+      );
+    }
+    if (object.currencyHideDecimalPlaces != null) {
+      yield r'currencyHideDecimalPlaces';
+      yield serializers.serialize(
+        object.currencyHideDecimalPlaces,
+        specifiedType: const FullType(bool),
+      );
+    }
+    yield r'icons';
+    yield serializers.serialize(
+      object.icons,
+      specifiedType: const FullType(BuiltList, [FullType(Icon)]),
     );
   }
 
@@ -237,6 +298,41 @@ class _$AppDataSerializer implements PrimitiveSerializer<AppData> {
             specifiedType: const FullType(String),
           ) as String;
           result.currencyDisplay = valueDes;
+          break;
+        case r'currencyThousandthsSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyThousandthsSeparator = valueDes;
+          break;
+        case r'currencyDecimalSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyDecimalSeparator = valueDes;
+          break;
+        case r'currencySymbolPosition':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySymbolPosition),
+          ) as CurrencySymbolPosition;
+          result.currencySymbolPosition = valueDes;
+          break;
+        case r'currencyHideDecimalPlaces':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.currencyHideDecimalPlaces = valueDes;
+          break;
+        case r'icons':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(Icon)]),
+          ) as BuiltList<Icon>;
+          result.icons.replace(valueDes);
           break;
         default:
           unhandled.add(key);

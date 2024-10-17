@@ -3,14 +3,26 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:openapi/src/model/receipt_status.dart';
+import 'package:openapi/src/model/tag_view.dart';
+import 'package:openapi/src/model/system_email.dart';
+import 'package:openapi/src/model/prompt.dart';
+import 'package:openapi/src/model/tag.dart';
+import 'package:openapi/src/model/group_member.dart';
+import 'package:openapi/src/model/ocr_engine.dart';
+import 'package:openapi/src/model/group.dart';
+import 'package:openapi/src/model/receipt.dart';
+import 'package:openapi/src/model/system_task.dart';
+import 'package:openapi/src/model/ai_type.dart';
+import 'package:openapi/src/model/group_settings.dart';
+import 'package:openapi/src/model/associated_entity_type.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/category.dart';
-import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/comment.dart';
 import 'package:openapi/src/model/file_data.dart';
-import 'package:openapi/src/model/receipt.dart';
+import 'package:openapi/src/model/system_task_type.dart';
+import 'package:openapi/src/model/receipt_processing_settings.dart';
 import 'package:openapi/src/model/item.dart';
+import 'package:openapi/src/model/system_task_status.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:one_of/any_of.dart';
@@ -29,18 +41,43 @@ part 'paged_data_data_inner.g.dart';
 /// * [groupId] - Group foreign key
 /// * [id] 
 /// * [imageFiles] - Files associated to receipt
-/// * [name] - Tag name
+/// * [name] - Name of the settings
 /// * [paidByUserId] - User paid foreign key
 /// * [receiptItems] - Items associated to receipt
 /// * [resolvedDate] - Date resolved
 /// * [status] 
 /// * [tags] - Tags associated to receipt
 /// * [updatedAt] 
-/// * [createdByString] - Created by string, which is anything that is not a user
-/// * [description] - Tag description
+/// * [createdByString] - Created by entity's name
+/// * [description] - Description of the settings
+/// * [prompt] 
+/// * [groupSettings] 
+/// * [groupMembers] - Members of the group
+/// * [isDefault] - Is default group (not used yet)
+/// * [isAllGroup] - Is all group for user
+/// * [numberOfReceipts] - Number of receipts associated with this tag
+/// * [type] 
+/// * [startedAt] 
+/// * [endedAt] 
+/// * [associatedEntityId] 
+/// * [associatedEntityType] 
+/// * [ranByUserId] 
+/// * [resultDescription] 
+/// * [childSystemTasks] 
+/// * [aiType] 
+/// * [url] - URL for custom endpoints
+/// * [key] - Key for endpoints that require authentication
+/// * [model] - LLM model
+/// * [isVisionModel] - Is vision model
+/// * [ocrEngine] 
+/// * [promptId] - Prompt foreign key
+/// * [host] - IMAP host
+/// * [port] - IMAP port
+/// * [username] - IMAP username
+/// * [password] - IMAP password
 @BuiltValue()
 abstract class PagedDataDataInner implements Built<PagedDataDataInner, PagedDataDataInnerBuilder> {
-  /// Any Of [Category], [Receipt], [Tag]
+  /// Any Of [Category], [Group], [Prompt], [Receipt], [ReceiptProcessingSettings], [SystemEmail], [SystemTask], [Tag], [TagView]
   AnyOf get anyOf;
 
   PagedDataDataInner._();
@@ -86,7 +123,7 @@ class _$PagedDataDataInnerSerializer implements PrimitiveSerializer<PagedDataDat
   }) {
     final result = PagedDataDataInnerBuilder();
     Object? anyOfDataSrc;
-    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), ]);
+    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), FullType(Prompt), FullType(Group), FullType(TagView), FullType(SystemTask), FullType(ReceiptProcessingSettings), FullType(SystemEmail), ]);
     anyOfDataSrc = serialized;
     result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
     return result.build();

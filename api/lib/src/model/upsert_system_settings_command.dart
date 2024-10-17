@@ -3,6 +3,8 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:openapi/src/model/currency_symbol_position.dart';
+import 'package:openapi/src/model/currency_separator.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -13,6 +15,10 @@ part 'upsert_system_settings_command.g.dart';
 /// Properties:
 /// * [enableLocalSignUp] - Whether local sign up is enabled
 /// * [currencyDisplay] - Currency display
+/// * [currencyThousandthsSeparator] 
+/// * [currencyDecimalSeparator] 
+/// * [currencySymbolPosition] 
+/// * [currencyHideDecimalPlaces] - Whether to hide decimal places
 /// * [debugOcr] 
 /// * [numWorkers] - Number of workers to use
 /// * [emailPollingInterval] - Email polling interval
@@ -27,6 +33,22 @@ abstract class UpsertSystemSettingsCommand implements Built<UpsertSystemSettings
   /// Currency display
   @BuiltValueField(wireName: r'currencyDisplay')
   String? get currencyDisplay;
+
+  @BuiltValueField(wireName: r'currencyThousandthsSeparator')
+  CurrencySeparator get currencyThousandthsSeparator;
+  // enum currencyThousandthsSeparatorEnum {  ,,  .,  };
+
+  @BuiltValueField(wireName: r'currencyDecimalSeparator')
+  CurrencySeparator get currencyDecimalSeparator;
+  // enum currencyDecimalSeparatorEnum {  ,,  .,  };
+
+  @BuiltValueField(wireName: r'currencySymbolPosition')
+  CurrencySymbolPosition get currencySymbolPosition;
+  // enum currencySymbolPositionEnum {  START,  END,  };
+
+  /// Whether to hide decimal places
+  @BuiltValueField(wireName: r'currencyHideDecimalPlaces')
+  bool get currencyHideDecimalPlaces;
 
   @BuiltValueField(wireName: r'debugOcr')
   bool? get debugOcr;
@@ -85,6 +107,26 @@ class _$UpsertSystemSettingsCommandSerializer implements PrimitiveSerializer<Ups
         specifiedType: const FullType(String),
       );
     }
+    yield r'currencyThousandthsSeparator';
+    yield serializers.serialize(
+      object.currencyThousandthsSeparator,
+      specifiedType: const FullType(CurrencySeparator),
+    );
+    yield r'currencyDecimalSeparator';
+    yield serializers.serialize(
+      object.currencyDecimalSeparator,
+      specifiedType: const FullType(CurrencySeparator),
+    );
+    yield r'currencySymbolPosition';
+    yield serializers.serialize(
+      object.currencySymbolPosition,
+      specifiedType: const FullType(CurrencySymbolPosition),
+    );
+    yield r'currencyHideDecimalPlaces';
+    yield serializers.serialize(
+      object.currencyHideDecimalPlaces,
+      specifiedType: const FullType(bool),
+    );
     if (object.debugOcr != null) {
       yield r'debugOcr';
       yield serializers.serialize(
@@ -156,6 +198,34 @@ class _$UpsertSystemSettingsCommandSerializer implements PrimitiveSerializer<Ups
             specifiedType: const FullType(String),
           ) as String;
           result.currencyDisplay = valueDes;
+          break;
+        case r'currencyThousandthsSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyThousandthsSeparator = valueDes;
+          break;
+        case r'currencyDecimalSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyDecimalSeparator = valueDes;
+          break;
+        case r'currencySymbolPosition':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySymbolPosition),
+          ) as CurrencySymbolPosition;
+          result.currencySymbolPosition = valueDes;
+          break;
+        case r'currencyHideDecimalPlaces':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.currencyHideDecimalPlaces = valueDes;
           break;
         case r'debugOcr':
           final valueDes = serializers.deserialize(
