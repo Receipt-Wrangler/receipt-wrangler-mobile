@@ -15,7 +15,7 @@ Widget amountField(BuildContext context, String label, String fieldName,
   var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
   var amountMask = new CurrencyTextInputFormatter(
-      NumberFormat.decimalPatternDigits(decimalDigits: 2),
+      NumberFormat.currency(customPattern: '###.###,##'),
       enableNegative: false);
   return FormBuilderTextField(
     key: key,

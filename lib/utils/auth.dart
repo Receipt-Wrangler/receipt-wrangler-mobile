@@ -136,4 +136,12 @@ Future<void> storeAppData(
   categoryModel.setCategories(appData.categories.toList());
   tagModel.setTags(appData.tags.toList());
   systemSettingsModel.setCurrencyDisplay(appData.currencyDisplay);
+  systemSettingsModel.setCurrencyDecimalSeparator(
+      appData?.currencyDecimalSeparator ?? CurrencySeparator.period);
+  systemSettingsModel.setCurrencyThousandSeparator(
+      appData?.currencyThousandthsSeparator ?? CurrencySeparator.comma);
+  systemSettingsModel.setCurrencySymbolPosition(
+      appData?.currencySymbolPosition ?? CurrencySymbolPosition.END);
+  systemSettingsModel.setCurrencyHideDecimalPlaces(
+      appData?.currencyHideDecimalPlaces ?? false);
 }
