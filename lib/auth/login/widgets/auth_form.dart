@@ -17,6 +17,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import '../../../models/system_settings_model.dart';
+import '../../../utils/currency.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -79,6 +80,7 @@ class _Login extends State<AuthForm> {
     await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
         categoryModel, tagModel, systemSettingsModel, appData);
     showSuccessSnackbar(context, "Successfully logged in!");
+    registerCustomCurrency(context);
     context.go("/groups");
   }
 

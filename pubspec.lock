@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.14.0"
+  decimal:
+    dependency: transitive
+    description:
+      name: decimal
+      sha256: "4140a688f9e443e2f4de3a1162387bf25e1ac6d51e24c9da263f245210f41440"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   dio:
     dependency: transitive
     description:
@@ -297,6 +305,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+3"
+  fixed:
+    dependency: transitive
+    description:
+      name: fixed
+      sha256: "00fa3f0c6b3f38340edc843132050a2676e30bc70bff1168908a15dc7751be55"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   fixnum:
     dependency: transitive
     description:
@@ -589,6 +605,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  money2:
+    dependency: "direct main"
+    description:
+      name: money2
+      sha256: "9a71b32cfa26dff236330de8da04bf9f3851cc5ee9fcae6930b6cedefd68bb92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.0"
   nested:
     dependency: transitive
     description:
@@ -780,6 +804,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
+  rational:
+    dependency: transitive
+    description:
+      name: rational
+      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   rxdart:
     dependency: "direct main"
     description:

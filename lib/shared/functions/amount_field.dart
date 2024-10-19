@@ -57,8 +57,7 @@ Widget amountField(BuildContext context, String label, String fieldName,
     readOnly: isFieldReadOnly(formState),
     controller: controller,
     valueTransformer: (value) {
-      // TODO: fix euros
-      return value?.trim();
+      return exchangeCustomToUSD(value);
     },
   );
 }

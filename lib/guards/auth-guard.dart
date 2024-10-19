@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 
 import '../models/auth_model.dart';
 import '../models/system_settings_model.dart';
+import '../utils/currency.dart';
 
 Future<String?> protectedRouteRedirect(
     BuildContext context, String? redirect) async {
@@ -64,6 +65,7 @@ Future<String?> unprotectedRouteRedirect(
   var redirectRoute = redirect ?? "/";
 
   if (tokensValid) {
+    registerCustomCurrency(context);
     return redirectRoute;
   } else {
     await authModelProvider.purgeTokens();
