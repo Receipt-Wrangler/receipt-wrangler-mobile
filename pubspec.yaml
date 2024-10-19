@@ -54,12 +54,13 @@ dependencies:
   file_selector: ^1.0.3
   rxdart: ^0.28.0
   flutter_launcher_icons: ^0.14.1
-  currency_text_input_formatter: ^2.1.11
+  currency_text_input_formatter: ^2.2.5
   flutter_slidable: ^3.1.0
   flutter_staggered_grid_view: ^0.7.0
   accordion: ^2.6.0
   uuid: ^4.4.2
   gal: ^2.3.0
+  currency_textfield: ^4.12.0
 
 dev_dependencies:
   flutter_test:
