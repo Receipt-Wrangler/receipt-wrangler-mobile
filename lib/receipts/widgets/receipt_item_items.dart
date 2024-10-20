@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';

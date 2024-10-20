@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
