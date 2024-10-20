@@ -1,6 +1,7 @@
 // TODO: fix delete, and fix adding new items, fix broken amount owed
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:money2/money2.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
@@ -68,9 +69,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
+
     var owedAmount = items
-        .map((item) => num.parse(item.amount))
-        .reduce((value, element) => value + element);
+        .map((item) => Money.parse(item.amount, isoCode: "USD"))
+        .reduce((value, element) => value + element)
+        .amount;
 
     return ExpansionPanel(
         canTapOnHeader: true,

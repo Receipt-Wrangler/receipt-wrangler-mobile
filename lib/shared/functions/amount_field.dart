@@ -10,13 +10,23 @@ import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import '../../models/system_settings_model.dart';
 import '../../utils/forms.dart';
 
+// TODO: fix not working items
 Widget amountField(BuildContext context, String label, String fieldName,
     String initialAmount, WranglerFormState formState,
     {Key? key}) {
   var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
   var hideDecimalPlaces = systemSettingsModel.currencyHideDecimalPlaces;
-  var doubleAmount = double.parse(initialAmount);
+  var doubleAmount = 0.0;
 
+  try {
+    doubleAmount = double.parse(initialAmount);
+  } catch (e) {
+    var exchanged = exchangeCustomToUSD(initialAmount);
+    doubleAmount = double.parse(exchanged);
+  }
+
+  // TODO: move to util
+  // TODO: move into widget with actual state
   var controller = CurrencyTextFieldController(
       decimalSymbol: hideDecimalPlaces
           ? ""

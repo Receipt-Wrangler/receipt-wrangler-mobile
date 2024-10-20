@@ -288,7 +288,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                       validator: FormBuilderValidators.required(),
                     ),
                     textFieldSpacing,
-                    amountField(context, "Amount", "amount", "", formState),
+                    amountField(context, "Amount", "amount", "0.00", formState),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -298,6 +298,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                             onPressed: () {
                               if (!addSharesFormKey.currentState!
                                   .saveAndValidate()) {
+                                print(addSharesFormKey.currentState!.value);
                                 return;
                               }
 
@@ -357,6 +358,7 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   @override
   Widget build(BuildContext context) {
+    print(addSharesFormKey);
     return FormBuilder(
       key: formKey,
       child: Column(
