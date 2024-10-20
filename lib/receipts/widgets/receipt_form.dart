@@ -73,8 +73,11 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAmountField() {
-    return amountField(context, "Amount", "amount",
-        modifiedReceipt.amount.toString(), formState);
+    return AmountField(
+        label: "Amount",
+        fieldName: "amount",
+        initialAmount: modifiedReceipt.amount.toString(),
+        formState: formState);
   }
 
   Widget buildDateField() {
@@ -288,7 +291,11 @@ class _ReceiptForm extends State<ReceiptForm> {
                       validator: FormBuilderValidators.required(),
                     ),
                     textFieldSpacing,
-                    amountField(context, "Amount", "amount", "0.00", formState),
+                    AmountField(
+                        label: "Amount",
+                        fieldName: "amount",
+                        initialAmount: "0.00",
+                        formState: formState),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [

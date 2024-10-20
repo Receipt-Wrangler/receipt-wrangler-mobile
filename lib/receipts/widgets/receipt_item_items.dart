@@ -168,8 +168,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ),
         Expanded(
             key: Key(amountName),
-            child: amountField(
-                context, "Amount", amountName, initialAmount, formState)),
+            child: AmountField(
+                label: "Amount",
+                fieldName: amountName,
+                initialAmount: initialAmount,
+                formState: formState)),
         Expanded(
           key: Key(statusName),
           child: itemStatusField(

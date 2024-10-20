@@ -10,64 +10,91 @@ import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import '../../models/system_settings_model.dart';
 import '../../utils/forms.dart';
 
-// TODO: fix not working items
-Widget amountField(BuildContext context, String label, String fieldName,
-    String initialAmount, WranglerFormState formState,
-    {Key? key}) {
-  var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
-  var hideDecimalPlaces = systemSettingsModel.currencyHideDecimalPlaces;
-  var doubleAmount = 0.0;
+class AmountField extends StatefulWidget {
+  const AmountField({
+    super.key,
+    required this.label,
+    required this.fieldName,
+    required this.initialAmount,
+    required this.formState,
+  });
 
-  try {
-    doubleAmount = double.parse(initialAmount);
-  } catch (e) {
-    var exchanged = exchangeCustomToUSD(initialAmount);
-    doubleAmount = double.parse(exchanged);
-  }
+  final String label;
 
-  // TODO: move to util
-  // TODO: move into widget with actual state
-  var controller = CurrencyTextFieldController(
-      decimalSymbol: hideDecimalPlaces
+  final String fieldName;
+
+  final String initialAmount;
+
+  final WranglerFormState formState;
+
+  @override
+  State<AmountField> createState() => _AmountField();
+}
+
+class _AmountField extends State<AmountField> {
+  late final systemSettingsModel = Provider.of<SystemSettingsModel>(context);
+  late final controller = CurrencyTextFieldController(
+      decimalSymbol: systemSettingsModel.currencyHideDecimalPlaces
           ? ""
           : getCurrencySeparatorLiteral(
               systemSettingsModel.currencyDecimalSeparator),
       thousandSymbol: getCurrencySeparatorLiteral(
           systemSettingsModel.currencyThousandSeparator),
-      initDoubleValue: doubleAmount,
-      numberOfDecimals: hideDecimalPlaces ? 0 : 2,
+      initDoubleValue: getInitialAmount(),
+      numberOfDecimals: systemSettingsModel.currencyHideDecimalPlaces ? 0 : 2,
       currencySymbol: "",
       startWithSeparator: true,
       forceCursorToEnd: false);
 
-  var prefix = systemSettingsModel.currencySymbolPosition ==
-          api.CurrencySymbolPosition.START
-      ? systemSettingsModel.currencyDisplay
-      : null;
+  double getInitialAmount() {
+    var doubleAmount = 0.0;
 
-  var suffix = systemSettingsModel.currencySymbolPosition ==
-          api.CurrencySymbolPosition.END
-      ? systemSettingsModel.currencyDisplay
-      : null;
+    try {
+      doubleAmount = double.parse(widget.initialAmount);
+    } catch (e) {
+      var exchanged = exchangeCustomToUSD(widget.initialAmount);
+      doubleAmount = double.parse(exchanged);
+    }
 
-  return FormBuilderTextField(
-    key: key,
-    name: fieldName,
-    decoration: InputDecoration(
-      labelText: label,
-      prefixText: prefix,
-      suffixText: suffix,
-    ),
-    keyboardType: TextInputType.number,
-    validator: FormBuilderValidators.compose([
-      FormBuilderValidators.required(),
-      //FormBuilderValidators.numeric(),
-      //FormBuilderValidators.min(0, inclusive: false),
-    ]),
-    readOnly: isFieldReadOnly(formState),
-    controller: controller,
-    valueTransformer: (value) {
-      return exchangeCustomToUSD(value);
-    },
-  );
+    return doubleAmount;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
+
+    // TODO: move to util
+    // TODO: move into widget with actual state
+
+    var prefix = systemSettingsModel.currencySymbolPosition ==
+            api.CurrencySymbolPosition.START
+        ? systemSettingsModel.currencyDisplay
+        : null;
+
+    var suffix = systemSettingsModel.currencySymbolPosition ==
+            api.CurrencySymbolPosition.END
+        ? systemSettingsModel.currencyDisplay
+        : null;
+
+    return FormBuilderTextField(
+      key: widget.key,
+      name: widget.fieldName,
+      decoration: InputDecoration(
+        labelText: widget.label,
+        prefixText: prefix,
+        suffixText: suffix,
+      ),
+      keyboardType: TextInputType.number,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(),
+        //FormBuilderValidators.numeric(),
+        //FormBuilderValidators.min(0, inclusive: false),
+      ]),
+      readOnly: isFieldReadOnly(widget.formState),
+      controller: controller,
+      valueTransformer: (value) {
+        return exchangeCustomToUSD(value);
+      },
+    );
+  }
 }
