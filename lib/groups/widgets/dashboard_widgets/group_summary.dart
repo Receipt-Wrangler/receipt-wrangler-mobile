@@ -22,8 +22,7 @@ class _GroupSummary extends State<GroupSummary> {
   String _getUserOwesText(
       MapEntry<String, String> mapEntry, UserModel userModel) {
     var user = userModel.getUserById(mapEntry.key);
-    var amount = double.parse(mapEntry.value);
-    var formattedAmount = formatCurrency(context, amount);
+    var formattedAmount = formatCurrency(context, mapEntry.value);
     var value = formattedAmount.replaceAll("-", "");
 
     if (mapEntry.value.contains("-") || mapEntry.value == "0") {

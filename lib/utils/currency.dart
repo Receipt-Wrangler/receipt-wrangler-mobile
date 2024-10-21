@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
 import 'package:openapi/openapi.dart';
 import 'package:provider/provider.dart';
@@ -7,11 +6,25 @@ import 'package:receipt_wrangler_mobile/constants/currency.dart';
 
 import '../models/system_settings_model.dart';
 
-String formatCurrency(BuildContext context, double amount) {
-  var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
-  return NumberFormat.currency(
-          decimalDigits: 2, name: systemSettingsModel.currencyDisplay)
-      .format(amount);
+String getDefaultFormat(BuildContext context) {
+  var systemSettingsModel =
+      Provider.of<SystemSettingsModel>(context, listen: false);
+  var symbolDisplayPosition = systemSettingsModel.currencySymbolPosition;
+  var format = "###,###.00";
+
+  if (symbolDisplayPosition == CurrencySymbolPosition.START) {
+    var formatParts = format.split("");
+    formatParts.insert(0, "S");
+    format = formatParts.join("");
+  } else {
+    format = format + "S";
+  }
+
+  return format;
+}
+
+String formatCurrency(BuildContext context, String amount) {
+  return exchangeUSDToCustom(amount);
 }
 
 String getCurrencySeparatorLiteral(CurrencySeparator separator) {
@@ -38,6 +51,7 @@ void registerCustomCurrency(BuildContext context) {
         systemSettingsModel.currencyThousandSeparator),
     decimalSeparator: getCurrencySeparatorLiteral(
         systemSettingsModel.currencyDecimalSeparator),
+    pattern: getDefaultFormat(context),
   );
 
   Currencies().register(currency);
@@ -56,4 +70,18 @@ String exchangeCustomToUSD(String? customValue) {
 
   var usdValue = exchangeRate.applyRate(parsedCustomValue);
   return usdValue.amount.toString();
+}
+
+String exchangeUSDToCustom(String? usdValue) {
+  if (usdValue == null || usdValue.isEmpty) {
+    return "0";
+  }
+
+  var parsedUSDValue = Money.parse(usdValue, isoCode: "USD");
+
+  ExchangeRate exchangeRate = ExchangeRate.fromNum(1,
+      decimalDigits: 2, fromCode: "USD", toCode: customCurrencyISOCode);
+
+  var customValue = exchangeRate.applyRate(parsedUSDValue);
+  return customValue.toString();
 }
