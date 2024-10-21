@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:money2/money2.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/currency.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
@@ -70,17 +71,17 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
 
+    // TODO: fix owed amount
     var owedAmount = items
-        .map((item) => Money.parse(item.amount, isoCode: "USD"))
-        .reduce((value, element) => value + element)
-        .amount;
+        .map((item) => Money.parse(item.amount, isoCode: customCurrencyISOCode))
+        .reduce((value, element) => value + element);
 
     return ExpansionPanel(
         canTapOnHeader: true,
         isExpanded: expanded,
         headerBuilder: (context, expanded) {
           return ListTile(
-            title: Text("${user?.displayName} - Amount Owed: ${owedAmount}"),
+            title: Text("${user?.displayName} - Amount Owed: $owedAmount"),
           );
         },
         body: Container(

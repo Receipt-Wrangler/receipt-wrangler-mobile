@@ -63,9 +63,6 @@ class _AmountField extends State<AmountField> {
   Widget build(BuildContext context) {
     var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
-    // TODO: move to util
-    // TODO: move into widget with actual state
-
     var prefix = systemSettingsModel.currencySymbolPosition ==
             api.CurrencySymbolPosition.START
         ? systemSettingsModel.currencyDisplay

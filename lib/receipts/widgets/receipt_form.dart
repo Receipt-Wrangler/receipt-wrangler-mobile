@@ -305,7 +305,6 @@ class _ReceiptForm extends State<ReceiptForm> {
                             onPressed: () {
                               if (!addSharesFormKey.currentState!
                                   .saveAndValidate()) {
-                                print(addSharesFormKey.currentState!.value);
                                 return;
                               }
 
