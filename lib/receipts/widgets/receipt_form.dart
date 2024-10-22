@@ -307,17 +307,13 @@ class _ReceiptForm extends State<ReceiptForm> {
                                   .saveAndValidate()) {
                                 return;
                               }
+                              var form = addSharesFormKey.currentState!.value;
 
                               var items = [...receiptModel.items];
                               var newItem = (api.ItemBuilder()
-                                    ..name = addSharesFormKey
-                                        .currentState!.fields["name"]!.value
-                                    ..amount = addSharesFormKey
-                                        .currentState!.fields["amount"]!.value
-                                    ..chargedToUserId = addSharesFormKey
-                                        .currentState!
-                                        .fields["chargedToUserId"]!
-                                        .value
+                                    ..name = form["name"]
+                                    ..amount = form["amount"]
+                                    ..chargedToUserId = form["chargedToUserId"]
                                     ..receiptId = receipt?.id ?? 0
                                     ..status = api.ItemStatus.OPEN)
                                   .build();

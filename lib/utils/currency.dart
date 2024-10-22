@@ -6,11 +6,13 @@ import 'package:receipt_wrangler_mobile/constants/currency.dart';
 
 import '../models/system_settings_model.dart';
 
+const numberFormatWithoutSymbol = "###,###.00";
+
 String getDefaultFormat(BuildContext context) {
   var systemSettingsModel =
       Provider.of<SystemSettingsModel>(context, listen: false);
   var symbolDisplayPosition = systemSettingsModel.currencySymbolPosition;
-  var format = "###,###.00";
+  var format = numberFormatWithoutSymbol;
 
   if (symbolDisplayPosition == CurrencySymbolPosition.START) {
     var formatParts = format.split("");
@@ -23,8 +25,8 @@ String getDefaultFormat(BuildContext context) {
   return format;
 }
 
-String formatCurrency(BuildContext context, String amount) {
-  return exchangeUSDToCustom(amount);
+String? formatCurrency(BuildContext context, String amount) {
+  return exchangeUSDToCustom(amount).toString();
 }
 
 String getCurrencySeparatorLiteral(CurrencySeparator separator) {
@@ -57,9 +59,9 @@ void registerCustomCurrency(BuildContext context) {
   Currencies().register(currency);
 }
 
-String exchangeCustomToUSD(String? customValue) {
+Money exchangeCustomToUSD(String? customValue) {
   if (customValue == null || customValue.isEmpty) {
-    return "0";
+    return Money.parse("0", isoCode: "USD");
   }
 
   var parsedCustomValue =
@@ -69,12 +71,12 @@ String exchangeCustomToUSD(String? customValue) {
       decimalDigits: 2, fromCode: customCurrencyISOCode, toCode: "USD");
 
   var usdValue = exchangeRate.applyRate(parsedCustomValue);
-  return usdValue.amount.toString();
+  return usdValue;
 }
 
-String exchangeUSDToCustom(String? usdValue) {
+Money exchangeUSDToCustom(String? usdValue) {
   if (usdValue == null || usdValue.isEmpty) {
-    return "0";
+    return Money.parse("0", isoCode: customCurrencyISOCode);
   }
 
   var parsedUSDValue = Money.parse(usdValue, isoCode: "USD");
@@ -83,5 +85,5 @@ String exchangeUSDToCustom(String? usdValue) {
       decimalDigits: 2, fromCode: "USD", toCode: customCurrencyISOCode);
 
   var customValue = exchangeRate.applyRate(parsedUSDValue);
-  return customValue.toString();
+  return customValue;
 }

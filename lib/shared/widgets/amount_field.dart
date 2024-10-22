@@ -53,7 +53,7 @@ class _AmountField extends State<AmountField> {
       doubleAmount = double.parse(widget.initialAmount);
     } catch (e) {
       var exchanged = exchangeCustomToUSD(widget.initialAmount);
-      doubleAmount = double.parse(exchanged);
+      doubleAmount = double.parse(exchanged.format(numberFormatWithoutSymbol));
     }
 
     return doubleAmount;
@@ -90,7 +90,7 @@ class _AmountField extends State<AmountField> {
       readOnly: isFieldReadOnly(widget.formState),
       controller: controller,
       valueTransformer: (value) {
-        return exchangeCustomToUSD(value);
+        return exchangeCustomToUSD(value).format(numberFormatWithoutSymbol);
       },
     );
   }
