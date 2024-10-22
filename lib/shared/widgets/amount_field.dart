@@ -90,7 +90,8 @@ class _AmountField extends State<AmountField> {
       readOnly: isFieldReadOnly(widget.formState),
       controller: controller,
       valueTransformer: (value) {
-        return exchangeCustomToUSD(value).format(numberFormatWithoutSymbol);
+        return exchangeCustomToUSD(value)
+            .format(numberFormatWithoutSymbolOrGroupSeparator);
       },
     );
   }

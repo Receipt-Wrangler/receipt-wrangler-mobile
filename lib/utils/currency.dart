@@ -7,6 +7,7 @@ import 'package:receipt_wrangler_mobile/constants/currency.dart';
 import '../models/system_settings_model.dart';
 
 const numberFormatWithoutSymbol = "###,###.00";
+const numberFormatWithoutSymbolOrGroupSeparator = "######.00";
 
 String getDefaultFormat(BuildContext context) {
   var systemSettingsModel =
@@ -20,6 +21,10 @@ String getDefaultFormat(BuildContext context) {
     format = formatParts.join("");
   } else {
     format = format + "S";
+  }
+
+  if (systemSettingsModel.currencyHideDecimalPlaces) {
+    format = format.replaceAll(".00", "");
   }
 
   return format;
