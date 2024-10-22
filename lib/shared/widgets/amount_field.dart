@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
+import '../../constants/currency.dart';
 import '../../models/system_settings_model.dart';
 import '../../utils/forms.dart';
 

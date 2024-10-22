@@ -6,9 +6,6 @@ import 'package:receipt_wrangler_mobile/constants/currency.dart';
 
 import '../models/system_settings_model.dart';
 
-const numberFormatWithoutSymbol = "###,###.00";
-const numberFormatWithoutSymbolOrGroupSeparator = "######.00";
-
 String getDefaultFormat(BuildContext context) {
   var systemSettingsModel =
       Provider.of<SystemSettingsModel>(context, listen: false);
