@@ -12,41 +12,50 @@ part 'receipt_paged_request_filter.g.dart';
 /// ReceiptPagedRequestFilter
 ///
 /// Properties:
-/// * [date] 
-/// * [amount] 
-/// * [name] 
-/// * [paidBy] 
-/// * [categories] 
-/// * [tags] 
-/// * [status] 
-/// * [resolvedDate] 
-/// * [createdAt] 
+/// * [date] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [amount] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [name] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [paidBy] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [categories] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [tags] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [status] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [resolvedDate] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
+/// * [createdAt] - Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
 @BuiltValue()
 abstract class ReceiptPagedRequestFilter implements Built<ReceiptPagedRequestFilter, ReceiptPagedRequestFilterBuilder> {
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'date')
   JsonObject? get date;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'amount')
   JsonObject? get amount;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'name')
   JsonObject? get name;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'paidBy')
   JsonObject? get paidBy;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'categories')
   JsonObject? get categories;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'tags')
   JsonObject? get tags;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'status')
   JsonObject? get status;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'resolvedDate')
   JsonObject? get resolvedDate;
 
+  /// Contains two keys: operation of type FilterOperation and value which can a different type depending on the field.
   @BuiltValueField(wireName: r'createdAt')
   JsonObject? get createdAt;
 

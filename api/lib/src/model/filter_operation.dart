@@ -19,6 +19,10 @@ class FilterOperation extends EnumClass {
   static const FilterOperation GREATER_THAN = _$GREATER_THAN;
   @BuiltValueEnumConst(wireName: r'LESS_THAN')
   static const FilterOperation LESS_THAN = _$LESS_THAN;
+  @BuiltValueEnumConst(wireName: r'BETWEEN')
+  static const FilterOperation BETWEEN = _$BETWEEN;
+  @BuiltValueEnumConst(wireName: r'WITHIN_CURRENT_MONTH')
+  static const FilterOperation WITHIN_CURRENT_MONTH = _$WITHIN_CURRENT_MONTH;
   @BuiltValueEnumConst(wireName: r'')
   static const FilterOperation empty = _$empty;
 

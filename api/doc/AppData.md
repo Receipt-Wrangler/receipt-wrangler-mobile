@@ -18,6 +18,11 @@ Name | Type | Description | Notes
 **jwt** | **String** | JWT token | [optional] 
 **refreshToken** | **String** | Refresh token | [optional] 
 **currencyDisplay** | **String** | Currency display | 
+**currencyThousandthsSeparator** | [**CurrencySeparator**](CurrencySeparator.md) |  | [optional] 
+**currencyDecimalSeparator** | [**CurrencySeparator**](CurrencySeparator.md) |  | [optional] 
+**currencySymbolPosition** | [**CurrencySymbolPosition**](CurrencySymbolPosition.md) |  | [optional] 
+**currencyHideDecimalPlaces** | **bool** | Whether to hide decimal places | [optional] 
+**icons** | [**BuiltList&lt;Icon&gt;**](Icon.md) | Icons in the system | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

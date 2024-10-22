@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
+import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
@@ -68,8 +69,10 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
+
+    // TODO: fix owed amount
     var owedAmount = items
-        .map((item) => num.parse(item.amount))
+        .map((item) => exchangeUSDToCustom(item.amount))
         .reduce((value, element) => value + element);
 
     return ExpansionPanel(
@@ -77,7 +80,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         isExpanded: expanded,
         headerBuilder: (context, expanded) {
           return ListTile(
-            title: Text("${user?.displayName} - Amount Owed: ${owedAmount}"),
+            title: Text("${user?.displayName} - Amount Owed: $owedAmount"),
           );
         },
         body: Container(
@@ -165,8 +168,11 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         ),
         Expanded(
             key: Key(amountName),
-            child: amountField(
-                context, "Amount", amountName, initialAmount, formState)),
+            child: AmountField(
+                label: "Amount",
+                fieldName: amountName,
+                initialAmount: initialAmount,
+                formState: formState)),
         Expanded(
           key: Key(statusName),
           child: itemStatusField(

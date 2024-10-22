@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/amount_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
@@ -73,8 +73,11 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAmountField() {
-    return amountField(context, "Amount", "amount",
-        modifiedReceipt.amount.toString(), formState);
+    return AmountField(
+        label: "Amount",
+        fieldName: "amount",
+        initialAmount: modifiedReceipt.amount.toString(),
+        formState: formState);
   }
 
   Widget buildDateField() {
@@ -288,7 +291,11 @@ class _ReceiptForm extends State<ReceiptForm> {
                       validator: FormBuilderValidators.required(),
                     ),
                     textFieldSpacing,
-                    amountField(context, "Amount", "amount", "", formState),
+                    AmountField(
+                        label: "Amount",
+                        fieldName: "amount",
+                        initialAmount: "0.00",
+                        formState: formState),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -300,17 +307,13 @@ class _ReceiptForm extends State<ReceiptForm> {
                                   .saveAndValidate()) {
                                 return;
                               }
+                              var form = addSharesFormKey.currentState!.value;
 
                               var items = [...receiptModel.items];
                               var newItem = (api.ItemBuilder()
-                                    ..name = addSharesFormKey
-                                        .currentState!.fields["name"]!.value
-                                    ..amount = addSharesFormKey
-                                        .currentState!.fields["amount"]!.value
-                                    ..chargedToUserId = addSharesFormKey
-                                        .currentState!
-                                        .fields["chargedToUserId"]!
-                                        .value
+                                    ..name = form["name"]
+                                    ..amount = form["amount"]
+                                    ..chargedToUserId = form["chargedToUserId"]
                                     ..receiptId = receipt?.id ?? 0
                                     ..status = api.ItemStatus.OPEN)
                                   .build();

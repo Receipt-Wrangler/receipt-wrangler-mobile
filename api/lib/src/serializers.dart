@@ -26,6 +26,8 @@ import 'package:openapi/src/model/check_email_connectivity_command.dart';
 import 'package:openapi/src/model/check_receipt_processing_settings_connectivity_command.dart';
 import 'package:openapi/src/model/claims.dart';
 import 'package:openapi/src/model/comment.dart';
+import 'package:openapi/src/model/currency_separator.dart';
+import 'package:openapi/src/model/currency_symbol_position.dart';
 import 'package:openapi/src/model/dashboard.dart';
 import 'package:openapi/src/model/encoded_image.dart';
 import 'package:openapi/src/model/feature_config.dart';
@@ -41,6 +43,7 @@ import 'package:openapi/src/model/group_role.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:openapi/src/model/group_settings_white_list_email.dart';
 import 'package:openapi/src/model/group_status.dart';
+import 'package:openapi/src/model/icon.dart';
 import 'package:openapi/src/model/import_type.dart';
 import 'package:openapi/src/model/item.dart';
 import 'package:openapi/src/model/item_status.dart';
@@ -88,6 +91,7 @@ import 'package:openapi/src/model/upsert_widget_command.dart';
 import 'package:openapi/src/model/user.dart';
 import 'package:openapi/src/model/user_preferences.dart';
 import 'package:openapi/src/model/user_role.dart';
+import 'package:openapi/src/model/user_shortcut.dart';
 import 'package:openapi/src/model/user_view.dart';
 import 'package:openapi/src/model/widget.dart';
 import 'package:openapi/src/model/widget_type.dart';
@@ -107,6 +111,8 @@ part 'serializers.g.dart';
   CheckReceiptProcessingSettingsConnectivityCommand,
   Claims,
   Comment,
+  CurrencySeparator,
+  CurrencySymbolPosition,
   Dashboard,
   EncodedImage,
   FeatureConfig,
@@ -122,6 +128,7 @@ part 'serializers.g.dart';
   GroupSettings,
   GroupSettingsWhiteListEmail,
   GroupStatus,
+  Icon,
   ImportType,
   Item,
   ItemStatus,
@@ -169,6 +176,7 @@ part 'serializers.g.dart';
   User,
   UserPreferences,
   UserRole,
+  UserShortcut,
   UserView,
   Widget,
   WidgetType,

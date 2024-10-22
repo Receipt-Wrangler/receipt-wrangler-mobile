@@ -6,6 +6,8 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 // ignore_for_file: unused_element
 import 'package:openapi/src/model/base_model.dart';
+import 'package:openapi/src/model/currency_separator.dart';
+import 'package:openapi/src/model/currency_symbol_position.dart';
 
 part 'system_settings.g.dart';
 
@@ -19,6 +21,10 @@ part 'system_settings.g.dart';
 /// * [updatedAt]
 /// * [enableLocalSignUp] - Whether local sign up is enabled
 /// * [currencyDisplay] - Currency display
+/// * [currencyThousandthsSeparator]
+/// * [currencyDecimalSeparator]
+/// * [currencySymbolPosition]
+/// * [currencyHideDecimalPlaces] - Whether to hide decimal places
 /// * [debugOcr] - Debug OCR
 /// * [numWorkers] - Number of workers to use
 /// * [emailPollingInterval] - Email polling interval
@@ -27,6 +33,10 @@ part 'system_settings.g.dart';
 @BuiltValue()
 abstract class SystemSettings
     implements BaseModel, Built<SystemSettings, SystemSettingsBuilder> {
+  @BuiltValueField(wireName: r'currencyThousandthsSeparator')
+  CurrencySeparator? get currencyThousandthsSeparator;
+  // enum currencyThousandthsSeparatorEnum {  ,,  .,  };
+
   /// Receipt processing settings foreign key
   @BuiltValueField(wireName: r'receiptProcessingSettingsId')
   int? get receiptProcessingSettingsId;
@@ -34,6 +44,10 @@ abstract class SystemSettings
   /// Currency display
   @BuiltValueField(wireName: r'currencyDisplay')
   String? get currencyDisplay;
+
+  @BuiltValueField(wireName: r'currencySymbolPosition')
+  CurrencySymbolPosition? get currencySymbolPosition;
+  // enum currencySymbolPositionEnum {  START,  END,  };
 
   /// Email polling interval
   @BuiltValueField(wireName: r'emailPollingInterval')
@@ -46,6 +60,14 @@ abstract class SystemSettings
   /// Whether local sign up is enabled
   @BuiltValueField(wireName: r'enableLocalSignUp')
   bool? get enableLocalSignUp;
+
+  /// Whether to hide decimal places
+  @BuiltValueField(wireName: r'currencyHideDecimalPlaces')
+  bool? get currencyHideDecimalPlaces;
+
+  @BuiltValueField(wireName: r'currencyDecimalSeparator')
+  CurrencySeparator? get currencyDecimalSeparator;
+  // enum currencyDecimalSeparatorEnum {  ,,  .,  };
 
   /// Debug OCR
   @BuiltValueField(wireName: r'debugOcr')
@@ -62,12 +84,13 @@ abstract class SystemSettings
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(SystemSettingsBuilder b) => b
-    ..createdBy = 0
     ..currencyDisplay = '\$'
+    ..currencyHideDecimalPlaces = false
+    ..debugOcr = false
+    ..createdBy = 0
     ..emailPollingInterval = 1800
     ..numWorkers = 1
     ..enableLocalSignUp = false
-    ..debugOcr = false
     ..createdByString = ''
     ..updatedAt = '';
 
@@ -89,6 +112,48 @@ class _$SystemSettingsSerializer
     SystemSettings object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.currencyThousandthsSeparator != null) {
+      yield r'currencyThousandthsSeparator';
+      yield serializers.serialize(
+        object.currencyThousandthsSeparator,
+        specifiedType: const FullType(CurrencySeparator),
+      );
+    }
+    if (object.currencyDisplay != null) {
+      yield r'currencyDisplay';
+      yield serializers.serialize(
+        object.currencyDisplay,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.currencyHideDecimalPlaces != null) {
+      yield r'currencyHideDecimalPlaces';
+      yield serializers.serialize(
+        object.currencyHideDecimalPlaces,
+        specifiedType: const FullType(bool),
+      );
+    }
+    if (object.currencyDecimalSeparator != null) {
+      yield r'currencyDecimalSeparator';
+      yield serializers.serialize(
+        object.currencyDecimalSeparator,
+        specifiedType: const FullType(CurrencySeparator),
+      );
+    }
+    if (object.debugOcr != null) {
+      yield r'debugOcr';
+      yield serializers.serialize(
+        object.debugOcr,
+        specifiedType: const FullType(bool),
+      );
+    }
+    if (object.fallbackReceiptProcessingSettingsId != null) {
+      yield r'fallbackReceiptProcessingSettingsId';
+      yield serializers.serialize(
+        object.fallbackReceiptProcessingSettingsId,
+        specifiedType: const FullType(int),
+      );
+    }
     yield r'createdAt';
     yield serializers.serialize(
       object.createdAt,
@@ -108,11 +173,11 @@ class _$SystemSettingsSerializer
         specifiedType: const FullType(int),
       );
     }
-    if (object.currencyDisplay != null) {
-      yield r'currencyDisplay';
+    if (object.currencySymbolPosition != null) {
+      yield r'currencySymbolPosition';
       yield serializers.serialize(
-        object.currencyDisplay,
-        specifiedType: const FullType(String),
+        object.currencySymbolPosition,
+        specifiedType: const FullType(CurrencySymbolPosition),
       );
     }
     if (object.emailPollingInterval != null) {
@@ -141,20 +206,6 @@ class _$SystemSettingsSerializer
       object.id,
       specifiedType: const FullType(int),
     );
-    if (object.debugOcr != null) {
-      yield r'debugOcr';
-      yield serializers.serialize(
-        object.debugOcr,
-        specifiedType: const FullType(bool),
-      );
-    }
-    if (object.fallbackReceiptProcessingSettingsId != null) {
-      yield r'fallbackReceiptProcessingSettingsId';
-      yield serializers.serialize(
-        object.fallbackReceiptProcessingSettingsId,
-        specifiedType: const FullType(int),
-      );
-    }
     if (object.createdByString != null) {
       yield r'createdByString';
       yield serializers.serialize(
@@ -194,6 +245,48 @@ class _$SystemSettingsSerializer
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'currencyThousandthsSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyThousandthsSeparator = valueDes;
+          break;
+        case r'currencyDisplay':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.currencyDisplay = valueDes;
+          break;
+        case r'currencyHideDecimalPlaces':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.currencyHideDecimalPlaces = valueDes;
+          break;
+        case r'currencyDecimalSeparator':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CurrencySeparator),
+          ) as CurrencySeparator;
+          result.currencyDecimalSeparator = valueDes;
+          break;
+        case r'debugOcr':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.debugOcr = valueDes;
+          break;
+        case r'fallbackReceiptProcessingSettingsId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.fallbackReceiptProcessingSettingsId = valueDes;
+          break;
         case r'createdAt':
           final valueDes = serializers.deserialize(
             value,
@@ -215,12 +308,12 @@ class _$SystemSettingsSerializer
           ) as int;
           result.createdBy = valueDes;
           break;
-        case r'currencyDisplay':
+        case r'currencySymbolPosition':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.currencyDisplay = valueDes;
+            specifiedType: const FullType(CurrencySymbolPosition),
+          ) as CurrencySymbolPosition;
+          result.currencySymbolPosition = valueDes;
           break;
         case r'emailPollingInterval':
           final valueDes = serializers.deserialize(
@@ -249,20 +342,6 @@ class _$SystemSettingsSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.id = valueDes;
-          break;
-        case r'debugOcr':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.debugOcr = valueDes;
-          break;
-        case r'fallbackReceiptProcessingSettingsId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.fallbackReceiptProcessingSettingsId = valueDes;
           break;
         case r'createdByString':
           final valueDes = serializers.deserialize(

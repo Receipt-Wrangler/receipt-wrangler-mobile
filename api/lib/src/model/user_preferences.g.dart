@@ -10,6 +10,8 @@ class _$UserPreferences extends UserPreferences {
   @override
   final ReceiptStatus? quickScanDefaultStatus;
   @override
+  final BuiltList<UserShortcut>? userShortcuts;
+  @override
   final bool? showLargeImagePreviews;
   @override
   final int userId;
@@ -33,6 +35,7 @@ class _$UserPreferences extends UserPreferences {
 
   _$UserPreferences._(
       {this.quickScanDefaultStatus,
+      this.userShortcuts,
       this.showLargeImagePreviews,
       required this.userId,
       this.quickScanDefaultGroupId,
@@ -62,6 +65,7 @@ class _$UserPreferences extends UserPreferences {
     if (identical(other, this)) return true;
     return other is UserPreferences &&
         quickScanDefaultStatus == other.quickScanDefaultStatus &&
+        userShortcuts == other.userShortcuts &&
         showLargeImagePreviews == other.showLargeImagePreviews &&
         userId == other.userId &&
         quickScanDefaultGroupId == other.quickScanDefaultGroupId &&
@@ -77,6 +81,7 @@ class _$UserPreferences extends UserPreferences {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, quickScanDefaultStatus.hashCode);
+    _$hash = $jc(_$hash, userShortcuts.hashCode);
     _$hash = $jc(_$hash, showLargeImagePreviews.hashCode);
     _$hash = $jc(_$hash, userId.hashCode);
     _$hash = $jc(_$hash, quickScanDefaultGroupId.hashCode);
@@ -94,6 +99,7 @@ class _$UserPreferences extends UserPreferences {
   String toString() {
     return (newBuiltValueToStringHelper(r'UserPreferences')
           ..add('quickScanDefaultStatus', quickScanDefaultStatus)
+          ..add('userShortcuts', userShortcuts)
           ..add('showLargeImagePreviews', showLargeImagePreviews)
           ..add('userId', userId)
           ..add('quickScanDefaultGroupId', quickScanDefaultGroupId)
@@ -117,6 +123,12 @@ class UserPreferencesBuilder
   ReceiptStatus? get quickScanDefaultStatus => _$this._quickScanDefaultStatus;
   set quickScanDefaultStatus(covariant ReceiptStatus? quickScanDefaultStatus) =>
       _$this._quickScanDefaultStatus = quickScanDefaultStatus;
+
+  ListBuilder<UserShortcut>? _userShortcuts;
+  ListBuilder<UserShortcut> get userShortcuts =>
+      _$this._userShortcuts ??= new ListBuilder<UserShortcut>();
+  set userShortcuts(covariant ListBuilder<UserShortcut>? userShortcuts) =>
+      _$this._userShortcuts = userShortcuts;
 
   bool? _showLargeImagePreviews;
   bool? get showLargeImagePreviews => _$this._showLargeImagePreviews;
@@ -166,6 +178,7 @@ class UserPreferencesBuilder
     final $v = _$v;
     if ($v != null) {
       _quickScanDefaultStatus = $v.quickScanDefaultStatus;
+      _userShortcuts = $v.userShortcuts?.toBuilder();
       _showLargeImagePreviews = $v.showLargeImagePreviews;
       _userId = $v.userId;
       _quickScanDefaultGroupId = $v.quickScanDefaultGroupId;
@@ -195,21 +208,35 @@ class UserPreferencesBuilder
   UserPreferences build() => _build();
 
   _$UserPreferences _build() {
-    final _$result = _$v ??
-        new _$UserPreferences._(
-            quickScanDefaultStatus: quickScanDefaultStatus,
-            showLargeImagePreviews: showLargeImagePreviews,
-            userId: BuiltValueNullFieldError.checkNotNull(
-                userId, r'UserPreferences', 'userId'),
-            quickScanDefaultGroupId: quickScanDefaultGroupId,
-            quickScanDefaultPaidById: quickScanDefaultPaidById,
-            id: BuiltValueNullFieldError.checkNotNull(
-                id, r'UserPreferences', 'id'),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-                createdAt, r'UserPreferences', 'createdAt'),
-            createdBy: createdBy,
-            createdByString: createdByString,
-            updatedAt: updatedAt);
+    _$UserPreferences _$result;
+    try {
+      _$result = _$v ??
+          new _$UserPreferences._(
+              quickScanDefaultStatus: quickScanDefaultStatus,
+              userShortcuts: _userShortcuts?.build(),
+              showLargeImagePreviews: showLargeImagePreviews,
+              userId: BuiltValueNullFieldError.checkNotNull(
+                  userId, r'UserPreferences', 'userId'),
+              quickScanDefaultGroupId: quickScanDefaultGroupId,
+              quickScanDefaultPaidById: quickScanDefaultPaidById,
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, r'UserPreferences', 'id'),
+              createdAt: BuiltValueNullFieldError.checkNotNull(
+                  createdAt, r'UserPreferences', 'createdAt'),
+              createdBy: createdBy,
+              createdByString: createdByString,
+              updatedAt: updatedAt);
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'userShortcuts';
+        _userShortcuts?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            r'UserPreferences', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

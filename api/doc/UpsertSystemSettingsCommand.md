@@ -10,6 +10,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **enableLocalSignUp** | **bool** | Whether local sign up is enabled | [optional] 
 **currencyDisplay** | **String** | Currency display | [optional] 
+**currencyThousandthsSeparator** | [**CurrencySeparator**](CurrencySeparator.md) |  | 
+**currencyDecimalSeparator** | [**CurrencySeparator**](CurrencySeparator.md) |  | 
+**currencySymbolPosition** | [**CurrencySymbolPosition**](CurrencySymbolPosition.md) |  | 
+**currencyHideDecimalPlaces** | **bool** | Whether to hide decimal places | 
 **debugOcr** | **bool** |  | [optional] 
 **numWorkers** | **int** | Number of workers to use | [optional] [default to 1]
 **emailPollingInterval** | **int** | Email polling interval | [optional] 

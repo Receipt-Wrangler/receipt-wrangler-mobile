@@ -20,6 +20,8 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(CheckReceiptProcessingSettingsConnectivityCommand.serializer)
       ..add(Claims.serializer)
       ..add(Comment.serializer)
+      ..add(CurrencySeparator.serializer)
+      ..add(CurrencySymbolPosition.serializer)
       ..add(Dashboard.serializer)
       ..add(EncodedImage.serializer)
       ..add(FeatureConfig.serializer)
@@ -35,6 +37,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GroupSettings.serializer)
       ..add(GroupSettingsWhiteListEmail.serializer)
       ..add(GroupStatus.serializer)
+      ..add(Icon.serializer)
       ..add(ImportType.serializer)
       ..add(Item.serializer)
       ..add(ItemStatus.serializer)
@@ -81,6 +84,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(User.serializer)
       ..add(UserPreferences.serializer)
       ..add(UserRole.serializer)
+      ..add(UserShortcut.serializer)
       ..add(UserView.serializer)
       ..add(Widget.serializer)
       ..add(WidgetType.serializer)
@@ -111,6 +115,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Tag)]),
           () => new ListBuilder<Tag>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Icon)]),
+          () => new ListBuilder<Icon>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GroupMember)]),
           () => new ListBuilder<GroupMember>())
@@ -155,6 +162,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(UpsertWidgetCommand)]),
           () => new ListBuilder<UpsertWidgetCommand>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(UserShortcut)]),
+          () => new ListBuilder<UserShortcut>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Widget)]),
           () => new ListBuilder<Widget>())

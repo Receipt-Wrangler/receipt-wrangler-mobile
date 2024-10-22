@@ -10,6 +10,9 @@ const FilterOperation _$CONTAINS = const FilterOperation._('CONTAINS');
 const FilterOperation _$EQUALS = const FilterOperation._('EQUALS');
 const FilterOperation _$GREATER_THAN = const FilterOperation._('GREATER_THAN');
 const FilterOperation _$LESS_THAN = const FilterOperation._('LESS_THAN');
+const FilterOperation _$BETWEEN = const FilterOperation._('BETWEEN');
+const FilterOperation _$WITHIN_CURRENT_MONTH =
+    const FilterOperation._('WITHIN_CURRENT_MONTH');
 const FilterOperation _$empty = const FilterOperation._('empty');
 
 FilterOperation _$valueOf(String name) {
@@ -22,6 +25,10 @@ FilterOperation _$valueOf(String name) {
       return _$GREATER_THAN;
     case 'LESS_THAN':
       return _$LESS_THAN;
+    case 'BETWEEN':
+      return _$BETWEEN;
+    case 'WITHIN_CURRENT_MONTH':
+      return _$WITHIN_CURRENT_MONTH;
     case 'empty':
       return _$empty;
     default:
@@ -35,6 +42,8 @@ final BuiltSet<FilterOperation> _$values =
   _$EQUALS,
   _$GREATER_THAN,
   _$LESS_THAN,
+  _$BETWEEN,
+  _$WITHIN_CURRENT_MONTH,
   _$empty,
 ]);
 
@@ -44,6 +53,8 @@ class _$FilterOperationMeta {
   FilterOperation get EQUALS => _$EQUALS;
   FilterOperation get GREATER_THAN => _$GREATER_THAN;
   FilterOperation get LESS_THAN => _$LESS_THAN;
+  FilterOperation get BETWEEN => _$BETWEEN;
+  FilterOperation get WITHIN_CURRENT_MONTH => _$WITHIN_CURRENT_MONTH;
   FilterOperation get empty => _$empty;
   FilterOperation valueOf(String name) => _$valueOf(name);
   BuiltSet<FilterOperation> get values => _$values;
@@ -64,6 +75,8 @@ class _$FilterOperationSerializer
     'EQUALS': 'EQUALS',
     'GREATER_THAN': 'GREATER_THAN',
     'LESS_THAN': 'LESS_THAN',
+    'BETWEEN': 'BETWEEN',
+    'WITHIN_CURRENT_MONTH': 'WITHIN_CURRENT_MONTH',
     'empty': '',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
@@ -71,6 +84,8 @@ class _$FilterOperationSerializer
     'EQUALS': 'EQUALS',
     'GREATER_THAN': 'GREATER_THAN',
     'LESS_THAN': 'LESS_THAN',
+    'BETWEEN': 'BETWEEN',
+    'WITHIN_CURRENT_MONTH': 'WITHIN_CURRENT_MONTH',
     '': 'empty',
   };
 

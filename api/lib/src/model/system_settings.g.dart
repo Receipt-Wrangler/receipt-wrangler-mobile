@@ -8,15 +8,23 @@ part of 'system_settings.dart';
 
 class _$SystemSettings extends SystemSettings {
   @override
+  final CurrencySeparator? currencyThousandthsSeparator;
+  @override
   final int? receiptProcessingSettingsId;
   @override
   final String? currencyDisplay;
+  @override
+  final CurrencySymbolPosition? currencySymbolPosition;
   @override
   final int? emailPollingInterval;
   @override
   final int? numWorkers;
   @override
   final bool? enableLocalSignUp;
+  @override
+  final bool? currencyHideDecimalPlaces;
+  @override
+  final CurrencySeparator? currencyDecimalSeparator;
   @override
   final bool? debugOcr;
   @override
@@ -36,11 +44,15 @@ class _$SystemSettings extends SystemSettings {
       (new SystemSettingsBuilder()..update(updates))._build();
 
   _$SystemSettings._(
-      {this.receiptProcessingSettingsId,
+      {this.currencyThousandthsSeparator,
+      this.receiptProcessingSettingsId,
       this.currencyDisplay,
+      this.currencySymbolPosition,
       this.emailPollingInterval,
       this.numWorkers,
       this.enableLocalSignUp,
+      this.currencyHideDecimalPlaces,
+      this.currencyDecimalSeparator,
       this.debugOcr,
       this.fallbackReceiptProcessingSettingsId,
       required this.id,
@@ -66,11 +78,15 @@ class _$SystemSettings extends SystemSettings {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is SystemSettings &&
+        currencyThousandthsSeparator == other.currencyThousandthsSeparator &&
         receiptProcessingSettingsId == other.receiptProcessingSettingsId &&
         currencyDisplay == other.currencyDisplay &&
+        currencySymbolPosition == other.currencySymbolPosition &&
         emailPollingInterval == other.emailPollingInterval &&
         numWorkers == other.numWorkers &&
         enableLocalSignUp == other.enableLocalSignUp &&
+        currencyHideDecimalPlaces == other.currencyHideDecimalPlaces &&
+        currencyDecimalSeparator == other.currencyDecimalSeparator &&
         debugOcr == other.debugOcr &&
         fallbackReceiptProcessingSettingsId ==
             other.fallbackReceiptProcessingSettingsId &&
@@ -84,11 +100,15 @@ class _$SystemSettings extends SystemSettings {
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, currencyThousandthsSeparator.hashCode);
     _$hash = $jc(_$hash, receiptProcessingSettingsId.hashCode);
     _$hash = $jc(_$hash, currencyDisplay.hashCode);
+    _$hash = $jc(_$hash, currencySymbolPosition.hashCode);
     _$hash = $jc(_$hash, emailPollingInterval.hashCode);
     _$hash = $jc(_$hash, numWorkers.hashCode);
     _$hash = $jc(_$hash, enableLocalSignUp.hashCode);
+    _$hash = $jc(_$hash, currencyHideDecimalPlaces.hashCode);
+    _$hash = $jc(_$hash, currencyDecimalSeparator.hashCode);
     _$hash = $jc(_$hash, debugOcr.hashCode);
     _$hash = $jc(_$hash, fallbackReceiptProcessingSettingsId.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
@@ -103,11 +123,15 @@ class _$SystemSettings extends SystemSettings {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'SystemSettings')
+          ..add('currencyThousandthsSeparator', currencyThousandthsSeparator)
           ..add('receiptProcessingSettingsId', receiptProcessingSettingsId)
           ..add('currencyDisplay', currencyDisplay)
+          ..add('currencySymbolPosition', currencySymbolPosition)
           ..add('emailPollingInterval', emailPollingInterval)
           ..add('numWorkers', numWorkers)
           ..add('enableLocalSignUp', enableLocalSignUp)
+          ..add('currencyHideDecimalPlaces', currencyHideDecimalPlaces)
+          ..add('currencyDecimalSeparator', currencyDecimalSeparator)
           ..add('debugOcr', debugOcr)
           ..add('fallbackReceiptProcessingSettingsId',
               fallbackReceiptProcessingSettingsId)
@@ -126,6 +150,13 @@ class SystemSettingsBuilder
         BaseModelBuilder {
   _$SystemSettings? _$v;
 
+  CurrencySeparator? _currencyThousandthsSeparator;
+  CurrencySeparator? get currencyThousandthsSeparator =>
+      _$this._currencyThousandthsSeparator;
+  set currencyThousandthsSeparator(
+          covariant CurrencySeparator? currencyThousandthsSeparator) =>
+      _$this._currencyThousandthsSeparator = currencyThousandthsSeparator;
+
   int? _receiptProcessingSettingsId;
   int? get receiptProcessingSettingsId => _$this._receiptProcessingSettingsId;
   set receiptProcessingSettingsId(covariant int? receiptProcessingSettingsId) =>
@@ -135,6 +166,13 @@ class SystemSettingsBuilder
   String? get currencyDisplay => _$this._currencyDisplay;
   set currencyDisplay(covariant String? currencyDisplay) =>
       _$this._currencyDisplay = currencyDisplay;
+
+  CurrencySymbolPosition? _currencySymbolPosition;
+  CurrencySymbolPosition? get currencySymbolPosition =>
+      _$this._currencySymbolPosition;
+  set currencySymbolPosition(
+          covariant CurrencySymbolPosition? currencySymbolPosition) =>
+      _$this._currencySymbolPosition = currencySymbolPosition;
 
   int? _emailPollingInterval;
   int? get emailPollingInterval => _$this._emailPollingInterval;
@@ -149,6 +187,18 @@ class SystemSettingsBuilder
   bool? get enableLocalSignUp => _$this._enableLocalSignUp;
   set enableLocalSignUp(covariant bool? enableLocalSignUp) =>
       _$this._enableLocalSignUp = enableLocalSignUp;
+
+  bool? _currencyHideDecimalPlaces;
+  bool? get currencyHideDecimalPlaces => _$this._currencyHideDecimalPlaces;
+  set currencyHideDecimalPlaces(covariant bool? currencyHideDecimalPlaces) =>
+      _$this._currencyHideDecimalPlaces = currencyHideDecimalPlaces;
+
+  CurrencySeparator? _currencyDecimalSeparator;
+  CurrencySeparator? get currencyDecimalSeparator =>
+      _$this._currencyDecimalSeparator;
+  set currencyDecimalSeparator(
+          covariant CurrencySeparator? currencyDecimalSeparator) =>
+      _$this._currencyDecimalSeparator = currencyDecimalSeparator;
 
   bool? _debugOcr;
   bool? get debugOcr => _$this._debugOcr;
@@ -190,11 +240,15 @@ class SystemSettingsBuilder
   SystemSettingsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _currencyThousandthsSeparator = $v.currencyThousandthsSeparator;
       _receiptProcessingSettingsId = $v.receiptProcessingSettingsId;
       _currencyDisplay = $v.currencyDisplay;
+      _currencySymbolPosition = $v.currencySymbolPosition;
       _emailPollingInterval = $v.emailPollingInterval;
       _numWorkers = $v.numWorkers;
       _enableLocalSignUp = $v.enableLocalSignUp;
+      _currencyHideDecimalPlaces = $v.currencyHideDecimalPlaces;
+      _currencyDecimalSeparator = $v.currencyDecimalSeparator;
       _debugOcr = $v.debugOcr;
       _fallbackReceiptProcessingSettingsId =
           $v.fallbackReceiptProcessingSettingsId;
@@ -225,11 +279,15 @@ class SystemSettingsBuilder
   _$SystemSettings _build() {
     final _$result = _$v ??
         new _$SystemSettings._(
+            currencyThousandthsSeparator: currencyThousandthsSeparator,
             receiptProcessingSettingsId: receiptProcessingSettingsId,
             currencyDisplay: currencyDisplay,
+            currencySymbolPosition: currencySymbolPosition,
             emailPollingInterval: emailPollingInterval,
             numWorkers: numWorkers,
             enableLocalSignUp: enableLocalSignUp,
+            currencyHideDecimalPlaces: currencyHideDecimalPlaces,
+            currencyDecimalSeparator: currencyDecimalSeparator,
             debugOcr: debugOcr,
             fallbackReceiptProcessingSettingsId:
                 fallbackReceiptProcessingSettingsId,

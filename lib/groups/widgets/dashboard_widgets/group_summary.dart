@@ -22,9 +22,8 @@ class _GroupSummary extends State<GroupSummary> {
   String _getUserOwesText(
       MapEntry<String, String> mapEntry, UserModel userModel) {
     var user = userModel.getUserById(mapEntry.key);
-    var amount = double.parse(mapEntry.value);
-    var formattedAmount = formatCurrency(context, amount);
-    var value = formattedAmount.replaceAll("-", "");
+    var formattedAmount = formatCurrency(context, mapEntry.value);
+    var value = formattedAmount.toString().replaceAll("-", "");
 
     if (mapEntry.value.contains("-") || mapEntry.value == "0") {
       return "${user!.displayName} owes you: $formattedAmount";

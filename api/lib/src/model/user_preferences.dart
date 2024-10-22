@@ -2,11 +2,13 @@
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 // ignore_for_file: unused_element
 import 'package:openapi/src/model/base_model.dart';
 import 'package:openapi/src/model/receipt_status.dart';
+import 'package:openapi/src/model/user_shortcut.dart';
 
 part 'user_preferences.g.dart';
 
@@ -23,6 +25,7 @@ part 'user_preferences.g.dart';
 /// * [quickScanDefaultPaidById] - User foreign key
 /// * [quickScanDefaultStatus] - Default quick scan status
 /// * [showLargeImagePreviews] - Whether to show large image previews
+/// * [userShortcuts]
 @BuiltValue()
 abstract class UserPreferences
     implements BaseModel, Built<UserPreferences, UserPreferencesBuilder> {
@@ -30,6 +33,9 @@ abstract class UserPreferences
   @BuiltValueField(wireName: r'quickScanDefaultStatus')
   ReceiptStatus? get quickScanDefaultStatus;
   // enum quickScanDefaultStatusEnum {  OPEN,  NEEDS_ATTENTION,  RESOLVED,  DRAFT,  ,  };
+
+  @BuiltValueField(wireName: r'userShortcuts')
+  BuiltList<UserShortcut>? get userShortcuts;
 
   /// Whether to show large image previews
   @BuiltValueField(wireName: r'showLargeImagePreviews')
@@ -56,7 +62,6 @@ abstract class UserPreferences
   static void _defaults(UserPreferencesBuilder b) => b
     ..quickScanDefaultStatus = ReceiptStatus.OPEN
     ..createdBy = 0
-    ..showLargeImagePreviews = false
     ..quickScanDefaultGroupId = 0
     ..quickScanDefaultPaidById = 0
     ..createdByString = ''
@@ -97,6 +102,13 @@ class _$UserPreferencesSerializer
       yield serializers.serialize(
         object.createdBy,
         specifiedType: const FullType(int),
+      );
+    }
+    if (object.userShortcuts != null) {
+      yield r'userShortcuts';
+      yield serializers.serialize(
+        object.userShortcuts,
+        specifiedType: const FullType(BuiltList, [FullType(UserShortcut)]),
       );
     }
     if (object.showLargeImagePreviews != null) {
@@ -189,6 +201,13 @@ class _$UserPreferencesSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.createdBy = valueDes;
+          break;
+        case r'userShortcuts':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UserShortcut)]),
+          ) as BuiltList<UserShortcut>;
+          result.userShortcuts.replace(valueDes);
           break;
         case r'showLargeImagePreviews':
           final valueDes = serializers.deserialize(
