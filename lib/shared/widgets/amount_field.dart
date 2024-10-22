@@ -85,8 +85,6 @@ class _AmountField extends State<AmountField> {
       keyboardType: TextInputType.number,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(),
-        //FormBuilderValidators.numeric(),
-        //FormBuilderValidators.min(0, inclusive: false),
       ]),
       readOnly: isFieldReadOnly(widget.formState),
       controller: controller,
