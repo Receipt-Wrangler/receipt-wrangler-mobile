@@ -360,7 +360,6 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   @override
   Widget build(BuildContext context) {
-    print(addSharesFormKey);
     return FormBuilder(
       key: formKey,
       child: Column(
