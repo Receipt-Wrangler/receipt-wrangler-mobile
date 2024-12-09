@@ -35,35 +35,41 @@ class _Login extends State<AuthForm> {
 
     if (_formKey.currentState!.validate()) {
       if (_isSignUp()) {
-        OpenApiClient.client
-            .getAuthApi()
-            .signUp(
-                signUpCommand: (api.SignUpCommandBuilder()
-                      ..username = form["username"]
-                      ..password = form["password"]
-                      ..displayName = form["displayName"])
-                    .build())
-            .then((data) => {
-                  showSuccessSnackbar(
-                      context, "${form["username"]} successfully signed up!")
-                })
-            .catchError((err) => showApiErrorSnackbar(context, err));
+        await signUp();
       } else {
-        var command = (api.LoginCommandBuilder()
-              ..username = form["username"]
-              ..password = form["password"])
-            .build();
-        try {
-          var appDataResponse = await OpenApiClient.client
-              .getAuthApi()
-              .login(loginCommand: command);
-          await _onLoginSuccess(appDataResponse.data as api.AppData);
-        } catch (e) {
-          print(e);
-          showApiErrorSnackbar(context, e as dynamic);
-        }
+        await login();
       }
     }
+  }
+
+  Future<void> login() async {
+    var form = _formKey.currentState!.value;
+    var command = (api.LoginCommandBuilder()
+          ..username = form["username"]
+          ..password = form["password"])
+        .build();
+    try {
+      var appDataResponse =
+          await OpenApiClient.client.getAuthApi().login(loginCommand: command);
+      await _onLoginSuccess(appDataResponse.data as api.AppData);
+    } catch (e) {
+      print(e);
+      showApiErrorSnackbar(context, e as dynamic);
+    }
+  }
+
+  Future<void> signUp() async {
+    var form = _formKey.currentState!.value;
+    OpenApiClient.client
+        .getAuthApi()
+        .signUp(
+            signUpCommand: (api.SignUpCommandBuilder()
+                  ..username = form["username"]
+                  ..password = form["password"]
+                  ..displayName = form["displayName"])
+                .build())
+        .then((data) async => {await login()})
+        .catchError((err) => showApiErrorSnackbar(context, err));
   }
 
   Future<void> _onLoginSuccess(api.AppData appData) async {
