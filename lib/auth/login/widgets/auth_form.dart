@@ -168,6 +168,9 @@ class _Login extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Image.asset(
+            "assets/branding/loading.gif",
+          ),
           _getHeaderText(),
           const SizedBox(
             height: 10,
