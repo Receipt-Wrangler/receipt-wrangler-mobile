@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
@@ -28,6 +29,7 @@ class AuthForm extends StatefulWidget {
 
 class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  late final screenSize = MediaQuery.of(context).size;
 
   Future<void> _submit() async {
     _formKey.currentState!.save();
@@ -109,15 +111,6 @@ class _Login extends State<AuthForm> {
     }
   }
 
-  Widget _getHeaderText() {
-    var headerText = _isSignUp() ? "Create Account" : "Login";
-
-    return Text(
-      headerText,
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    );
-  }
-
   Widget _getSignUpButton() {
     var route = "";
     var buttonText = "";
@@ -168,10 +161,11 @@ class _Login extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            "assets/branding/loading.gif",
+          SvgPicture.asset(
+            "assets/branding/logo-large.svg",
+            width: screenSize.width * 0.5,
+            height: screenSize.width * 0.5,
           ),
-          _getHeaderText(),
           const SizedBox(
             height: 10,
           ),
