@@ -60,7 +60,6 @@ class _TopAppBar extends State<TopAppBar> {
                 .build(),
           );
       await authModel.purgeTokens();
-      showSuccessSnackbar(context, "Successfully logged out");
       context.go("/login");
     } catch (e) {
       showErrorSnackbar(context, e as dynamic);
