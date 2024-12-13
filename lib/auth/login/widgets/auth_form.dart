@@ -31,6 +31,7 @@ class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final screenSize = MediaQuery.of(context).size;
   bool isSignUp = false;
+  bool isLoading = false;
 
   Future<void> _submit() async {
     _formKey.currentState!.save();
@@ -51,10 +52,12 @@ class _Login extends State<AuthForm> {
           ..password = form["password"])
         .build();
     try {
+      toggleIsLoading();
       var appDataResponse =
           await OpenApiClient.client.getAuthApi().login(loginCommand: command);
       await _onLoginSuccess(appDataResponse.data as api.AppData);
     } catch (e) {
+      toggleIsLoading();
       print(e);
       showApiErrorSnackbar(context, e as dynamic);
     }
@@ -62,6 +65,7 @@ class _Login extends State<AuthForm> {
 
   Future<void> signUp() async {
     var form = _formKey.currentState!.value;
+    toggleIsLoading();
     OpenApiClient.client
         .getAuthApi()
         .signUp(
@@ -71,7 +75,17 @@ class _Login extends State<AuthForm> {
                   ..displayName = form["displayName"])
                 .build())
         .then((data) async => {await login()})
-        .catchError((err) => showApiErrorSnackbar(context, err));
+        .catchError((err) => {
+              toggleIsLoading(),
+              print(err),
+              showApiErrorSnackbar(context, err),
+            });
+  }
+
+  void toggleIsLoading() {
+    setState(() {
+      isLoading = !isLoading;
+    });
   }
 
   Future<void> _onLoginSuccess(api.AppData appData) async {
@@ -87,7 +101,6 @@ class _Login extends State<AuthForm> {
 
     await storeAppData(authModel, groupModel, userModel, userPreferencesModel,
         categoryModel, tagModel, systemSettingsModel, appData);
-    showSuccessSnackbar(context, "Successfully logged in!");
     registerCustomCurrency(context);
     context.go("/groups");
   }
@@ -155,62 +168,66 @@ class _Login extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(
-            "assets/branding/logo-large.svg",
-            width: screenSize.width * 0.25,
-            height: screenSize.width * 0.25,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Consumer<AuthModel>(
-            builder: (context, auth, child) {
-              return _getServerInfoText(auth);
-            },
-          ),
-          headerSpacing,
-          _getDisplaynameField(),
-          isSignUp ? textFieldSpacing : const SizedBox.shrink(),
-          FormBuilderTextField(
-              name: "username",
-              autofillHints: const [AutofillHints.username],
-              decoration: const InputDecoration(
-                  labelText: "Username", border: OutlineInputBorder()),
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-              ])),
-          textFieldSpacing,
-          FormBuilderTextField(
-              name: "password",
-              autofillHints: const [AutofillHints.password],
-              obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: "Password", border: OutlineInputBorder()),
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-              ])),
-          lastFieldSpacing,
-          Row(
-            children: [
-              Expanded(
-                child: CupertinoButton.filled(
-                    onPressed: () {
-                      _submit();
-                    },
-                    child: _getSubmitButtonText()),
-              )
-            ],
-          ),
-          Consumer<AuthModel>(
-            builder: (context, auth, child) {
-              if (auth.featureConfig.enableLocalSignUp) {
-                return _getSignUpButton();
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
-          _getChangeServerButton(),
+          if (isLoading) ...[
+            const CircularProgressIndicator(),
+          ] else ...[
+            SvgPicture.asset(
+              "assets/branding/logo-large.svg",
+              width: screenSize.width * 0.25,
+              height: screenSize.width * 0.25,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Consumer<AuthModel>(
+              builder: (context, auth, child) {
+                return _getServerInfoText(auth);
+              },
+            ),
+            headerSpacing,
+            _getDisplaynameField(),
+            isSignUp ? textFieldSpacing : const SizedBox.shrink(),
+            FormBuilderTextField(
+                name: "username",
+                autofillHints: const [AutofillHints.username],
+                decoration: const InputDecoration(
+                    labelText: "Username", border: OutlineInputBorder()),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                ])),
+            textFieldSpacing,
+            FormBuilderTextField(
+                name: "password",
+                autofillHints: const [AutofillHints.password],
+                obscureText: true,
+                decoration: const InputDecoration(
+                    labelText: "Password", border: OutlineInputBorder()),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                ])),
+            lastFieldSpacing,
+            Row(
+              children: [
+                Expanded(
+                  child: CupertinoButton.filled(
+                      onPressed: () {
+                        _submit();
+                      },
+                      child: _getSubmitButtonText()),
+                )
+              ],
+            ),
+            Consumer<AuthModel>(
+              builder: (context, auth, child) {
+                if (auth.featureConfig.enableLocalSignUp) {
+                  return _getSignUpButton();
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+            _getChangeServerButton(),
+          ],
         ],
       ),
     ));
