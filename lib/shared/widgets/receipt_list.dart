@@ -65,6 +65,9 @@ class _ReceiptListState extends State<ReceiptList> {
                 return ReceiptListItem(
                     receipt: item.anyOf.values[0] as api.Receipt);
               },
+              noItemsFoundIndicatorBuilder: (context) => const Center(
+                child: Text('No receipts found'),
+              ),
             )));
   }
 }
