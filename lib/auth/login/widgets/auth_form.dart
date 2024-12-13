@@ -30,13 +30,13 @@ class AuthForm extends StatefulWidget {
 class _Login extends State<AuthForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final screenSize = MediaQuery.of(context).size;
+  bool isSignUp = false;
 
   Future<void> _submit() async {
     _formKey.currentState!.save();
-    var form = _formKey.currentState!.value;
 
     if (_formKey.currentState!.validate()) {
-      if (_isSignUp()) {
+      if (isSignUp) {
         await signUp();
       } else {
         await login();
@@ -92,13 +92,8 @@ class _Login extends State<AuthForm> {
     context.go("/groups");
   }
 
-  bool _isSignUp() {
-    return GoRouter.of(context).routeInformationProvider.value.uri.toString() ==
-        "/sign-up";
-  }
-
   Widget _getDisplaynameField() {
-    if (_isSignUp()) {
+    if (isSignUp) {
       return FormBuilderTextField(
           name: "displayName",
           decoration: const InputDecoration(
@@ -112,26 +107,25 @@ class _Login extends State<AuthForm> {
   }
 
   Widget _getSignUpButton() {
-    var route = "";
     var buttonText = "";
 
-    if (_isSignUp()) {
-      route = "/login";
+    if (isSignUp) {
       buttonText = "Return to Login";
     } else {
-      route = "/sign-up";
       buttonText = "Create an Account";
     }
 
     return CupertinoButton(
         onPressed: () {
-          context.go(route);
+          setState(() {
+            isSignUp = !isSignUp;
+          });
         },
         child: Text(buttonText));
   }
 
   Widget _getSubmitButtonText() {
-    if (_isSignUp()) {
+    if (isSignUp) {
       return const Text("Create an Account");
     } else {
       return const Text("Log in");
@@ -139,7 +133,7 @@ class _Login extends State<AuthForm> {
   }
 
   Widget _getServerInfoText(AuthModel server) {
-    if (_isSignUp()) {
+    if (isSignUp) {
       return Text('Signing up on: ${server.basePath}');
     }
     return Text('Logging into: ${server.basePath}');
@@ -176,7 +170,7 @@ class _Login extends State<AuthForm> {
           ),
           headerSpacing,
           _getDisplaynameField(),
-          _isSignUp() ? textFieldSpacing : const SizedBox.shrink(),
+          isSignUp ? textFieldSpacing : const SizedBox.shrink(),
           FormBuilderTextField(
               name: "username",
               autofillHints: const [AutofillHints.username],
