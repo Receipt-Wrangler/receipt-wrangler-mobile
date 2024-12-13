@@ -19,7 +19,7 @@ void showErrorSnackbar(BuildContext context, String message,
 }
 
 void showApiErrorSnackbar(BuildContext context, DioException error) {
-  var errorObject = jsonDecode(error.message ?? "{}");
+  var errorObject = jsonDecode(error.response.toString() ?? "{}");
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text(errorObject["errorMsg"] ?? 'An error occurred'),
     backgroundColor: Colors.red,

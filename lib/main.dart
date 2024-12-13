@@ -88,13 +88,6 @@ final _router = GoRouter(
         return unprotectedRouteRedirect(context, "/groups");
       },
     ),
-    GoRoute(
-      path: '/sign-up',
-      builder: (context, state) => const ScreenWrapper(child: AuthScreen()),
-      redirect: (context, state) {
-        return unprotectedRouteRedirect(context, "/groups");
-      },
-    ),
     ShellRoute(
         builder: (context, state, child) {
           return ScreenWrapper(

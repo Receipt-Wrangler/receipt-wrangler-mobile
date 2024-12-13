@@ -91,15 +91,14 @@ class _GroupDashboard extends State<GroupDashboard> {
   @override
   Widget build(BuildContext context) {
     var chipList = buildChoiceChipList(widget.dashboards);
-    var dashboardWidgets = <Widget>[];
     api.Dashboard? selectedDashboard = getSelectedDashboard(widget.dashboards);
 
     List<Widget> children = [];
 
     if (widget.dashboards.isEmpty) {
-      children.add(const Text("No dashboards to display"));
+      return const Center(child: Text("No dashboards found"));
     } else {
-      dashboardWidgets = buildDashboardWidgets(selectedDashboard);
+      children.addAll(buildDashboardWidgets(selectedDashboard));
     }
 
     return SizedBox(
@@ -108,9 +107,7 @@ class _GroupDashboard extends State<GroupDashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           chipList,
-          Expanded(
-              child:
-                  GridView.count(crossAxisCount: 1, children: dashboardWidgets))
+          Expanded(child: GridView.count(crossAxisCount: 1, children: children))
         ]));
   }
 }
