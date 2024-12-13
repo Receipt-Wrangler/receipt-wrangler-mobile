@@ -96,11 +96,7 @@ class _GroupDashboard extends State<GroupDashboard> {
     List<Widget> children = [];
 
     if (widget.dashboards.isEmpty) {
-      children.add(
-        const Center(
-          child: Text("No dashboards found"),
-        ),
-      );
+      return const Center(child: Text("No dashboards found"));
     } else {
       children.addAll(buildDashboardWidgets(selectedDashboard));
     }
