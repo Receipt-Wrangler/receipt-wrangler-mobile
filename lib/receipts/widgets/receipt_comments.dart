@@ -145,7 +145,7 @@ class _ReceiptComments extends State<ReceiptComments> {
   Widget buildCommentWidgets(bool hasComments) {
     return hasComments
         ? buildWidgetList()
-        : Center(child: Text("No comments found."));
+        : Center(child: Text("No comments found"));
   }
 
   @override
