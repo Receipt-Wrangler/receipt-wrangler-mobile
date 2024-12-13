@@ -163,8 +163,8 @@ class _Login extends State<AuthForm> {
         children: [
           SvgPicture.asset(
             "assets/branding/logo-large.svg",
-            width: screenSize.width * 0.5,
-            height: screenSize.width * 0.5,
+            width: screenSize.width * 0.25,
+            height: screenSize.width * 0.25,
           ),
           const SizedBox(
             height: 10,
