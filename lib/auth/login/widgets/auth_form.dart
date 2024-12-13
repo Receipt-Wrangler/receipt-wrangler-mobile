@@ -141,7 +141,7 @@ class _Login extends State<AuthForm> {
     if (isSignUp) {
       return const Text("Create an Account");
     } else {
-      return const Text("Log in");
+      return const Text("Log In");
     }
   }
 
