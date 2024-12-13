@@ -137,7 +137,7 @@ class ReceiptBottomSheetBuilder {
         .addComment(upsertCommentCommand: command)
         .then((value) {
       var comments = [...receiptModel.comments];
-      comments.add(value as api.Comment);
+      comments.add(value.data as api.Comment);
 
       receiptModel.setComments(comments);
       textBehaviorSubject.add("");
