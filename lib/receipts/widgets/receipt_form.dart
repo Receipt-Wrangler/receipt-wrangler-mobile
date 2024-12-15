@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
+import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
@@ -241,7 +242,13 @@ class _ReceiptForm extends State<ReceiptForm> {
                       isAddingShare = true;
                     });
                   },
-          )
+          ),
+          IconButton(
+              onPressed: openQuickActionsBottomSheet,
+              icon: Icon(
+                Icons.abc,
+                color: Theme.of(context).hintColor,
+              ))
         ],
       ));
     }
@@ -252,6 +259,12 @@ class _ReceiptForm extends State<ReceiptForm> {
         ...rowChildren,
       ],
     );
+  }
+
+  void openQuickActionsBottomSheet() {
+    showFullscreenBottomSheet(
+        shellContext as BuildContext, Text("we here"), "deez nuts",
+        bottomSheetWidget: Text("bottom sheet"));
   }
 
   Widget buildAddSharesCard() {
