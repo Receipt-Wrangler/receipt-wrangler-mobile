@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
@@ -245,9 +247,10 @@ class _ReceiptForm extends State<ReceiptForm> {
           ),
           IconButton(
               onPressed: openQuickActionsBottomSheet,
-              icon: Icon(
-                Icons.abc,
-                color: Theme.of(context).hintColor,
+              icon: SvgPicture.asset(
+                "assets/icons/split.svg",
+                width: 24,
+                height: 24,
               ))
         ],
       ));
@@ -262,8 +265,8 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   void openQuickActionsBottomSheet() {
-    showFullscreenBottomSheet(
-        shellContext as BuildContext, Text("we here"), "deez nuts",
+    showFullscreenBottomSheet(shellContext as BuildContext,
+        const ReceiptQuickActions(), "Quick Actions",
         bottomSheetWidget: Text("bottom sheet"));
   }
 
