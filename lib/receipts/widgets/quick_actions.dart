@@ -3,13 +3,17 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../../models/context_model.dart';
+import '../../models/group_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/widgets/multi-select-field.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
-  const ReceiptQuickActions({super.key});
+  const ReceiptQuickActions({super.key, required int groupId});
+
+  final int groupId = 0;
 
   @override
   State<ReceiptQuickActions> createState() => _ReceiptQuickActions();
@@ -18,12 +22,13 @@ class ReceiptQuickActions extends StatefulWidget {
 class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
-  late final users = Provider.of<UserModel>(context, listen: false).users;
-  var quickActions = ["Split Evenly", "Split Evenly with Portions"];
-  var quickActionsSelection = [true, false];
+  late final userModel = Provider.of<UserModel>(context, listen: false);
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
   final formKey = GlobalKey<FormBuilderState>();
 
-  // TODO: Get users in group
+  var quickActions = ["Split Evenly", "Split Evenly with Portions"];
+  var quickActionsSelection = [true, false];
+
   Widget buildUserField() {
     return MultiSelectField<api.UserView>(
         name: "userIds",
@@ -35,8 +40,13 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   }
 
   void showUserMultiSelect() {
-    showMultiselectBottomSheet(shellContext, "Select Users", "Select", users,
-        [], (user) => user.displayName).then((value) {
+    showMultiselectBottomSheet(
+        shellContext,
+        "Select Users",
+        "Select",
+        getUsersInGroup(userModel, groupModel, widget.groupId.toString()),
+        [],
+        (user) => user.displayName).then((value) {
       if (value != null) {
         var users =
             List<api.UserView>.from(value.map((item) => item as api.UserView));

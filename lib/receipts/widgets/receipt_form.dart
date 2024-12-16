@@ -265,8 +265,12 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   void openQuickActionsBottomSheet() {
-    showFullscreenBottomSheet(shellContext as BuildContext,
-        const ReceiptQuickActions(), "Quick Actions",
+    showFullscreenBottomSheet(
+        shellContext as BuildContext,
+        ReceiptQuickActions(
+          groupId: groupId,
+        ),
+        "Quick Actions",
         bottomSheetWidget: Text("bottom sheet"));
   }
 
