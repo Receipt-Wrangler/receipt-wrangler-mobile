@@ -7,6 +7,7 @@ import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../../models/context_model.dart';
 import '../../models/group_model.dart';
+import '../../models/receipt_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/widgets/multi-select-field.dart';
 
@@ -24,7 +25,8 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
       Provider.of<ContextModel>(context, listen: false).shellContext;
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
-  final formKey = GlobalKey<FormBuilderState>();
+  late final formKey =
+      Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
 
   var quickActions = ["Split Evenly", "Split Evenly with Portions"];
   var quickActionsSelection = [true, false];
