@@ -12,7 +12,7 @@ import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/widgets/multi-select-field.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
-  const ReceiptQuickActions({super.key, required int this.groupId});
+  const ReceiptQuickActions({super.key, required this.groupId});
 
   final int groupId;
 
@@ -70,6 +70,9 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
         quickActionsSelection = [false, false];
         quickActionsSelection[selected] = newState;
+
+        formKey.currentState!.fields["quickActionsSelection"]!
+            .setValue(quickActionsSelection);
       }),
     );
   }
@@ -80,6 +83,13 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
         key: formKey,
         child: Column(
           children: [
+            FormBuilderField<List<bool>>(
+              name: "quickActionsSelection",
+              initialValue: quickActionsSelection,
+              builder: (FormFieldState<List<bool>> field) {
+                return SizedBox.shrink();
+              },
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,

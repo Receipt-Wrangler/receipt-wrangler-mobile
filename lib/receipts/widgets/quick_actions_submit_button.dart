@@ -19,7 +19,7 @@ class _ReceiptQuickActionsSubmitButton
 
   void onSubmitPressed() {
     if (formKey.currentState!.saveAndValidate()) {}
-    ;
+    print(formKey.currentState!.value);
   }
 
   @override
