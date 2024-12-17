@@ -25,7 +25,7 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
       child: Consumer<LoadingModel>(
         builder: (context, loadingModel, child) {
           return MaterialButton(
-            onPressed: (loadingModel.isLoading || widget.disabled)
+            onPressed: (loadingModel.isLoading || (widget.disabled ?? false))
                 ? null
                 : widget.onPressed,
             color: Theme.of(context).primaryColor,
