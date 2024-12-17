@@ -17,9 +17,30 @@ class _ReceiptQuickActionsSubmitButton
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
 
+  void splitEvenly() {
+/*    var newItem = (api.ItemBuilder()
+          ..name = form["name"]
+          ..amount = form["amount"]
+          ..chargedToUserId = form["chargedToUserId"]
+          ..receiptId = receipt?.id ?? 0
+          ..status = api.ItemStatus.OPEN)
+        .build();*/
+  }
+
+  void splitEvenlyWithPortions() {}
+
   void onSubmitPressed() {
-    if (formKey.currentState!.saveAndValidate()) {}
-    print(formKey.currentState!.value);
+    if (formKey.currentState!.saveAndValidate()) {
+      var quickActionSelection =
+          formKey.currentState!.value["quickActionsSelection"] as List<bool>;
+      var selected = quickActionSelection.indexOf(true);
+      switch (selected) {
+        case 0:
+          splitEvenly();
+        case 1:
+          splitEvenlyWithPortions();
+      }
+    }
   }
 
   @override
