@@ -66,6 +66,10 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
       children: [...quickActions.map((action) => Text(action))],
       isSelected: quickActionsSelection,
       onPressed: (selected) => setState(() {
+        if (quickActionsSelection[selected]) {
+          return;
+        }
+
         var newState = !quickActionsSelection[selected];
 
         quickActionsSelection = [false, false];
