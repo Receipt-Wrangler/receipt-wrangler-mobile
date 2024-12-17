@@ -35,6 +35,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
     return MultiSelectField<api.UserView>(
         name: "userIds",
         label: "Users",
+        required: true,
         initialValue: [],
         itemDisplayName: (user) => user.displayName ?? "",
         itemName: "Users",

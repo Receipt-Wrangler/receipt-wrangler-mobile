@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class MultiSelectField<T> extends StatefulWidget {
-  const MultiSelectField({
-    super.key,
-    required this.name,
-    required this.label,
-    required this.itemDisplayName,
-    required this.itemName,
-    this.initialValue,
-    this.onTap,
-  });
+  const MultiSelectField(
+      {super.key,
+      required this.name,
+      required this.label,
+      required this.itemDisplayName,
+      required this.itemName,
+      this.initialValue,
+      this.onTap,
+      this.required});
 
   final String name;
 
@@ -23,6 +24,8 @@ class MultiSelectField<T> extends StatefulWidget {
   final List<T>? initialValue;
 
   final Function()? onTap;
+
+  final bool? required;
 
   @override
   State<MultiSelectField> createState() => _MultiSelectField<T>();
@@ -38,6 +41,8 @@ class _MultiSelectField<T> extends State<MultiSelectField<T>> {
   Widget build(BuildContext context) {
     return FormBuilderField<List<T>>(
       name: widget.name,
+      validator:
+          (widget.required ?? false) ? FormBuilderValidators.required() : null,
       initialValue: widget!.initialValue as dynamic,
       builder: (FormFieldState<List<T>?> field) {
         Widget buildChipLabel(T thing) {
