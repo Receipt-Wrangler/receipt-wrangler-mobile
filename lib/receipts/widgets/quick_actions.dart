@@ -11,9 +11,9 @@ import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/widgets/multi-select-field.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
-  const ReceiptQuickActions({super.key, required int groupId});
+  const ReceiptQuickActions({super.key, required int this.groupId});
 
-  final int groupId = 0;
+  final int groupId;
 
   @override
   State<ReceiptQuickActions> createState() => _ReceiptQuickActions();
