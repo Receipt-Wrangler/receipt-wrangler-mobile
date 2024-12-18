@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:money2/money2.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/currency.dart';
 import 'package:receipt_wrangler_mobile/models/context_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 
@@ -19,17 +21,21 @@ class _ReceiptQuickActionsSubmitButton
     extends State<ReceiptQuickActionsSubmitButton> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
-  late final receipt =
-      Provider.of<ReceiptModel>(context, listen: false).modifiedReceipt;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
 
   void splitEvenly() {
+    var formAmount =
+        receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;
     var selectedUsers =
         formKey.currentState!.value["users"] as List<api.UserView>;
-    var receiptAmount = double.parse(receipt.amount);
-    double equalSplit = (receiptAmount / 2);
+
+    var receiptAmount = Money.parse(formAmount, isoCode: customCurrencyISOCode);
+    var divisor = Money.parse(selectedUsers.length.toString(),
+        isoCode: customCurrencyISOCode);
+
+    double equalSplit = receiptAmount.dividedBy(divisor);
     var items = [...receiptModel.items];
 
     selectedUsers.forEach((user) {
@@ -37,7 +43,7 @@ class _ReceiptQuickActionsSubmitButton
             ..name = "${user.displayName}'s Even Portion"
             ..amount = equalSplit.toString()
             ..chargedToUserId = user.id
-            ..receiptId = receipt.id
+            ..receiptId = receiptModel.receipt.id
             ..status = api.ItemStatus.OPEN)
           .build();
 
