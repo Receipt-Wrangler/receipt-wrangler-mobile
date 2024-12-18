@@ -33,7 +33,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
   Widget buildUserField() {
     return MultiSelectField<api.UserView>(
-        name: "userIds",
+        name: "users",
         label: "Users",
         required: true,
         initialValue: [],
@@ -55,7 +55,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             List<api.UserView>.from(value.map((item) => item as api.UserView));
 
         setState(() {
-          formKey.currentState!.fields["userIds"]!.setValue(users);
+          formKey.currentState!.fields["users"]!.setValue(users);
         });
       }
     });
