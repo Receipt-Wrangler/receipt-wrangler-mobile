@@ -31,12 +31,10 @@ class _ReceiptQuickActionsSubmitButton
     return formKey.currentState!.value["users"] as List<api.UserView>;
   }
 
-  List<FormItem> buildEvenSplitFormItems() {
-    var formAmount =
-        receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;
+  List<FormItem> buildEvenSplitFormItems(String amount) {
     var selectedUsers = getSelectedUsers();
 
-    var receiptAmount = Money.parse(formAmount, isoCode: customCurrencyISOCode);
+    var receiptAmount = Money.parse(amount, isoCode: customCurrencyISOCode);
     var divisor = Money.parse(selectedUsers.length.toString(),
         isoCode: customCurrencyISOCode);
 
@@ -61,7 +59,9 @@ class _ReceiptQuickActionsSubmitButton
   // TODO: don't forget about validation
   void splitEvenly() {
     if (formKey.currentState!.saveAndValidate()) {
-      List<FormItem> items = buildEvenSplitFormItems();
+      var formAmount =
+          receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;
+      List<FormItem> items = buildEvenSplitFormItems(formAmount);
       receiptModel.setItems(items);
       Navigator.pop(shellContext as BuildContext);
     }
@@ -70,22 +70,24 @@ class _ReceiptQuickActionsSubmitButton
   void splitEvenlyWithPortions() {
     if (formKey.currentState!.saveAndValidate()) {
       List<FormItem> userPortionsItems = [];
-      var items = buildEvenSplitFormItems();
+      var selectedUsers = getSelectedUsers();
+      var remainingAmount = Money.parse(
+          receiptModel.receiptFormKey.currentState!.fields["amount"]!.value,
+          isoCode: customCurrencyISOCode);
 
-      items.forEach((item) {
-        var splitAmount = formKey
-            .currentState!.fields["${item.chargedToUserId}"]!.value
-            .toString();
+      selectedUsers.forEach((user) {
+        var splitAmount =
+            formKey.currentState!.fields["${user.id}"]!.value.toString();
 
         if (splitAmount.length > 0) {
-          var user = userModel.getUserById(item.chargedToUserId.toString());
+          var splitCurrency =
+              Money.parse(splitAmount, isoCode: customCurrencyISOCode);
+          remainingAmount = remainingAmount - splitCurrency;
+
           var newItem = (api.ItemBuilder()
-                ..name = "${user?.displayName}'s Portion"
-                ..amount =
-                    Money.parse(splitAmount, isoCode: customCurrencyISOCode)
-                        .toDouble()
-                        .toString()
-                ..chargedToUserId = item.chargedToUserId
+                ..name = "${user.displayName}'s Portion"
+                ..amount = splitCurrency.toDouble().toString()
+                ..chargedToUserId = user.id
                 ..receiptId = receiptModel.receipt.id
                 ..status = api.ItemStatus.OPEN)
               .build();
@@ -94,7 +96,10 @@ class _ReceiptQuickActionsSubmitButton
         }
       });
 
-      receiptModel.setItems([...items, ...userPortionsItems]);
+      receiptModel.setItems([
+        ...buildEvenSplitFormItems(remainingAmount.toDouble().toString()),
+        ...userPortionsItems
+      ]);
       Navigator.pop(shellContext as BuildContext);
     }
   }
