@@ -25,6 +25,7 @@ class _ReceiptQuickActionsSubmitButton
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
 
+  // TODO: don't forget about validation
   void splitEvenly() {
     var formAmount =
         receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;

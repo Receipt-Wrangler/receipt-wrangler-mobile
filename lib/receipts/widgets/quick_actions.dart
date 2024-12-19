@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
 import '../../models/context_model.dart';
@@ -27,6 +29,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
+  final formState = WranglerFormState.edit;
 
   var quickActions = ["Split Evenly", "Split Evenly with Portions"];
   var quickActionsSelection = [true, false];
@@ -81,6 +84,24 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
     );
   }
 
+  List<Widget> buildSplitWithPortionsField() {
+    List<Widget> fields = [];
+    if (quickActionsSelection[1]) {
+      var users =
+          formKey.currentState!.fields["users"]!.value as List<api.UserView>;
+
+      users.forEach((user) {
+        fields.add(AmountField(
+            label: "${user.displayName}'s Portion",
+            fieldName: "${user.id}",
+            initialAmount: "0",
+            formState: formState));
+      });
+    }
+
+    return fields;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -100,6 +121,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
               children: [buildToggleButtons()],
             ),
             buildUserField(),
+            ...buildSplitWithPortionsField()
           ],
         ));
   }
