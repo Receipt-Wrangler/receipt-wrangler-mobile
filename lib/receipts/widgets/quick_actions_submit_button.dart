@@ -4,6 +4,7 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/currency.dart';
 import 'package:receipt_wrangler_mobile/models/context_model.dart';
+import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 
 import '../../interfaces/form_item.dart';
@@ -21,16 +22,19 @@ class _ReceiptQuickActionsSubmitButton
     extends State<ReceiptQuickActionsSubmitButton> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
+  late final userModel = Provider.of<UserModel>(context, listen: false);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
 
-  // TODO: don't forget about validation
-  void splitEvenly() {
+  List<api.UserView> getSelectedUsers() {
+    return formKey.currentState!.value["users"] as List<api.UserView>;
+  }
+
+  List<FormItem> buildEvenSplitFormItems() {
     var formAmount =
         receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;
-    var selectedUsers =
-        formKey.currentState!.value["users"] as List<api.UserView>;
+    var selectedUsers = getSelectedUsers();
 
     var receiptAmount = Money.parse(formAmount, isoCode: customCurrencyISOCode);
     var divisor = Money.parse(selectedUsers.length.toString(),
@@ -51,11 +55,49 @@ class _ReceiptQuickActionsSubmitButton
       items.add(FormItem.fromItem(newItem));
     });
 
-    receiptModel.setItems(items);
-    Navigator.pop(shellContext as BuildContext);
+    return items;
   }
 
-  void splitEvenlyWithPortions() {}
+  // TODO: don't forget about validation
+  void splitEvenly() {
+    if (formKey.currentState!.saveAndValidate()) {
+      List<FormItem> items = buildEvenSplitFormItems();
+      receiptModel.setItems(items);
+      Navigator.pop(shellContext as BuildContext);
+    }
+  }
+
+  void splitEvenlyWithPortions() {
+    if (formKey.currentState!.saveAndValidate()) {
+      List<FormItem> userPortionsItems = [];
+      var items = buildEvenSplitFormItems();
+
+      items.forEach((item) {
+        var splitAmount = formKey
+            .currentState!.fields["${item.chargedToUserId}"]!.value
+            .toString();
+
+        if (splitAmount.length > 0) {
+          var user = userModel.getUserById(item.chargedToUserId.toString());
+          var newItem = (api.ItemBuilder()
+                ..name = "${user?.displayName}'s Portion"
+                ..amount =
+                    Money.parse(splitAmount, isoCode: customCurrencyISOCode)
+                        .toDouble()
+                        .toString()
+                ..chargedToUserId = item.chargedToUserId
+                ..receiptId = receiptModel.receipt.id
+                ..status = api.ItemStatus.OPEN)
+              .build();
+
+          userPortionsItems.add(FormItem.fromItem(newItem));
+        }
+      });
+
+      receiptModel.setItems([...items, ...userPortionsItems]);
+      Navigator.pop(shellContext as BuildContext);
+    }
+  }
 
   void onSubmitPressed() {
     if (formKey.currentState!.saveAndValidate()) {
