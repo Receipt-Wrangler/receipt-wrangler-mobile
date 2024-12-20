@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
@@ -66,7 +67,12 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
   Widget buildToggleButtons() {
     return ToggleButtons(
-      children: [...quickActions.map((action) => Text(action))],
+      children: [
+        ...quickActions.map((action) => Padding(
+              padding: EdgeInsets.all(4),
+              child: Text(action),
+            )),
+      ],
       isSelected: quickActionsSelection,
       onPressed: (selected) => setState(() {
         if (quickActionsSelection[selected]) {
@@ -91,6 +97,10 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
           formKey.currentState!.fields["users"]!.value as List<api.UserView>;
 
       users.forEach((user) {
+        fields.add(const SizedBox(
+          height: 10,
+          width: 10,
+        ));
         fields.add(AmountField(
             label: "${user.displayName}'s Portion",
             fieldName: "${user.id}",
@@ -120,6 +130,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [buildToggleButtons()],
             ),
+            textFieldSpacing,
             buildUserField(),
             ...buildSplitWithPortionsField()
           ],
