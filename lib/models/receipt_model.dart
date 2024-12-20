@@ -48,6 +48,10 @@ class ReceiptModel extends ChangeNotifier {
 
   GlobalKey<FormBuilderState> get receiptFormKey => _receiptFormKey;
 
+  var _quickActionsFormKey = GlobalKey<FormBuilderState>();
+
+  GlobalKey<FormBuilderState> get quickActionsFormKey => _quickActionsFormKey;
+
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
 
@@ -82,6 +86,10 @@ class ReceiptModel extends ChangeNotifier {
   void setModifiedReceipt(Receipt receipt) {
     _modifiedReceipt = receipt;
     notifyListeners();
+  }
+
+  void resetQuickActionsFormKey() {
+    _quickActionsFormKey = GlobalKey<FormBuilderState>();
   }
 
   void resetModel() {

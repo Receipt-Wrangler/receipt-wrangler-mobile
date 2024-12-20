@@ -87,6 +87,7 @@ flutter:
   assets:
     - assets/branding/loading.gif
     - assets/branding/logo-large.svg
+    - assets/icons/split.svg
   fonts:
     - family: Raleway
       fonts:
