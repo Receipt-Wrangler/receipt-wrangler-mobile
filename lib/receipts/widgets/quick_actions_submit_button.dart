@@ -34,7 +34,8 @@ class _ReceiptQuickActionsSubmitButton
   List<FormItem> buildEvenSplitFormItems(String amount) {
     var selectedUsers = getSelectedUsers();
 
-    var receiptAmount = Money.parse(amount, isoCode: customCurrencyISOCode);
+    var receiptAmount = Money.parse(amount.length == 0 ? "0" : amount,
+        isoCode: customCurrencyISOCode);
     var divisor = Money.parse(selectedUsers.length.toString(),
         isoCode: customCurrencyISOCode);
 
