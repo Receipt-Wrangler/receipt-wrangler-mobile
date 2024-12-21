@@ -26,9 +26,15 @@ class ReceiptAppBarActionBuilder {
 
   late final loadingModel = Provider.of<LoadingModel>(context, listen: false);
 
+  late final formState = getFormStateFromContext(context);
+
   ReceiptAppBarActionBuilder(BuildContext context, ReceiptModel receiptModel) {
     this.context = context;
     this.receiptModel = receiptModel;
+  }
+
+  bool areImagesToUpload() {
+    return !receiptModel.imagesToUploadBehaviorSubject.value.isEmpty;
   }
 
   api.FileDataView? getCurrentlySelectedImage() {
@@ -109,6 +115,8 @@ class ReceiptAppBarActionBuilder {
   PopupMenuItem viewInFullScreenButton() {
     return PopupMenuItem(
         child: Text("View in full screen"),
+        enabled:
+            formState == WranglerFormState.add ? areImagesToUpload() : true,
         onTap: () {
           var selectedIndex =
               receiptModel.infiniteScrollController.selectedItem;
@@ -129,6 +137,7 @@ class ReceiptAppBarActionBuilder {
   PopupMenuItem buildImageDownloadButton() {
     return PopupMenuItem(
       child: const Text("Download"),
+      enabled: formState == WranglerFormState.add ? areImagesToUpload() : true,
       onTap: () async => await downloadImage(),
     );
   }

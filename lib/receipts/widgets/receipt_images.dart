@@ -24,13 +24,15 @@ class _ReceiptImages extends State<ReceiptImages> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-  late final imageStream = CombineLatestStream.combine2(widget.imageStream,
-      receiptModel.imagesToUploadBehaviorSubject.stream, (a, b) => a);
+  late final imageStream = CombineLatestStream.combine2(
+      widget.imageStream.asBroadcastStream(),
+      receiptModel.imagesToUploadBehaviorSubject.stream.asBroadcastStream(),
+      (a, b) => a).asBroadcastStream();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: imageStream.asBroadcastStream(),
+      stream: imageStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
