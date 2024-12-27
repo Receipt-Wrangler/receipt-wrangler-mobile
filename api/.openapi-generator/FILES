@@ -1,6 +1,7 @@
 .gitignore
 README.md
 analysis_options.yaml
+doc/About.md
 doc/AiType.md
 doc/AppData.md
 doc/AssociatedEntityType.md
@@ -31,6 +32,7 @@ doc/GetSystemTaskCommand.md
 doc/Group.md
 doc/GroupFilter.md
 doc/GroupMember.md
+doc/GroupReceiptSettings.md
 doc/GroupRole.md
 doc/GroupSettings.md
 doc/GroupSettingsWhiteListEmail.md
@@ -79,11 +81,14 @@ doc/Tag.md
 doc/TagApi.md
 doc/TagView.md
 doc/TokenPair.md
+doc/UpdateGroupReceiptSettingsCommand.md
 doc/UpdateGroupSettingsCommand.md
 doc/UpdateProfileCommand.md
 doc/UpsertCategoryCommand.md
 doc/UpsertCommentCommand.md
 doc/UpsertDashboardCommand.md
+doc/UpsertGroupCommand.md
+doc/UpsertGroupMemberCommand.md
 doc/UpsertItemCommand.md
 doc/UpsertPromptCommand.md
 doc/UpsertReceiptCommand.md
@@ -129,6 +134,7 @@ lib/src/auth/basic_auth.dart
 lib/src/auth/bearer_auth.dart
 lib/src/auth/oauth.dart
 lib/src/date_serializer.dart
+lib/src/model/about.dart
 lib/src/model/ai_type.dart
 lib/src/model/app_data.dart
 lib/src/model/associated_entity_type.dart
@@ -155,6 +161,7 @@ lib/src/model/get_system_task_command.dart
 lib/src/model/group.dart
 lib/src/model/group_filter.dart
 lib/src/model/group_member.dart
+lib/src/model/group_receipt_settings.dart
 lib/src/model/group_role.dart
 lib/src/model/group_settings.dart
 lib/src/model/group_settings_white_list_email.dart
@@ -191,11 +198,14 @@ lib/src/model/system_task_type.dart
 lib/src/model/tag.dart
 lib/src/model/tag_view.dart
 lib/src/model/token_pair.dart
+lib/src/model/update_group_receipt_settings_command.dart
 lib/src/model/update_group_settings_command.dart
 lib/src/model/update_profile_command.dart
 lib/src/model/upsert_category_command.dart
 lib/src/model/upsert_comment_command.dart
 lib/src/model/upsert_dashboard_command.dart
+lib/src/model/upsert_group_command.dart
+lib/src/model/upsert_group_member_command.dart
 lib/src/model/upsert_item_command.dart
 lib/src/model/upsert_prompt_command.dart
 lib/src/model/upsert_receipt_command.dart
@@ -213,3 +223,8 @@ lib/src/model/widget.dart
 lib/src/model/widget_type.dart
 lib/src/serializers.dart
 pubspec.yaml
+test/about_test.dart
+test/group_receipt_settings_test.dart
+test/update_group_receipt_settings_command_test.dart
+test/upsert_group_command_test.dart
+test/upsert_group_member_command_test.dart

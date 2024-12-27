@@ -8,6 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**about** | [**About**](About.md) |  | 
 **claims** | [**Claims**](Claims.md) |  | 
 **groups** | [**BuiltList&lt;Group&gt;**](Group.md) | Groups in the system | 
 **users** | [**BuiltList&lt;UserView&gt;**](UserView.md) | Users in the system | 

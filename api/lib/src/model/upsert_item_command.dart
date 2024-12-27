@@ -3,7 +3,10 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
+import 'package:openapi/src/model/upsert_category_command.dart';
 import 'package:openapi/src/model/item_status.dart';
+import 'package:openapi/src/model/upsert_tag_command.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -17,6 +20,8 @@ part 'upsert_item_command.g.dart';
 /// * [name] - Item name
 /// * [receiptId] - Receipt foreign key
 /// * [status] 
+/// * [categories] - Categories associated to item
+/// * [tags] - Tags associated to item
 @BuiltValue()
 abstract class UpsertItemCommand implements Built<UpsertItemCommand, UpsertItemCommandBuilder> {
   /// Amount the item costs
@@ -38,6 +43,14 @@ abstract class UpsertItemCommand implements Built<UpsertItemCommand, UpsertItemC
   @BuiltValueField(wireName: r'status')
   ItemStatus get status;
   // enum statusEnum {  OPEN,  RESOLVED,  DRAFT,  };
+
+  /// Categories associated to item
+  @BuiltValueField(wireName: r'categories')
+  BuiltList<UpsertCategoryCommand>? get categories;
+
+  /// Tags associated to item
+  @BuiltValueField(wireName: r'tags')
+  BuiltList<UpsertTagCommand>? get tags;
 
   UpsertItemCommand._();
 
@@ -87,6 +100,20 @@ class _$UpsertItemCommandSerializer implements PrimitiveSerializer<UpsertItemCom
       object.status,
       specifiedType: const FullType(ItemStatus),
     );
+    if (object.categories != null) {
+      yield r'categories';
+      yield serializers.serialize(
+        object.categories,
+        specifiedType: const FullType(BuiltList, [FullType(UpsertCategoryCommand)]),
+      );
+    }
+    if (object.tags != null) {
+      yield r'tags';
+      yield serializers.serialize(
+        object.tags,
+        specifiedType: const FullType(BuiltList, [FullType(UpsertTagCommand)]),
+      );
+    }
   }
 
   @override
@@ -144,6 +171,20 @@ class _$UpsertItemCommandSerializer implements PrimitiveSerializer<UpsertItemCom
             specifiedType: const FullType(ItemStatus),
           ) as ItemStatus;
           result.status = valueDes;
+          break;
+        case r'categories':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UpsertCategoryCommand)]),
+          ) as BuiltList<UpsertCategoryCommand>;
+          result.categories.replace(valueDes);
+          break;
+        case r'tags':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UpsertTagCommand)]),
+          ) as BuiltList<UpsertTagCommand>;
+          result.tags.replace(valueDes);
           break;
         default:
           unhandled.add(key);

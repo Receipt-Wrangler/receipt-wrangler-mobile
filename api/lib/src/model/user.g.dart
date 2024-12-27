@@ -27,6 +27,8 @@ class _$User extends User {
   final String? updatedAt;
   @override
   final UserRole userRole;
+  @override
+  final String? lastLoginDate;
 
   factory _$User([void Function(UserBuilder)? updates]) =>
       (new UserBuilder()..update(updates))._build();
@@ -41,7 +43,8 @@ class _$User extends User {
       required this.id,
       required this.isDummyUser,
       this.updatedAt,
-      required this.userRole})
+      required this.userRole,
+      this.lastLoginDate})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(username, r'User', 'username');
     BuiltValueNullFieldError.checkNotNull(displayName, r'User', 'displayName');
@@ -70,7 +73,8 @@ class _$User extends User {
         id == other.id &&
         isDummyUser == other.isDummyUser &&
         updatedAt == other.updatedAt &&
-        userRole == other.userRole;
+        userRole == other.userRole &&
+        lastLoginDate == other.lastLoginDate;
   }
 
   @override
@@ -86,6 +90,7 @@ class _$User extends User {
     _$hash = $jc(_$hash, isDummyUser.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
     _$hash = $jc(_$hash, userRole.hashCode);
+    _$hash = $jc(_$hash, lastLoginDate.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -102,7 +107,8 @@ class _$User extends User {
           ..add('id', id)
           ..add('isDummyUser', isDummyUser)
           ..add('updatedAt', updatedAt)
-          ..add('userRole', userRole))
+          ..add('userRole', userRole)
+          ..add('lastLoginDate', lastLoginDate))
         .toString();
   }
 }
@@ -151,6 +157,11 @@ class UserBuilder implements Builder<User, UserBuilder> {
   UserRole? get userRole => _$this._userRole;
   set userRole(UserRole? userRole) => _$this._userRole = userRole;
 
+  String? _lastLoginDate;
+  String? get lastLoginDate => _$this._lastLoginDate;
+  set lastLoginDate(String? lastLoginDate) =>
+      _$this._lastLoginDate = lastLoginDate;
+
   UserBuilder() {
     User._defaults(this);
   }
@@ -168,6 +179,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _isDummyUser = $v.isDummyUser;
       _updatedAt = $v.updatedAt;
       _userRole = $v.userRole;
+      _lastLoginDate = $v.lastLoginDate;
       _$v = null;
     }
     return this;
@@ -203,7 +215,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
                 isDummyUser, r'User', 'isDummyUser'),
             updatedAt: updatedAt,
             userRole: BuiltValueNullFieldError.checkNotNull(
-                userRole, r'User', 'userRole'));
+                userRole, r'User', 'userRole'),
+            lastLoginDate: lastLoginDate);
     replace(_$result);
     return _$result;
   }

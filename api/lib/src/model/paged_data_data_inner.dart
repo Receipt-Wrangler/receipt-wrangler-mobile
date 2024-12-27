@@ -12,6 +12,7 @@ import 'package:openapi/src/model/ocr_engine.dart';
 import 'package:openapi/src/model/group.dart';
 import 'package:openapi/src/model/receipt.dart';
 import 'package:openapi/src/model/system_task.dart';
+import 'package:openapi/src/model/group_receipt_settings.dart';
 import 'package:openapi/src/model/ai_type.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:openapi/src/model/associated_entity_type.dart';
@@ -52,6 +53,7 @@ part 'paged_data_data_inner.g.dart';
 /// * [description] - Description of the settings
 /// * [prompt] 
 /// * [groupSettings] 
+/// * [groupReceiptSettings] 
 /// * [groupMembers] - Members of the group
 /// * [isDefault] - Is default group (not used yet)
 /// * [isAllGroup] - Is all group for user

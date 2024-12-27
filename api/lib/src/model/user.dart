@@ -22,6 +22,7 @@ part 'user.g.dart';
 /// * [isDummyUser] - Is dummy user
 /// * [updatedAt] 
 /// * [userRole] - User's role
+/// * [lastLoginDate] 
 @BuiltValue()
 abstract class User implements Built<User, UserBuilder> {
   /// User's password
@@ -60,6 +61,9 @@ abstract class User implements Built<User, UserBuilder> {
   @BuiltValueField(wireName: r'userRole')
   UserRole get userRole;
   // enum userRoleEnum {  ADMIN,  USER,  };
+
+  @BuiltValueField(wireName: r'lastLoginDate')
+  String? get lastLoginDate;
 
   User._();
 
@@ -144,6 +148,13 @@ class _$UserSerializer implements PrimitiveSerializer<User> {
       object.userRole,
       specifiedType: const FullType(UserRole),
     );
+    if (object.lastLoginDate != null) {
+      yield r'lastLoginDate';
+      yield serializers.serialize(
+        object.lastLoginDate,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override
@@ -236,6 +247,13 @@ class _$UserSerializer implements PrimitiveSerializer<User> {
             specifiedType: const FullType(UserRole),
           ) as UserRole;
           result.userRole = valueDes;
+          break;
+        case r'lastLoginDate':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.lastLoginDate = valueDes;
           break;
         default:
           unhandled.add(key);

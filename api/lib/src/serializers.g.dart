@@ -9,6 +9,7 @@ part of 'serializers.dart';
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add($BaseModel.serializer)
       ..add($PagedRequestCommand.serializer)
+      ..add(About.serializer)
       ..add(AiType.serializer)
       ..add(AppData.serializer)
       ..add(AssociatedEntityType.serializer)
@@ -33,6 +34,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Group.serializer)
       ..add(GroupFilter.serializer)
       ..add(GroupMember.serializer)
+      ..add(GroupReceiptSettings.serializer)
       ..add(GroupRole.serializer)
       ..add(GroupSettings.serializer)
       ..add(GroupSettingsWhiteListEmail.serializer)
@@ -68,11 +70,14 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Tag.serializer)
       ..add(TagView.serializer)
       ..add(TokenPair.serializer)
+      ..add(UpdateGroupReceiptSettingsCommand.serializer)
       ..add(UpdateGroupSettingsCommand.serializer)
       ..add(UpdateProfileCommand.serializer)
       ..add(UpsertCategoryCommand.serializer)
       ..add(UpsertCommentCommand.serializer)
       ..add(UpsertDashboardCommand.serializer)
+      ..add(UpsertGroupCommand.serializer)
+      ..add(UpsertGroupMemberCommand.serializer)
       ..add(UpsertItemCommand.serializer)
       ..add(UpsertPromptCommand.serializer)
       ..add(UpsertReceiptCommand.serializer)
@@ -100,6 +105,12 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Item)]),
           () => new ListBuilder<Item>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Tag)]),
+          () => new ListBuilder<Tag>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Category)]),
+          () => new ListBuilder<Category>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Tag)]),
           () => new ListBuilder<Tag>())
@@ -152,12 +163,23 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(UpsertTagCommand)]),
           () => new ListBuilder<UpsertTagCommand>())
       ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(UpsertCategoryCommand)]),
+          () => new ListBuilder<UpsertCategoryCommand>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(UpsertTagCommand)]),
+          () => new ListBuilder<UpsertTagCommand>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(UpsertItemCommand)]),
           () => new ListBuilder<UpsertItemCommand>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(UpsertCommentCommand)]),
           () => new ListBuilder<UpsertCommentCommand>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(UpsertGroupMemberCommand)]),
+          () => new ListBuilder<UpsertGroupMemberCommand>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(UpsertWidgetCommand)]),

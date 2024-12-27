@@ -6,6 +6,7 @@
 import 'package:openapi/src/model/claims.dart';
 import 'package:openapi/src/model/user_preferences.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:openapi/src/model/about.dart';
 import 'package:openapi/src/model/category.dart';
 import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/currency_symbol_position.dart';
@@ -22,6 +23,7 @@ part 'app_data.g.dart';
 /// AppData
 ///
 /// Properties:
+/// * [about] 
 /// * [claims] 
 /// * [groups] - Groups in the system
 /// * [users] - Users in the system
@@ -39,6 +41,9 @@ part 'app_data.g.dart';
 /// * [icons] - Icons in the system
 @BuiltValue()
 abstract class AppData implements Built<AppData, AppDataBuilder> {
+  @BuiltValueField(wireName: r'about')
+  About get about;
+
   @BuiltValueField(wireName: r'claims')
   Claims get claims;
 
@@ -119,6 +124,11 @@ class _$AppDataSerializer implements PrimitiveSerializer<AppData> {
     AppData object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    yield r'about';
+    yield serializers.serialize(
+      object.about,
+      specifiedType: const FullType(About),
+    );
     yield r'claims';
     yield serializers.serialize(
       object.claims,
@@ -229,6 +239,13 @@ class _$AppDataSerializer implements PrimitiveSerializer<AppData> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'about':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(About),
+          ) as About;
+          result.about.replace(valueDes);
+          break;
         case r'claims':
           final valueDes = serializers.deserialize(
             value,

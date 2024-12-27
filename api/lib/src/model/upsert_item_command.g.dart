@@ -17,6 +17,10 @@ class _$UpsertItemCommand extends UpsertItemCommand {
   final int receiptId;
   @override
   final ItemStatus status;
+  @override
+  final BuiltList<UpsertCategoryCommand>? categories;
+  @override
+  final BuiltList<UpsertTagCommand>? tags;
 
   factory _$UpsertItemCommand(
           [void Function(UpsertItemCommandBuilder)? updates]) =>
@@ -27,7 +31,9 @@ class _$UpsertItemCommand extends UpsertItemCommand {
       required this.chargedToUserId,
       required this.name,
       required this.receiptId,
-      required this.status})
+      required this.status,
+      this.categories,
+      this.tags})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         amount, r'UpsertItemCommand', 'amount');
@@ -56,7 +62,9 @@ class _$UpsertItemCommand extends UpsertItemCommand {
         chargedToUserId == other.chargedToUserId &&
         name == other.name &&
         receiptId == other.receiptId &&
-        status == other.status;
+        status == other.status &&
+        categories == other.categories &&
+        tags == other.tags;
   }
 
   @override
@@ -67,6 +75,8 @@ class _$UpsertItemCommand extends UpsertItemCommand {
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, receiptId.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
+    _$hash = $jc(_$hash, categories.hashCode);
+    _$hash = $jc(_$hash, tags.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -78,7 +88,9 @@ class _$UpsertItemCommand extends UpsertItemCommand {
           ..add('chargedToUserId', chargedToUserId)
           ..add('name', name)
           ..add('receiptId', receiptId)
-          ..add('status', status))
+          ..add('status', status)
+          ..add('categories', categories)
+          ..add('tags', tags))
         .toString();
   }
 }
@@ -108,6 +120,17 @@ class UpsertItemCommandBuilder
   ItemStatus? get status => _$this._status;
   set status(ItemStatus? status) => _$this._status = status;
 
+  ListBuilder<UpsertCategoryCommand>? _categories;
+  ListBuilder<UpsertCategoryCommand> get categories =>
+      _$this._categories ??= new ListBuilder<UpsertCategoryCommand>();
+  set categories(ListBuilder<UpsertCategoryCommand>? categories) =>
+      _$this._categories = categories;
+
+  ListBuilder<UpsertTagCommand>? _tags;
+  ListBuilder<UpsertTagCommand> get tags =>
+      _$this._tags ??= new ListBuilder<UpsertTagCommand>();
+  set tags(ListBuilder<UpsertTagCommand>? tags) => _$this._tags = tags;
+
   UpsertItemCommandBuilder() {
     UpsertItemCommand._defaults(this);
   }
@@ -120,6 +143,8 @@ class UpsertItemCommandBuilder
       _name = $v.name;
       _receiptId = $v.receiptId;
       _status = $v.status;
+      _categories = $v.categories?.toBuilder();
+      _tags = $v.tags?.toBuilder();
       _$v = null;
     }
     return this;
@@ -140,18 +165,35 @@ class UpsertItemCommandBuilder
   UpsertItemCommand build() => _build();
 
   _$UpsertItemCommand _build() {
-    final _$result = _$v ??
-        new _$UpsertItemCommand._(
-            amount: BuiltValueNullFieldError.checkNotNull(
-                amount, r'UpsertItemCommand', 'amount'),
-            chargedToUserId: BuiltValueNullFieldError.checkNotNull(
-                chargedToUserId, r'UpsertItemCommand', 'chargedToUserId'),
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'UpsertItemCommand', 'name'),
-            receiptId: BuiltValueNullFieldError.checkNotNull(
-                receiptId, r'UpsertItemCommand', 'receiptId'),
-            status: BuiltValueNullFieldError.checkNotNull(
-                status, r'UpsertItemCommand', 'status'));
+    _$UpsertItemCommand _$result;
+    try {
+      _$result = _$v ??
+          new _$UpsertItemCommand._(
+              amount: BuiltValueNullFieldError.checkNotNull(
+                  amount, r'UpsertItemCommand', 'amount'),
+              chargedToUserId: BuiltValueNullFieldError.checkNotNull(
+                  chargedToUserId, r'UpsertItemCommand', 'chargedToUserId'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'UpsertItemCommand', 'name'),
+              receiptId: BuiltValueNullFieldError.checkNotNull(
+                  receiptId, r'UpsertItemCommand', 'receiptId'),
+              status: BuiltValueNullFieldError.checkNotNull(
+                  status, r'UpsertItemCommand', 'status'),
+              categories: _categories?.build(),
+              tags: _tags?.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'categories';
+        _categories?.build();
+        _$failedField = 'tags';
+        _tags?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            r'UpsertItemCommand', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }
