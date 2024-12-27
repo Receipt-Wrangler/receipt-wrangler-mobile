@@ -133,6 +133,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var itemName = FormItem.buildItemNameName(item);
     var amountName = FormItem.buildItemAmountName(item);
     var statusName = FormItem.buildItemStatusName(item);
+    var categoryName = FormItem.buildItemCategoryName(item);
+    var tagName = FormItem.buildItemTagName(item);
 
     var initialName =
         formKey.currentState?.fields[itemName]?.value ?? item.name;
@@ -140,6 +142,10 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         formKey.currentState?.fields[amountName]?.value ?? item.amount;
     var initialStatus =
         formKey.currentState?.fields[statusName]?.value ?? item.status;
+    var initialCategories =
+        formKey.currentState?.fields[categoryName]?.value ?? item.categories;
+    var initialTags =
+        formKey.currentState?.fields[tagName]?.value ?? item.categories;
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {

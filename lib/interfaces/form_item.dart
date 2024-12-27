@@ -8,6 +8,8 @@ class FormItem {
   final int chargedToUserId;
   final int receiptId;
   final api.ItemStatus status;
+  final List<api.Category> categories;
+  final List<api.Tag> tags;
 
   FormItem({
     required this.formId,
@@ -16,6 +18,8 @@ class FormItem {
     required int chargedToUserId,
     required int receiptId,
     required api.ItemStatus status,
+    required this.categories,
+    required this.tags,
   })  : name = name,
         amount = amount,
         chargedToUserId = chargedToUserId,
@@ -30,6 +34,8 @@ class FormItem {
       chargedToUserId: item.chargedToUserId,
       receiptId: item.receiptId,
       status: item.status,
+      categories: item.categories?.toList() ?? [],
+      tags: item.tags?.toList() ?? [],
     );
   }
 
@@ -47,5 +53,13 @@ class FormItem {
 
   static String buildItemStatusName(FormItem item) {
     return "items.${item.formId}.status";
+  }
+
+  static String buildItemCategoryName(FormItem item) {
+    return "items.${item.formId}.category";
+  }
+
+  static String buildItemTagName(FormItem item) {
+    return "items.${item.formId}.tag";
   }
 }
