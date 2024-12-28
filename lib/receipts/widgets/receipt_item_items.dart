@@ -8,6 +8,8 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
@@ -144,8 +146,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         formKey.currentState?.fields[statusName]?.value ?? item.status;
     var initialCategories =
         formKey.currentState?.fields[categoryName]?.value ?? item.categories;
-    var initialTags =
-        formKey.currentState?.fields[tagName]?.value ?? item.categories;
+    var initialTags = formKey.currentState?.fields[tagName]?.value ?? item.tags;
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
@@ -188,6 +189,31 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             formState,
           ),
         ),
+        Expanded(
+            key: Key(categoryName),
+            child: CategorySelectField(
+                label: "Categories",
+                fieldName: categoryName,
+                initialCategories: initialCategories,
+                formState: formState,
+                onCategoriesChanged: (categories) {
+                  setState(() {
+                    formKey.currentState?.fields[categoryName]
+                        ?.setValue(categories);
+                  });
+                })),
+        Expanded(
+            key: Key(tagName),
+            child: TagSelectField(
+                label: "Tags",
+                fieldName: tagName,
+                initialTags: initialTags,
+                formState: formState,
+                onTagsChanged: (tags) {
+                  setState(() {
+                    formKey.currentState?.fields[tagName]?.setValue(tags);
+                  });
+                })),
         iconButton
       ],
     );

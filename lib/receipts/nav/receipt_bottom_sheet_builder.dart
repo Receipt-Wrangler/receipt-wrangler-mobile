@@ -149,9 +149,9 @@ class ReceiptBottomSheetBuilder {
   }
 
   List<api.UpsertCategoryCommand> buildUpsertCategoryCommand(
-      Map<String, dynamic> form) {
-    var categories = List<api.Category>.from(
-        form["categories"].map((item) => item as api.Category));
+      Map<String, dynamic> form, String name) {
+    var categories =
+        List<api.Category>.from(form[name].map((item) => item as api.Category));
 
     return categories
         .map((category) => (api.UpsertCategoryCommandBuilder()
@@ -162,9 +162,10 @@ class ReceiptBottomSheetBuilder {
         .toList();
   }
 
-  List<api.UpsertTagCommand> buildUpsertTagCommand(Map<String, dynamic> form) {
+  List<api.UpsertTagCommand> buildUpsertTagCommand(
+      Map<String, dynamic> form, name) {
     // TODO: move these into shared funcs
-    var tags = List<api.Tag>.from(form["tags"].map((item) => item as api.Tag));
+    var tags = List<api.Tag>.from(form[name].map((item) => item as api.Tag));
 
     return tags
         .map((tag) => (api.UpsertTagCommandBuilder()
@@ -186,13 +187,18 @@ class ReceiptBottomSheetBuilder {
       var itemName = FormItem.buildItemNameName(item);
       var amountName = FormItem.buildItemAmountName(item);
       var statusName = FormItem.buildItemStatusName(item);
+      var categoryName = FormItem.buildItemCategoryName(item);
+      var tagName = FormItem.buildItemTagName(item);
 
       var command = (api.UpsertItemCommandBuilder()
             ..amount = form[amountName]
             ..chargedToUserId = item.chargedToUserId
             ..name = form[itemName]
             ..receiptId = item?.receiptId ?? 0
-            ..status = form[statusName])
+            ..status = form[statusName]
+            ..categories =
+                ListBuilder(buildUpsertCategoryCommand(form, categoryName))
+            ..tags = ListBuilder(buildUpsertTagCommand(form, tagName)))
           .build();
 
       upsertItems.add(command);
@@ -235,8 +241,9 @@ class ReceiptBottomSheetBuilder {
       ..paidByUserId = form["paidByUserId"]
       ..status = form["status"]);
 
-    receiptToUpdate.categories = ListBuilder(buildUpsertCategoryCommand(form));
-    receiptToUpdate.tags = ListBuilder(buildUpsertTagCommand(form));
+    receiptToUpdate.categories =
+        ListBuilder(buildUpsertCategoryCommand(form, "categories"));
+    receiptToUpdate.tags = ListBuilder(buildUpsertTagCommand(form, "tags"));
     receiptToUpdate.receiptItems = ListBuilder(buildUpsertItemCommand(form));
 
     if (formState == WranglerFormState.add) {
