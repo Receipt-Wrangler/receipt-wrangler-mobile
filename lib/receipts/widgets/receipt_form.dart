@@ -160,7 +160,8 @@ class _ReceiptForm extends State<ReceiptForm> {
     return CategorySelectField(
       fieldName: "categories",
       label: "Categories",
-      initialCategories: modifiedReceipt.categories?.toList() ?? [],
+      initialCategories: formKey.currentState?.fields["categories"]?.value ??
+          modifiedReceipt.categories!.toList(),
       formState: formState,
       onCategoriesChanged: (categories) => {
         setState(() {
@@ -174,7 +175,8 @@ class _ReceiptForm extends State<ReceiptForm> {
     return TagSelectField(
         label: "Tags",
         fieldName: "tags",
-        initialTags: modifiedReceipt.tags?.toList() ?? [],
+        initialTags: formKey.currentState?.fields["tags"]?.value ??
+            modifiedReceipt.tags!.toList(),
         formState: formState,
         onTagsChanged: (tags) => {
               setState(() {
