@@ -12,6 +12,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dar
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
+import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
@@ -20,9 +21,12 @@ class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
     required this.items,
+    required this.groupId,
   });
 
   final List<FormItem> items;
+
+  final int groupId;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -31,6 +35,7 @@ class ReceiptItemItems extends StatefulWidget {
 class _ReceiptItemItems extends State<ReceiptItemItems> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
@@ -193,27 +198,38 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             iconButton
           ],
         ),
-        CategorySelectField(
-            label: "Categories",
-            fieldName: categoryName,
-            initialCategories: initialCategories,
-            formState: formState,
-            onCategoriesChanged: (categories) {
-              setState(() {
-                formKey.currentState?.fields[categoryName]
-                    ?.setValue(categories);
-              });
-            }),
-        TagSelectField(
-            label: "Tags",
-            fieldName: tagName,
-            initialTags: initialTags,
-            formState: formState,
-            onTagsChanged: (tags) {
-              setState(() {
-                formKey.currentState?.fields[tagName]?.setValue(tags);
-              });
-            })
+        Visibility(
+          visible: groupModel
+                  .getGroupReceiptSettings(widget.groupId)
+                  ?.hideItemCategories ==
+              false,
+          child: CategorySelectField(
+              label: "Categories",
+              fieldName: categoryName,
+              initialCategories: initialCategories,
+              formState: formState,
+              onCategoriesChanged: (categories) {
+                setState(() {
+                  formKey.currentState?.fields[categoryName]
+                      ?.setValue(categories);
+                });
+              }),
+        ),
+        Visibility(
+            visible: groupModel
+                    .getGroupReceiptSettings(widget.groupId)
+                    ?.hideItemTags ==
+                false,
+            child: TagSelectField(
+                label: "Tags",
+                fieldName: tagName,
+                initialTags: initialTags,
+                formState: formState,
+                onTagsChanged: (tags) {
+                  setState(() {
+                    formKey.currentState?.fields[tagName]?.setValue(tags);
+                  });
+                }))
       ],
     );
   }

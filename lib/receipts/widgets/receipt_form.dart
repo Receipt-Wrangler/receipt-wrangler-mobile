@@ -19,6 +19,7 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/context_model.dart';
+import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
 import '../../shared/functions/forms.dart';
@@ -41,6 +42,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
@@ -186,7 +188,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildReceiptItemList() {
-    return ReceiptItemField();
+    return ReceiptItemField(
+      groupId: groupId,
+    );
   }
 
   Widget buildDetailsHeader() {
@@ -372,10 +376,24 @@ class _ReceiptForm extends State<ReceiptForm> {
           textFieldSpacing,
           buildStatusField(),
           textFieldSpacing,
-          buildCategoryField(),
-          textFieldSpacing,
-          buildTagField(),
-          textFieldSpacing,
+          Visibility(
+              visible: groupModel
+                      .getGroupReceiptSettings(groupId)
+                      ?.hideReceiptCategories ==
+                  false,
+              child: Column(children: [
+                buildCategoryField(),
+                textFieldSpacing,
+              ])),
+          Visibility(
+              visible: groupModel
+                      .getGroupReceiptSettings(groupId)
+                      ?.hideReceiptTags ==
+                  false,
+              child: Column(children: [
+                buildTagField(),
+                textFieldSpacing,
+              ])),
           buildSharesHeader(),
           textFieldSpacing,
           buildAddSharesCard(),
