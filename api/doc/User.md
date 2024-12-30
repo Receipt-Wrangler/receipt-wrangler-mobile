@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **isDummyUser** | **bool** | Is dummy user | 
 **updatedAt** | **String** |  | [optional] 
 **userRole** | [**UserRole**](UserRole.md) | User's role | 
+**lastLoginDate** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -3,8 +3,7 @@
 //
 
 import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-// ignore_for_file: unused_element
+import 'package:built_value/serializer.dart'; // ignore_for_file: unused_element
 import 'package:openapi/src/model/base_model.dart';
 import 'package:openapi/src/model/currency_separator.dart';
 import 'package:openapi/src/model/currency_symbol_position.dart';
@@ -35,6 +34,7 @@ abstract class SystemSettings
     implements BaseModel, Built<SystemSettings, SystemSettingsBuilder> {
   @BuiltValueField(wireName: r'currencyThousandthsSeparator')
   CurrencySeparator? get currencyThousandthsSeparator;
+
   // enum currencyThousandthsSeparatorEnum {  ,,  .,  };
 
   /// Receipt processing settings foreign key
@@ -47,6 +47,7 @@ abstract class SystemSettings
 
   @BuiltValueField(wireName: r'currencySymbolPosition')
   CurrencySymbolPosition? get currencySymbolPosition;
+
   // enum currencySymbolPositionEnum {  START,  END,  };
 
   /// Email polling interval
@@ -67,6 +68,7 @@ abstract class SystemSettings
 
   @BuiltValueField(wireName: r'currencyDecimalSeparator')
   CurrencySeparator? get currencyDecimalSeparator;
+
   // enum currencyDecimalSeparatorEnum {  ,,  .,  };
 
   /// Debug OCR

@@ -90,6 +90,7 @@ Class | Method | HTTP request | Description
 [*GroupsApi*](doc/GroupsApi.md) | [**getPagedGroups**](doc/GroupsApi.md#getpagedgroups) | **POST** /group/getPagedGroups | Get paged groups
 [*GroupsApi*](doc/GroupsApi.md) | [**pollGroupEmail**](doc/GroupsApi.md#pollgroupemail) | **POST** /group/{groupId}/pollGroupEmail | Poll group email
 [*GroupsApi*](doc/GroupsApi.md) | [**updateGroup**](doc/GroupsApi.md#updategroup) | **PUT** /group/{groupId} | Update a group
+[*GroupsApi*](doc/GroupsApi.md) | [**updateGroupReceiptSettings**](doc/GroupsApi.md#updategroupreceiptsettings) | **PUT** /group/{groupId}/groupReceiptSettings | Update group receipt settings
 [*GroupsApi*](doc/GroupsApi.md) | [**updateGroupSettings**](doc/GroupsApi.md#updategroupsettings) | **PUT** /group/{groupId}/groupSettings | Update group settings
 [*ImportApi*](doc/ImportApi.md) | [**importConfigJson**](doc/ImportApi.md#importconfigjson) | **POST** /import/importConfigJson | Import config json
 [*NotificationsApi*](doc/NotificationsApi.md) | [**deleteAllNotificationsForUser**](doc/NotificationsApi.md#deleteallnotificationsforuser) | **DELETE** /notifications/ | Delete all notifications for user
@@ -156,6 +157,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [About](doc/About.md)
  - [AiType](doc/AiType.md)
  - [AppData](doc/AppData.md)
  - [AssociatedEntityType](doc/AssociatedEntityType.md)
@@ -181,6 +183,7 @@ Class | Method | HTTP request | Description
  - [Group](doc/Group.md)
  - [GroupFilter](doc/GroupFilter.md)
  - [GroupMember](doc/GroupMember.md)
+ - [GroupReceiptSettings](doc/GroupReceiptSettings.md)
  - [GroupRole](doc/GroupRole.md)
  - [GroupSettings](doc/GroupSettings.md)
  - [GroupSettingsWhiteListEmail](doc/GroupSettingsWhiteListEmail.md)
@@ -217,11 +220,14 @@ Class | Method | HTTP request | Description
  - [Tag](doc/Tag.md)
  - [TagView](doc/TagView.md)
  - [TokenPair](doc/TokenPair.md)
+ - [UpdateGroupReceiptSettingsCommand](doc/UpdateGroupReceiptSettingsCommand.md)
  - [UpdateGroupSettingsCommand](doc/UpdateGroupSettingsCommand.md)
  - [UpdateProfileCommand](doc/UpdateProfileCommand.md)
  - [UpsertCategoryCommand](doc/UpsertCategoryCommand.md)
  - [UpsertCommentCommand](doc/UpsertCommentCommand.md)
  - [UpsertDashboardCommand](doc/UpsertDashboardCommand.md)
+ - [UpsertGroupCommand](doc/UpsertGroupCommand.md)
+ - [UpsertGroupMemberCommand](doc/UpsertGroupMemberCommand.md)
  - [UpsertItemCommand](doc/UpsertItemCommand.md)
  - [UpsertPromptCommand](doc/UpsertPromptCommand.md)
  - [UpsertReceiptCommand](doc/UpsertReceiptCommand.md)

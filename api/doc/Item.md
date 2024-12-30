@@ -17,6 +17,8 @@ Name | Type | Description | Notes
 **name** | **String** | Item name | 
 **receiptId** | **int** | Receipt foreign key | 
 **status** | [**ItemStatus**](ItemStatus.md) |  | 
+**categories** | [**BuiltList&lt;Category&gt;**](Category.md) | Categories associated to the item | [optional] 
+**tags** | [**BuiltList&lt;Tag&gt;**](Tag.md) | Tags associated to the item | [optional] 
 **updatedAt** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

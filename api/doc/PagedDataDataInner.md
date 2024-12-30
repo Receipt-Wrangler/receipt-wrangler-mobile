@@ -28,6 +28,7 @@ Name | Type | Description | Notes
 **description** | **String** | Description of the settings | [optional] 
 **prompt** | [**Prompt**](Prompt.md) |  | 
 **groupSettings** | [**GroupSettings**](GroupSettings.md) |  | [optional] 
+**groupReceiptSettings** | [**GroupReceiptSettings**](GroupReceiptSettings.md) |  | 
 **groupMembers** | [**BuiltList&lt;GroupMember&gt;**](GroupMember.md) | Members of the group | 
 **isDefault** | **bool** | Is default group (not used yet) | [optional] 
 **isAllGroup** | **bool** | Is all group for user | 

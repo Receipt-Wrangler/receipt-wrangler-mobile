@@ -14,6 +14,7 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:openapi/src/date_serializer.dart';
 import 'package:openapi/src/model/date.dart';
 
+import 'package:openapi/src/model/about.dart';
 import 'package:openapi/src/model/ai_type.dart';
 import 'package:openapi/src/model/app_data.dart';
 import 'package:openapi/src/model/associated_entity_type.dart';
@@ -39,6 +40,7 @@ import 'package:openapi/src/model/get_system_task_command.dart';
 import 'package:openapi/src/model/group.dart';
 import 'package:openapi/src/model/group_filter.dart';
 import 'package:openapi/src/model/group_member.dart';
+import 'package:openapi/src/model/group_receipt_settings.dart';
 import 'package:openapi/src/model/group_role.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:openapi/src/model/group_settings_white_list_email.dart';
@@ -75,11 +77,14 @@ import 'package:openapi/src/model/system_task_type.dart';
 import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/tag_view.dart';
 import 'package:openapi/src/model/token_pair.dart';
+import 'package:openapi/src/model/update_group_receipt_settings_command.dart';
 import 'package:openapi/src/model/update_group_settings_command.dart';
 import 'package:openapi/src/model/update_profile_command.dart';
 import 'package:openapi/src/model/upsert_category_command.dart';
 import 'package:openapi/src/model/upsert_comment_command.dart';
 import 'package:openapi/src/model/upsert_dashboard_command.dart';
+import 'package:openapi/src/model/upsert_group_command.dart';
+import 'package:openapi/src/model/upsert_group_member_command.dart';
 import 'package:openapi/src/model/upsert_item_command.dart';
 import 'package:openapi/src/model/upsert_prompt_command.dart';
 import 'package:openapi/src/model/upsert_receipt_command.dart';
@@ -99,6 +104,7 @@ import 'package:openapi/src/model/widget_type.dart';
 part 'serializers.g.dart';
 
 @SerializersFor([
+  About,
   AiType,
   AppData,
   AssociatedEntityType,
@@ -124,6 +130,7 @@ part 'serializers.g.dart';
   Group,
   GroupFilter,
   GroupMember,
+  GroupReceiptSettings,
   GroupRole,
   GroupSettings,
   GroupSettingsWhiteListEmail,
@@ -160,11 +167,14 @@ part 'serializers.g.dart';
   Tag,
   TagView,
   TokenPair,
+  UpdateGroupReceiptSettingsCommand,
   UpdateGroupSettingsCommand,
   UpdateProfileCommand,
   UpsertCategoryCommand,
   UpsertCommentCommand,
   UpsertDashboardCommand,
+  UpsertGroupCommand,
+  UpsertGroupMemberCommand,
   UpsertItemCommand,
   UpsertPromptCommand,
   UpsertReceiptCommand,

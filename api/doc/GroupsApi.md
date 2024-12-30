@@ -17,11 +17,12 @@ Method | HTTP request | Description
 [**getPagedGroups**](GroupsApi.md#getpagedgroups) | **POST** /group/getPagedGroups | Get paged groups
 [**pollGroupEmail**](GroupsApi.md#pollgroupemail) | **POST** /group/{groupId}/pollGroupEmail | Poll group email
 [**updateGroup**](GroupsApi.md#updategroup) | **PUT** /group/{groupId} | Update a group
+[**updateGroupReceiptSettings**](GroupsApi.md#updategroupreceiptsettings) | **PUT** /group/{groupId}/groupReceiptSettings | Update group receipt settings
 [**updateGroupSettings**](GroupsApi.md#updategroupsettings) | **PUT** /group/{groupId}/groupSettings | Update group settings
 
 
 # **createGroup**
-> createGroup(group)
+> createGroup(upsertGroupCommand)
 
 Create group
 
@@ -32,10 +33,10 @@ This will create a group
 import 'package:openapi/api.dart';
 
 final api = Openapi().getGroupsApi();
-final Group group = ; // Group | Group to create
+final UpsertGroupCommand upsertGroupCommand = ; // UpsertGroupCommand | Group to create
 
 try {
-    api.createGroup(group);
+    api.createGroup(upsertGroupCommand);
 } catch on DioException (e) {
     print('Exception when calling GroupsApi->createGroup: $e\n');
 }
@@ -45,7 +46,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **group** | [**Group**](Group.md)| Group to create | 
+ **upsertGroupCommand** | [**UpsertGroupCommand**](UpsertGroupCommand.md)| Group to create | 
 
 ### Return type
 
@@ -353,6 +354,51 @@ void (empty response body)
 
  - **Content-Type**: application/json
  - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateGroupReceiptSettings**
+> GroupReceiptSettings updateGroupReceiptSettings(groupId, updateGroupReceiptSettingsCommand)
+
+Update group receipt settings
+
+This will update the group receipt settings for a group
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api = Openapi().getGroupsApi();
+final int groupId = 56; // int | Group Id to update
+final UpdateGroupReceiptSettingsCommand updateGroupReceiptSettingsCommand = ; // UpdateGroupReceiptSettingsCommand | Group settings to update
+
+try {
+    final response = api.updateGroupReceiptSettings(groupId, updateGroupReceiptSettingsCommand);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling GroupsApi->updateGroupReceiptSettings: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **groupId** | **int**| Group Id to update | 
+ **updateGroupReceiptSettingsCommand** | [**UpdateGroupReceiptSettingsCommand**](UpdateGroupReceiptSettingsCommand.md)| Group settings to update | 
+
+### Return type
+
+[**GroupReceiptSettings**](GroupReceiptSettings.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

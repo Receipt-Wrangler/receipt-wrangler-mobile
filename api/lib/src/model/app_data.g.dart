@@ -8,6 +8,8 @@ part of 'app_data.dart';
 
 class _$AppData extends AppData {
   @override
+  final About about;
+  @override
   final Claims claims;
   @override
   final BuiltList<Group> groups;
@@ -42,7 +44,8 @@ class _$AppData extends AppData {
       (new AppDataBuilder()..update(updates))._build();
 
   _$AppData._(
-      {required this.claims,
+      {required this.about,
+      required this.claims,
       required this.groups,
       required this.users,
       required this.userPreferences,
@@ -58,6 +61,7 @@ class _$AppData extends AppData {
       this.currencyHideDecimalPlaces,
       required this.icons})
       : super._() {
+    BuiltValueNullFieldError.checkNotNull(about, r'AppData', 'about');
     BuiltValueNullFieldError.checkNotNull(claims, r'AppData', 'claims');
     BuiltValueNullFieldError.checkNotNull(groups, r'AppData', 'groups');
     BuiltValueNullFieldError.checkNotNull(users, r'AppData', 'users');
@@ -83,6 +87,7 @@ class _$AppData extends AppData {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is AppData &&
+        about == other.about &&
         claims == other.claims &&
         groups == other.groups &&
         users == other.users &&
@@ -103,6 +108,7 @@ class _$AppData extends AppData {
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, about.hashCode);
     _$hash = $jc(_$hash, claims.hashCode);
     _$hash = $jc(_$hash, groups.hashCode);
     _$hash = $jc(_$hash, users.hashCode);
@@ -125,6 +131,7 @@ class _$AppData extends AppData {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'AppData')
+          ..add('about', about)
           ..add('claims', claims)
           ..add('groups', groups)
           ..add('users', users)
@@ -146,6 +153,10 @@ class _$AppData extends AppData {
 
 class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
   _$AppData? _$v;
+
+  AboutBuilder? _about;
+  AboutBuilder get about => _$this._about ??= new AboutBuilder();
+  set about(AboutBuilder? about) => _$this._about = about;
 
   ClaimsBuilder? _claims;
   ClaimsBuilder get claims => _$this._claims ??= new ClaimsBuilder();
@@ -230,6 +241,7 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
   AppDataBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _about = $v.about.toBuilder();
       _claims = $v.claims.toBuilder();
       _groups = $v.groups.toBuilder();
       _users = $v.users.toBuilder();
@@ -269,6 +281,7 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
     try {
       _$result = _$v ??
           new _$AppData._(
+              about: about.build(),
               claims: claims.build(),
               groups: groups.build(),
               users: users.build(),
@@ -288,6 +301,8 @@ class AppDataBuilder implements Builder<AppData, AppDataBuilder> {
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'about';
+        about.build();
         _$failedField = 'claims';
         claims.build();
         _$failedField = 'groups';

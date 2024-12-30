@@ -14,6 +14,8 @@ class _$Group extends Group {
   @override
   final GroupSettings? groupSettings;
   @override
+  final GroupReceiptSettings groupReceiptSettings;
+  @override
   final BuiltList<GroupMember> groupMembers;
   @override
   final int id;
@@ -35,6 +37,7 @@ class _$Group extends Group {
       {this.createdAt,
       this.createdBy,
       this.groupSettings,
+      required this.groupReceiptSettings,
       required this.groupMembers,
       required this.id,
       this.isDefault,
@@ -43,6 +46,8 @@ class _$Group extends Group {
       required this.status,
       this.updatedAt})
       : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        groupReceiptSettings, r'Group', 'groupReceiptSettings');
     BuiltValueNullFieldError.checkNotNull(
         groupMembers, r'Group', 'groupMembers');
     BuiltValueNullFieldError.checkNotNull(id, r'Group', 'id');
@@ -65,6 +70,7 @@ class _$Group extends Group {
         createdAt == other.createdAt &&
         createdBy == other.createdBy &&
         groupSettings == other.groupSettings &&
+        groupReceiptSettings == other.groupReceiptSettings &&
         groupMembers == other.groupMembers &&
         id == other.id &&
         isDefault == other.isDefault &&
@@ -80,6 +86,7 @@ class _$Group extends Group {
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jc(_$hash, createdBy.hashCode);
     _$hash = $jc(_$hash, groupSettings.hashCode);
+    _$hash = $jc(_$hash, groupReceiptSettings.hashCode);
     _$hash = $jc(_$hash, groupMembers.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jc(_$hash, isDefault.hashCode);
@@ -97,6 +104,7 @@ class _$Group extends Group {
           ..add('createdAt', createdAt)
           ..add('createdBy', createdBy)
           ..add('groupSettings', groupSettings)
+          ..add('groupReceiptSettings', groupReceiptSettings)
           ..add('groupMembers', groupMembers)
           ..add('id', id)
           ..add('isDefault', isDefault)
@@ -124,6 +132,12 @@ class GroupBuilder implements Builder<Group, GroupBuilder> {
       _$this._groupSettings ??= new GroupSettingsBuilder();
   set groupSettings(GroupSettingsBuilder? groupSettings) =>
       _$this._groupSettings = groupSettings;
+
+  GroupReceiptSettingsBuilder? _groupReceiptSettings;
+  GroupReceiptSettingsBuilder get groupReceiptSettings =>
+      _$this._groupReceiptSettings ??= new GroupReceiptSettingsBuilder();
+  set groupReceiptSettings(GroupReceiptSettingsBuilder? groupReceiptSettings) =>
+      _$this._groupReceiptSettings = groupReceiptSettings;
 
   ListBuilder<GroupMember>? _groupMembers;
   ListBuilder<GroupMember> get groupMembers =>
@@ -165,6 +179,7 @@ class GroupBuilder implements Builder<Group, GroupBuilder> {
       _createdAt = $v.createdAt;
       _createdBy = $v.createdBy;
       _groupSettings = $v.groupSettings?.toBuilder();
+      _groupReceiptSettings = $v.groupReceiptSettings.toBuilder();
       _groupMembers = $v.groupMembers.toBuilder();
       _id = $v.id;
       _isDefault = $v.isDefault;
@@ -199,6 +214,7 @@ class GroupBuilder implements Builder<Group, GroupBuilder> {
               createdAt: createdAt,
               createdBy: createdBy,
               groupSettings: _groupSettings?.build(),
+              groupReceiptSettings: groupReceiptSettings.build(),
               groupMembers: groupMembers.build(),
               id: BuiltValueNullFieldError.checkNotNull(id, r'Group', 'id'),
               isDefault: isDefault,
@@ -214,6 +230,8 @@ class GroupBuilder implements Builder<Group, GroupBuilder> {
       try {
         _$failedField = 'groupSettings';
         _groupSettings?.build();
+        _$failedField = 'groupReceiptSettings';
+        groupReceiptSettings.build();
         _$failedField = 'groupMembers';
         groupMembers.build();
       } catch (e) {

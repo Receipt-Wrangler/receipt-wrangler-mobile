@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:openapi/src/model/group_receipt_settings.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/group_member.dart';
@@ -18,6 +19,7 @@ part 'group.g.dart';
 /// * [createdAt] 
 /// * [createdBy] 
 /// * [groupSettings] 
+/// * [groupReceiptSettings] 
 /// * [groupMembers] - Members of the group
 /// * [id] 
 /// * [isDefault] - Is default group (not used yet)
@@ -35,6 +37,9 @@ abstract class Group implements Built<Group, GroupBuilder> {
 
   @BuiltValueField(wireName: r'groupSettings')
   GroupSettings? get groupSettings;
+
+  @BuiltValueField(wireName: r'groupReceiptSettings')
+  GroupReceiptSettings get groupReceiptSettings;
 
   /// Members of the group
   @BuiltValueField(wireName: r'groupMembers')
@@ -106,6 +111,11 @@ class _$GroupSerializer implements PrimitiveSerializer<Group> {
         specifiedType: const FullType(GroupSettings),
       );
     }
+    yield r'groupReceiptSettings';
+    yield serializers.serialize(
+      object.groupReceiptSettings,
+      specifiedType: const FullType(GroupReceiptSettings),
+    );
     yield r'groupMembers';
     yield serializers.serialize(
       object.groupMembers,
@@ -188,6 +198,13 @@ class _$GroupSerializer implements PrimitiveSerializer<Group> {
             specifiedType: const FullType(GroupSettings),
           ) as GroupSettings;
           result.groupSettings.replace(valueDes);
+          break;
+        case r'groupReceiptSettings':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(GroupReceiptSettings),
+          ) as GroupReceiptSettings;
+          result.groupReceiptSettings.replace(valueDes);
           break;
         case r'groupMembers':
           final valueDes = serializers.deserialize(

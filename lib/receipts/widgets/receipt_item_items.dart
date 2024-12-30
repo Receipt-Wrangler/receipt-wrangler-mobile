@@ -8,19 +8,25 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
+import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
+import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
 class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
     required this.items,
+    required this.groupId,
   });
 
   final List<FormItem> items;
+
+  final int groupId;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -29,6 +35,7 @@ class ReceiptItemItems extends StatefulWidget {
 class _ReceiptItemItems extends State<ReceiptItemItems> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
+  late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
@@ -70,7 +77,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
 
-    // TODO: fix owed amount
     var owedAmount = items
         .map((item) => exchangeUSDToCustom(item.amount))
         .reduce((value, element) => value + element);
@@ -133,6 +139,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var itemName = FormItem.buildItemNameName(item);
     var amountName = FormItem.buildItemAmountName(item);
     var statusName = FormItem.buildItemStatusName(item);
+    var categoryName = FormItem.buildItemCategoryName(item);
+    var tagName = FormItem.buildItemTagName(item);
 
     var initialName =
         formKey.currentState?.fields[itemName]?.value ?? item.name;
@@ -140,6 +148,9 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
         formKey.currentState?.fields[amountName]?.value ?? item.amount;
     var initialStatus =
         formKey.currentState?.fields[statusName]?.value ?? item.status;
+    var initialCategories =
+        formKey.currentState?.fields[categoryName]?.value ?? item.categories;
+    var initialTags = formKey.currentState?.fields[tagName]?.value ?? item.tags;
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
@@ -155,34 +166,70 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           });
     }
     // TODO: need to fix new item data being wiped out when adding
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          key: Key(itemName),
-          child: FormBuilderTextField(
-            name: itemName,
-            initialValue: initialName,
-            decoration: const InputDecoration(label: Text("Name")),
-            readOnly: isFieldReadOnly(formState),
-          ),
+        Row(
+          children: [
+            Expanded(
+              key: Key(itemName),
+              child: FormBuilderTextField(
+                name: itemName,
+                initialValue: initialName,
+                decoration: const InputDecoration(label: Text("Name")),
+                readOnly: isFieldReadOnly(formState),
+              ),
+            ),
+            Expanded(
+                key: Key(amountName),
+                child: AmountField(
+                    label: "Amount",
+                    fieldName: amountName,
+                    initialAmount: initialAmount,
+                    formState: formState)),
+            Expanded(
+              key: Key(statusName),
+              child: itemStatusField(
+                "Status",
+                statusName,
+                initialStatus,
+                formState,
+              ),
+            ),
+            iconButton
+          ],
         ),
-        Expanded(
-            key: Key(amountName),
-            child: AmountField(
-                label: "Amount",
-                fieldName: amountName,
-                initialAmount: initialAmount,
-                formState: formState)),
-        Expanded(
-          key: Key(statusName),
-          child: itemStatusField(
-            "Status",
-            statusName,
-            initialStatus,
-            formState,
-          ),
+        Visibility(
+          visible: groupModel
+                  .getGroupReceiptSettings(widget.groupId)
+                  ?.hideItemCategories ==
+              false,
+          child: CategorySelectField(
+              label: "Categories",
+              fieldName: categoryName,
+              initialCategories: initialCategories,
+              formState: formState,
+              onCategoriesChanged: (categories) {
+                setState(() {
+                  formKey.currentState?.fields[categoryName]
+                      ?.setValue(categories);
+                });
+              }),
         ),
-        iconButton
+        Visibility(
+            visible: groupModel
+                    .getGroupReceiptSettings(widget.groupId)
+                    ?.hideItemTags ==
+                false,
+            child: TagSelectField(
+                label: "Tags",
+                fieldName: tagName,
+                initialTags: initialTags,
+                formState: formState,
+                onTagsChanged: (tags) {
+                  setState(() {
+                    formKey.currentState?.fields[tagName]?.setValue(tags);
+                  });
+                }))
       ],
     );
   }

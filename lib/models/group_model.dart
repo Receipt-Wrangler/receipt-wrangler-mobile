@@ -19,4 +19,12 @@ class GroupModel extends ChangeNotifier {
       return null;
     }
   }
+
+  GroupReceiptSettings? getGroupReceiptSettings(int groupId) {
+    if (groupId == 0) {
+      return null;
+    }
+
+    return getGroupById(groupId.toString())?.groupReceiptSettings;
+  }
 }

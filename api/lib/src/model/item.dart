@@ -3,6 +3,9 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
+import 'package:openapi/src/model/category.dart';
+import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/item_status.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -21,6 +24,8 @@ part 'item.g.dart';
 /// * [name] - Item name
 /// * [receiptId] - Receipt foreign key
 /// * [status] 
+/// * [categories] - Categories associated to the item
+/// * [tags] - Tags associated to the item
 /// * [updatedAt] 
 @BuiltValue()
 abstract class Item implements Built<Item, ItemBuilder> {
@@ -56,6 +61,14 @@ abstract class Item implements Built<Item, ItemBuilder> {
   @BuiltValueField(wireName: r'status')
   ItemStatus get status;
   // enum statusEnum {  OPEN,  RESOLVED,  DRAFT,  };
+
+  /// Categories associated to the item
+  @BuiltValueField(wireName: r'categories')
+  BuiltList<Category>? get categories;
+
+  /// Tags associated to the item
+  @BuiltValueField(wireName: r'tags')
+  BuiltList<Tag>? get tags;
 
   @BuiltValueField(wireName: r'updatedAt')
   String? get updatedAt;
@@ -136,6 +149,20 @@ class _$ItemSerializer implements PrimitiveSerializer<Item> {
       object.status,
       specifiedType: const FullType(ItemStatus),
     );
+    if (object.categories != null) {
+      yield r'categories';
+      yield serializers.serialize(
+        object.categories,
+        specifiedType: const FullType(BuiltList, [FullType(Category)]),
+      );
+    }
+    if (object.tags != null) {
+      yield r'tags';
+      yield serializers.serialize(
+        object.tags,
+        specifiedType: const FullType(BuiltList, [FullType(Tag)]),
+      );
+    }
     if (object.updatedAt != null) {
       yield r'updatedAt';
       yield serializers.serialize(
@@ -228,6 +255,20 @@ class _$ItemSerializer implements PrimitiveSerializer<Item> {
             specifiedType: const FullType(ItemStatus),
           ) as ItemStatus;
           result.status = valueDes;
+          break;
+        case r'categories':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(Category)]),
+          ) as BuiltList<Category>;
+          result.categories.replace(valueDes);
+          break;
+        case r'tags':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(Tag)]),
+          ) as BuiltList<Tag>;
+          result.tags.replace(valueDes);
           break;
         case r'updatedAt':
           final valueDes = serializers.deserialize(
