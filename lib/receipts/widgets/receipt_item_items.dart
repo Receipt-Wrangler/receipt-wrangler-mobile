@@ -9,11 +9,11 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
+import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
 class ReceiptItemItems extends StatefulWidget {
@@ -72,7 +72,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
 
-    // TODO: fix owed amount
     var owedAmount = items
         .map((item) => exchangeUSDToCustom(item.amount))
         .reduce((value, element) => value + element);
@@ -162,59 +161,59 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           });
     }
     // TODO: need to fix new item data being wiped out when adding
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          key: Key(itemName),
-          child: FormBuilderTextField(
-            name: itemName,
-            initialValue: initialName,
-            decoration: const InputDecoration(label: Text("Name")),
-            readOnly: isFieldReadOnly(formState),
-          ),
+        Row(
+          children: [
+            Expanded(
+              key: Key(itemName),
+              child: FormBuilderTextField(
+                name: itemName,
+                initialValue: initialName,
+                decoration: const InputDecoration(label: Text("Name")),
+                readOnly: isFieldReadOnly(formState),
+              ),
+            ),
+            Expanded(
+                key: Key(amountName),
+                child: AmountField(
+                    label: "Amount",
+                    fieldName: amountName,
+                    initialAmount: initialAmount,
+                    formState: formState)),
+            Expanded(
+              key: Key(statusName),
+              child: itemStatusField(
+                "Status",
+                statusName,
+                initialStatus,
+                formState,
+              ),
+            ),
+            iconButton
+          ],
         ),
-        Expanded(
-            key: Key(amountName),
-            child: AmountField(
-                label: "Amount",
-                fieldName: amountName,
-                initialAmount: initialAmount,
-                formState: formState)),
-        Expanded(
-          key: Key(statusName),
-          child: itemStatusField(
-            "Status",
-            statusName,
-            initialStatus,
-            formState,
-          ),
-        ),
-        Expanded(
-            key: Key(categoryName),
-            child: CategorySelectField(
-                label: "Categories",
-                fieldName: categoryName,
-                initialCategories: initialCategories,
-                formState: formState,
-                onCategoriesChanged: (categories) {
-                  setState(() {
-                    formKey.currentState?.fields[categoryName]
-                        ?.setValue(categories);
-                  });
-                })),
-        Expanded(
-            key: Key(tagName),
-            child: TagSelectField(
-                label: "Tags",
-                fieldName: tagName,
-                initialTags: initialTags,
-                formState: formState,
-                onTagsChanged: (tags) {
-                  setState(() {
-                    formKey.currentState?.fields[tagName]?.setValue(tags);
-                  });
-                })),
-        iconButton
+        CategorySelectField(
+            label: "Categories",
+            fieldName: categoryName,
+            initialCategories: initialCategories,
+            formState: formState,
+            onCategoriesChanged: (categories) {
+              setState(() {
+                formKey.currentState?.fields[categoryName]
+                    ?.setValue(categories);
+              });
+            }),
+        TagSelectField(
+            label: "Tags",
+            fieldName: tagName,
+            initialTags: initialTags,
+            formState: formState,
+            onTagsChanged: (tags) {
+              setState(() {
+                formKey.currentState?.fields[tagName]?.setValue(tags);
+              });
+            })
       ],
     );
   }
