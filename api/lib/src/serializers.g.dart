@@ -10,6 +10,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add($BaseModel.serializer)
       ..add($PagedRequestCommand.serializer)
       ..add(About.serializer)
+      ..add(Activity.serializer)
       ..add(AiType.serializer)
       ..add(AppData.serializer)
       ..add(AssociatedEntityType.serializer)
@@ -48,10 +49,12 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(MagicFillCommand.serializer)
       ..add(Notification.serializer)
       ..add(OcrEngine.serializer)
+      ..add(PagedActivityRequestCommand.serializer)
       ..add(PagedData.serializer)
       ..add(PagedDataDataInner.serializer)
       ..add(PagedGroupRequestCommand.serializer)
       ..add(Prompt.serializer)
+      ..add(QueueName.serializer)
       ..add(Receipt.serializer)
       ..add(ReceiptPagedRequestCommand.serializer)
       ..add(ReceiptPagedRequestFilter.serializer)
@@ -69,6 +72,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(SystemTaskType.serializer)
       ..add(Tag.serializer)
       ..add(TagView.serializer)
+      ..add(TaskQueueConfiguration.serializer)
       ..add(TokenPair.serializer)
       ..add(UpdateGroupReceiptSettingsCommand.serializer)
       ..add(UpdateGroupSettingsCommand.serializer)
@@ -85,6 +89,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(UpsertSystemEmailCommand.serializer)
       ..add(UpsertSystemSettingsCommand.serializer)
       ..add(UpsertTagCommand.serializer)
+      ..add(UpsertTaskQueueConfiguration.serializer)
       ..add(UpsertWidgetCommand.serializer)
       ..add(User.serializer)
       ..add(UserPreferences.serializer)
@@ -157,6 +162,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
           () => new ListBuilder<SystemTask>())
       ..addBuilderFactory(
           const FullType(
+              BuiltList, const [const FullType(TaskQueueConfiguration)]),
+          () => new ListBuilder<TaskQueueConfiguration>())
+      ..addBuilderFactory(
+          const FullType(
               BuiltList, const [const FullType(UpsertCategoryCommand)]),
           () => new ListBuilder<UpsertCategoryCommand>())
       ..addBuilderFactory(
@@ -182,6 +191,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
           () => new ListBuilder<UpsertGroupMemberCommand>())
       ..addBuilderFactory(
           const FullType(
+              BuiltList, const [const FullType(UpsertTaskQueueConfiguration)]),
+          () => new ListBuilder<UpsertTaskQueueConfiguration>())
+      ..addBuilderFactory(
+          const FullType(
               BuiltList, const [const FullType(UpsertWidgetCommand)]),
           () => new ListBuilder<UpsertWidgetCommand>())
       ..addBuilderFactory(
@@ -190,6 +203,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Widget)]),
           () => new ListBuilder<Widget>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(int)]),
+          () => new ListBuilder<int>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(int)]),
           () => new ListBuilder<int>())

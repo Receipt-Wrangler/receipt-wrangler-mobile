@@ -24,6 +24,8 @@ const SystemTaskType _$RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK =
     const SystemTaskType._('RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK');
 const SystemTaskType _$RECEIPT_UPLOADED =
     const SystemTaskType._('RECEIPT_UPLOADED');
+const SystemTaskType _$RECEIPT_UPDATED =
+    const SystemTaskType._('RECEIPT_UPDATED');
 const SystemTaskType _$PROMPT_GENERATED =
     const SystemTaskType._('PROMPT_GENERATED');
 
@@ -51,6 +53,8 @@ SystemTaskType _$valueOf(String name) {
       return _$RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK;
     case 'RECEIPT_UPLOADED':
       return _$RECEIPT_UPLOADED;
+    case 'RECEIPT_UPDATED':
+      return _$RECEIPT_UPDATED;
     case 'PROMPT_GENERATED':
       return _$PROMPT_GENERATED;
     default:
@@ -71,6 +75,7 @@ final BuiltSet<SystemTaskType> _$values =
   _$SYSTEM_EMAIL_CONNECTIVITY_CHECK,
   _$RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,
   _$RECEIPT_UPLOADED,
+  _$RECEIPT_UPDATED,
   _$PROMPT_GENERATED,
 ]);
 
@@ -90,6 +95,7 @@ class _$SystemTaskTypeMeta {
   SystemTaskType get RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK =>
       _$RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK;
   SystemTaskType get RECEIPT_UPLOADED => _$RECEIPT_UPLOADED;
+  SystemTaskType get RECEIPT_UPDATED => _$RECEIPT_UPDATED;
   SystemTaskType get PROMPT_GENERATED => _$PROMPT_GENERATED;
   SystemTaskType valueOf(String name) => _$valueOf(name);
   BuiltSet<SystemTaskType> get values => _$values;
@@ -118,6 +124,7 @@ class _$SystemTaskTypeSerializer
     'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK':
         'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK',
     'RECEIPT_UPLOADED': 'RECEIPT_UPLOADED',
+    'RECEIPT_UPDATED': 'RECEIPT_UPDATED',
     'PROMPT_GENERATED': 'PROMPT_GENERATED',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
@@ -133,6 +140,7 @@ class _$SystemTaskTypeSerializer
     'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK':
         'RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK',
     'RECEIPT_UPLOADED': 'RECEIPT_UPLOADED',
+    'RECEIPT_UPDATED': 'RECEIPT_UPDATED',
     'PROMPT_GENERATED': 'PROMPT_GENERATED',
   };
 
