@@ -323,7 +323,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **quickScanReceipt**
-> BuiltList<Receipt> quickScanReceipt(files, groupIds, paidByUserIds, statuses)
+> quickScanReceipt(files, groupIds, paidByUserIds, statuses)
 
 Quick scan a receipt
 
@@ -340,8 +340,7 @@ final BuiltList<int> paidByUserIds = ; // BuiltList<int> |
 final BuiltList<ReceiptStatus> statuses = ; // BuiltList<ReceiptStatus> | 
 
 try {
-    final response = api.quickScanReceipt(files, groupIds, paidByUserIds, statuses);
-    print(response);
+    api.quickScanReceipt(files, groupIds, paidByUserIds, statuses);
 } catch on DioException (e) {
     print('Exception when calling ReceiptApi->quickScanReceipt: $e\n');
 }
@@ -358,7 +357,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;Receipt&gt;**](Receipt.md)
+void (empty response body)
 
 ### Authorization
 
@@ -367,7 +366,7 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

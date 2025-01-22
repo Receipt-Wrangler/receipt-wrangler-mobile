@@ -15,6 +15,7 @@ import 'package:openapi/src/date_serializer.dart';
 import 'package:openapi/src/model/date.dart';
 
 import 'package:openapi/src/model/about.dart';
+import 'package:openapi/src/model/activity.dart';
 import 'package:openapi/src/model/ai_type.dart';
 import 'package:openapi/src/model/app_data.dart';
 import 'package:openapi/src/model/associated_entity_type.dart';
@@ -54,11 +55,13 @@ import 'package:openapi/src/model/logout_command.dart';
 import 'package:openapi/src/model/magic_fill_command.dart';
 import 'package:openapi/src/model/notification.dart';
 import 'package:openapi/src/model/ocr_engine.dart';
+import 'package:openapi/src/model/paged_activity_request_command.dart';
 import 'package:openapi/src/model/paged_data.dart';
 import 'package:openapi/src/model/paged_data_data_inner.dart';
 import 'package:openapi/src/model/paged_group_request_command.dart';
 import 'package:openapi/src/model/paged_request_command.dart';
 import 'package:openapi/src/model/prompt.dart';
+import 'package:openapi/src/model/queue_name.dart';
 import 'package:openapi/src/model/receipt.dart';
 import 'package:openapi/src/model/receipt_paged_request_command.dart';
 import 'package:openapi/src/model/receipt_paged_request_filter.dart';
@@ -76,6 +79,7 @@ import 'package:openapi/src/model/system_task_status.dart';
 import 'package:openapi/src/model/system_task_type.dart';
 import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/tag_view.dart';
+import 'package:openapi/src/model/task_queue_configuration.dart';
 import 'package:openapi/src/model/token_pair.dart';
 import 'package:openapi/src/model/update_group_receipt_settings_command.dart';
 import 'package:openapi/src/model/update_group_settings_command.dart';
@@ -92,6 +96,7 @@ import 'package:openapi/src/model/upsert_receipt_processing_settings_command.dar
 import 'package:openapi/src/model/upsert_system_email_command.dart';
 import 'package:openapi/src/model/upsert_system_settings_command.dart';
 import 'package:openapi/src/model/upsert_tag_command.dart';
+import 'package:openapi/src/model/upsert_task_queue_configuration.dart';
 import 'package:openapi/src/model/upsert_widget_command.dart';
 import 'package:openapi/src/model/user.dart';
 import 'package:openapi/src/model/user_preferences.dart';
@@ -105,6 +110,7 @@ part 'serializers.g.dart';
 
 @SerializersFor([
   About,
+  Activity,
   AiType,
   AppData,
   AssociatedEntityType,
@@ -144,11 +150,13 @@ part 'serializers.g.dart';
   MagicFillCommand,
   Notification,
   OcrEngine,
+  PagedActivityRequestCommand,
   PagedData,
   PagedDataDataInner,
   PagedGroupRequestCommand,
   PagedRequestCommand,$PagedRequestCommand,
   Prompt,
+  QueueName,
   Receipt,
   ReceiptPagedRequestCommand,
   ReceiptPagedRequestFilter,
@@ -166,6 +174,7 @@ part 'serializers.g.dart';
   SystemTaskType,
   Tag,
   TagView,
+  TaskQueueConfiguration,
   TokenPair,
   UpdateGroupReceiptSettingsCommand,
   UpdateGroupSettingsCommand,
@@ -182,6 +191,7 @@ part 'serializers.g.dart';
   UpsertSystemEmailCommand,
   UpsertSystemSettingsCommand,
   UpsertTagCommand,
+  UpsertTaskQueueConfiguration,
   UpsertWidgetCommand,
   User,
   UserPreferences,

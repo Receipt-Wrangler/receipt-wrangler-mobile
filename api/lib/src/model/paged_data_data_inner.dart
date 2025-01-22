@@ -14,6 +14,7 @@ import 'package:openapi/src/model/receipt.dart';
 import 'package:openapi/src/model/system_task.dart';
 import 'package:openapi/src/model/group_receipt_settings.dart';
 import 'package:openapi/src/model/ai_type.dart';
+import 'package:openapi/src/model/activity.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:openapi/src/model/associated_entity_type.dart';
 import 'package:built_collection/built_collection.dart';
@@ -77,9 +78,10 @@ part 'paged_data_data_inner.g.dart';
 /// * [port] - IMAP port
 /// * [username] - IMAP username
 /// * [password] - IMAP password
+/// * [canBeRestarted] 
 @BuiltValue()
 abstract class PagedDataDataInner implements Built<PagedDataDataInner, PagedDataDataInnerBuilder> {
-  /// Any Of [Category], [Group], [Prompt], [Receipt], [ReceiptProcessingSettings], [SystemEmail], [SystemTask], [Tag], [TagView]
+  /// Any Of [Activity], [Category], [Group], [Prompt], [Receipt], [ReceiptProcessingSettings], [SystemEmail], [SystemTask], [Tag], [TagView]
   AnyOf get anyOf;
 
   PagedDataDataInner._();
@@ -125,7 +127,7 @@ class _$PagedDataDataInnerSerializer implements PrimitiveSerializer<PagedDataDat
   }) {
     final result = PagedDataDataInnerBuilder();
     Object? anyOfDataSrc;
-    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), FullType(Prompt), FullType(Group), FullType(TagView), FullType(SystemTask), FullType(ReceiptProcessingSettings), FullType(SystemEmail), ]);
+    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), FullType(Prompt), FullType(Group), FullType(TagView), FullType(SystemTask), FullType(ReceiptProcessingSettings), FullType(SystemEmail), FullType(Activity), ]);
     anyOfDataSrc = serialized;
     result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
     return result.build();

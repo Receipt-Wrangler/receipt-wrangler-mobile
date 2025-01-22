@@ -33,6 +33,8 @@ class SystemTaskType extends EnumClass {
   static const SystemTaskType RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK = _$RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK;
   @BuiltValueEnumConst(wireName: r'RECEIPT_UPLOADED')
   static const SystemTaskType RECEIPT_UPLOADED = _$RECEIPT_UPLOADED;
+  @BuiltValueEnumConst(wireName: r'RECEIPT_UPDATED')
+  static const SystemTaskType RECEIPT_UPDATED = _$RECEIPT_UPDATED;
   @BuiltValueEnumConst(wireName: r'PROMPT_GENERATED')
   static const SystemTaskType PROMPT_GENERATED = _$PROMPT_GENERATED;
 

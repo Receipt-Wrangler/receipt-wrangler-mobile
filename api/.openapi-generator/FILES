@@ -2,6 +2,7 @@
 README.md
 analysis_options.yaml
 doc/About.md
+doc/Activity.md
 doc/AiType.md
 doc/AppData.md
 doc/AssociatedEntityType.md
@@ -49,12 +50,14 @@ doc/MagicFillCommand.md
 doc/Notification.md
 doc/NotificationsApi.md
 doc/OcrEngine.md
+doc/PagedActivityRequestCommand.md
 doc/PagedData.md
 doc/PagedDataDataInner.md
 doc/PagedGroupRequestCommand.md
 doc/PagedRequestCommand.md
 doc/Prompt.md
 doc/PromptApi.md
+doc/QueueName.md
 doc/Receipt.md
 doc/ReceiptApi.md
 doc/ReceiptImageApi.md
@@ -80,6 +83,7 @@ doc/SystemTaskType.md
 doc/Tag.md
 doc/TagApi.md
 doc/TagView.md
+doc/TaskQueueConfiguration.md
 doc/TokenPair.md
 doc/UpdateGroupReceiptSettingsCommand.md
 doc/UpdateGroupSettingsCommand.md
@@ -96,6 +100,7 @@ doc/UpsertReceiptProcessingSettingsCommand.md
 doc/UpsertSystemEmailCommand.md
 doc/UpsertSystemSettingsCommand.md
 doc/UpsertTagCommand.md
+doc/UpsertTaskQueueConfiguration.md
 doc/UpsertWidgetCommand.md
 doc/User.md
 doc/UserApi.md
@@ -135,6 +140,7 @@ lib/src/auth/bearer_auth.dart
 lib/src/auth/oauth.dart
 lib/src/date_serializer.dart
 lib/src/model/about.dart
+lib/src/model/activity.dart
 lib/src/model/ai_type.dart
 lib/src/model/app_data.dart
 lib/src/model/associated_entity_type.dart
@@ -175,11 +181,13 @@ lib/src/model/logout_command.dart
 lib/src/model/magic_fill_command.dart
 lib/src/model/notification.dart
 lib/src/model/ocr_engine.dart
+lib/src/model/paged_activity_request_command.dart
 lib/src/model/paged_data.dart
 lib/src/model/paged_data_data_inner.dart
 lib/src/model/paged_group_request_command.dart
 lib/src/model/paged_request_command.dart
 lib/src/model/prompt.dart
+lib/src/model/queue_name.dart
 lib/src/model/receipt.dart
 lib/src/model/receipt_paged_request_command.dart
 lib/src/model/receipt_paged_request_filter.dart
@@ -197,6 +205,7 @@ lib/src/model/system_task_status.dart
 lib/src/model/system_task_type.dart
 lib/src/model/tag.dart
 lib/src/model/tag_view.dart
+lib/src/model/task_queue_configuration.dart
 lib/src/model/token_pair.dart
 lib/src/model/update_group_receipt_settings_command.dart
 lib/src/model/update_group_settings_command.dart
@@ -213,6 +222,7 @@ lib/src/model/upsert_receipt_processing_settings_command.dart
 lib/src/model/upsert_system_email_command.dart
 lib/src/model/upsert_system_settings_command.dart
 lib/src/model/upsert_tag_command.dart
+lib/src/model/upsert_task_queue_configuration.dart
 lib/src/model/upsert_widget_command.dart
 lib/src/model/user.dart
 lib/src/model/user_preferences.dart
@@ -223,8 +233,8 @@ lib/src/model/widget.dart
 lib/src/model/widget_type.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/about_test.dart
-test/group_receipt_settings_test.dart
-test/update_group_receipt_settings_command_test.dart
-test/upsert_group_command_test.dart
-test/upsert_group_member_command_test.dart
+test/activity_test.dart
+test/paged_activity_request_command_test.dart
+test/queue_name_test.dart
+test/task_queue_configuration_test.dart
+test/upsert_task_queue_configuration_test.dart

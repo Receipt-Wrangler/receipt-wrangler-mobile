@@ -3,7 +3,9 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/currency_symbol_position.dart';
+import 'package:openapi/src/model/upsert_task_queue_configuration.dart';
 import 'package:openapi/src/model/currency_separator.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -24,6 +26,8 @@ part 'upsert_system_settings_command.g.dart';
 /// * [emailPollingInterval] - Email polling interval
 /// * [receiptProcessingSettingsId] - Receipt processing settings foreign key
 /// * [fallbackReceiptProcessingSettingsId] - Fallback receipt processing settings foreign key
+/// * [taskConcurrency] - Concurrency for task worker
+/// * [taskQueueConfigurations] 
 @BuiltValue()
 abstract class UpsertSystemSettingsCommand implements Built<UpsertSystemSettingsCommand, UpsertSystemSettingsCommandBuilder> {
   /// Whether local sign up is enabled
@@ -68,6 +72,13 @@ abstract class UpsertSystemSettingsCommand implements Built<UpsertSystemSettings
   /// Fallback receipt processing settings foreign key
   @BuiltValueField(wireName: r'fallbackReceiptProcessingSettingsId')
   int? get fallbackReceiptProcessingSettingsId;
+
+  /// Concurrency for task worker
+  @BuiltValueField(wireName: r'taskConcurrency')
+  int get taskConcurrency;
+
+  @BuiltValueField(wireName: r'taskQueueConfigurations')
+  BuiltList<UpsertTaskQueueConfiguration>? get taskQueueConfigurations;
 
   UpsertSystemSettingsCommand._();
 
@@ -160,6 +171,18 @@ class _$UpsertSystemSettingsCommandSerializer implements PrimitiveSerializer<Ups
       yield serializers.serialize(
         object.fallbackReceiptProcessingSettingsId,
         specifiedType: const FullType(int),
+      );
+    }
+    yield r'taskConcurrency';
+    yield serializers.serialize(
+      object.taskConcurrency,
+      specifiedType: const FullType(int),
+    );
+    if (object.taskQueueConfigurations != null) {
+      yield r'taskQueueConfigurations';
+      yield serializers.serialize(
+        object.taskQueueConfigurations,
+        specifiedType: const FullType(BuiltList, [FullType(UpsertTaskQueueConfiguration)]),
       );
     }
   }
@@ -261,6 +284,20 @@ class _$UpsertSystemSettingsCommandSerializer implements PrimitiveSerializer<Ups
             specifiedType: const FullType(int),
           ) as int;
           result.fallbackReceiptProcessingSettingsId = valueDes;
+          break;
+        case r'taskConcurrency':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.taskConcurrency = valueDes;
+          break;
+        case r'taskQueueConfigurations':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UpsertTaskQueueConfiguration)]),
+          ) as BuiltList<UpsertTaskQueueConfiguration>;
+          result.taskQueueConfigurations.replace(valueDes);
           break;
         default:
           unhandled.add(key);

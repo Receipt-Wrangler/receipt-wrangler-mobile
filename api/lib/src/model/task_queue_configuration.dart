@@ -3,86 +3,64 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:openapi/src/model/widget_type.dart';
-import 'package:built_value/json_object.dart';
+import 'package:openapi/src/model/base_model.dart';
+import 'package:openapi/src/model/queue_name.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-part 'widget.g.dart';
+part 'task_queue_configuration.g.dart';
 
-/// Widget related to a user's dashboard
+/// TaskQueueConfiguration
 ///
 /// Properties:
+/// * [id] 
 /// * [createdAt] 
 /// * [createdBy] 
-/// * [id] 
-/// * [name] - Widget name
-/// * [dashboardId] - Dashboard foreign key
+/// * [createdByString] - Created by entity's name
 /// * [updatedAt] 
-/// * [widgetType] - Type of widget
-/// * [configuration] - Configuration of widget
+/// * [name] 
+/// * [priority] - Queue priority
 @BuiltValue()
-abstract class Widget implements Built<Widget, WidgetBuilder> {
-  @BuiltValueField(wireName: r'createdAt')
-  String? get createdAt;
-
-  @BuiltValueField(wireName: r'createdBy')
-  int? get createdBy;
-
-  @BuiltValueField(wireName: r'id')
-  int get id;
-
-  /// Widget name
+abstract class TaskQueueConfiguration implements BaseModel, Built<TaskQueueConfiguration, TaskQueueConfigurationBuilder> {
   @BuiltValueField(wireName: r'name')
-  String? get name;
+  QueueName? get name;
+  // enum nameEnum {  quick_scan,  email_polling,  email_receipt_processing,  email_receipt_image_cleanup,  };
 
-  /// Dashboard foreign key
-  @BuiltValueField(wireName: r'dashboardId')
-  int get dashboardId;
+  /// Queue priority
+  @BuiltValueField(wireName: r'priority')
+  int? get priority;
 
-  @BuiltValueField(wireName: r'updatedAt')
-  String? get updatedAt;
+  TaskQueueConfiguration._();
 
-  /// Type of widget
-  @BuiltValueField(wireName: r'widgetType')
-  WidgetType? get widgetType;
-  // enum widgetTypeEnum {  GROUP_SUMMARY,  FILTERED_RECEIPTS,  GROUP_ACTIVITY,  };
-
-  /// Configuration of widget
-  @BuiltValueField(wireName: r'configuration')
-  BuiltMap<String, JsonObject?>? get configuration;
-
-  Widget._();
-
-  factory Widget([void updates(WidgetBuilder b)]) = _$Widget;
+  factory TaskQueueConfiguration([void updates(TaskQueueConfigurationBuilder b)]) = _$TaskQueueConfiguration;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(WidgetBuilder b) => b;
+  static void _defaults(TaskQueueConfigurationBuilder b) => b
+      ..createdBy = 0
+      ..createdByString = ''
+      ..updatedAt = '';
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<Widget> get serializer => _$WidgetSerializer();
+  static Serializer<TaskQueueConfiguration> get serializer => _$TaskQueueConfigurationSerializer();
 }
 
-class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
+class _$TaskQueueConfigurationSerializer implements PrimitiveSerializer<TaskQueueConfiguration> {
   @override
-  final Iterable<Type> types = const [Widget, _$Widget];
+  final Iterable<Type> types = const [TaskQueueConfiguration, _$TaskQueueConfiguration];
 
   @override
-  final String wireName = r'Widget';
+  final String wireName = r'TaskQueueConfiguration';
 
   Iterable<Object?> _serializeProperties(
     Serializers serializers,
-    Widget object, {
+    TaskQueueConfiguration object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    if (object.createdAt != null) {
-      yield r'createdAt';
-      yield serializers.serialize(
-        object.createdAt,
-        specifiedType: const FullType(String),
-      );
-    }
+    yield r'createdAt';
+    yield serializers.serialize(
+      object.createdAt,
+      specifiedType: const FullType(String),
+    );
     if (object.createdBy != null) {
       yield r'createdBy';
       yield serializers.serialize(
@@ -90,23 +68,32 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
         specifiedType: const FullType(int),
       );
     }
+    if (object.name != null) {
+      yield r'name';
+      yield serializers.serialize(
+        object.name,
+        specifiedType: const FullType(QueueName),
+      );
+    }
     yield r'id';
     yield serializers.serialize(
       object.id,
       specifiedType: const FullType(int),
     );
-    if (object.name != null) {
-      yield r'name';
+    if (object.priority != null) {
+      yield r'priority';
       yield serializers.serialize(
-        object.name,
+        object.priority,
+        specifiedType: const FullType(int),
+      );
+    }
+    if (object.createdByString != null) {
+      yield r'createdByString';
+      yield serializers.serialize(
+        object.createdByString,
         specifiedType: const FullType(String),
       );
     }
-    yield r'dashboardId';
-    yield serializers.serialize(
-      object.dashboardId,
-      specifiedType: const FullType(int),
-    );
     if (object.updatedAt != null) {
       yield r'updatedAt';
       yield serializers.serialize(
@@ -114,26 +101,12 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
         specifiedType: const FullType(String),
       );
     }
-    if (object.widgetType != null) {
-      yield r'widgetType';
-      yield serializers.serialize(
-        object.widgetType,
-        specifiedType: const FullType(WidgetType),
-      );
-    }
-    if (object.configuration != null) {
-      yield r'configuration';
-      yield serializers.serialize(
-        object.configuration,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
-      );
-    }
   }
 
   @override
   Object serialize(
     Serializers serializers,
-    Widget object, {
+    TaskQueueConfiguration object, {
     FullType specifiedType = FullType.unspecified,
   }) {
     return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
@@ -144,7 +117,7 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
     required List<Object?> serializedList,
-    required WidgetBuilder result,
+    required TaskQueueConfigurationBuilder result,
     required List<Object?> unhandled,
   }) {
     for (var i = 0; i < serializedList.length; i += 2) {
@@ -165,6 +138,13 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
           ) as int;
           result.createdBy = valueDes;
           break;
+        case r'name':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(QueueName),
+          ) as QueueName;
+          result.name = valueDes;
+          break;
         case r'id':
           final valueDes = serializers.deserialize(
             value,
@@ -172,19 +152,19 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
           ) as int;
           result.id = valueDes;
           break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'dashboardId':
+        case r'priority':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(int),
           ) as int;
-          result.dashboardId = valueDes;
+          result.priority = valueDes;
+          break;
+        case r'createdByString':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.createdByString = valueDes;
           break;
         case r'updatedAt':
           final valueDes = serializers.deserialize(
@@ -192,20 +172,6 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
             specifiedType: const FullType(String),
           ) as String;
           result.updatedAt = valueDes;
-          break;
-        case r'widgetType':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(WidgetType),
-          ) as WidgetType;
-          result.widgetType = valueDes;
-          break;
-        case r'configuration':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
-          ) as BuiltMap<String, JsonObject?>;
-          result.configuration.replace(valueDes);
           break;
         default:
           unhandled.add(key);
@@ -216,12 +182,12 @@ class _$WidgetSerializer implements PrimitiveSerializer<Widget> {
   }
 
   @override
-  Widget deserialize(
+  TaskQueueConfiguration deserialize(
     Serializers serializers,
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final result = WidgetBuilder();
+    final result = TaskQueueConfigurationBuilder();
     final serializedList = (serialized as Iterable<Object?>).toList();
     final unhandled = <Object?>[];
     _deserializeProperties(
