@@ -9,7 +9,6 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/delete_button.dart';
-import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:receipt_wrangler_mobile/utils/has_feature.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
@@ -91,21 +90,20 @@ Future<void> _submitQuickScan(
   }
 
   try {
-    setLoadingBarState(context, true);
-    var response = await OpenApiClient.client.getReceiptApi().quickScanReceipt(
+    await OpenApiClient.client.getReceiptApi().quickScanReceipt(
         files: files.toBuiltList(),
         groupIds: groupIds.toBuiltList(),
         paidByUserIds: paidByUserIds.toBuiltList(),
         statuses: statuses.toBuiltList());
 
-    setLoadingBarState(context, false);
+    var imageWord = images.length > 1 ? "images" : "image";
+
     showSuccessSnackbar(
       context,
-      "Quick scan successfully uploaded ${response?.data?.length} receipts",
+      "Successfully queued $imageWord for processing!",
     );
   } catch (e) {
     print(e);
-    setLoadingBarState(context, false);
     showApiErrorSnackbar(context, e as dynamic);
     return;
   }
