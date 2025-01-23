@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/constants/text_styles.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/paged_data_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 import '../../../client/client.dart';
 import '../../../utils/receipts.dart';
+import '../receipt_list_item.dart';
 
 class FilteredReceipts extends StatefulWidget {
   const FilteredReceipts({super.key, required api.Widget this.dashboardWidget});
@@ -35,9 +36,14 @@ class _FilteredReceipts extends State<FilteredReceipts> {
             widget.dashboardWidget.name ?? "",
             style: dashboardWidgetNameStyle,
           ),
-          ReceiptList(
+          PagedDataList(
               pagingController: _pagingController,
-              getPagedReceiptFuture: (page) {
+              noItemsFoundText: "No receipts found",
+              listItemBuilder: (context, receipt, index) {
+                return ReceiptListItem(
+                    receipt: receipt.anyOf.values[0] as api.Receipt);
+              },
+              getPagedDataFuture: (page) {
                 return OpenApiClient.client.getReceiptApi().getReceiptsForGroup(
                     groupId: int.parse(groupId),
                     receiptPagedRequestCommand:
