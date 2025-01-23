@@ -23,6 +23,14 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   late final authModel = Provider.of<AuthModel>(context, listen: false);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
 
+  Widget buildListTile() {
+    return ListTile(
+      leading: Text(widget.activity.startedAt),
+      title: Text(widget.activity.type.toString()),
+      trailing: Text(widget.activity.status.toString()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var canEdit = canEditReceipt(authModel, groupModel, widget.groupId);
@@ -30,6 +38,6 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
     return SlidableWidget(
         slideEnabled: canEdit,
         endActionPaneChildren: [],
-        slidableChild: Text("deez"));
+        slidableChild: buildListTile());
   }
 }
