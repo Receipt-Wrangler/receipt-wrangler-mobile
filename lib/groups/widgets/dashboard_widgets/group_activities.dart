@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/constants/text_styles.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/group_activity_list_item.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/paged_data_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
@@ -56,7 +57,9 @@ class _GroupActivities extends State<GroupActivities> {
               pagingController: _pagingController,
               noItemsFoundText: "No activity found",
               listItemBuilder: (context, activity, index) {
-                return Text("hi");
+                return GroupActivityListItem(
+                    activity: activity.anyOf.values[9] as api.Activity,
+                    groupId: int.parse(groupId));
               },
               getPagedDataFuture: (page) {
                 return OpenApiClient.client
