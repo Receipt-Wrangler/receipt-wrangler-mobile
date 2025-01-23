@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/date_block.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 
 import '../../models/auth_model.dart';
@@ -25,7 +26,7 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
 
   Widget buildListTile() {
     return ListTile(
-      leading: Text(widget.activity.startedAt),
+      leading: DateBlock(date: widget.activity.startedAt),
       title: Text(widget.activity.type.toString()),
       trailing: Text(widget.activity.status.toString()),
     );

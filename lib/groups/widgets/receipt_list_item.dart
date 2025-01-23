@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/date_block.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
@@ -74,7 +74,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
             color: getStatusColor(),
           ),
           const SizedBox(width: 10),
-          getDateText(),
+          DateBlock(date: widget.receipt.createdAt ?? ""),
         ],
       ),
     );
@@ -93,28 +93,6 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       default:
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
-  }
-
-  Widget getDateText() {
-    var date = DateTime.parse(widget.receipt.createdAt ?? "");
-    DateFormat format = DateFormat("MMM d");
-    var formattedDate = format.format(date);
-    var formattedDateParts = formattedDate.split(" ");
-
-    var dateTextWidgets = formattedDateParts.map((e) {
-      return Text(
-        e,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
-      );
-    });
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [...dateTextWidgets],
-    );
   }
 
   Widget getSubtitleText() {
