@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/receipts.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/receipt_list_item.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/paged_data_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_list.dart';
 import 'package:receipt_wrangler_mobile/utils/group.dart';
 
@@ -109,9 +110,14 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
     return Column(
       children: [
         buildSortFilterBar(),
-        ReceiptList(
+        PagedDataList(
           pagingController: _pagingController,
-          getPagedReceiptFuture: (pageKey) {
+          noItemsFoundText: "No receipts found",
+          listItemBuilder: (context, receipt, index) {
+            return ReceiptListItem(
+                receipt: receipt.anyOf.values[0] as api.Receipt);
+          },
+          getPagedDataFuture: (pageKey) {
             var model = Provider.of<ReceiptListModel>(context, listen: false);
             model.setPage(pageKey, false);
             var command = model.receiptPagedRequestCommand;
