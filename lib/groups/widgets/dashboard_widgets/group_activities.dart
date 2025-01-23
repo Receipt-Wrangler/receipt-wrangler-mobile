@@ -7,7 +7,6 @@ import 'package:receipt_wrangler_mobile/utils/group.dart';
 
 import '../../../client/client.dart';
 import '../../../utils/receipts.dart';
-import '../receipt_list_item.dart';
 
 class GroupActivities extends StatefulWidget {
   const GroupActivities({super.key, required api.Widget this.dashboardWidget});
@@ -40,8 +39,7 @@ class _GroupActivities extends State<GroupActivities> {
               pagingController: _pagingController,
               noItemsFoundText: "No receipts found",
               listItemBuilder: (context, receipt, index) {
-                return ReceiptListItem(
-                    receipt: receipt.anyOf.values[0] as api.Receipt);
+                return Text("hi");
               },
               getPagedDataFuture: (page) {
                 return OpenApiClient.client.getReceiptApi().getReceiptsForGroup(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
-import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/activity.dart';
+import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_activities.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
 
 import 'dashboard_widgets/filtered_receipts.dart';
