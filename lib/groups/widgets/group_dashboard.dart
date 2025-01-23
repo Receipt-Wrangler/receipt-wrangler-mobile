@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
+import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/activity.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/dashboard_widgets/group_summary.dart';
 
 import 'dashboard_widgets/filtered_receipts.dart';
@@ -70,6 +71,11 @@ class _GroupDashboard extends State<GroupDashboard> {
             break;
           case api.WidgetType.GROUP_SUMMARY:
             widgets.add(GroupSummary(
+              dashboardWidget: widget,
+            ));
+            break;
+          case api.WidgetType.GROUP_ACTIVITY:
+            widgets.add(GroupActivities(
               dashboardWidget: widget,
             ));
             break;
