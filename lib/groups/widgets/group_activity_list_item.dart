@@ -32,6 +32,7 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   late final authModel = Provider.of<AuthModel>(context, listen: false);
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
+  var hasBeenRerun = false;
 
   Color getActivityColor() {
     switch (widget.activity.status) {
@@ -77,7 +78,7 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   Widget buildSlideableAction() {
     return SlidableAction(
       icon: Icons.refresh,
-      label: "Rerun Activity",
+      label: "Rerun",
       foregroundColor: Theme.of(context).colorScheme.primary,
       onPressed: (BuildContext context) async {
         await rerunActivity();
@@ -92,6 +93,9 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
           .rerunActivity(id: widget.activity.id);
 
       showSuccessSnackbar(context, "Activity has been successfully queued.");
+      setState(() {
+        hasBeenRerun = true;
+      });
     } catch (e) {
       showApiErrorSnackbar(context, e as dynamic);
     }
@@ -100,7 +104,8 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   @override
   Widget build(BuildContext context) {
     var canEdit = canEditReceipt(authModel, groupModel, widget.groupId);
-    var slideEnabled = canEdit && (widget.activity.canBeRestarted ?? false);
+    var slideEnabled =
+        canEdit && (widget.activity.canBeRestarted ?? false) && !hasBeenRerun;
 
     return SlidableWidget(
         slideEnabled: slideEnabled,
