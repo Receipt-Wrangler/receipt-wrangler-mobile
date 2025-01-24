@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/font.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/activities.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 
@@ -54,7 +55,13 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   Widget buildListTile() {
     return ListTile(
         leading: getLeadingWidget(),
-        title: Text(getActivityTypeDisplay(widget.activity.type)),
+        subtitle: Text("Ran by Noah"),
+        title: Text(
+          getActivityTypeDisplay(
+            widget.activity.type,
+          ),
+          style: boldText,
+        ),
         trailing: getTrailingWidget());
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/font.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/list_item_lead.dart';
@@ -95,7 +96,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     return ListTile(
         title: Text(
           titleText,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: boldText,
         ),
         subtitle: getSubtitleText(),
         leading: getLeadingWidget(),
