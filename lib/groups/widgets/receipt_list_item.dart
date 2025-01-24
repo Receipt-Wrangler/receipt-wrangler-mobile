@@ -4,7 +4,7 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/date_block.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/list_item_lead.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
@@ -14,7 +14,6 @@ import '../../constants/colors.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
-import '../../shared/widgets/list_item_color_block.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem(
@@ -65,17 +64,8 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   }
 
   Widget getLeadingWidget() {
-    return SizedBox(
-      width: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          ListItemColorBlock(color: getStatusColor()),
-          const SizedBox(width: 10),
-          DateBlock(date: widget.receipt.createdAt ?? ""),
-        ],
-      ),
-    );
+    return ListItemLead(
+        date: widget.receipt.createdAt ?? "", color: getStatusColor());
   }
 
   Color getStatusColor() {
