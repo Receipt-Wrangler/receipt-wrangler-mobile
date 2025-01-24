@@ -10,9 +10,11 @@ import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
+import '../../constants/colors.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
+import '../../shared/widgets/list_item_color_block.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem(
@@ -68,11 +70,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: 10,
-            height: 50,
-            color: getStatusColor(),
-          ),
+          ListItemColorBlock(color: getStatusColor()),
           const SizedBox(width: 10),
           DateBlock(date: widget.receipt.createdAt ?? ""),
         ],
@@ -85,11 +83,11 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       case api.ReceiptStatus.DRAFT:
         return const Color.fromRGBO(224, 224, 224, 1);
       case api.ReceiptStatus.NEEDS_ATTENTION:
-        return const Color.fromRGBO(242, 191, 191, 1);
+        return errorRed;
       case api.ReceiptStatus.OPEN:
         return const Color.fromRGBO(255, 250, 205, 1);
       case api.ReceiptStatus.RESOLVED:
-        return const Color.fromRGBO(144, 238, 144, 1);
+        return successGreen;
       default:
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
