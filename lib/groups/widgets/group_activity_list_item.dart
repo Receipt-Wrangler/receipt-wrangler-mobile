@@ -93,8 +93,6 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
 
       showSuccessSnackbar(context, "Activity has been successfully queued.");
     } catch (e) {
-      print("error rerunning activity");
-      print(e);
       showApiErrorSnackbar(context, e as dynamic);
     }
   }
@@ -105,7 +103,7 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
     var slideEnabled = canEdit && (widget.activity.canBeRestarted ?? false);
 
     return SlidableWidget(
-        slideEnabled: true,
+        slideEnabled: slideEnabled,
         endActionPaneChildren: [buildSlideableAction()],
         slidableChild: buildListTile());
   }
