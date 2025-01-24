@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/constants/font.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/list_item_lead.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_edit_button.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
+import '../../constants/colors.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
+import '../../shared/widgets/list_item_trailing_status.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem(
@@ -46,38 +49,12 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
 
-    Color backgroundColor = Theme.of(context).colorScheme.background;
-
-    return Container(
-      width: 100,
-      height: 50,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: [backgroundColor, getStatusColor()],
-      )),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]),
-    );
+    return ListItemTrailingStatus(color: getStatusColor(), text: text);
   }
 
   Widget getLeadingWidget() {
-    return SizedBox(
-      width: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            width: 10,
-            height: 50,
-            color: getStatusColor(),
-          ),
-          const SizedBox(width: 10),
-          getDateText(),
-        ],
-      ),
-    );
+    return ListItemLead(
+        date: widget.receipt.createdAt ?? "", color: getStatusColor());
   }
 
   Color getStatusColor() {
@@ -85,36 +62,14 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       case api.ReceiptStatus.DRAFT:
         return const Color.fromRGBO(224, 224, 224, 1);
       case api.ReceiptStatus.NEEDS_ATTENTION:
-        return const Color.fromRGBO(242, 191, 191, 1);
+        return errorRed;
       case api.ReceiptStatus.OPEN:
         return const Color.fromRGBO(255, 250, 205, 1);
       case api.ReceiptStatus.RESOLVED:
-        return const Color.fromRGBO(144, 238, 144, 1);
+        return successGreen;
       default:
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
-  }
-
-  Widget getDateText() {
-    var date = DateTime.parse(widget.receipt.createdAt ?? "");
-    DateFormat format = DateFormat("MMM d");
-    var formattedDate = format.format(date);
-    var formattedDateParts = formattedDate.split(" ");
-
-    var dateTextWidgets = formattedDateParts.map((e) {
-      return Text(
-        e,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
-      );
-    });
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [...dateTextWidgets],
-    );
   }
 
   Widget getSubtitleText() {
@@ -141,7 +96,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
     return ListTile(
         title: Text(
           titleText,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: boldText,
         ),
         subtitle: getSubtitleText(),
         leading: getLeadingWidget(),

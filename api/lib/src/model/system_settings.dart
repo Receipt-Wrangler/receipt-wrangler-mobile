@@ -2,11 +2,14 @@
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart'; // ignore_for_file: unused_element
+import 'package:built_value/serializer.dart';
+// ignore_for_file: unused_element
 import 'package:openapi/src/model/base_model.dart';
 import 'package:openapi/src/model/currency_separator.dart';
 import 'package:openapi/src/model/currency_symbol_position.dart';
+import 'package:openapi/src/model/task_queue_configuration.dart';
 
 part 'system_settings.g.dart';
 
@@ -29,26 +32,46 @@ part 'system_settings.g.dart';
 /// * [emailPollingInterval] - Email polling interval
 /// * [receiptProcessingSettingsId] - Receipt processing settings foreign key
 /// * [fallbackReceiptProcessingSettingsId] - Fallback receipt processing settings foreign key
+/// * [taskConcurrency] - Concurrency for task worker
+/// * [taskQueueConfigurations]
 @BuiltValue()
 abstract class SystemSettings
     implements BaseModel, Built<SystemSettings, SystemSettingsBuilder> {
   @BuiltValueField(wireName: r'currencyThousandthsSeparator')
   CurrencySeparator? get currencyThousandthsSeparator;
-
   // enum currencyThousandthsSeparatorEnum {  ,,  .,  };
-
-  /// Receipt processing settings foreign key
-  @BuiltValueField(wireName: r'receiptProcessingSettingsId')
-  int? get receiptProcessingSettingsId;
 
   /// Currency display
   @BuiltValueField(wireName: r'currencyDisplay')
   String? get currencyDisplay;
 
+  /// Whether to hide decimal places
+  @BuiltValueField(wireName: r'currencyHideDecimalPlaces')
+  bool? get currencyHideDecimalPlaces;
+
+  @BuiltValueField(wireName: r'currencyDecimalSeparator')
+  CurrencySeparator? get currencyDecimalSeparator;
+  // enum currencyDecimalSeparatorEnum {  ,,  .,  };
+
+  /// Debug OCR
+  @BuiltValueField(wireName: r'debugOcr')
+  bool? get debugOcr;
+
+  /// Fallback receipt processing settings foreign key
+  @BuiltValueField(wireName: r'fallbackReceiptProcessingSettingsId')
+  int? get fallbackReceiptProcessingSettingsId;
+
+  /// Receipt processing settings foreign key
+  @BuiltValueField(wireName: r'receiptProcessingSettingsId')
+  int? get receiptProcessingSettingsId;
+
   @BuiltValueField(wireName: r'currencySymbolPosition')
   CurrencySymbolPosition? get currencySymbolPosition;
-
   // enum currencySymbolPositionEnum {  START,  END,  };
+
+  /// Concurrency for task worker
+  @BuiltValueField(wireName: r'taskConcurrency')
+  int? get taskConcurrency;
 
   /// Email polling interval
   @BuiltValueField(wireName: r'emailPollingInterval')
@@ -62,22 +85,8 @@ abstract class SystemSettings
   @BuiltValueField(wireName: r'enableLocalSignUp')
   bool? get enableLocalSignUp;
 
-  /// Whether to hide decimal places
-  @BuiltValueField(wireName: r'currencyHideDecimalPlaces')
-  bool? get currencyHideDecimalPlaces;
-
-  @BuiltValueField(wireName: r'currencyDecimalSeparator')
-  CurrencySeparator? get currencyDecimalSeparator;
-
-  // enum currencyDecimalSeparatorEnum {  ,,  .,  };
-
-  /// Debug OCR
-  @BuiltValueField(wireName: r'debugOcr')
-  bool? get debugOcr;
-
-  /// Fallback receipt processing settings foreign key
-  @BuiltValueField(wireName: r'fallbackReceiptProcessingSettingsId')
-  int? get fallbackReceiptProcessingSettingsId;
+  @BuiltValueField(wireName: r'taskQueueConfigurations')
+  BuiltList<TaskQueueConfiguration> get taskQueueConfigurations;
 
   SystemSettings._();
 
@@ -90,6 +99,7 @@ abstract class SystemSettings
     ..currencyHideDecimalPlaces = false
     ..debugOcr = false
     ..createdBy = 0
+    ..taskConcurrency = 10
     ..emailPollingInterval = 1800
     ..numWorkers = 1
     ..enableLocalSignUp = false
@@ -182,6 +192,13 @@ class _$SystemSettingsSerializer
         specifiedType: const FullType(CurrencySymbolPosition),
       );
     }
+    if (object.taskConcurrency != null) {
+      yield r'taskConcurrency';
+      yield serializers.serialize(
+        object.taskConcurrency,
+        specifiedType: const FullType(int),
+      );
+    }
     if (object.emailPollingInterval != null) {
       yield r'emailPollingInterval';
       yield serializers.serialize(
@@ -207,6 +224,12 @@ class _$SystemSettingsSerializer
     yield serializers.serialize(
       object.id,
       specifiedType: const FullType(int),
+    );
+    yield r'taskQueueConfigurations';
+    yield serializers.serialize(
+      object.taskQueueConfigurations,
+      specifiedType:
+          const FullType(BuiltList, [FullType(TaskQueueConfiguration)]),
     );
     if (object.createdByString != null) {
       yield r'createdByString';
@@ -317,6 +340,13 @@ class _$SystemSettingsSerializer
           ) as CurrencySymbolPosition;
           result.currencySymbolPosition = valueDes;
           break;
+        case r'taskConcurrency':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.taskConcurrency = valueDes;
+          break;
         case r'emailPollingInterval':
           final valueDes = serializers.deserialize(
             value,
@@ -344,6 +374,14 @@ class _$SystemSettingsSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.id = valueDes;
+          break;
+        case r'taskQueueConfigurations':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType:
+                const FullType(BuiltList, [FullType(TaskQueueConfiguration)]),
+          ) as BuiltList<TaskQueueConfiguration>;
+          result.taskQueueConfigurations.replace(valueDes);
           break;
         case r'createdByString':
           final valueDes = serializers.deserialize(

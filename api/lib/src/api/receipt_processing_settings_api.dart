@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/check_receipt_processing_settings_connectivity_command.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/paged_data.dart';
 import 'package:openapi/src/model/paged_request_command.dart';
 import 'package:openapi/src/model/receipt_processing_settings.dart';

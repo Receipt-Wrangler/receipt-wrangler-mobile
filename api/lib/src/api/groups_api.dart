@@ -13,6 +13,7 @@ import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/group.dart';
 import 'package:openapi/src/model/group_receipt_settings.dart';
 import 'package:openapi/src/model/group_settings.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/paged_data.dart';
 import 'package:openapi/src/model/paged_group_request_command.dart';
 import 'package:openapi/src/model/update_group_receipt_settings_command.dart';

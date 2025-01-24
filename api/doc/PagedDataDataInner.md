@@ -33,12 +33,12 @@ Name | Type | Description | Notes
 **isDefault** | **bool** | Is default group (not used yet) | [optional] 
 **isAllGroup** | **bool** | Is all group for user | 
 **numberOfReceipts** | **int** | Number of receipts associated with this tag | 
-**type** | [**SystemTaskType**](SystemTaskType.md) |  | [optional] 
-**startedAt** | **String** |  | [optional] 
-**endedAt** | **String** |  | [optional] 
+**type** | [**SystemTaskType**](SystemTaskType.md) |  | 
+**startedAt** | **String** |  | 
+**endedAt** | **String** |  | 
 **associatedEntityId** | **int** |  | [optional] 
 **associatedEntityType** | [**AssociatedEntityType**](AssociatedEntityType.md) |  | [optional] 
-**ranByUserId** | **int** |  | [optional] 
+**ranByUserId** | **int** |  | 
 **resultDescription** | **String** |  | [optional] 
 **childSystemTasks** | [**BuiltList&lt;SystemTask&gt;**](SystemTask.md) |  | [optional] 
 **aiType** | [**AiType**](AiType.md) |  | [optional] 
@@ -52,6 +52,7 @@ Name | Type | Description | Notes
 **port** | **String** | IMAP port | [optional] 
 **username** | **String** | IMAP username | [optional] 
 **password** | **String** | IMAP password | [optional] 
+**canBeRestarted** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

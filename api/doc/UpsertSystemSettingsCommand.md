@@ -19,6 +19,8 @@ Name | Type | Description | Notes
 **emailPollingInterval** | **int** | Email polling interval | [optional] 
 **receiptProcessingSettingsId** | **int** | Receipt processing settings foreign key | [optional] 
 **fallbackReceiptProcessingSettingsId** | **int** | Fallback receipt processing settings foreign key | [optional] 
+**taskConcurrency** | **int** | Concurrency for task worker | 
+**taskQueueConfigurations** | [**BuiltList&lt;UpsertTaskQueueConfiguration&gt;**](UpsertTaskQueueConfiguration.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

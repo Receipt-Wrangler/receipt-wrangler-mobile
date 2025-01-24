@@ -12,6 +12,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/app_data.dart';
 import 'package:openapi/src/model/claims.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/reset_password_command.dart';
 import 'package:openapi/src/model/update_profile_command.dart';
 import 'package:openapi/src/model/user.dart';

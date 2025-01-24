@@ -6,6 +6,9 @@ class GroupModel extends ChangeNotifier {
 
   List<Group> get groups => _groups;
 
+  List<Group> get groupsWithoutAllGroup =>
+      _groups.where((group) => !group.isAllGroup).toList();
+
   void setGroups(List<Group> groups) {
     _groups = groups;
 

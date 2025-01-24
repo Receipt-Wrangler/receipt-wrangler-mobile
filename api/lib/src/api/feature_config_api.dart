@@ -9,6 +9,7 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:openapi/src/model/feature_config.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 
 class FeatureConfigApi {
 
