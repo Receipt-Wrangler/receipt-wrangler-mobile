@@ -11,6 +11,7 @@ import 'package:dio/dio.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/dashboard.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/upsert_dashboard_command.dart';
 
 class DashboardApi {

@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/comment.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/upsert_comment_command.dart';
 
 class CommentApi {

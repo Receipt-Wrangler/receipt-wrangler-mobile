@@ -42,6 +42,7 @@ doc/GroupsApi.md
 doc/Icon.md
 doc/ImportApi.md
 doc/ImportType.md
+doc/InternalErrorResponse.md
 doc/Item.md
 doc/ItemStatus.md
 doc/LoginCommand.md
@@ -174,6 +175,7 @@ lib/src/model/group_settings_white_list_email.dart
 lib/src/model/group_status.dart
 lib/src/model/icon.dart
 lib/src/model/import_type.dart
+lib/src/model/internal_error_response.dart
 lib/src/model/item.dart
 lib/src/model/item_status.dart
 lib/src/model/login_command.dart
@@ -233,8 +235,4 @@ lib/src/model/widget.dart
 lib/src/model/widget_type.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/activity_test.dart
-test/paged_activity_request_command_test.dart
-test/queue_name_test.dart
-test/task_queue_configuration_test.dart
-test/upsert_task_queue_configuration_test.dart
+test/internal_error_response_test.dart

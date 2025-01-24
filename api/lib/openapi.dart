@@ -64,6 +64,7 @@ export 'package:openapi/src/model/group_settings_white_list_email.dart';
 export 'package:openapi/src/model/group_status.dart';
 export 'package:openapi/src/model/icon.dart';
 export 'package:openapi/src/model/import_type.dart';
+export 'package:openapi/src/model/internal_error_response.dart';
 export 'package:openapi/src/model/item.dart';
 export 'package:openapi/src/model/item_status.dart';
 export 'package:openapi/src/model/login_command.dart';

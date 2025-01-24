@@ -12,6 +12,7 @@ import 'dart:typed_data';
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/encoded_image.dart';
 import 'package:openapi/src/model/file_data_view.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/receipt.dart';
 
 class ReceiptImageApi {

@@ -194,6 +194,7 @@ Class | Method | HTTP request | Description
  - [GroupStatus](doc/GroupStatus.md)
  - [Icon](doc/Icon.md)
  - [ImportType](doc/ImportType.md)
+ - [InternalErrorResponse](doc/InternalErrorResponse.md)
  - [Item](doc/Item.md)
  - [ItemStatus](doc/ItemStatus.md)
  - [LoginCommand](doc/LoginCommand.md)

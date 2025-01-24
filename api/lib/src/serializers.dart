@@ -48,6 +48,7 @@ import 'package:openapi/src/model/group_settings_white_list_email.dart';
 import 'package:openapi/src/model/group_status.dart';
 import 'package:openapi/src/model/icon.dart';
 import 'package:openapi/src/model/import_type.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/item.dart';
 import 'package:openapi/src/model/item_status.dart';
 import 'package:openapi/src/model/login_command.dart';
@@ -143,6 +144,7 @@ part 'serializers.g.dart';
   GroupStatus,
   Icon,
   ImportType,
+  InternalErrorResponse,
   Item,
   ItemStatus,
   LoginCommand,

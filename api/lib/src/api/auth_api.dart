@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 
 import 'package:openapi/src/model/app_data.dart';
 import 'package:openapi/src/model/get_new_refresh_token200_response.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/login_command.dart';
 import 'package:openapi/src/model/logout_command.dart';
 import 'package:openapi/src/model/sign_up_command.dart';

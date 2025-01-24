@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 
 import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/get_system_task_command.dart';
+import 'package:openapi/src/model/internal_error_response.dart';
 import 'package:openapi/src/model/paged_activity_request_command.dart';
 import 'package:openapi/src/model/paged_data.dart';
 
