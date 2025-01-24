@@ -9,6 +9,7 @@ import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
 import '../../shared/widgets/list_item_lead.dart';
+import '../../shared/widgets/list_item_trailing_status.dart';
 
 class GroupActivityListItem extends StatefulWidget {
   const GroupActivityListItem(
@@ -44,12 +45,17 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
     );
   }
 
+  Widget getTrailingWidget() {
+    return ListItemTrailingStatus(
+        color: getActivityColor(),
+        text: getActivityStatusDisplay(widget.activity.status));
+  }
+
   Widget buildListTile() {
     return ListTile(
-      leading: getLeadingWidget(),
-      title: Text(getActivityTypeDisplay(widget.activity.type)),
-      trailing: Text(getActivityStatusDisplay(widget.activity.status)),
-    );
+        leading: getLeadingWidget(),
+        title: Text(getActivityTypeDisplay(widget.activity.type)),
+        trailing: getTrailingWidget());
   }
 
   @override

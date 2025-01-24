@@ -14,6 +14,7 @@ import '../../constants/colors.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
+import '../../shared/widgets/list_item_trailing_status.dart';
 
 class ReceiptListItem extends StatefulWidget {
   const ReceiptListItem(
@@ -47,20 +48,7 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
 
-    Color backgroundColor = Theme.of(context).colorScheme.background;
-
-    return Container(
-      width: 100,
-      height: 50,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: [backgroundColor, getStatusColor()],
-      )),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]),
-    );
+    return ListItemTrailingStatus(color: getStatusColor(), text: text);
   }
 
   Widget getLeadingWidget() {
