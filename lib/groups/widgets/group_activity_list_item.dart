@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/client/client.dart';
 import 'package:receipt_wrangler_mobile/constants/font.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/activities.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import '../../constants/colors.dart';
 import '../../models/auth_model.dart';
@@ -71,13 +74,39 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
         trailing: getTrailingWidget());
   }
 
+  Widget buildSlideableAction() {
+    return SlidableAction(
+      icon: Icons.refresh,
+      label: "Rerun Activity",
+      foregroundColor: Theme.of(context).colorScheme.primary,
+      onPressed: (BuildContext context) async {
+        await rerunActivity();
+      },
+    );
+  }
+
+  Future<void> rerunActivity() async {
+    try {
+      await OpenApiClient.client
+          .getSystemTaskApi()
+          .rerunActivity(id: widget.activity.id);
+
+      showSuccessSnackbar(context, "Activity has been successfully queued.");
+    } catch (e) {
+      print("error rerunning activity");
+      print(e);
+      showApiErrorSnackbar(context, e as dynamic);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var canEdit = canEditReceipt(authModel, groupModel, widget.groupId);
+    var slideEnabled = canEdit && (widget.activity.canBeRestarted ?? false);
 
     return SlidableWidget(
-        slideEnabled: canEdit,
-        endActionPaneChildren: [],
+        slideEnabled: true,
+        endActionPaneChildren: [buildSlideableAction()],
         slidableChild: buildListTile());
   }
 }
