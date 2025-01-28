@@ -59,9 +59,13 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   }
 
   Widget buildSubtitleWidget() {
-    var user = userModel.getUserById(widget.activity.ranByUserId.toString());
+    var displayName = "System";
+    if (widget.activity.ranByUserId != null) {
+      var user = userModel.getUserById(widget.activity.ranByUserId.toString());
+      displayName = user?.displayName ?? "Unknown";
+    }
 
-    return Text("Ran by ${user?.displayName}");
+    return Text("Ran by ${displayName}");
   }
 
   Widget buildListTile() {

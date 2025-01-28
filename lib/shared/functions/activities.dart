@@ -8,6 +8,8 @@ String getActivityTypeDisplay(SystemTaskType type) {
       return "Updated Receipt";
     case SystemTaskType.RECEIPT_UPLOADED:
       return "Uploaded Receipt";
+    case SystemTaskType.EMAIL_UPLOAD:
+      return "Email Upload";
     default:
       return "Unknown";
   }
