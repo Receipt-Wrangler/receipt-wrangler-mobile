@@ -14,6 +14,8 @@ class _$SystemTask extends SystemTask {
   @override
   final AssociatedEntityType? associatedEntityType;
   @override
+  final int? groupId;
+  @override
   final BuiltList<SystemTask>? childSystemTasks;
   @override
   final String? startedAt;
@@ -21,6 +23,8 @@ class _$SystemTask extends SystemTask {
   final String? resultDescription;
   @override
   final SystemTaskType? type;
+  @override
+  final int? receiptId;
   @override
   final int? ranByUserId;
   @override
@@ -43,10 +47,12 @@ class _$SystemTask extends SystemTask {
       {this.associatedEntityId,
       this.endedAt,
       this.associatedEntityType,
+      this.groupId,
       this.childSystemTasks,
       this.startedAt,
       this.resultDescription,
       this.type,
+      this.receiptId,
       this.ranByUserId,
       this.status,
       required this.id,
@@ -74,10 +80,12 @@ class _$SystemTask extends SystemTask {
         associatedEntityId == other.associatedEntityId &&
         endedAt == other.endedAt &&
         associatedEntityType == other.associatedEntityType &&
+        groupId == other.groupId &&
         childSystemTasks == other.childSystemTasks &&
         startedAt == other.startedAt &&
         resultDescription == other.resultDescription &&
         type == other.type &&
+        receiptId == other.receiptId &&
         ranByUserId == other.ranByUserId &&
         status == other.status &&
         id == other.id &&
@@ -93,10 +101,12 @@ class _$SystemTask extends SystemTask {
     _$hash = $jc(_$hash, associatedEntityId.hashCode);
     _$hash = $jc(_$hash, endedAt.hashCode);
     _$hash = $jc(_$hash, associatedEntityType.hashCode);
+    _$hash = $jc(_$hash, groupId.hashCode);
     _$hash = $jc(_$hash, childSystemTasks.hashCode);
     _$hash = $jc(_$hash, startedAt.hashCode);
     _$hash = $jc(_$hash, resultDescription.hashCode);
     _$hash = $jc(_$hash, type.hashCode);
+    _$hash = $jc(_$hash, receiptId.hashCode);
     _$hash = $jc(_$hash, ranByUserId.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
@@ -114,10 +124,12 @@ class _$SystemTask extends SystemTask {
           ..add('associatedEntityId', associatedEntityId)
           ..add('endedAt', endedAt)
           ..add('associatedEntityType', associatedEntityType)
+          ..add('groupId', groupId)
           ..add('childSystemTasks', childSystemTasks)
           ..add('startedAt', startedAt)
           ..add('resultDescription', resultDescription)
           ..add('type', type)
+          ..add('receiptId', receiptId)
           ..add('ranByUserId', ranByUserId)
           ..add('status', status)
           ..add('id', id)
@@ -149,6 +161,10 @@ class SystemTaskBuilder
           covariant AssociatedEntityType? associatedEntityType) =>
       _$this._associatedEntityType = associatedEntityType;
 
+  int? _groupId;
+  int? get groupId => _$this._groupId;
+  set groupId(covariant int? groupId) => _$this._groupId = groupId;
+
   ListBuilder<SystemTask>? _childSystemTasks;
   ListBuilder<SystemTask> get childSystemTasks =>
       _$this._childSystemTasks ??= new ListBuilder<SystemTask>();
@@ -167,6 +183,10 @@ class SystemTaskBuilder
   SystemTaskType? _type;
   SystemTaskType? get type => _$this._type;
   set type(covariant SystemTaskType? type) => _$this._type = type;
+
+  int? _receiptId;
+  int? get receiptId => _$this._receiptId;
+  set receiptId(covariant int? receiptId) => _$this._receiptId = receiptId;
 
   int? _ranByUserId;
   int? get ranByUserId => _$this._ranByUserId;
@@ -208,10 +228,12 @@ class SystemTaskBuilder
       _associatedEntityId = $v.associatedEntityId;
       _endedAt = $v.endedAt;
       _associatedEntityType = $v.associatedEntityType;
+      _groupId = $v.groupId;
       _childSystemTasks = $v.childSystemTasks?.toBuilder();
       _startedAt = $v.startedAt;
       _resultDescription = $v.resultDescription;
       _type = $v.type;
+      _receiptId = $v.receiptId;
       _ranByUserId = $v.ranByUserId;
       _status = $v.status;
       _id = $v.id;
@@ -246,10 +268,12 @@ class SystemTaskBuilder
               associatedEntityId: associatedEntityId,
               endedAt: endedAt,
               associatedEntityType: associatedEntityType,
+              groupId: groupId,
               childSystemTasks: _childSystemTasks?.build(),
               startedAt: startedAt,
               resultDescription: resultDescription,
               type: type,
+              receiptId: receiptId,
               ranByUserId: ranByUserId,
               status: status,
               id: BuiltValueNullFieldError.checkNotNull(

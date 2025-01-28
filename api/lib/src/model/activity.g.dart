@@ -18,7 +18,11 @@ class _$Activity extends Activity {
   @override
   final String endedAt;
   @override
-  final int ranByUserId;
+  final int? ranByUserId;
+  @override
+  final int? receiptId;
+  @override
+  final int? groupId;
   @override
   final bool? canBeRestarted;
 
@@ -31,7 +35,9 @@ class _$Activity extends Activity {
       required this.status,
       required this.startedAt,
       required this.endedAt,
-      required this.ranByUserId,
+      this.ranByUserId,
+      this.receiptId,
+      this.groupId,
       this.canBeRestarted})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, r'Activity', 'id');
@@ -39,8 +45,6 @@ class _$Activity extends Activity {
     BuiltValueNullFieldError.checkNotNull(status, r'Activity', 'status');
     BuiltValueNullFieldError.checkNotNull(startedAt, r'Activity', 'startedAt');
     BuiltValueNullFieldError.checkNotNull(endedAt, r'Activity', 'endedAt');
-    BuiltValueNullFieldError.checkNotNull(
-        ranByUserId, r'Activity', 'ranByUserId');
   }
 
   @override
@@ -60,6 +64,8 @@ class _$Activity extends Activity {
         startedAt == other.startedAt &&
         endedAt == other.endedAt &&
         ranByUserId == other.ranByUserId &&
+        receiptId == other.receiptId &&
+        groupId == other.groupId &&
         canBeRestarted == other.canBeRestarted;
   }
 
@@ -72,6 +78,8 @@ class _$Activity extends Activity {
     _$hash = $jc(_$hash, startedAt.hashCode);
     _$hash = $jc(_$hash, endedAt.hashCode);
     _$hash = $jc(_$hash, ranByUserId.hashCode);
+    _$hash = $jc(_$hash, receiptId.hashCode);
+    _$hash = $jc(_$hash, groupId.hashCode);
     _$hash = $jc(_$hash, canBeRestarted.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -86,6 +94,8 @@ class _$Activity extends Activity {
           ..add('startedAt', startedAt)
           ..add('endedAt', endedAt)
           ..add('ranByUserId', ranByUserId)
+          ..add('receiptId', receiptId)
+          ..add('groupId', groupId)
           ..add('canBeRestarted', canBeRestarted))
         .toString();
   }
@@ -118,6 +128,14 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
   int? get ranByUserId => _$this._ranByUserId;
   set ranByUserId(int? ranByUserId) => _$this._ranByUserId = ranByUserId;
 
+  int? _receiptId;
+  int? get receiptId => _$this._receiptId;
+  set receiptId(int? receiptId) => _$this._receiptId = receiptId;
+
+  int? _groupId;
+  int? get groupId => _$this._groupId;
+  set groupId(int? groupId) => _$this._groupId = groupId;
+
   bool? _canBeRestarted;
   bool? get canBeRestarted => _$this._canBeRestarted;
   set canBeRestarted(bool? canBeRestarted) =>
@@ -136,6 +154,8 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
       _startedAt = $v.startedAt;
       _endedAt = $v.endedAt;
       _ranByUserId = $v.ranByUserId;
+      _receiptId = $v.receiptId;
+      _groupId = $v.groupId;
       _canBeRestarted = $v.canBeRestarted;
       _$v = null;
     }
@@ -168,8 +188,9 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
                 startedAt, r'Activity', 'startedAt'),
             endedAt: BuiltValueNullFieldError.checkNotNull(
                 endedAt, r'Activity', 'endedAt'),
-            ranByUserId: BuiltValueNullFieldError.checkNotNull(
-                ranByUserId, r'Activity', 'ranByUserId'),
+            ranByUserId: ranByUserId,
+            receiptId: receiptId,
+            groupId: groupId,
             canBeRestarted: canBeRestarted);
     replace(_$result);
     return _$result;
