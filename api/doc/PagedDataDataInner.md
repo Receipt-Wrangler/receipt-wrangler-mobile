@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **createdAt** | **String** |  | 
 **createdBy** | **int** |  | [optional] [default to 0]
 **date** | **String** | Receipt date | 
-**groupId** | **int** | Group foreign key | 
+**groupId** | **int** |  | 
 **id** | **int** |  | 
 **imageFiles** | [**BuiltList&lt;FileData&gt;**](FileData.md) | Files associated to receipt | [optional] 
 **name** | **String** | Name of the settings | 
@@ -38,7 +38,8 @@ Name | Type | Description | Notes
 **endedAt** | **String** |  | 
 **associatedEntityId** | **int** |  | [optional] 
 **associatedEntityType** | [**AssociatedEntityType**](AssociatedEntityType.md) |  | [optional] 
-**ranByUserId** | **int** |  | 
+**ranByUserId** | **int** |  | [optional] 
+**receiptId** | **int** |  | [optional] 
 **resultDescription** | **String** |  | [optional] 
 **childSystemTasks** | [**BuiltList&lt;SystemTask&gt;**](SystemTask.md) |  | [optional] 
 **aiType** | [**AiType**](AiType.md) |  | [optional] 

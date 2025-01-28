@@ -19,6 +19,8 @@ part 'activity.g.dart';
 /// * [startedAt] 
 /// * [endedAt] 
 /// * [ranByUserId] 
+/// * [receiptId] 
+/// * [groupId] 
 /// * [canBeRestarted] 
 @BuiltValue()
 abstract class Activity implements Built<Activity, ActivityBuilder> {
@@ -27,7 +29,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
 
   @BuiltValueField(wireName: r'type')
   SystemTaskType get type;
-  // enum typeEnum {  META_ASSOCIATE_TASKS_TO_RECEIPT,  OCR_PROCESSING,  CHAT_COMPLETION,  MAGIC_FILL,  QUICK_SCAN,  EMAIL_READ,  META_COMBINE_QUICK_SCAN,  EMAIL_UPLOAD,  SYSTEM_EMAIL_CONNECTIVITY_CHECK,  RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,  RECEIPT_UPLOADED,  RECEIPT_UPDATED,  PROMPT_GENERATED,  };
+  // enum typeEnum {  OCR_PROCESSING,  CHAT_COMPLETION,  MAGIC_FILL,  QUICK_SCAN,  EMAIL_READ,  EMAIL_UPLOAD,  SYSTEM_EMAIL_CONNECTIVITY_CHECK,  RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,  RECEIPT_UPLOADED,  RECEIPT_UPDATED,  PROMPT_GENERATED,  };
 
   @BuiltValueField(wireName: r'status')
   SystemTaskStatus get status;
@@ -40,7 +42,13 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   String get endedAt;
 
   @BuiltValueField(wireName: r'ranByUserId')
-  int get ranByUserId;
+  int? get ranByUserId;
+
+  @BuiltValueField(wireName: r'receiptId')
+  int? get receiptId;
+
+  @BuiltValueField(wireName: r'groupId')
+  int? get groupId;
 
   @BuiltValueField(wireName: r'canBeRestarted')
   bool? get canBeRestarted;
@@ -93,11 +101,27 @@ class _$ActivitySerializer implements PrimitiveSerializer<Activity> {
       object.endedAt,
       specifiedType: const FullType(String),
     );
-    yield r'ranByUserId';
-    yield serializers.serialize(
-      object.ranByUserId,
-      specifiedType: const FullType(int),
-    );
+    if (object.ranByUserId != null) {
+      yield r'ranByUserId';
+      yield serializers.serialize(
+        object.ranByUserId,
+        specifiedType: const FullType(int),
+      );
+    }
+    if (object.receiptId != null) {
+      yield r'receiptId';
+      yield serializers.serialize(
+        object.receiptId,
+        specifiedType: const FullType(int),
+      );
+    }
+    if (object.groupId != null) {
+      yield r'groupId';
+      yield serializers.serialize(
+        object.groupId,
+        specifiedType: const FullType(int),
+      );
+    }
     if (object.canBeRestarted != null) {
       yield r'canBeRestarted';
       yield serializers.serialize(
@@ -169,6 +193,20 @@ class _$ActivitySerializer implements PrimitiveSerializer<Activity> {
             specifiedType: const FullType(int),
           ) as int;
           result.ranByUserId = valueDes;
+          break;
+        case r'receiptId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.receiptId = valueDes;
+          break;
+        case r'groupId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.groupId = valueDes;
           break;
         case r'canBeRestarted':
           final valueDes = serializers.deserialize(

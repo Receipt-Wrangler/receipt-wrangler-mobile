@@ -28,6 +28,8 @@ part 'system_task.g.dart';
 /// * [associatedEntityId] 
 /// * [associatedEntityType] 
 /// * [ranByUserId] 
+/// * [receiptId] 
+/// * [groupId] 
 /// * [resultDescription] 
 /// * [childSystemTasks] 
 @BuiltValue()
@@ -42,6 +44,9 @@ abstract class SystemTask implements BaseModel, Built<SystemTask, SystemTaskBuil
   AssociatedEntityType? get associatedEntityType;
   // enum associatedEntityTypeEnum {  NOOP_ENTITY_TYPE,  RECEIPT,  SYSTEM_EMAIL,  RECEIPT_PROCESSING_SETTINGS,  PROMPT,  };
 
+  @BuiltValueField(wireName: r'groupId')
+  int? get groupId;
+
   @BuiltValueField(wireName: r'childSystemTasks')
   BuiltList<SystemTask>? get childSystemTasks;
 
@@ -53,7 +58,10 @@ abstract class SystemTask implements BaseModel, Built<SystemTask, SystemTaskBuil
 
   @BuiltValueField(wireName: r'type')
   SystemTaskType? get type;
-  // enum typeEnum {  META_ASSOCIATE_TASKS_TO_RECEIPT,  OCR_PROCESSING,  CHAT_COMPLETION,  MAGIC_FILL,  QUICK_SCAN,  EMAIL_READ,  META_COMBINE_QUICK_SCAN,  EMAIL_UPLOAD,  SYSTEM_EMAIL_CONNECTIVITY_CHECK,  RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,  RECEIPT_UPLOADED,  RECEIPT_UPDATED,  PROMPT_GENERATED,  };
+  // enum typeEnum {  OCR_PROCESSING,  CHAT_COMPLETION,  MAGIC_FILL,  QUICK_SCAN,  EMAIL_READ,  EMAIL_UPLOAD,  SYSTEM_EMAIL_CONNECTIVITY_CHECK,  RECEIPT_PROCESSING_SETTINGS_CONNECTIVITY_CHECK,  RECEIPT_UPLOADED,  RECEIPT_UPDATED,  PROMPT_GENERATED,  };
+
+  @BuiltValueField(wireName: r'receiptId')
+  int? get receiptId;
 
   @BuiltValueField(wireName: r'ranByUserId')
   int? get ranByUserId;
@@ -88,6 +96,13 @@ class _$SystemTaskSerializer implements PrimitiveSerializer<SystemTask> {
     SystemTask object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.groupId != null) {
+      yield r'groupId';
+      yield serializers.serialize(
+        object.groupId,
+        specifiedType: const FullType(int),
+      );
+    }
     if (object.startedAt != null) {
       yield r'startedAt';
       yield serializers.serialize(
@@ -154,6 +169,13 @@ class _$SystemTaskSerializer implements PrimitiveSerializer<SystemTask> {
       object.id,
       specifiedType: const FullType(int),
     );
+    if (object.receiptId != null) {
+      yield r'receiptId';
+      yield serializers.serialize(
+        object.receiptId,
+        specifiedType: const FullType(int),
+      );
+    }
     if (object.ranByUserId != null) {
       yield r'ranByUserId';
       yield serializers.serialize(
@@ -205,6 +227,13 @@ class _$SystemTaskSerializer implements PrimitiveSerializer<SystemTask> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'groupId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.groupId = valueDes;
+          break;
         case r'startedAt':
           final valueDes = serializers.deserialize(
             value,
@@ -274,6 +303,13 @@ class _$SystemTaskSerializer implements PrimitiveSerializer<SystemTask> {
             specifiedType: const FullType(int),
           ) as int;
           result.id = valueDes;
+          break;
+        case r'receiptId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.receiptId = valueDes;
           break;
         case r'ranByUserId':
           final valueDes = serializers.deserialize(

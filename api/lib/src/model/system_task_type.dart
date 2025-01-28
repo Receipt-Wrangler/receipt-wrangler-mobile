@@ -11,8 +11,6 @@ part 'system_task_type.g.dart';
 
 class SystemTaskType extends EnumClass {
 
-  @BuiltValueEnumConst(wireName: r'META_ASSOCIATE_TASKS_TO_RECEIPT')
-  static const SystemTaskType META_ASSOCIATE_TASKS_TO_RECEIPT = _$META_ASSOCIATE_TASKS_TO_RECEIPT;
   @BuiltValueEnumConst(wireName: r'OCR_PROCESSING')
   static const SystemTaskType OCR_PROCESSING = _$OCR_PROCESSING;
   @BuiltValueEnumConst(wireName: r'CHAT_COMPLETION')
@@ -23,8 +21,6 @@ class SystemTaskType extends EnumClass {
   static const SystemTaskType QUICK_SCAN = _$QUICK_SCAN;
   @BuiltValueEnumConst(wireName: r'EMAIL_READ')
   static const SystemTaskType EMAIL_READ = _$EMAIL_READ;
-  @BuiltValueEnumConst(wireName: r'META_COMBINE_QUICK_SCAN')
-  static const SystemTaskType META_COMBINE_QUICK_SCAN = _$META_COMBINE_QUICK_SCAN;
   @BuiltValueEnumConst(wireName: r'EMAIL_UPLOAD')
   static const SystemTaskType EMAIL_UPLOAD = _$EMAIL_UPLOAD;
   @BuiltValueEnumConst(wireName: r'SYSTEM_EMAIL_CONNECTIVITY_CHECK')

@@ -13,7 +13,9 @@ Name | Type | Description | Notes
 **status** | [**SystemTaskStatus**](SystemTaskStatus.md) |  | 
 **startedAt** | **String** |  | 
 **endedAt** | **String** |  | 
-**ranByUserId** | **int** |  | 
+**ranByUserId** | **int** |  | [optional] 
+**receiptId** | **int** |  | [optional] 
+**groupId** | **int** |  | [optional] 
 **canBeRestarted** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

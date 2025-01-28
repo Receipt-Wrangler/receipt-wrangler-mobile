@@ -40,7 +40,7 @@ part 'paged_data_data_inner.g.dart';
 /// * [createdAt] 
 /// * [createdBy] 
 /// * [date] - Receipt date
-/// * [groupId] - Group foreign key
+/// * [groupId] 
 /// * [id] 
 /// * [imageFiles] - Files associated to receipt
 /// * [name] - Name of the settings
@@ -65,6 +65,7 @@ part 'paged_data_data_inner.g.dart';
 /// * [associatedEntityId] 
 /// * [associatedEntityType] 
 /// * [ranByUserId] 
+/// * [receiptId] 
 /// * [resultDescription] 
 /// * [childSystemTasks] 
 /// * [aiType] 

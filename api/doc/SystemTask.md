@@ -20,6 +20,8 @@ Name | Type | Description | Notes
 **associatedEntityId** | **int** |  | [optional] 
 **associatedEntityType** | [**AssociatedEntityType**](AssociatedEntityType.md) |  | [optional] 
 **ranByUserId** | **int** |  | [optional] 
+**receiptId** | **int** |  | [optional] 
+**groupId** | **int** |  | [optional] 
 **resultDescription** | **String** |  | [optional] 
 **childSystemTasks** | [**BuiltList&lt;SystemTask&gt;**](SystemTask.md) |  | [optional] 
 
