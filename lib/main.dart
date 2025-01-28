@@ -41,6 +41,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import 'client/client.dart';
 import 'constants/search.dart';
@@ -163,6 +164,12 @@ final _router = GoRouter(
                 if (isReady && idsAreDifferent) {
                   receiptModel.setReceipt(
                       snapshot.data?.data as api.Receipt, false);
+                }
+
+                if (snapshot.hasError) {
+                  Future.microtask(() =>
+                      showErrorSnackbar(context, "Receipt not available"));
+                  context.go('/');
                 }
 
                 return ScreenWrapper(

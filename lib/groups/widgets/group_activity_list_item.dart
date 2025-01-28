@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/client/client.dart';
@@ -78,13 +79,18 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
 
   Widget buildListTile() {
     return ListTile(
-        leading: getLeadingWidget(),
-        subtitle: buildSubtitleWidget(),
-        title: Text(
-          getActivityTypeDisplay(widget.activity.type),
-          style: boldText,
-        ),
-        trailing: getTrailingWidget());
+      leading: getLeadingWidget(),
+      subtitle: buildSubtitleWidget(),
+      title: Text(
+        getActivityTypeDisplay(widget.activity.type),
+        style: boldText,
+      ),
+      trailing: getTrailingWidget(),
+      onTap: () => {
+        if (widget.activity.receiptId != null)
+          {context.go('/receipts/${widget.activity.receiptId}/view')}
+      },
+    );
   }
 
   Widget buildSlideableAction() {
