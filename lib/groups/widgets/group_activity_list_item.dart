@@ -65,6 +65,14 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
       displayName = user?.displayName ?? "Unknown";
     }
 
+    var group = groupModel.getGroupById(widget.groupId.toString());
+    if (group?.isAllGroup ?? false) {
+      var taskGroup =
+          groupModel.getGroupById(widget.activity.groupId.toString());
+
+      return Text("Ran by ${displayName} in ${taskGroup?.name ?? 'Unknown'} ");
+    }
+
     return Text("Ran by ${displayName}");
   }
 
