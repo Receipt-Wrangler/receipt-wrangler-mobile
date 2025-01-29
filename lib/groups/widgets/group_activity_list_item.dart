@@ -10,6 +10,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/slidable_widget.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import '../../constants/colors.dart';
+import '../../extensions/duration.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../models/user_model.dart';
@@ -54,9 +55,16 @@ class _GroupActivityListItem extends State<GroupActivityListItem> {
   }
 
   Widget getTrailingWidget() {
-    return ListItemTrailingStatus(
-        color: getActivityColor(),
-        text: getActivityStatusDisplay(widget.activity.status));
+    return Column(
+      children: [
+        Text(widget.activity.startedAt.toDurationString()),
+        ListItemTrailingStatus(
+          color: getActivityColor(),
+          text: getActivityStatusDisplay(widget.activity.status),
+          height: 40,
+        )
+      ],
+    );
   }
 
   Widget buildSubtitleWidget() {
