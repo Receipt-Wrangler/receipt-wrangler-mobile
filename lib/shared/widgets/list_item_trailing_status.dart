@@ -5,11 +5,14 @@ class ListItemTrailingStatus extends StatefulWidget {
     super.key,
     required this.color,
     required this.text,
+    this.height = 50,
   });
 
   final Color color;
 
   final String text;
+
+  final double height;
 
   @override
   _ListItemTrailingStatusState createState() {
@@ -24,7 +27,7 @@ class _ListItemTrailingStatusState extends State<ListItemTrailingStatus> {
 
     return Container(
       width: 100,
-      height: 50,
+      height: widget.height,
       decoration: BoxDecoration(
           gradient: LinearGradient(
         begin: Alignment.centerLeft,
