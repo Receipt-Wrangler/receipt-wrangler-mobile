@@ -91,10 +91,6 @@ Future<void> _submitQuickScan(
   var defaultStatus =
       userPreferenceModel.userPreferences.quickScanDefaultStatus;
 
-  print(defaultGroupId);
-  print(defaultPaidById);
-  print(defaultStatus);
-
   for (var (index, image) in images.indexed) {
     files.add(image.multipartFile);
     if (image.formKey.currentState != null &&
