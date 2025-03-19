@@ -35,16 +35,24 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   // TODO: refactor to a common Widget to use in receipt form
   Widget _buildGroupField() {
-    int? initialValue = null;
+    // Get the list of groups for dropdown
+    final dropdownItems = buildGroupDropDownMenuItems(context);
 
+    // Set initialValue based on userPreferences if available, otherwise null
+    int? initialValue = null;
     if ((userPreferences.quickScanDefaultGroupId ?? 0) > 0) {
-      initialValue = userPreferences.quickScanDefaultGroupId;
+      // Make sure initialValue exists in the dropdown items
+      final exists = dropdownItems
+          .any((item) => item.value == userPreferences.quickScanDefaultGroupId);
+      if (exists) {
+        initialValue = userPreferences.quickScanDefaultGroupId;
+      }
     }
 
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      items: buildGroupDropDownMenuItems(context),
+      items: dropdownItems,
       validator: FormBuilderValidators.required(),
       initialValue: initialValue,
       onChanged: (value) {
@@ -62,12 +70,17 @@ class _QuickScanForm extends State<QuickScanForm> {
 
     if (groupId > 0) {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
-    }
 
-    if (groupId != 0 &&
-        groupId == userPreferences.quickScanDefaultGroupId &&
-        userPreferences.userId > 0) {
-      initialValue = userPreferences.quickScanDefaultPaidById;
+      // Only set initialValue if the group matches and paid by ID exists
+      if (groupId == userPreferences.quickScanDefaultGroupId &&
+          userPreferences.quickScanDefaultPaidById != null) {
+        // Check if the initialValue exists in the items
+        final exists = items.any(
+            (item) => item.value == userPreferences.quickScanDefaultPaidById);
+        if (exists) {
+          initialValue = userPreferences.quickScanDefaultPaidById;
+        }
+      }
     }
 
     return FormBuilderDropdown(
@@ -85,8 +98,16 @@ class _QuickScanForm extends State<QuickScanForm> {
         Provider.of<UserPreferencesModel>(context, listen: false);
 
     if (userPreferencesModel.userPreferences.quickScanDefaultStatus != null) {
-      initialValue =
-          userPreferencesModel.userPreferences.quickScanDefaultStatus;
+      // Make sure the status is one of the valid options
+      final statusOptions = buildReceiptStatusDropDownMenuItems();
+      final exists = statusOptions.any((item) =>
+          item.value ==
+          userPreferencesModel.userPreferences.quickScanDefaultStatus);
+
+      if (exists) {
+        initialValue =
+            userPreferencesModel.userPreferences.quickScanDefaultStatus;
+      }
     }
 
     return FormBuilderDropdown(
