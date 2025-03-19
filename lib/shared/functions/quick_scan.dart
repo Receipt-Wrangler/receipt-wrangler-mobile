@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:openapi/openapi.dart' as api;
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
@@ -29,6 +31,8 @@ Widget _getUploadIcon(
           var quickScanImage =
               QuickScanImage.fromUploadMultipartFileData(image);
           quickScanImages.add(quickScanImage);
+          print("in scan");
+          print(quickScanImage.formKey);
         }
         imageSubject.add(imageSubject.value + quickScanImages);
       }
@@ -77,16 +81,47 @@ Future<void> _submitQuickScan(
     return;
   }
 
-  for (var image in images) {
-    if (image.formKey.currentState!.saveAndValidate()) {
+  late final userPreferenceModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
+  var errored = false;
+  var defaultGroupId =
+      userPreferenceModel.userPreferences.quickScanDefaultGroupId;
+  var defaultPaidById =
+      userPreferenceModel.userPreferences.quickScanDefaultPaidById;
+  var defaultStatus =
+      userPreferenceModel.userPreferences.quickScanDefaultStatus;
+
+  print(defaultGroupId);
+  print(defaultPaidById);
+  print(defaultStatus);
+
+  for (var (index, image) in images.indexed) {
+    files.add(image.multipartFile);
+    if (image.formKey.currentState != null &&
+        image.formKey.currentState!.saveAndValidate()) {
       var form = image.formKey.currentState!.value;
-      files.add(image.multipartFile);
       groupIds.add(form["groupId"]);
       paidByUserIds.add(form["paidByUserId"]);
       statuses.add(form["status"]);
+    } else if (defaultGroupId != 0 &&
+        defaultPaidById != 0 &&
+        defaultStatus != api.ReceiptStatus.empty) {
+      groupIds.add(defaultGroupId ?? 0);
+      paidByUserIds.add(defaultPaidById ?? 0);
+      statuses.add(defaultStatus ?? api.ReceiptStatus.empty);
     } else {
-      return;
+      errored = true;
+      showErrorSnackbar(
+          context,
+          "Please fix error on quick scan " +
+              (index + 1).toString() +
+              " to continue");
+      break;
     }
+  }
+
+  if (errored) {
+    return;
   }
 
   try {
