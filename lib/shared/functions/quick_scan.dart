@@ -27,12 +27,14 @@ Widget _getUploadIcon(
       var uploadedImages = await scanImagesMultiPart(100);
       if (uploadedImages.isNotEmpty) {
         List<QuickScanImage> quickScanImages = [];
+        var initialQuickScanValues = _getInitialQuickScanValues(context);
         for (var image in uploadedImages) {
-          var quickScanImage =
-              QuickScanImage.fromUploadMultipartFileData(image);
+          var quickScanImage = QuickScanImage.fromUploadMultipartFileData(
+              image,
+              initialQuickScanValues.groupId,
+              initialQuickScanValues.paidByUserId,
+              initialQuickScanValues.status);
           quickScanImages.add(quickScanImage);
-          print("in scan");
-          print(quickScanImage.formKey);
         }
         imageSubject.add(imageSubject.value + quickScanImages);
       }
@@ -48,15 +50,31 @@ Widget _getGalleryUploadImage(
       var uploadedImages = await getGalleryImages();
       if (uploadedImages.isNotEmpty) {
         List<QuickScanImage> quickScanImages = [];
+        var initialQuickScanValues = _getInitialQuickScanValues(context);
         for (var image in uploadedImages) {
-          var quickScanImage =
-              QuickScanImage.fromUploadMultipartFileData(image);
+          var quickScanImage = QuickScanImage.fromUploadMultipartFileData(
+              image,
+              initialQuickScanValues.groupId,
+              initialQuickScanValues.paidByUserId,
+              initialQuickScanValues.status);
           quickScanImages.add(quickScanImage);
         }
 
         imageSubject.add(imageSubject.value + quickScanImages);
       }
     },
+  );
+}
+
+({int? groupId, int? paidByUserId, api.ReceiptStatus? status})
+    _getInitialQuickScanValues(BuildContext context) {
+  late final userPreferenceModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
+  final userPreferences = userPreferenceModel.userPreferences;
+  return (
+    groupId: userPreferences.quickScanDefaultGroupId,
+    paidByUserId: userPreferences.quickScanDefaultPaidById,
+    status: userPreferences.quickScanDefaultStatus,
   );
 }
 
@@ -99,6 +117,8 @@ Future<void> _submitQuickScan(
     var isStatusValid =
         image.status != null && image.status != api.ReceiptStatus.empty;
 
+    // TODO: refactor to init image with defaults
+    // TODO: fix delete
     if (isGroupIdValid && isPaidByUserIdValid && isStatusValid) {
       groupIds.add(image.groupId as int);
       paidByUserIds.add(image.paidByUserId as int);

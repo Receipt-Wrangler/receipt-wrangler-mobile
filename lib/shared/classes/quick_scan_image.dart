@@ -24,7 +24,10 @@ class QuickScanImage extends UploadMultipartFileData {
   ReceiptStatus? status;
 
   static QuickScanImage fromUploadMultipartFileData(
-      UploadMultipartFileData data) {
+      UploadMultipartFileData data,
+      int? initialGroupId,
+      int? initialPaidByUserId,
+      ReceiptStatus? initialStatus) {
     return QuickScanImage(
         multipartFile: data.multipartFile,
         bytes: data.bytes,
