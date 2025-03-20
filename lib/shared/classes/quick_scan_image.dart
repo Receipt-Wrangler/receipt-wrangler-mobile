@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.dart';
 
 class QuickScanImage extends UploadMultipartFileData {
@@ -15,6 +16,12 @@ class QuickScanImage extends UploadMultipartFileData {
   final Uint8List bytes;
 
   final GlobalKey<FormBuilderState> formKey;
+
+  int? groupId;
+
+  int? paidByUserId;
+
+  ReceiptStatus? status;
 
   static QuickScanImage fromUploadMultipartFileData(
       UploadMultipartFileData data) {

@@ -48,7 +48,14 @@ class _QuickScan extends State<QuickScan> {
                 padding: getImageDataPadding(),
                 child: QuickScanForm(
                   formKey: widget.imageSubject.value[realIndex].formKey,
+                  image: widget.imageSubject.value[realIndex],
                   index: realIndex,
+                  onDisposeCallback: (groupId, paidByUserId, status) {
+                    widget.imageSubject.value[realIndex].groupId = groupId;
+                    widget.imageSubject.value[realIndex].paidByUserId =
+                        paidByUserId;
+                    widget.imageSubject.value[realIndex].status = status;
+                  },
                 ),
               )
             ],

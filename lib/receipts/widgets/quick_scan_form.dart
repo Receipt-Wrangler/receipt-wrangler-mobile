@@ -4,16 +4,26 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
-  const QuickScanForm({super.key, required this.formKey, required this.index});
+  const QuickScanForm(
+      {super.key,
+      required this.formKey,
+      required this.image,
+      required this.index,
+      required this.onDisposeCallback});
 
   final GlobalKey<FormBuilderState> formKey;
 
+  final QuickScanImage image;
+
   final int index;
+
+  final void Function(int?, int?, api.ReceiptStatus?) onDisposeCallback;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -30,7 +40,20 @@ class _QuickScanForm extends State<QuickScanForm> {
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
 
-    groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId ?? 0;
+    groupId = widget.image.groupId ??
+        userPreferencesModel.userPreferences.quickScanDefaultGroupId ??
+        0;
+  }
+
+  @override
+  deactivate() {
+    widget.formKey.currentState!.save();
+    var formValue = widget.formKey.currentState!.value;
+
+    widget.onDisposeCallback(
+        formValue["groupId"], formValue["paidByUserId"], formValue["status"]);
+
+    super.deactivate();
   }
 
   // TODO: refactor to a common Widget to use in receipt form
@@ -38,9 +61,9 @@ class _QuickScanForm extends State<QuickScanForm> {
     // Get the list of groups for dropdown
     final dropdownItems = buildGroupDropDownMenuItems(context);
 
-    // Set initialValue based on userPreferences if available, otherwise null
-    int? initialValue = null;
-    if ((userPreferences.quickScanDefaultGroupId ?? 0) > 0) {
+    int? initialValue = widget.image.groupId;
+    if (initialValue == null &&
+        (userPreferences.quickScanDefaultGroupId ?? 0) > 0) {
       // Make sure initialValue exists in the dropdown items
       final exists = dropdownItems
           .any((item) => item.value == userPreferences.quickScanDefaultGroupId);
@@ -66,13 +89,14 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   Widget _buildUserDropDown() {
     List<DropdownMenuItem> items = [];
-    int? initialValue = null;
+    int? initialValue = widget.image.paidByUserId;
 
     if (groupId > 0) {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
 
       // Only set initialValue if the group matches and paid by ID exists
-      if (groupId == userPreferences.quickScanDefaultGroupId &&
+      if (initialValue == null &&
+          groupId == userPreferences.quickScanDefaultGroupId &&
           userPreferences.quickScanDefaultPaidById != null) {
         // Check if the initialValue exists in the items
         final exists = items.any(
@@ -93,11 +117,12 @@ class _QuickScanForm extends State<QuickScanForm> {
   }
 
   Widget _buildStatusDropdown() {
-    api.ReceiptStatus? initialValue = null;
+    api.ReceiptStatus? initialValue = widget.image.status;
     var userPreferencesModel =
         Provider.of<UserPreferencesModel>(context, listen: false);
 
-    if (userPreferencesModel.userPreferences.quickScanDefaultStatus != null) {
+    if (initialValue == null &&
+        userPreferencesModel.userPreferences.quickScanDefaultStatus != null) {
       // Make sure the status is one of the valid options
       final statusOptions = buildReceiptStatusDropDownMenuItems();
       final exists = statusOptions.any((item) =>
