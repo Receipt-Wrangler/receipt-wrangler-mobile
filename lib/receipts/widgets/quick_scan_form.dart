@@ -15,7 +15,7 @@ class QuickScanForm extends StatefulWidget {
       required this.formKey,
       required this.image,
       required this.index,
-      required this.onDisposeCallback});
+      required this.onDeactivateCallback});
 
   final GlobalKey<FormBuilderState> formKey;
 
@@ -23,7 +23,7 @@ class QuickScanForm extends StatefulWidget {
 
   final int index;
 
-  final void Function(int?, int?, api.ReceiptStatus?) onDisposeCallback;
+  final void Function(int?, int?, api.ReceiptStatus?) onDeactivateCallback;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -50,7 +50,7 @@ class _QuickScanForm extends State<QuickScanForm> {
     widget.formKey.currentState!.save();
     var formValue = widget.formKey.currentState!.value;
 
-    widget.onDisposeCallback(
+    widget.onDeactivateCallback(
         formValue["groupId"], formValue["paidByUserId"], formValue["status"]);
 
     super.deactivate();

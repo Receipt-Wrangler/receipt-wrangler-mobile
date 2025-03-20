@@ -93,12 +93,16 @@ Future<void> _submitQuickScan(
 
   for (var (index, image) in images.indexed) {
     files.add(image.multipartFile);
-    if (image.formKey.currentState != null &&
-        image.formKey.currentState!.saveAndValidate()) {
-      var form = image.formKey.currentState!.value;
-      groupIds.add(form["groupId"]);
-      paidByUserIds.add(form["paidByUserId"]);
-      statuses.add(form["status"]);
+    var isGroupIdValid = image.groupId != null && (image.groupId ?? 0) > 0;
+    var isPaidByUserIdValid =
+        image.paidByUserId != null && (image.paidByUserId ?? 0) > 0;
+    var isStatusValid =
+        image.status != null && image.status != api.ReceiptStatus.empty;
+
+    if (isGroupIdValid && isPaidByUserIdValid && isStatusValid) {
+      groupIds.add(image.groupId as int);
+      paidByUserIds.add(image.paidByUserId as int);
+      statuses.add(image.status as api.ReceiptStatus);
     } else if (defaultGroupId != 0 &&
         defaultPaidById != 0 &&
         defaultStatus != api.ReceiptStatus.empty) {

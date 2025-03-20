@@ -50,7 +50,7 @@ class _QuickScan extends State<QuickScan> {
                   formKey: widget.imageSubject.value[realIndex].formKey,
                   image: widget.imageSubject.value[realIndex],
                   index: realIndex,
-                  onDisposeCallback: (groupId, paidByUserId, status) {
+                  onDeactivateCallback: (groupId, paidByUserId, status) {
                     widget.imageSubject.value[realIndex].groupId = groupId;
                     widget.imageSubject.value[realIndex].paidByUserId =
                         paidByUserId;
