@@ -173,7 +173,7 @@ Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
 showQuickScanBottomSheet(context) {
   if (!hasAiPoweredReceipts(context)) {
     showErrorSnackbar(context,
-        "AI Powered Receipts required to use Quick Scan. Currently this is the only way to add receipts. Contact your administrator for more information.");
+        "A configured Receipt Processing Settings is required to use Quick Scan. Contact your administrator for more information.");
     return;
   }
 
