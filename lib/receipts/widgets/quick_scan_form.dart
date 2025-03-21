@@ -4,16 +4,23 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
+import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../models/user_preferences_model.dart';
 
 class QuickScanForm extends StatefulWidget {
-  const QuickScanForm({super.key, required this.formKey, required this.index});
+  const QuickScanForm(
+      {super.key,
+      required this.formKey,
+      required this.image,
+      required this.index,
+      required this.onFormChangeCallback});
 
   final GlobalKey<FormBuilderState> formKey;
-
+  final QuickScanImage image;
   final int index;
+  final void Function(int?, int?, api.ReceiptStatus?) onFormChangeCallback;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -27,27 +34,34 @@ class _QuickScanForm extends State<QuickScanForm> {
   @override
   initState() {
     super.initState();
-    var userPreferencesModel =
-        Provider.of<UserPreferencesModel>(context, listen: false);
+    groupId = widget.image.groupId ?? 0;
+  }
 
-    groupId = userPreferencesModel.userPreferences.quickScanDefaultGroupId ?? 0;
+  void onValueChange() {
+    widget.formKey.currentState!.save();
+    var formValue = widget.formKey.currentState!.value;
+    widget.onFormChangeCallback(
+        formValue["groupId"], formValue["paidByUserId"], formValue["status"]);
   }
 
   // TODO: refactor to a common Widget to use in receipt form
   Widget _buildGroupField() {
-    int? initialValue = null;
+    // Get the list of groups for dropdown
+    final dropdownItems = buildGroupDropDownMenuItems(context);
+    int? initialValue = widget.image.groupId;
 
-    if ((userPreferences.quickScanDefaultGroupId ?? 0) > 0) {
-      initialValue = userPreferences.quickScanDefaultGroupId;
-    }
+    // Check if initialValue exists in the dropdown items
+    bool valueExists = dropdownItems.any((item) => item.value == initialValue);
 
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      items: buildGroupDropDownMenuItems(context),
+      items: dropdownItems,
       validator: FormBuilderValidators.required(),
-      initialValue: initialValue,
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
       onChanged: (value) {
+        onValueChange();
         setState(() {
           widget.formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
@@ -58,43 +72,45 @@ class _QuickScanForm extends State<QuickScanForm> {
 
   Widget _buildUserDropDown() {
     List<DropdownMenuItem> items = [];
-    int? initialValue = null;
+    int? initialValue = widget.image.paidByUserId;
 
     if (groupId > 0) {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
     }
 
-    if (groupId != 0 &&
-        groupId == userPreferences.quickScanDefaultGroupId &&
-        userPreferences.userId > 0) {
-      initialValue = userPreferences.quickScanDefaultPaidById;
-    }
+    // Check if initialValue exists in the dropdown items
+    bool valueExists = items.any((item) => item.value == initialValue);
 
     return FormBuilderDropdown(
       name: "paidByUserId",
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items,
       validator: FormBuilderValidators.required(),
-      initialValue: initialValue,
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
+      onChanged: (value) {
+        onValueChange();
+      },
     );
   }
 
   Widget _buildStatusDropdown() {
-    api.ReceiptStatus? initialValue = null;
-    var userPreferencesModel =
-        Provider.of<UserPreferencesModel>(context, listen: false);
+    api.ReceiptStatus? initialValue = widget.image.status;
+    final items = buildReceiptStatusDropDownMenuItems();
 
-    if (userPreferencesModel.userPreferences.quickScanDefaultStatus != null) {
-      initialValue =
-          userPreferencesModel.userPreferences.quickScanDefaultStatus;
-    }
+    // Check if initialValue exists in the dropdown items
+    bool valueExists = items.any((item) => item.value == initialValue);
 
     return FormBuilderDropdown(
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
-      items: buildReceiptStatusDropDownMenuItems(),
+      items: items,
       validator: FormBuilderValidators.required(),
-      initialValue: initialValue,
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
+      onChanged: (value) {
+        onValueChange();
+      },
     );
   }
 

@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:openapi/openapi.dart' as api;
+import 'package:provider/provider.dart';
+import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_scan.dart';
 import 'package:receipt_wrangler_mobile/shared/classes/quick_scan_image.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
@@ -25,9 +27,13 @@ Widget _getUploadIcon(
       var uploadedImages = await scanImagesMultiPart(100);
       if (uploadedImages.isNotEmpty) {
         List<QuickScanImage> quickScanImages = [];
+        var initialQuickScanValues = _getInitialQuickScanValues(context);
         for (var image in uploadedImages) {
-          var quickScanImage =
-              QuickScanImage.fromUploadMultipartFileData(image);
+          var quickScanImage = QuickScanImage.fromUploadMultipartFileData(
+              image,
+              initialQuickScanValues.groupId,
+              initialQuickScanValues.paidByUserId,
+              initialQuickScanValues.status);
           quickScanImages.add(quickScanImage);
         }
         imageSubject.add(imageSubject.value + quickScanImages);
@@ -44,15 +50,31 @@ Widget _getGalleryUploadImage(
       var uploadedImages = await getGalleryImages();
       if (uploadedImages.isNotEmpty) {
         List<QuickScanImage> quickScanImages = [];
+        var initialQuickScanValues = _getInitialQuickScanValues(context);
         for (var image in uploadedImages) {
-          var quickScanImage =
-              QuickScanImage.fromUploadMultipartFileData(image);
+          var quickScanImage = QuickScanImage.fromUploadMultipartFileData(
+              image,
+              initialQuickScanValues.groupId,
+              initialQuickScanValues.paidByUserId,
+              initialQuickScanValues.status);
           quickScanImages.add(quickScanImage);
         }
 
         imageSubject.add(imageSubject.value + quickScanImages);
       }
     },
+  );
+}
+
+({int? groupId, int? paidByUserId, api.ReceiptStatus? status})
+    _getInitialQuickScanValues(BuildContext context) {
+  late final userPreferenceModel =
+      Provider.of<UserPreferencesModel>(context, listen: false);
+  final userPreferences = userPreferenceModel.userPreferences;
+  return (
+    groupId: userPreferences.quickScanDefaultGroupId,
+    paidByUserId: userPreferences.quickScanDefaultPaidById,
+    status: userPreferences.quickScanDefaultStatus,
   );
 }
 
@@ -77,16 +99,32 @@ Future<void> _submitQuickScan(
     return;
   }
 
-  for (var image in images) {
-    if (image.formKey.currentState!.saveAndValidate()) {
-      var form = image.formKey.currentState!.value;
-      files.add(image.multipartFile);
-      groupIds.add(form["groupId"]);
-      paidByUserIds.add(form["paidByUserId"]);
-      statuses.add(form["status"]);
+  var errored = false;
+  for (var (index, image) in images.indexed) {
+    files.add(image.multipartFile);
+    var isGroupIdValid = image.groupId != null && (image.groupId ?? 0) > 0;
+    var isPaidByUserIdValid =
+        image.paidByUserId != null && (image.paidByUserId ?? 0) > 0;
+    var isStatusValid =
+        image.status != null && image.status != api.ReceiptStatus.empty;
+
+    if (isGroupIdValid && isPaidByUserIdValid && isStatusValid) {
+      groupIds.add(image.groupId as int);
+      paidByUserIds.add(image.paidByUserId as int);
+      statuses.add(image.status as api.ReceiptStatus);
     } else {
-      return;
+      errored = true;
+      showErrorSnackbar(
+          context,
+          "Please fix error on quick scan " +
+              (index + 1).toString() +
+              " to continue");
+      break;
     }
+  }
+
+  if (errored) {
+    return;
   }
 
   try {
@@ -134,7 +172,7 @@ Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
 showQuickScanBottomSheet(context) {
   if (!hasAiPoweredReceipts(context)) {
     showErrorSnackbar(context,
-        "AI Powered Receipts required to use Quick Scan. Currently this is the only way to add receipts. Contact your administrator for more information.");
+        "A configured Receipt Processing Settings is required to use Quick Scan. Contact your administrator for more information.");
     return;
   }
 

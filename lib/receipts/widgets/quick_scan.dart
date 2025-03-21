@@ -40,17 +40,31 @@ class _QuickScan extends State<QuickScan> {
       axisDirection: Axis.horizontal,
       loop: false,
       itemBuilder: (BuildContext context, int itemIndex, int realIndex) {
-        return Column(
-          children: [
-            _buildImagePreview(realIndex),
-            Padding(
-              padding: getImageDataPadding(),
-              child: QuickScanForm(
-                formKey: widget.imageSubject.value[realIndex].formKey,
-                index: realIndex,
-              ),
-            )
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildImagePreview(realIndex),
+              Padding(
+                padding: getImageDataPadding(),
+                child: QuickScanForm(
+                  formKey: widget.imageSubject.value[realIndex].formKey,
+                  image: widget.imageSubject.value[realIndex],
+                  index: realIndex,
+                  onFormChangeCallback: (groupId, paidByUserId, status) {
+                    var newImage = widget.imageSubject.value[realIndex];
+                    newImage.groupId = groupId;
+                    newImage.paidByUserId = paidByUserId;
+                    newImage.status = status;
+
+                    var newImages = widget.imageSubject.value;
+
+                    newImages[realIndex] = newImage;
+                    widget.imageSubject.add(newImages);
+                  },
+                ),
+              )
+            ],
+          ),
         );
       },
     );
