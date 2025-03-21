@@ -15,12 +15,12 @@ class QuickScanForm extends StatefulWidget {
       required this.formKey,
       required this.image,
       required this.index,
-      required this.onDeactivateCallback});
+      required this.onFormChangeCallback});
 
   final GlobalKey<FormBuilderState> formKey;
   final QuickScanImage image;
   final int index;
-  final void Function(int?, int?, api.ReceiptStatus?) onDeactivateCallback;
+  final void Function(int?, int?, api.ReceiptStatus?) onFormChangeCallback;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -40,7 +40,7 @@ class _QuickScanForm extends State<QuickScanForm> {
   void onValueChange() {
     widget.formKey.currentState!.save();
     var formValue = widget.formKey.currentState!.value;
-    widget.onDeactivateCallback(
+    widget.onFormChangeCallback(
         formValue["groupId"], formValue["paidByUserId"], formValue["status"]);
   }
 
@@ -58,9 +58,8 @@ class _QuickScanForm extends State<QuickScanForm> {
       decoration: const InputDecoration(labelText: "Group"),
       items: dropdownItems,
       validator: FormBuilderValidators.required(),
-      initialValue: valueExists
-          ? initialValue
-          : null, // Set to null if value doesn't exist
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();
         setState(() {
@@ -87,9 +86,8 @@ class _QuickScanForm extends State<QuickScanForm> {
       decoration: const InputDecoration(labelText: "Paid By"),
       items: items,
       validator: FormBuilderValidators.required(),
-      initialValue: valueExists
-          ? initialValue
-          : null, // Set to null if value doesn't exist
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();
       },
@@ -108,9 +106,8 @@ class _QuickScanForm extends State<QuickScanForm> {
       decoration: const InputDecoration(labelText: "Status"),
       items: items,
       validator: FormBuilderValidators.required(),
-      initialValue: valueExists
-          ? initialValue
-          : null, // Set to null if value doesn't exist
+      initialValue: valueExists ? initialValue : null,
+      // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();
       },
