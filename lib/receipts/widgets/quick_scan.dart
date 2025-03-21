@@ -51,10 +51,15 @@ class _QuickScan extends State<QuickScan> {
                   image: widget.imageSubject.value[realIndex],
                   index: realIndex,
                   onDeactivateCallback: (groupId, paidByUserId, status) {
-                    widget.imageSubject.value[realIndex].groupId = groupId;
-                    widget.imageSubject.value[realIndex].paidByUserId =
-                        paidByUserId;
-                    widget.imageSubject.value[realIndex].status = status;
+                    var newImage = widget.imageSubject.value[realIndex];
+                    newImage.groupId = groupId;
+                    newImage.paidByUserId = paidByUserId;
+                    newImage.status = status;
+
+                    var newImages = widget.imageSubject.value;
+
+                    newImages[realIndex] = newImage;
+                    widget.imageSubject.add(newImages);
                   },
                 ),
               )

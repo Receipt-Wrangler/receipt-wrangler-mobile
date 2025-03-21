@@ -8,7 +8,12 @@ import 'package:receipt_wrangler_mobile/interfaces/upload_multipart_file_data.da
 
 class QuickScanImage extends UploadMultipartFileData {
   QuickScanImage(
-      {required this.multipartFile, required this.bytes, required this.formKey})
+      {required this.multipartFile,
+      required this.bytes,
+      required this.formKey,
+      this.groupId,
+      this.paidByUserId,
+      this.status})
       : super(multipartFile: multipartFile, bytes: bytes);
 
   final MultipartFile multipartFile;
@@ -31,6 +36,9 @@ class QuickScanImage extends UploadMultipartFileData {
     return QuickScanImage(
         multipartFile: data.multipartFile,
         bytes: data.bytes,
-        formKey: GlobalKey<FormBuilderState>());
+        formKey: GlobalKey<FormBuilderState>(),
+        groupId: initialGroupId,
+        paidByUserId: initialPaidByUserId,
+        status: initialStatus);
   }
 }

@@ -99,16 +99,7 @@ Future<void> _submitQuickScan(
     return;
   }
 
-  late final userPreferenceModel =
-      Provider.of<UserPreferencesModel>(context, listen: false);
   var errored = false;
-  var defaultGroupId =
-      userPreferenceModel.userPreferences.quickScanDefaultGroupId;
-  var defaultPaidById =
-      userPreferenceModel.userPreferences.quickScanDefaultPaidById;
-  var defaultStatus =
-      userPreferenceModel.userPreferences.quickScanDefaultStatus;
-
   for (var (index, image) in images.indexed) {
     files.add(image.multipartFile);
     var isGroupIdValid = image.groupId != null && (image.groupId ?? 0) > 0;
@@ -117,18 +108,11 @@ Future<void> _submitQuickScan(
     var isStatusValid =
         image.status != null && image.status != api.ReceiptStatus.empty;
 
-    // TODO: refactor to init image with defaults
     // TODO: fix delete
     if (isGroupIdValid && isPaidByUserIdValid && isStatusValid) {
       groupIds.add(image.groupId as int);
       paidByUserIds.add(image.paidByUserId as int);
       statuses.add(image.status as api.ReceiptStatus);
-    } else if (defaultGroupId != 0 &&
-        defaultPaidById != 0 &&
-        defaultStatus != api.ReceiptStatus.empty) {
-      groupIds.add(defaultGroupId ?? 0);
-      paidByUserIds.add(defaultPaidById ?? 0);
-      statuses.add(defaultStatus ?? api.ReceiptStatus.empty);
     } else {
       errored = true;
       showErrorSnackbar(
