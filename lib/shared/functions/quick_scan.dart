@@ -108,7 +108,6 @@ Future<void> _submitQuickScan(
     var isStatusValid =
         image.status != null && image.status != api.ReceiptStatus.empty;
 
-    // TODO: fix delete
     if (isGroupIdValid && isPaidByUserIdValid && isStatusValid) {
       groupIds.add(image.groupId as int);
       paidByUserIds.add(image.paidByUserId as int);
