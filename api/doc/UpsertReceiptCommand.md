@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **tags** | [**BuiltList&lt;UpsertTagCommand&gt;**](UpsertTagCommand.md) | Tags associated to receipt | [optional] 
 **receiptItems** | [**BuiltList&lt;UpsertItemCommand&gt;**](UpsertItemCommand.md) | Items associated to receipt | [optional] 
 **comments** | [**BuiltList&lt;UpsertCommentCommand&gt;**](UpsertCommentCommand.md) | Comments associated to receipt | [optional] 
+**customFields** | [**BuiltList&lt;UpsertCustomFieldCommand&gt;**](UpsertCustomFieldCommand.md) | Custom fields associated to receipt | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

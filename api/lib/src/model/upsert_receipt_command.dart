@@ -8,6 +8,7 @@ import 'package:openapi/src/model/receipt_status.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/upsert_category_command.dart';
 import 'package:openapi/src/model/upsert_comment_command.dart';
+import 'package:openapi/src/model/upsert_custom_field_command.dart';
 import 'package:openapi/src/model/upsert_tag_command.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -27,6 +28,7 @@ part 'upsert_receipt_command.g.dart';
 /// * [tags] - Tags associated to receipt
 /// * [receiptItems] - Items associated to receipt
 /// * [comments] - Comments associated to receipt
+/// * [customFields] - Custom fields associated to receipt
 @BuiltValue()
 abstract class UpsertReceiptCommand implements Built<UpsertReceiptCommand, UpsertReceiptCommandBuilder> {
   /// Receipt name
@@ -68,6 +70,10 @@ abstract class UpsertReceiptCommand implements Built<UpsertReceiptCommand, Upser
   /// Comments associated to receipt
   @BuiltValueField(wireName: r'comments')
   BuiltList<UpsertCommentCommand>? get comments;
+
+  /// Custom fields associated to receipt
+  @BuiltValueField(wireName: r'customFields')
+  BuiltList<UpsertCustomFieldCommand>? get customFields;
 
   UpsertReceiptCommand._();
 
@@ -148,6 +154,13 @@ class _$UpsertReceiptCommandSerializer implements PrimitiveSerializer<UpsertRece
       yield serializers.serialize(
         object.comments,
         specifiedType: const FullType(BuiltList, [FullType(UpsertCommentCommand)]),
+      );
+    }
+    if (object.customFields != null) {
+      yield r'customFields';
+      yield serializers.serialize(
+        object.customFields,
+        specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldCommand)]),
       );
     }
   }
@@ -242,6 +255,13 @@ class _$UpsertReceiptCommandSerializer implements PrimitiveSerializer<UpsertRece
             specifiedType: const FullType(BuiltList, [FullType(UpsertCommentCommand)]),
           ) as BuiltList<UpsertCommentCommand>;
           result.comments.replace(valueDes);
+          break;
+        case r'customFields':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldCommand)]),
+          ) as BuiltList<UpsertCustomFieldCommand>;
+          result.customFields.replace(valueDes);
           break;
         default:
           unhandled.add(key);

@@ -3,28 +3,31 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:openapi/src/model/tag_view.dart';
 import 'package:openapi/src/model/system_email.dart';
 import 'package:openapi/src/model/prompt.dart';
+import 'package:openapi/src/model/custom_field_value.dart';
 import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/group_member.dart';
-import 'package:openapi/src/model/ocr_engine.dart';
 import 'package:openapi/src/model/group.dart';
 import 'package:openapi/src/model/receipt.dart';
-import 'package:openapi/src/model/system_task.dart';
 import 'package:openapi/src/model/group_receipt_settings.dart';
-import 'package:openapi/src/model/ai_type.dart';
 import 'package:openapi/src/model/activity.dart';
 import 'package:openapi/src/model/group_settings.dart';
 import 'package:openapi/src/model/associated_entity_type.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:openapi/src/model/category.dart';
 import 'package:openapi/src/model/comment.dart';
+import 'package:openapi/src/model/custom_field_type.dart';
 import 'package:openapi/src/model/file_data.dart';
-import 'package:openapi/src/model/system_task_type.dart';
-import 'package:openapi/src/model/receipt_processing_settings.dart';
 import 'package:openapi/src/model/item.dart';
 import 'package:openapi/src/model/system_task_status.dart';
+import 'package:openapi/src/model/tag_view.dart';
+import 'package:openapi/src/model/custom_field.dart';
+import 'package:openapi/src/model/ocr_engine.dart';
+import 'package:openapi/src/model/system_task.dart';
+import 'package:openapi/src/model/ai_type.dart';
+import 'package:openapi/src/model/custom_field_option.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:openapi/src/model/category.dart';
+import 'package:openapi/src/model/receipt_processing_settings.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:one_of/any_of.dart';
@@ -37,13 +40,14 @@ part 'paged_data_data_inner.g.dart';
 /// * [amount] - Receipt total amount
 /// * [categories] - Categories associated to receipt
 /// * [comments] - Comments associated to receipt
+/// * [customFields] - Custom fields associated to receipt
 /// * [createdAt] 
 /// * [createdBy] 
 /// * [date] - Receipt date
 /// * [groupId] 
 /// * [id] 
 /// * [imageFiles] - Files associated to receipt
-/// * [name] - Name of the settings
+/// * [name] - Custom Field name
 /// * [paidByUserId] - User paid foreign key
 /// * [receiptItems] - Items associated to receipt
 /// * [resolvedDate] - Date resolved
@@ -51,7 +55,7 @@ part 'paged_data_data_inner.g.dart';
 /// * [tags] - Tags associated to receipt
 /// * [updatedAt] 
 /// * [createdByString] - Created by entity's name
-/// * [description] - Description of the settings
+/// * [description] - Custom Field description
 /// * [prompt] 
 /// * [groupSettings] 
 /// * [groupReceiptSettings] 
@@ -80,9 +84,10 @@ part 'paged_data_data_inner.g.dart';
 /// * [username] - IMAP username
 /// * [password] - IMAP password
 /// * [canBeRestarted] 
+/// * [options] 
 @BuiltValue()
 abstract class PagedDataDataInner implements Built<PagedDataDataInner, PagedDataDataInnerBuilder> {
-  /// Any Of [Activity], [Category], [Group], [Prompt], [Receipt], [ReceiptProcessingSettings], [SystemEmail], [SystemTask], [Tag], [TagView]
+  /// Any Of [Activity], [Category], [CustomField], [Group], [Prompt], [Receipt], [ReceiptProcessingSettings], [SystemEmail], [SystemTask], [Tag], [TagView]
   AnyOf get anyOf;
 
   PagedDataDataInner._();
@@ -128,7 +133,7 @@ class _$PagedDataDataInnerSerializer implements PrimitiveSerializer<PagedDataDat
   }) {
     final result = PagedDataDataInnerBuilder();
     Object? anyOfDataSrc;
-    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), FullType(Prompt), FullType(Group), FullType(TagView), FullType(SystemTask), FullType(ReceiptProcessingSettings), FullType(SystemEmail), FullType(Activity), ]);
+    final targetType = const FullType(AnyOf, [FullType(Receipt), FullType(Category), FullType(Tag), FullType(Prompt), FullType(Group), FullType(TagView), FullType(SystemTask), FullType(ReceiptProcessingSettings), FullType(SystemEmail), FullType(Activity), FullType(CustomField), ]);
     anyOfDataSrc = serialized;
     result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
     return result.build();

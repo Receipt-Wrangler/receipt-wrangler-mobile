@@ -30,8 +30,13 @@ import 'package:openapi/src/model/claims.dart';
 import 'package:openapi/src/model/comment.dart';
 import 'package:openapi/src/model/currency_separator.dart';
 import 'package:openapi/src/model/currency_symbol_position.dart';
+import 'package:openapi/src/model/custom_field.dart';
+import 'package:openapi/src/model/custom_field_option.dart';
+import 'package:openapi/src/model/custom_field_type.dart';
+import 'package:openapi/src/model/custom_field_value.dart';
 import 'package:openapi/src/model/dashboard.dart';
 import 'package:openapi/src/model/encoded_image.dart';
+import 'package:openapi/src/model/export_format.dart';
 import 'package:openapi/src/model/feature_config.dart';
 import 'package:openapi/src/model/file_data.dart';
 import 'package:openapi/src/model/file_data_view.dart';
@@ -87,6 +92,9 @@ import 'package:openapi/src/model/update_group_settings_command.dart';
 import 'package:openapi/src/model/update_profile_command.dart';
 import 'package:openapi/src/model/upsert_category_command.dart';
 import 'package:openapi/src/model/upsert_comment_command.dart';
+import 'package:openapi/src/model/upsert_custom_field_command.dart';
+import 'package:openapi/src/model/upsert_custom_field_option_command.dart';
+import 'package:openapi/src/model/upsert_custom_field_value_command.dart';
 import 'package:openapi/src/model/upsert_dashboard_command.dart';
 import 'package:openapi/src/model/upsert_group_command.dart';
 import 'package:openapi/src/model/upsert_group_member_command.dart';
@@ -126,8 +134,13 @@ part 'serializers.g.dart';
   Comment,
   CurrencySeparator,
   CurrencySymbolPosition,
+  CustomField,
+  CustomFieldOption,
+  CustomFieldType,
+  CustomFieldValue,
   Dashboard,
   EncodedImage,
+  ExportFormat,
   FeatureConfig,
   FileData,
   FileDataView,
@@ -183,6 +196,9 @@ part 'serializers.g.dart';
   UpdateProfileCommand,
   UpsertCategoryCommand,
   UpsertCommentCommand,
+  UpsertCustomFieldCommand,
+  UpsertCustomFieldOptionCommand,
+  UpsertCustomFieldValueCommand,
   UpsertDashboardCommand,
   UpsertGroupCommand,
   UpsertGroupMemberCommand,
@@ -225,16 +241,16 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<Dashboard>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(int)]),
+        () => ListBuilder<int>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Notification)]),
         () => ListBuilder<Notification>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Receipt)]),
         () => ListBuilder<Receipt>(),
-      )
-      ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(int)]),
-        () => ListBuilder<int>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Category)]),

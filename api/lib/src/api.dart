@@ -12,7 +12,9 @@ import 'package:openapi/src/auth/oauth.dart';
 import 'package:openapi/src/api/auth_api.dart';
 import 'package:openapi/src/api/category_api.dart';
 import 'package:openapi/src/api/comment_api.dart';
+import 'package:openapi/src/api/custom_field_api.dart';
 import 'package:openapi/src/api/dashboard_api.dart';
+import 'package:openapi/src/api/export_api.dart';
 import 'package:openapi/src/api/feature_config_api.dart';
 import 'package:openapi/src/api/groups_api.dart';
 import 'package:openapi/src/api/import_api.dart';
@@ -101,10 +103,22 @@ class Openapi {
     return CommentApi(dio, serializers);
   }
 
+  /// Get CustomFieldApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  CustomFieldApi getCustomFieldApi() {
+    return CustomFieldApi(dio, serializers);
+  }
+
   /// Get DashboardApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   DashboardApi getDashboardApi() {
     return DashboardApi(dio, serializers);
+  }
+
+  /// Get ExportApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  ExportApi getExportApi() {
+    return ExportApi(dio, serializers);
   }
 
   /// Get FeatureConfigApi instance, base route and serializer can be overridden by a given but be careful,

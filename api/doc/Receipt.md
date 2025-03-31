@@ -9,8 +9,9 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **amount** | **String** | Receipt total amount | 
-**categories** | [**BuiltList&lt;Category&gt;**](Category.md) | Categories associated to receipt | [optional] 
-**comments** | [**BuiltList&lt;Comment&gt;**](Comment.md) | Comments associated to receipt | [optional] 
+**categories** | [**BuiltList&lt;Category&gt;**](Category.md) | Categories associated to receipt | 
+**comments** | [**BuiltList&lt;Comment&gt;**](Comment.md) | Comments associated to receipt | 
+**customFields** | [**BuiltList&lt;CustomFieldValue&gt;**](CustomFieldValue.md) | Custom fields associated to receipt | 
 **createdAt** | **String** |  | [optional] 
 **createdBy** | **int** |  | [optional] 
 **date** | **String** | Receipt date | 
@@ -19,10 +20,10 @@ Name | Type | Description | Notes
 **imageFiles** | [**BuiltList&lt;FileData&gt;**](FileData.md) | Files associated to receipt | [optional] 
 **name** | **String** | Receipt name | 
 **paidByUserId** | **int** | User paid foreign key | 
-**receiptItems** | [**BuiltList&lt;Item&gt;**](Item.md) | Items associated to receipt | [optional] 
+**receiptItems** | [**BuiltList&lt;Item&gt;**](Item.md) | Items associated to receipt | 
 **resolvedDate** | **String** | Date resolved | [optional] 
 **status** | [**ReceiptStatus**](ReceiptStatus.md) |  | 
-**tags** | [**BuiltList&lt;Tag&gt;**](Tag.md) | Tags associated to receipt | [optional] 
+**tags** | [**BuiltList&lt;Tag&gt;**](Tag.md) | Tags associated to receipt | 
 **updatedAt** | **String** |  | [optional] 
 **createdByString** | **String** | Created by string, which is anything that is not a user | [optional] 
 
