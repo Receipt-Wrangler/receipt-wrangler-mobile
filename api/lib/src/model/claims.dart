@@ -4,9 +4,9 @@
 
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
-import 'package:openapi/src/model/user_role.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:openapi/src/model/user_role.dart';
 
 part 'claims.g.dart';
 
@@ -34,6 +34,7 @@ abstract class Claims implements Built<Claims, ClaimsBuilder> {
   /// User's role
   @BuiltValueField(wireName: r'userRole')
   UserRole get userRole;
+
   // enum userRoleEnum {  ADMIN,  USER,  };
 
   /// Display name
@@ -82,18 +83,18 @@ abstract class Claims implements Built<Claims, ClaimsBuilder> {
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ClaimsBuilder b) => b
-      ..userId = 0
-      ..userRole = 'USER'
-      ..displayName = ''
-      ..defaultAvatarColor = ''
-      ..username = ''
-      ..iss = ''
-      ..sub = ''
-      ..aud = ListBuilder()
-      ..exp = 0
-      ..nbf = 0
-      ..iat = 0
-      ..jti = '';
+    ..userId = 0
+    ..userRole = UserRole.USER
+    ..displayName = ''
+    ..defaultAvatarColor = ''
+    ..username = ''
+    ..iss = ''
+    ..sub = ''
+    ..aud = ListBuilder()
+    ..exp = 0
+    ..nbf = 0
+    ..iat = 0
+    ..jti = '';
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Claims> get serializer => _$ClaimsSerializer();
@@ -189,7 +190,9 @@ class _$ClaimsSerializer implements PrimitiveSerializer<Claims> {
     Claims object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -316,4 +319,3 @@ class _$ClaimsSerializer implements PrimitiveSerializer<Claims> {
     return result.build();
   }
 }
-
