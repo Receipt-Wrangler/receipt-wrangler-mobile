@@ -129,6 +129,12 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
           value: "${users.length} users × $perPersonAmountDisplay each",
           isValid: true,
         ));
+      } else {
+        fields.add(const SizedBox(height: 10));
+        fields.add(Text(
+          "Please select users to split the receipt evenly among them.",
+          style: TextStyle(color: Colors.grey[600]),
+        ));
       }
     }
     return fields;
@@ -246,6 +252,12 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
           value: "Portions: $totalPortionsDisplay, Remaining: $remainingAmountDisplay",
           isValid: isValid,
           errorMessage: !isValid ? "Portions exceed receipt total" : null,
+        ));
+      } else {
+        fields.add(const SizedBox(height: 10));
+        fields.add(Text(
+          "Please select users to set custom portion amounts. The remaining balance will be split evenly.",
+          style: TextStyle(color: Colors.grey[600]),
         ));
       }
     }
