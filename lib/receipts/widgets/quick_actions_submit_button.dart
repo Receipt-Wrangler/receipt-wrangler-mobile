@@ -9,6 +9,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart
 
 import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
+import '../../utils/currency.dart';
 
 class ReceiptQuickActionsSubmitButton extends StatefulWidget {
   const ReceiptQuickActionsSubmitButton({super.key});
@@ -68,72 +69,38 @@ class _ReceiptQuickActionsSubmitButton
     }
   }
 
-  double calculateTotalPortions() {
+  double calculateTotalPortionsInUSD() {
     var selectedUsers = getSelectedUsers();
-    double total = 0.0;
+    double totalUSD = 0.0;
     
     for (api.UserView user in selectedUsers) {
       var fieldValue = formKey.currentState?.fields["${user.id}"]?.value;
-      String portionAmount = "";
+      String portionAmountDisplay = fieldValue?.toString() ?? "0";
       
-      if (fieldValue != null) {
-        portionAmount = fieldValue.toString();
-      }
-      
-      // Handle different number formats and remove currency symbols if present
-      String cleanAmount = portionAmount.replaceAll(RegExp(r'[^\d.,]'), ''); // Remove all non-digit, non-comma, non-period chars
-      
-      // Handle thousand separators: if there are multiple commas or the comma is not followed by exactly 3 digits at the end, treat commas as thousand separators
-      if (cleanAmount.contains(',')) {
-        List<String> parts = cleanAmount.split('.');
-        if (parts.length <= 2) { // Valid decimal format
-          String integerPart = parts[0];
-          String decimalPart = parts.length > 1 ? parts[1] : '';
-          
-          // Remove commas from integer part (thousand separators)
-          integerPart = integerPart.replaceAll(',', '');
-          
-          // Reconstruct the number
-          cleanAmount = decimalPart.isNotEmpty ? '$integerPart.$decimalPart' : integerPart;
-        }
-      }
-      
-      double portionValue = double.tryParse(cleanAmount.isEmpty ? "0" : cleanAmount) ?? 0.0;
-      total += portionValue;
+      // Convert display currency amount to USD for calculation
+      double portionValueUSD = exchangeCustomToUSD(portionAmountDisplay).toDouble();
+      totalUSD += portionValueUSD;
     }
     
-    return total;
+    return totalUSD;
   }
 
   void splitEvenlyWithPortions() {
     if (formKey.currentState!.saveAndValidate()) {
       // Additional validation for portions not exceeding receipt total
-      String receiptAmountStr = receiptModel.receiptFormKey.currentState!.fields["amount"]!.value ?? "0";
-      String cleanReceiptAmount = receiptAmountStr.replaceAll(RegExp(r'[^\d.,]'), ''); // Remove all non-digit, non-comma, non-period chars
+      String receiptAmountDisplay = receiptModel.receiptFormKey.currentState!.fields["amount"]!.value ?? "0";
+      double receiptTotalUSD = exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+      double totalPortionsUSD = calculateTotalPortionsInUSD();
       
-      // Handle thousand separators
-      if (cleanReceiptAmount.contains(',')) {
-        List<String> parts = cleanReceiptAmount.split('.');
-        if (parts.length <= 2) { // Valid decimal format
-          String integerPart = parts[0];
-          String decimalPart = parts.length > 1 ? parts[1] : '';
-          
-          // Remove commas from integer part (thousand separators)
-          integerPart = integerPart.replaceAll(',', '');
-          
-          // Reconstruct the number
-          cleanReceiptAmount = decimalPart.isNotEmpty ? '$integerPart.$decimalPart' : integerPart;
-        }
-      }
-      
-      double receiptTotal = double.tryParse(cleanReceiptAmount.isEmpty ? "0" : cleanReceiptAmount) ?? 0.0;
-      double totalPortions = calculateTotalPortions();
-      
-      if (totalPortions > receiptTotal) {
+      if (totalPortionsUSD > receiptTotalUSD) {
+        // Convert amounts back to display currency for error message
+        String totalPortionsDisplay = formatCurrency(shellContext as BuildContext, totalPortionsUSD.toString()) ?? "\$0.00";
+        String receiptTotalDisplay = formatCurrency(shellContext as BuildContext, receiptTotalUSD.toString()) ?? "\$0.00";
+        
         ScaffoldMessenger.of(shellContext as BuildContext).showSnackBar(
           SnackBar(
             content: Text(
-              "Total portions (\$${totalPortions.toStringAsFixed(2)}) cannot exceed receipt amount (\$${receiptTotal.toStringAsFixed(2)})",
+              "Total portions ($totalPortionsDisplay) cannot exceed receipt amount ($receiptTotalDisplay)",
             ),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
