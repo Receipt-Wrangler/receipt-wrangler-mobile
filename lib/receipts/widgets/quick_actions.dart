@@ -95,6 +95,32 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
         "0";
   }
 
+  double getReceiptAmountAsDouble() {
+    String receiptAmount = getReceiptAmount();
+    String cleanAmount = receiptAmount.replaceAll(RegExp(r'[^\d.,]'), ''); // Remove all non-digit, non-comma, non-period chars
+    
+    // Handle thousand separators
+    if (cleanAmount.contains(',')) {
+      List<String> parts = cleanAmount.split('.');
+      if (parts.length <= 2) { // Valid decimal format
+        String integerPart = parts[0];
+        String decimalPart = parts.length > 1 ? parts[1] : '';
+        
+        // Remove commas from integer part (thousand separators)
+        integerPart = integerPart.replaceAll(',', '');
+        
+        // Reconstruct the number
+        cleanAmount = decimalPart.isNotEmpty ? '$integerPart.$decimalPart' : integerPart;
+      }
+    }
+    
+    double result = double.tryParse(cleanAmount.isEmpty ? "0" : cleanAmount) ?? 0.0;
+    
+    print("Receipt amount: Raw = '$receiptAmount', Clean = '$cleanAmount', Parsed = $result");
+    
+    return result;
+  }
+
   List<Widget> buildSplitEvenlyTotal() {
     List<Widget> fields = [];
     if (quickActionsSelection[0]) {
@@ -180,14 +206,44 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             [];
     double total = 0.0;
 
+    print("=== DEBUG calculateTotalPortions ===");
     for (api.UserView user in users) {
-      String portionAmount =
-          formKey.currentState?.fields["${user.id}"]?.value ?? "0";
-      double portionValue =
-          double.tryParse(portionAmount.isEmpty ? "0" : portionAmount) ?? 0.0;
+      var fieldValue = formKey.currentState?.fields["${user.id}"]?.value;
+      String portionAmount = "";
+      
+      if (fieldValue != null) {
+        portionAmount = fieldValue.toString();
+      }
+      
+      print("User ${user.displayName}: Raw value = '$fieldValue', String value = '$portionAmount'");
+      
+      // Handle different number formats and remove currency symbols if present
+      String cleanAmount = portionAmount.replaceAll(RegExp(r'[^\d.,]'), ''); // Remove all non-digit, non-comma, non-period chars
+      
+      // Handle thousand separators: if there are multiple commas or the comma is not followed by exactly 3 digits at the end, treat commas as thousand separators
+      if (cleanAmount.contains(',')) {
+        List<String> parts = cleanAmount.split('.');
+        if (parts.length <= 2) { // Valid decimal format
+          String integerPart = parts[0];
+          String decimalPart = parts.length > 1 ? parts[1] : '';
+          
+          // Remove commas from integer part (thousand separators)
+          integerPart = integerPart.replaceAll(',', '');
+          
+          // Reconstruct the number
+          cleanAmount = decimalPart.isNotEmpty ? '$integerPart.$decimalPart' : integerPart;
+        }
+      }
+      
+      double portionValue = double.tryParse(cleanAmount.isEmpty ? "0" : cleanAmount) ?? 0.0;
+      
+      print("User ${user.displayName}: Clean amount = '$cleanAmount', Parsed value = $portionValue");
+      
       total += portionValue;
     }
 
+    print("Total portions calculated: $total");
+    print("=== END DEBUG ===");
     return total;
   }
 
@@ -213,9 +269,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
       if (users.isNotEmpty) {
         fields.add(const SizedBox(height: 10));
 
-        String receiptAmount = getReceiptAmount();
-        double receiptValue =
-            double.tryParse(receiptAmount.isEmpty ? "0" : receiptAmount) ?? 0.0;
+        double receiptValue = getReceiptAmountAsDouble();
         double totalPortions = calculateTotalPortions();
         double remainingAmount = receiptValue - totalPortions;
         bool isValid = remainingAmount >= 0;
