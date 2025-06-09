@@ -13,6 +13,7 @@ import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
 import '../../shared/widgets/multi-select-field.dart';
+import '../../shared/widgets/total_display_widget.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
   const ReceiptQuickActions({super.key, required this.groupId});
@@ -30,21 +31,30 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
+  late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   final formState = WranglerFormState.edit;
 
-  var quickActions = ["Split Evenly", "Split Evenly with Portions", "Split by Percentage"];
+  var quickActions = [
+    "Split Evenly",
+    "Split Evenly with Portions",
+    "Split by Percentage"
+  ];
   var quickActionsSelection = [true, false, false];
 
   var percentageOptions = ["25%", "50%", "75%", "100%", "Custom"];
 
   double calculateTotalPercentage() {
-    var users = formKey.currentState?.fields["users"]?.value as List<api.UserView>? ?? [];
+    var users =
+        formKey.currentState?.fields["users"]?.value as List<api.UserView>? ??
+            [];
     double total = 0.0;
-    
+
     for (api.UserView user in users) {
-      var userPercentageSelection = formKey.currentState?.fields["percentage_${user.id}"]?.value as String?;
-      
-      if (userPercentageSelection != null && userPercentageSelection.isNotEmpty) {
+      var userPercentageSelection = formKey
+          .currentState?.fields["percentage_${user.id}"]?.value as String?;
+
+      if (userPercentageSelection != null &&
+          userPercentageSelection.isNotEmpty) {
         switch (userPercentageSelection) {
           case "25%":
             total += 25.0;
@@ -59,7 +69,9 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             total += 100.0;
             break;
           case "Custom":
-            var customPercentageStr = formKey.currentState?.fields["custom_percentage_${user.id}"]?.value?.toString();
+            var customPercentageStr = formKey
+                .currentState?.fields["custom_percentage_${user.id}"]?.value
+                ?.toString();
             if (customPercentageStr != null && customPercentageStr.isNotEmpty) {
               final customPercentage = double.tryParse(customPercentageStr);
               if (customPercentage != null) {
@@ -70,12 +82,41 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
         }
       }
     }
-    
+
     return total;
   }
 
   bool isTotalPercentageValid() {
     return calculateTotalPercentage() <= 100.0;
+  }
+
+  String getReceiptAmount() {
+    return receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
+        "0";
+  }
+
+  List<Widget> buildSplitEvenlyTotal() {
+    List<Widget> fields = [];
+    if (quickActionsSelection[0]) {
+      var users =
+          formKey.currentState?.fields["users"]?.value as List<api.UserView>? ??
+              [];
+
+      if (users.isNotEmpty) {
+        String receiptAmount = getReceiptAmount();
+        double amountValue =
+            double.tryParse(receiptAmount.isEmpty ? "0" : receiptAmount) ?? 0.0;
+        double perPersonAmount = amountValue / users.length;
+
+        fields.add(const SizedBox(height: 10));
+        fields.add(TotalDisplayWidget(
+          value:
+              "${users.length} users × \$${perPersonAmount.toStringAsFixed(2)} each",
+          isValid: true,
+        ));
+      }
+    }
+    return fields;
   }
 
   Widget buildUserField() {
@@ -133,6 +174,23 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
     );
   }
 
+  double calculateTotalPortions() {
+    var users =
+        formKey.currentState?.fields["users"]?.value as List<api.UserView>? ??
+            [];
+    double total = 0.0;
+
+    for (api.UserView user in users) {
+      String portionAmount =
+          formKey.currentState?.fields["${user.id}"]?.value ?? "0";
+      double portionValue =
+          double.tryParse(portionAmount.isEmpty ? "0" : portionAmount) ?? 0.0;
+      total += portionValue;
+    }
+
+    return total;
+  }
+
   List<Widget> buildSplitWithPortionsField() {
     List<Widget> fields = [];
     if (quickActionsSelection[1]) {
@@ -150,6 +208,25 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             initialAmount: "0",
             formState: formState));
       });
+
+      // Add total display for portions
+      if (users.isNotEmpty) {
+        fields.add(const SizedBox(height: 10));
+
+        String receiptAmount = getReceiptAmount();
+        double receiptValue =
+            double.tryParse(receiptAmount.isEmpty ? "0" : receiptAmount) ?? 0.0;
+        double totalPortions = calculateTotalPortions();
+        double remainingAmount = receiptValue - totalPortions;
+        bool isValid = remainingAmount >= 0;
+
+        fields.add(TotalDisplayWidget(
+          value:
+              "Portions: \$${totalPortions.toStringAsFixed(2)}, Remaining: \$${remainingAmount.toStringAsFixed(2)}",
+          isValid: isValid,
+          errorMessage: !isValid ? "Portions exceed receipt total" : null,
+        ));
+      }
     }
 
     return fields;
@@ -157,7 +234,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
   Widget buildPercentageButtonsForUser(api.UserView user) {
     String fieldName = "percentage_${user.id}";
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -172,17 +249,20 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             ...percentageOptions.asMap().entries.map((entry) {
               int index = entry.key;
               String option = entry.value;
-              
+
               return FilterChip(
                 label: Text(option),
-                selected: formKey.currentState?.fields[fieldName]?.value == option,
+                selected:
+                    formKey.currentState?.fields[fieldName]?.value == option,
                 onSelected: (selected) {
                   if (selected) {
                     setState(() {
                       formKey.currentState!.fields[fieldName]!.setValue(option);
                       // Clear custom percentage field if not custom
                       if (option != "Custom") {
-                        formKey.currentState!.fields["custom_percentage_${user.id}"]?.setValue("");
+                        formKey.currentState!
+                            .fields["custom_percentage_${user.id}"]
+                            ?.setValue("");
                       }
                     });
                   }
@@ -198,10 +278,11 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   Widget buildCustomPercentageFieldForUser(api.UserView user) {
     String percentageFieldName = "percentage_${user.id}";
     String customFieldName = "custom_percentage_${user.id}";
-    
+
     // Only show if "Custom" is selected for this user
-    bool showCustomField = formKey.currentState?.fields[percentageFieldName]?.value == "Custom";
-    
+    bool showCustomField =
+        formKey.currentState?.fields[percentageFieldName]?.value == "Custom";
+
     if (showCustomField) {
       return Column(
         children: [
@@ -242,52 +323,29 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   List<Widget> buildPercentageFields() {
     List<Widget> fields = [];
     if (quickActionsSelection[2]) {
-      var users = formKey.currentState?.fields["users"]?.value as List<api.UserView>? ?? [];
-      
+      var users =
+          formKey.currentState?.fields["users"]?.value as List<api.UserView>? ??
+              [];
+
       if (users.isNotEmpty) {
         fields.add(const SizedBox(height: 10));
         fields.add(Text(
           "Select percentage for each user:",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ));
-        
+
         // Add total percentage display and validation
         fields.add(const SizedBox(height: 8));
         double totalPercentage = calculateTotalPercentage();
         bool isValid = isTotalPercentageValid();
-        
-        fields.add(Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isValid ? Colors.green.shade50 : Colors.red.shade50,
-            border: Border.all(
-              color: isValid ? Colors.green.shade300 : Colors.red.shade300,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                isValid ? Icons.check_circle : Icons.error,
-                color: isValid ? Colors.green.shade600 : Colors.red.shade600,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "Total: ${totalPercentage.toStringAsFixed(1)}%${!isValid ? ' (Exceeds 100%)' : ''}",
-                  style: TextStyle(
-                    color: isValid ? Colors.green.shade800 : Colors.red.shade800,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
+
+        fields.add(TotalDisplayWidget(
+          value: "${totalPercentage.toStringAsFixed(1)}%",
+          isValid: isValid,
+          errorMessage: !isValid ? "Exceeds 100%" : null,
         ));
         fields.add(const SizedBox(height: 10));
-        
+
         for (api.UserView user in users) {
           // Add hidden form fields for this user's percentage selection
           fields.add(FormBuilderField<String>(
@@ -297,7 +355,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
               return SizedBox.shrink();
             },
           ));
-          
+
           fields.add(buildPercentageButtonsForUser(user));
           fields.add(buildCustomPercentageFieldForUser(user));
           fields.add(const SizedBox(height: 16));
@@ -317,6 +375,17 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   Widget build(BuildContext context) {
     return FormBuilder(
         key: formKey,
+        onChanged: () {
+          // Trigger rebuild when any form field changes
+          if (quickActionsSelection[1]) {
+            // Only rebuild for portions to avoid unnecessary updates
+            Future.microtask(() {
+              if (mounted) {
+                setState(() {});
+              }
+            });
+          }
+        },
         child: Column(
           children: [
             FormBuilderField<List<bool>>(
@@ -333,6 +402,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
             ),
             textFieldSpacing,
             buildUserField(),
+            ...buildSplitEvenlyTotal(),
             ...buildSplitWithPortionsField(),
             ...buildPercentageFields()
           ],
