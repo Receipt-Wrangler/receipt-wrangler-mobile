@@ -19,13 +19,20 @@ class GroupListCard extends StatefulWidget {
 class _GroupListCard extends State<GroupListCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: space16,
         vertical: space8,
       ),
-      elevation: elevationLow,
-      shape: cardShape,
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(borderRadiusMedium),
+        boxShadow: cardShadow,
+        border: Border.all(
+          color: gray200,
+          width: 0.5,
+        ),
+      ),
       child: InkWell(
         onTap: () => widget.onGroupTap(widget.group),
         borderRadius: BorderRadius.circular(borderRadiusMedium),

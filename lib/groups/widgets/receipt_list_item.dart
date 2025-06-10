@@ -61,13 +61,13 @@ class _ReceiptListItem extends State<ReceiptListItem> {
   Color getStatusColor() {
     switch (widget.receipt.status) {
       case api.ReceiptStatus.DRAFT:
-        return const Color.fromRGBO(224, 224, 224, 1);
+        return gray500; // Much better contrast than light gray
       case api.ReceiptStatus.NEEDS_ATTENTION:
         return errorRed;
       case api.ReceiptStatus.OPEN:
-        return const Color.fromRGBO(255, 250, 205, 1);
+        return const Color(0xFFF57C00); // Orange color for much better contrast
       case api.ReceiptStatus.RESOLVED:
-        return successGreen;
+        return const Color(0xFF2E7D32); // Darker green for better contrast
       default:
         throw Exception("Unknown status: ${widget.receipt.status}");
     }
@@ -100,13 +100,20 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       titleText = "${widget.receipt.name}\n(${group?.name})";
     }
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: space16,
         vertical: space8,
       ),
-      elevation: elevationLow,
-      shape: cardShape,
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(borderRadiusMedium),
+        boxShadow: cardShadow,
+        border: Border.all(
+          color: gray200,
+          width: 0.5,
+        ),
+      ),
       child: InkWell(
         onTap: () => navigateToReceipt(WranglerFormState.view),
         borderRadius: BorderRadius.circular(borderRadiusMedium),

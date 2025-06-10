@@ -365,11 +365,15 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
         
         // Card Theme
         cardTheme: const CardTheme(
-          elevation: elevationLow,
+          elevation: elevationMedium,
           shape: cardShape,
-          color: cardColor,
-          shadowColor: shadowMedium,
+          color: surfaceColor,
+          shadowColor: shadowDark,
           surfaceTintColor: Colors.transparent,
+          margin: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
         ),
         
         // App Bar Theme
@@ -427,11 +431,18 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
         // Chip Theme
         chipTheme: ChipThemeData(
           shape: chipShape,
-          backgroundColor: gray100,
+          backgroundColor: surfaceColor,
           selectedColor: Color.fromRGBO(39, 177, 255, 0.12),
-          labelStyle: typography.labelMedium,
-          elevation: 0,
-          pressElevation: elevationLow,
+          labelStyle: typography.labelMedium.copyWith(
+            color: gray700,
+            fontWeight: FontWeight.w500,
+          ),
+          elevation: elevationLow,
+          pressElevation: elevationMedium,
+          side: const BorderSide(
+            color: gray300,
+            width: 1,
+          ),
         ),
         
         // Bottom Sheet Theme

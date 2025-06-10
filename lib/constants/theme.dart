@@ -34,13 +34,13 @@ const RoundedRectangleBorder dialogShape = RoundedRectangleBorder(
 // Modern Box Shadows
 const List<BoxShadow> cardShadow = [
   BoxShadow(
-    color: shadowLight,
-    offset: Offset(0, 1),
-    blurRadius: 3,
+    color: shadowMedium,
+    offset: Offset(0, 2),
+    blurRadius: 4,
     spreadRadius: 0,
   ),
   BoxShadow(
-    color: shadowMedium,
+    color: shadowLight,
     offset: Offset(0, 1),
     blurRadius: 2,
     spreadRadius: 0,
@@ -49,15 +49,15 @@ const List<BoxShadow> cardShadow = [
 
 const List<BoxShadow> elevatedShadow = [
   BoxShadow(
-    color: shadowMedium,
-    offset: Offset(0, 2),
-    blurRadius: 8,
+    color: shadowDark,
+    offset: Offset(0, 4),
+    blurRadius: 12,
     spreadRadius: 0,
   ),
   BoxShadow(
-    color: shadowLight,
-    offset: Offset(0, 1),
-    blurRadius: 4,
+    color: shadowMedium,
+    offset: Offset(0, 2),
+    blurRadius: 6,
     spreadRadius: 0,
   ),
 ];
