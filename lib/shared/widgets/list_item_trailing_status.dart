@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:receipt_wrangler_mobile/constants/theme.dart';
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 
 class ListItemTrailingStatus extends StatefulWidget {
   const ListItemTrailingStatus({
@@ -23,20 +25,26 @@ class ListItemTrailingStatus extends StatefulWidget {
 class _ListItemTrailingStatusState extends State<ListItemTrailingStatus> {
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = Theme.of(context).colorScheme.background;
-
     return Container(
-      width: 100,
-      height: widget.height,
+      padding: const EdgeInsets.symmetric(
+        horizontal: space12,
+        vertical: space8,
+      ),
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: [backgroundColor, widget.color],
-      )),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(widget.text)]),
+        color: widget.color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(borderRadiusLarge),
+        border: Border.all(
+          color: widget.color.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Text(
+        widget.text,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: widget.color.withValues(alpha: 0.8),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }

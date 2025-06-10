@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:receipt_wrangler_mobile/constants/colors.dart';
+import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 
 class ScreenWrapper extends StatefulWidget {
   const ScreenWrapper({
@@ -35,9 +37,9 @@ class _ScreenWrapper extends State<ScreenWrapper> {
         appBar: widget.appBarWidget,
         bottomSheet: widget.bottomSheetWidget,
         bottomNavigationBar: widget.bottomNavigationBarWidget,
+        backgroundColor: backgroundColor,
         body: Container(
-          padding:
-              widget.bodyPadding ?? const EdgeInsets.only(left: 16, right: 16),
+          padding: widget.bodyPadding ?? screenPadding,
           width: MediaQuery.of(context).size.width,
           child: widget.child,
         ),

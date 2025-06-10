@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/constants/font.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/list_item_lead.dart';
@@ -12,6 +11,8 @@ import 'package:receipt_wrangler_mobile/utils/currency.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 
 import '../../constants/colors.dart';
+import '../../constants/theme.dart';
+import '../../constants/spacing.dart';
 import '../../models/auth_model.dart';
 import '../../models/group_model.dart';
 import '../../shared/functions/permissions.dart';
@@ -82,7 +83,13 @@ class _ReceiptListItem extends State<ReceiptListItem> {
         formatDate(defaultDateFormat, DateTime.parse(widget.receipt.date));
 
     return Text(
-        "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText} on ${formattedDate}");
+      "${formattedAmount} paid by ${user?.displayName ?? userNotFoundText} on ${formattedDate}",
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: gray600,
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 
   Widget buildListTile() {
@@ -93,15 +100,46 @@ class _ReceiptListItem extends State<ReceiptListItem> {
       titleText = "${widget.receipt.name}\n(${group?.name})";
     }
 
-    return ListTile(
-        title: Text(
-          titleText,
-          style: boldText,
+    return Card(
+      margin: const EdgeInsets.symmetric(
+        horizontal: space16,
+        vertical: space8,
+      ),
+      elevation: elevationLow,
+      shape: cardShape,
+      child: InkWell(
+        onTap: () => navigateToReceipt(WranglerFormState.view),
+        borderRadius: BorderRadius.circular(borderRadiusMedium),
+        child: Padding(
+          padding: cardPadding,
+          child: Row(
+            children: [
+              getLeadingWidget(),
+              const SizedBox(width: space16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      titleText,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: space8),
+                    getSubtitleText(),
+                  ],
+                ),
+              ),
+              const SizedBox(width: space16),
+              getStatusText(),
+            ],
+          ),
         ),
-        subtitle: getSubtitleText(),
-        leading: getLeadingWidget(),
-        trailing: getStatusText(),
-        onTap: () => navigateToReceipt(WranglerFormState.view));
+      ),
+    );
   }
 
   Widget buildEditButton() {

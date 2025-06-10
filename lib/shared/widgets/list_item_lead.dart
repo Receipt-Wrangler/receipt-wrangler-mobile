@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/list_item_color_block.dart';
+import 'package:receipt_wrangler_mobile/constants/theme.dart';
 
 import 'date_block.dart';
 
@@ -20,13 +20,20 @@ class ListItemLead extends StatefulWidget {
 class _ListItemLead extends State<ListItemLead> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: widget.color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(borderRadiusMedium),
+        border: Border.all(
+          color: widget.color,
+          width: 2,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListItemColorBlock(color: widget.color),
-          const SizedBox(width: 10),
           DateBlock(date: widget.date),
         ],
       ),
