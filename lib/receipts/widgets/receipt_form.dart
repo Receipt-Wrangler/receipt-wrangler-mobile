@@ -19,6 +19,7 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/context_model.dart';
+import '../../models/custom_field_model.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
@@ -26,6 +27,7 @@ import '../../shared/functions/forms.dart';
 import '../../shared/functions/status_field.dart';
 import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
+import '../../shared/widgets/custom_field_widget.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -46,11 +48,13 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
+  late final customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
   bool isAddingShare = false;
+  List<int> selectedCustomFieldIds = [];
 
   @override
   void initState() {
@@ -58,6 +62,13 @@ class _ReceiptForm extends State<ReceiptForm> {
     Provider.of<ReceiptModel>(context, listen: false);
 
     groupId = modifiedReceipt.groupId;
+    
+    // Initialize selected custom fields from existing receipt data
+    selectedCustomFieldIds = modifiedReceipt.customFields.isNotEmpty
+        ? modifiedReceipt.customFields
+            .map((cf) => cf.customFieldId)
+            .toList()
+        : [];
   }
 
   Widget buildAuditDetailSection() {
@@ -185,6 +196,108 @@ class _ReceiptForm extends State<ReceiptForm> {
                 formKey.currentState!.fields["tags"]!.setValue(tags);
               })
             });
+  }
+
+  Widget buildCustomFieldsSection() {
+    return Column(
+      children: [
+        // Render existing custom fields
+        ...selectedCustomFieldIds.map((customFieldId) {
+          final customField = customFieldModel.customFields
+              .where((cf) => cf.id == customFieldId)
+              .firstOrNull;
+          
+          // Skip if custom field template is not found
+          if (customField == null) return const SizedBox.shrink();
+          
+          final existingValue = modifiedReceipt.customFields
+              .where((cfv) => cfv.customFieldId == customFieldId)
+              .firstOrNull;
+
+          return Column(
+            children: [
+              CustomFieldWidget(
+                customField: customField,
+                existingValue: existingValue,
+                formState: formState,
+                onRemove: formState != WranglerFormState.view
+                    ? () {
+                        setState(() {
+                          selectedCustomFieldIds.remove(customFieldId);
+                        });
+                      }
+                    : null,
+              ),
+              textFieldSpacing,
+            ],
+          );
+        }).toList(),
+        
+        // Add Custom Field button
+        if (formState != WranglerFormState.view)
+          buildAddCustomFieldButton(),
+      ],
+    );
+  }
+
+  Widget buildAddCustomFieldButton() {
+    // Get available custom fields that haven't been added yet
+    final availableCustomFields = customFieldModel.customFields
+        .where((cf) => !selectedCustomFieldIds.contains(cf.id))
+        .toList();
+
+    if (availableCustomFields.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButton.icon(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => buildCustomFieldSelectionSheet(availableCustomFields),
+          );
+        },
+        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+        label: Text(
+          'Add Custom Field',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCustomFieldSelectionSheet(List<api.CustomField> availableCustomFields) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Select Custom Field',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          ...availableCustomFields.map((customField) {
+            return ListTile(
+              title: Text(customField.name),
+              subtitle: customField.description != null
+                  ? Text(customField.description!)
+                  : null,
+              trailing: Text(customField.type.name),
+              onTap: () {
+                setState(() {
+                  selectedCustomFieldIds.add(customField.id);
+                });
+                Navigator.of(context).pop();
+              },
+            );
+          }).toList(),
+        ],
+      ),
+    );
   }
 
   Widget buildReceiptItemList() {
@@ -375,6 +488,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildPaidByField(),
           textFieldSpacing,
           buildStatusField(),
+          textFieldSpacing,
+          buildCustomFieldsSection(),
           textFieldSpacing,
           Visibility(
               visible: groupModel

@@ -45,10 +45,10 @@ import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import 'client/client.dart';
-import 'constants/search.dart';
 import 'constants/colors.dart';
-import 'constants/theme.dart';
 import 'constants/font.dart' as typography;
+import 'constants/search.dart';
+import 'constants/theme.dart';
 import 'models/context_model.dart';
 import 'models/system_settings_model.dart';
 
@@ -146,8 +146,7 @@ final _router = GoRouter(
           var customFieldModel =
               Provider.of<CustomFieldModel>(context, listen: false);
 
-          if (customFieldModel.customFields.isEmpty &&
-              !customFieldModel.isLoading) {
+          if (!customFieldModel.isLoading) {
             customFieldModel.loadCustomFields();
           }
 
@@ -311,7 +310,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
       theme: ThemeData(
         fontFamily: "Raleway",
         useMaterial3: true,
-        
+
         // Color Scheme
         colorScheme: const ColorScheme(
           primary: primaryBlue,
@@ -325,7 +324,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           brightness: Brightness.light,
           surfaceTint: primaryBlue,
         ),
-        
+
         // Typography Theme
         textTheme: const TextTheme(
           displayLarge: typography.displayLarge,
@@ -341,7 +340,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           labelMedium: typography.labelMedium,
           labelSmall: typography.labelSmall,
         ),
-        
+
         // Input Decoration Theme
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
@@ -371,7 +370,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             vertical: 12,
           ),
         ),
-        
+
         // Card Theme
         cardTheme: const CardTheme(
           elevation: elevationLow,
@@ -380,7 +379,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           shadowColor: shadowMedium,
           surfaceTintColor: Colors.transparent,
         ),
-        
+
         // App Bar Theme
         appBarTheme: const AppBarTheme(
           elevation: 0,
@@ -390,7 +389,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           titleTextStyle: typography.titleLarge,
           surfaceTintColor: Colors.transparent,
         ),
-        
+
         // Bottom Navigation Theme
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: surfaceColor,
@@ -399,7 +398,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           elevation: elevationMedium,
           type: BottomNavigationBarType.fixed,
         ),
-        
+
         // Elevated Button Theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -411,7 +410,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             textStyle: typography.labelLarge,
           ),
         ),
-        
+
         // Outlined Button Theme
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
@@ -422,7 +421,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             textStyle: typography.labelLarge,
           ),
         ),
-        
+
         // Text Button Theme
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -432,7 +431,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             textStyle: typography.labelLarge,
           ),
         ),
-        
+
         // Chip Theme
         chipTheme: ChipThemeData(
           shape: chipShape,
@@ -442,7 +441,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           elevation: 0,
           pressElevation: elevationLow,
         ),
-        
+
         // Bottom Sheet Theme
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: surfaceColor,
@@ -455,7 +454,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           ),
           elevation: elevationHigh,
         ),
-        
+
         // Dialog Theme
         dialogTheme: const DialogTheme(
           backgroundColor: surfaceColor,
@@ -463,7 +462,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           shape: dialogShape,
           elevation: elevationMax,
         ),
-        
+
         // Floating Action Button Theme
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: primaryBlue,
@@ -473,7 +472,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
             borderRadius: BorderRadius.all(Radius.circular(borderRadiusLarge)),
           ),
         ),
-        
+
         // List Tile Theme
         listTileTheme: const ListTileThemeData(
           contentPadding: EdgeInsets.symmetric(
@@ -483,7 +482,7 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
           titleTextStyle: typography.bodyLarge,
           subtitleTextStyle: typography.bodyMedium,
         ),
-        
+
         // Divider Theme
         dividerTheme: const DividerThemeData(
           color: gray200,

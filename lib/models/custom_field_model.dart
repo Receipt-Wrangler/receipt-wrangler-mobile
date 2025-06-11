@@ -23,7 +23,9 @@ class CustomFieldModel extends ChangeNotifier {
       var client = await OpenApiClient.client;
       var pagedRequest = ($PagedRequestCommandBuilder()
             ..page = 1
-            ..pageSize = -1)
+            ..pageSize = -1
+            ..orderBy = "name"
+            ..sortDirection = SortDirection.desc)
           .build();
 
       var response = await client.getCustomFieldApi().getPagedCustomFields(
@@ -31,9 +33,9 @@ class CustomFieldModel extends ChangeNotifier {
           );
 
       if (response.data?.data != null) {
-        var customFields =
-            response.data!.data!.whereType<CustomField>().toList();
-        setCustomFields(customFields);
+        var customFields = response.data!.data
+            .map((field) => field.anyOf.values[10] as CustomField);
+        setCustomFields(customFields.toList());
       }
     } catch (e) {
       print('Error loading custom fields: $e');

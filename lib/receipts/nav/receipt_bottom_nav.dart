@@ -50,16 +50,47 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       var fieldKey = "customField_${customField.id}";
       var fieldValue = form[fieldKey];
       
-      if (fieldValue != null && fieldValue.toString().isNotEmpty) {
+      // Only process if the field has a value (for text/currency fields) or for boolean/select fields
+      bool shouldProcess = false;
+      if (customField.type == api.CustomFieldType.BOOLEAN && fieldValue is bool) {
+        shouldProcess = true;
+      } else if (customField.type == api.CustomFieldType.SELECT && fieldValue is int) {
+        shouldProcess = true;
+      } else if (fieldValue != null && fieldValue.toString().isNotEmpty) {
+        shouldProcess = true;
+      }
+      
+      if (shouldProcess) {
         var customFieldValueBuilder = api.CustomFieldValueBuilder()
           ..customFieldId = customField.id
           ..receiptId = receiptModel.receipt.id;
         
         // Set the appropriate value based on the field type
-        if (customField.type == api.CustomFieldType.TEXT) {
-          customFieldValueBuilder.stringValue = fieldValue.toString();
+        switch (customField.type) {
+          case api.CustomFieldType.TEXT:
+            customFieldValueBuilder.stringValue = fieldValue.toString();
+            break;
+          case api.CustomFieldType.DATE:
+            if (fieldValue is DateTime) {
+              customFieldValueBuilder.dateValue = formatDate(zuluDateFormat, fieldValue);
+            } else if (fieldValue is String) {
+              customFieldValueBuilder.dateValue = fieldValue;
+            }
+            break;
+          case api.CustomFieldType.SELECT:
+            if (fieldValue is int) {
+              customFieldValueBuilder.selectValue = fieldValue;
+            }
+            break;
+          case api.CustomFieldType.CURRENCY:
+            customFieldValueBuilder.currencyValue = fieldValue.toString();
+            break;
+          case api.CustomFieldType.BOOLEAN:
+            if (fieldValue is bool) {
+              customFieldValueBuilder.booleanValue = fieldValue;
+            }
+            break;
         }
-        // Add other field types here when implemented
         
         customFieldValues.add(customFieldValueBuilder.build());
       }
