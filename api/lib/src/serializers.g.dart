@@ -24,8 +24,13 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Comment.serializer)
       ..add(CurrencySeparator.serializer)
       ..add(CurrencySymbolPosition.serializer)
+      ..add(CustomField.serializer)
+      ..add(CustomFieldOption.serializer)
+      ..add(CustomFieldType.serializer)
+      ..add(CustomFieldValue.serializer)
       ..add(Dashboard.serializer)
       ..add(EncodedImage.serializer)
+      ..add(ExportFormat.serializer)
       ..add(FeatureConfig.serializer)
       ..add(FileData.serializer)
       ..add(FileDataView.serializer)
@@ -80,6 +85,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(UpdateProfileCommand.serializer)
       ..add(UpsertCategoryCommand.serializer)
       ..add(UpsertCommentCommand.serializer)
+      ..add(UpsertCustomFieldCommand.serializer)
+      ..add(UpsertCustomFieldOptionCommand.serializer)
+      ..add(UpsertCustomFieldValueCommand.serializer)
       ..add(UpsertDashboardCommand.serializer)
       ..add(UpsertGroupCommand.serializer)
       ..add(UpsertGroupMemberCommand.serializer)
@@ -106,6 +114,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Comment)]),
           () => new ListBuilder<Comment>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CustomFieldValue)]),
+          () => new ListBuilder<CustomFieldValue>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(FileData)]),
           () => new ListBuilder<FileData>())
       ..addBuilderFactory(
@@ -120,6 +131,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Tag)]),
           () => new ListBuilder<Tag>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CustomFieldOption)]),
+          () => new ListBuilder<CustomFieldOption>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Group)]),
           () => new ListBuilder<Group>())
@@ -186,6 +200,14 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(UpsertCommentCommand)]),
           () => new ListBuilder<UpsertCommentCommand>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(UpsertCustomFieldCommand)]),
+          () => new ListBuilder<UpsertCustomFieldCommand>())
+      ..addBuilderFactory(
+          const FullType(BuiltList,
+              const [const FullType(UpsertCustomFieldOptionCommand)]),
+          () => new ListBuilder<UpsertCustomFieldOptionCommand>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(UpsertGroupMemberCommand)]),
