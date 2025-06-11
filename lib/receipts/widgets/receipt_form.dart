@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -54,7 +55,6 @@ class _ReceiptForm extends State<ReceiptForm> {
   final addSharesFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
   bool isAddingShare = false;
-  List<int> selectedCustomFieldIds = [];
 
   @override
   void initState() {
@@ -62,13 +62,6 @@ class _ReceiptForm extends State<ReceiptForm> {
     Provider.of<ReceiptModel>(context, listen: false);
 
     groupId = modifiedReceipt.groupId;
-    
-    // Initialize selected custom fields from existing receipt data
-    selectedCustomFieldIds = modifiedReceipt.customFields.isNotEmpty
-        ? modifiedReceipt.customFields
-            .map((cf) => cf.customFieldId)
-            .toList()
-        : [];
   }
 
   Widget buildAuditDetailSection() {
@@ -202,29 +195,23 @@ class _ReceiptForm extends State<ReceiptForm> {
     return Column(
       children: [
         // Render existing custom fields
-        ...selectedCustomFieldIds.map((customFieldId) {
+        ...modifiedReceipt.customFields.map((customFieldValue) {
           final customField = customFieldModel.customFields
-              .where((cf) => cf.id == customFieldId)
+              .where((cf) => cf.id == customFieldValue.customFieldId)
               .firstOrNull;
           
           // Skip if custom field template is not found
           if (customField == null) return const SizedBox.shrink();
-          
-          final existingValue = modifiedReceipt.customFields
-              .where((cfv) => cfv.customFieldId == customFieldId)
-              .firstOrNull;
 
           return Column(
             children: [
               CustomFieldWidget(
                 customField: customField,
-                existingValue: existingValue,
+                existingValue: customFieldValue,
                 formState: formState,
                 onRemove: formState != WranglerFormState.view
                     ? () {
-                        setState(() {
-                          selectedCustomFieldIds.remove(customFieldId);
-                        });
+                        _removeCustomField(customFieldValue.customFieldId);
                       }
                     : null,
               ),
@@ -241,9 +228,14 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAddCustomFieldButton() {
+    // Get custom field IDs that are already added
+    final addedCustomFieldIds = modifiedReceipt.customFields
+        .map((cfv) => cfv.customFieldId)
+        .toSet();
+    
     // Get available custom fields that haven't been added yet
     final availableCustomFields = customFieldModel.customFields
-        .where((cf) => !selectedCustomFieldIds.contains(cf.id))
+        .where((cf) => !addedCustomFieldIds.contains(cf.id))
         .toList();
 
     if (availableCustomFields.isEmpty) {
@@ -288,9 +280,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                   : null,
               trailing: Text(customField.type.name),
               onTap: () {
-                setState(() {
-                  selectedCustomFieldIds.add(customField.id);
-                });
+                _addCustomField(customField.id);
                 Navigator.of(context).pop();
               },
             );
@@ -298,6 +288,39 @@ class _ReceiptForm extends State<ReceiptForm> {
         ],
       ),
     );
+  }
+
+  void _addCustomField(int customFieldId) {
+    // Create a new empty custom field value
+    final newCustomFieldValue = (api.CustomFieldValueBuilder()
+          ..customFieldId = customFieldId
+          ..receiptId = modifiedReceipt.id)
+        .build();
+
+    // Add it to the modified receipt
+    final updatedCustomFields = [
+      ...modifiedReceipt.customFields,
+      newCustomFieldValue,
+    ];
+
+    final updatedReceipt = modifiedReceipt.rebuild((b) => b
+      ..customFields = ListBuilder(updatedCustomFields));
+
+    receiptModel.setModifiedReceipt(updatedReceipt);
+    setState(() {});
+  }
+
+  void _removeCustomField(int customFieldId) {
+    // Remove the custom field from the modified receipt
+    final updatedCustomFields = modifiedReceipt.customFields
+        .where((cfv) => cfv.customFieldId != customFieldId)
+        .toList();
+
+    final updatedReceipt = modifiedReceipt.rebuild((b) => b
+      ..customFields = ListBuilder(updatedCustomFields));
+
+    receiptModel.setModifiedReceipt(updatedReceipt);
+    setState(() {});
   }
 
   Widget buildReceiptItemList() {

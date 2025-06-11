@@ -8,7 +8,7 @@ import 'package:openapi/src/model/receipt_status.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/upsert_category_command.dart';
 import 'package:openapi/src/model/upsert_comment_command.dart';
-import 'package:openapi/src/model/upsert_custom_field_command.dart';
+import 'package:openapi/src/model/upsert_custom_field_value_command.dart';
 import 'package:openapi/src/model/upsert_tag_command.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -73,7 +73,7 @@ abstract class UpsertReceiptCommand implements Built<UpsertReceiptCommand, Upser
 
   /// Custom fields associated to receipt
   @BuiltValueField(wireName: r'customFields')
-  BuiltList<UpsertCustomFieldCommand>? get customFields;
+  BuiltList<UpsertCustomFieldValueCommand>? get customFields;
 
   UpsertReceiptCommand._();
 
@@ -160,7 +160,7 @@ class _$UpsertReceiptCommandSerializer implements PrimitiveSerializer<UpsertRece
       yield r'customFields';
       yield serializers.serialize(
         object.customFields,
-        specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldCommand)]),
+        specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldValueCommand)]),
       );
     }
   }
@@ -259,8 +259,8 @@ class _$UpsertReceiptCommandSerializer implements PrimitiveSerializer<UpsertRece
         case r'customFields':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldCommand)]),
-          ) as BuiltList<UpsertCustomFieldCommand>;
+            specifiedType: const FullType(BuiltList, [FullType(UpsertCustomFieldValueCommand)]),
+          ) as BuiltList<UpsertCustomFieldValueCommand>;
           result.customFields.replace(valueDes);
           break;
         default:

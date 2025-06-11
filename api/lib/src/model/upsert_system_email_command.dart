@@ -15,6 +15,7 @@ part 'upsert_system_email_command.g.dart';
 /// * [port] - IMAP port
 /// * [username] - IMAP username
 /// * [password] - IMAP password
+/// * [useStartTLS] - Whether to use STARTTLS
 @BuiltValue()
 abstract class UpsertSystemEmailCommand implements Built<UpsertSystemEmailCommand, UpsertSystemEmailCommandBuilder> {
   /// IMAP host
@@ -32,6 +33,10 @@ abstract class UpsertSystemEmailCommand implements Built<UpsertSystemEmailComman
   /// IMAP password
   @BuiltValueField(wireName: r'password')
   String get password;
+
+  /// Whether to use STARTTLS
+  @BuiltValueField(wireName: r'useStartTLS')
+  bool? get useStartTLS;
 
   UpsertSystemEmailCommand._();
 
@@ -76,6 +81,13 @@ class _$UpsertSystemEmailCommandSerializer implements PrimitiveSerializer<Upsert
       object.password,
       specifiedType: const FullType(String),
     );
+    if (object.useStartTLS != null) {
+      yield r'useStartTLS';
+      yield serializers.serialize(
+        object.useStartTLS,
+        specifiedType: const FullType(bool),
+      );
+    }
   }
 
   @override
@@ -126,6 +138,13 @@ class _$UpsertSystemEmailCommandSerializer implements PrimitiveSerializer<Upsert
             specifiedType: const FullType(String),
           ) as String;
           result.password = valueDes;
+          break;
+        case r'useStartTLS':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.useStartTLS = valueDes;
           break;
         default:
           unhandled.add(key);

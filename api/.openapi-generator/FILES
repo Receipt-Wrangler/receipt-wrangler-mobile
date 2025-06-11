@@ -10,6 +10,7 @@ doc/AssociatedGroup.md
 doc/AuthApi.md
 doc/BaseModel.md
 doc/BulkStatusUpdateCommand.md
+doc/BulkUserDeleteCommand.md
 doc/Category.md
 doc/CategoryApi.md
 doc/CategoryView.md
@@ -160,6 +161,7 @@ lib/src/model/associated_entity_type.dart
 lib/src/model/associated_group.dart
 lib/src/model/base_model.dart
 lib/src/model/bulk_status_update_command.dart
+lib/src/model/bulk_user_delete_command.dart
 lib/src/model/category.dart
 lib/src/model/category_view.dart
 lib/src/model/check_email_connectivity_command.dart
@@ -255,13 +257,4 @@ lib/src/model/widget.dart
 lib/src/model/widget_type.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/custom_field_api_test.dart
-test/custom_field_option_test.dart
-test/custom_field_test.dart
-test/custom_field_type_test.dart
-test/custom_field_value_test.dart
-test/export_api_test.dart
-test/export_format_test.dart
-test/upsert_custom_field_command_test.dart
-test/upsert_custom_field_option_command_test.dart
-test/upsert_custom_field_value_command_test.dart
+test/bulk_user_delete_command_test.dart

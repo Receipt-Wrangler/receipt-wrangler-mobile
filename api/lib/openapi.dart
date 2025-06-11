@@ -40,6 +40,7 @@ export 'package:openapi/src/model/associated_entity_type.dart';
 export 'package:openapi/src/model/associated_group.dart';
 export 'package:openapi/src/model/base_model.dart';
 export 'package:openapi/src/model/bulk_status_update_command.dart';
+export 'package:openapi/src/model/bulk_user_delete_command.dart';
 export 'package:openapi/src/model/category.dart';
 export 'package:openapi/src/model/category_view.dart';
 export 'package:openapi/src/model/check_email_connectivity_command.dart';

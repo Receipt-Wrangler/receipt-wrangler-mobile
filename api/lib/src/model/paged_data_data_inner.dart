@@ -83,6 +83,7 @@ part 'paged_data_data_inner.g.dart';
 /// * [port] - IMAP port
 /// * [username] - IMAP username
 /// * [password] - IMAP password
+/// * [useStartTLS] - Whether to use STARTTLS
 /// * [canBeRestarted] 
 /// * [options] 
 @BuiltValue()

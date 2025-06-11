@@ -9,6 +9,7 @@ All URIs are relative to */api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**bulkDeleteUsers**](UserApi.md#bulkdeleteusers) | **DELETE** /user/bulk | Bulk delete users
 [**convertDummyUserById**](UserApi.md#convertdummyuserbyid) | **POST** /user/{userId}/convertDummyUserToNormalUser | Converts dummy user
 [**createUser**](UserApi.md#createuser) | **POST** /user | Create user
 [**deleteUserById**](UserApi.md#deleteuserbyid) | **DELETE** /user/{userId} | Delete user
@@ -21,6 +22,48 @@ Method | HTTP request | Description
 [**updateUserById**](UserApi.md#updateuserbyid) | **PUT** /user/{userId} | Update user by id
 [**updateUserProfile**](UserApi.md#updateuserprofile) | **PUT** /user/updateUserProfile | Update user profile
 
+
+# **bulkDeleteUsers**
+> bulkDeleteUsers(bulkUserDeleteCommand)
+
+Bulk delete users
+
+This will delete multiple users by their IDs [SYSTEM ADMIN]
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api = Openapi().getUserApi();
+final BulkUserDeleteCommand bulkUserDeleteCommand = ; // BulkUserDeleteCommand | User IDs to delete
+
+try {
+    api.bulkDeleteUsers(bulkUserDeleteCommand);
+} catch on DioException (e) {
+    print('Exception when calling UserApi->bulkDeleteUsers: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **bulkUserDeleteCommand** | [**BulkUserDeleteCommand**](BulkUserDeleteCommand.md)| User IDs to delete | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **convertDummyUserById**
 > convertDummyUserById(userId, resetPasswordCommand)

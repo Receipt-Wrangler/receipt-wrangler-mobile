@@ -34,7 +34,6 @@ abstract class Claims implements Built<Claims, ClaimsBuilder> {
   /// User's role
   @BuiltValueField(wireName: r'userRole')
   UserRole get userRole;
-
   // enum userRoleEnum {  ADMIN,  USER,  };
 
   /// Display name

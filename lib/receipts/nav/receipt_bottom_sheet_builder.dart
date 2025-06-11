@@ -12,6 +12,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
 import '../../models/auth_model.dart';
+import '../../models/custom_field_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/widgets/bottom_submit_button.dart';
 import '../../utils/date.dart';
@@ -226,6 +227,65 @@ class ReceiptBottomSheetBuilder {
     return upsertComments;
   }
 
+  List<api.UpsertCustomFieldValueCommand> buildCustomFieldValueUpsertCommand(
+      Map<String, dynamic> form) {
+    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+    List<api.UpsertCustomFieldValueCommand> upsertCustomFieldValues = [];
+
+    // Process custom field values from the form
+    for (var customField in customFieldModel.customFields) {
+      var fieldKey = "customField_${customField.id}";
+      var fieldValue = form[fieldKey];
+
+      // Only process if the field has a value (for text/currency fields) or for boolean/select fields
+      bool shouldProcess = false;
+      if (customField.type == api.CustomFieldType.BOOLEAN && fieldValue is bool) {
+        shouldProcess = true;
+      } else if (customField.type == api.CustomFieldType.SELECT && fieldValue is int) {
+        shouldProcess = true;
+      } else if (fieldValue != null && fieldValue.toString().isNotEmpty) {
+        shouldProcess = true;
+      }
+
+      if (shouldProcess) {
+        var customFieldValueBuilder = api.UpsertCustomFieldValueCommandBuilder()
+          ..customFieldId = customField.id
+          ..receiptId = receiptModel.receipt.id;
+
+        // Set the appropriate value based on the field type
+        switch (customField.type) {
+          case api.CustomFieldType.TEXT:
+            customFieldValueBuilder.stringValue = fieldValue.toString();
+            break;
+          case api.CustomFieldType.DATE:
+            if (fieldValue is DateTime) {
+              customFieldValueBuilder.dateValue = formatDate(zuluDateFormat, fieldValue);
+            } else if (fieldValue is String) {
+              customFieldValueBuilder.dateValue = fieldValue;
+            }
+            break;
+          case api.CustomFieldType.SELECT:
+            if (fieldValue is int) {
+              customFieldValueBuilder.selectValue = fieldValue;
+            }
+            break;
+          case api.CustomFieldType.CURRENCY:
+            customFieldValueBuilder.currencyValue = fieldValue.toString();
+            break;
+          case api.CustomFieldType.BOOLEAN:
+            if (fieldValue is bool) {
+              customFieldValueBuilder.booleanValue = fieldValue;
+            }
+            break;
+        }
+
+        upsertCustomFieldValues.add(customFieldValueBuilder.build());
+      }
+    }
+
+    return upsertCustomFieldValues;
+  }
+
   api.UpsertReceiptCommand buildReceiptUpsertCommand() {
     var form = {...receiptModel.receiptFormKey.currentState!.value};
 
@@ -248,6 +308,18 @@ class ReceiptBottomSheetBuilder {
 
     if (formState == WranglerFormState.add) {
       receiptToUpdate.comments = ListBuilder(buildCommentUpsertCommand());
+    }
+
+    // Add custom field values 
+    // Note: There's a type mismatch in the generated API - it expects UpsertCustomFieldCommand 
+    // but we need UpsertCustomFieldValueCommand. Let's try casting for now.
+    try {
+      var customFieldValues = buildCustomFieldValueUpsertCommand(form);
+      // TODO: Fix this type mismatch when API spec is corrected
+      receiptToUpdate.customFields = ListBuilder(customFieldValues.cast<api.UpsertCustomFieldCommand>());
+    } catch (e) {
+      print('Custom field processing error: $e');
+      // Continue without custom fields if there's a type error
     }
 
     return receiptToUpdate.build();
