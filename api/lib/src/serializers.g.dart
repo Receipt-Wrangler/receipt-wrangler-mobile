@@ -16,6 +16,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(AssociatedEntityType.serializer)
       ..add(AssociatedGroup.serializer)
       ..add(BulkStatusUpdateCommand.serializer)
+      ..add(BulkUserDeleteCommand.serializer)
       ..add(Category.serializer)
       ..add(CategoryView.serializer)
       ..add(CheckEmailConnectivityCommand.serializer)
@@ -159,6 +160,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SubjectLineRegex)]),
           () => new ListBuilder<SubjectLineRegex>())
       ..addBuilderFactory(
@@ -202,8 +206,8 @@ Serializers _$serializers = (new Serializers().toBuilder()
           () => new ListBuilder<UpsertCommentCommand>())
       ..addBuilderFactory(
           const FullType(
-              BuiltList, const [const FullType(UpsertCustomFieldCommand)]),
-          () => new ListBuilder<UpsertCustomFieldCommand>())
+              BuiltList, const [const FullType(UpsertCustomFieldValueCommand)]),
+          () => new ListBuilder<UpsertCustomFieldValueCommand>())
       ..addBuilderFactory(
           const FullType(BuiltList,
               const [const FullType(UpsertCustomFieldOptionCommand)]),

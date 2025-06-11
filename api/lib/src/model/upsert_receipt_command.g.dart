@@ -28,7 +28,7 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
   @override
   final BuiltList<UpsertCommentCommand>? comments;
   @override
-  final BuiltList<UpsertCustomFieldCommand>? customFields;
+  final BuiltList<UpsertCustomFieldValueCommand>? customFields;
 
   factory _$UpsertReceiptCommand(
           [void Function(UpsertReceiptCommandBuilder)? updates]) =>
@@ -174,10 +174,10 @@ class UpsertReceiptCommandBuilder
   set comments(ListBuilder<UpsertCommentCommand>? comments) =>
       _$this._comments = comments;
 
-  ListBuilder<UpsertCustomFieldCommand>? _customFields;
-  ListBuilder<UpsertCustomFieldCommand> get customFields =>
-      _$this._customFields ??= new ListBuilder<UpsertCustomFieldCommand>();
-  set customFields(ListBuilder<UpsertCustomFieldCommand>? customFields) =>
+  ListBuilder<UpsertCustomFieldValueCommand>? _customFields;
+  ListBuilder<UpsertCustomFieldValueCommand> get customFields =>
+      _$this._customFields ??= new ListBuilder<UpsertCustomFieldValueCommand>();
+  set customFields(ListBuilder<UpsertCustomFieldValueCommand>? customFields) =>
       _$this._customFields = customFields;
 
   UpsertReceiptCommandBuilder() {

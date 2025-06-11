@@ -14,6 +14,8 @@ class _$SystemEmail extends SystemEmail {
   @override
   final String? host;
   @override
+  final bool? useStartTLS;
+  @override
   final String? username;
   @override
   final int id;
@@ -33,6 +35,7 @@ class _$SystemEmail extends SystemEmail {
       {this.password,
       this.port,
       this.host,
+      this.useStartTLS,
       this.username,
       required this.id,
       required this.createdAt,
@@ -59,6 +62,7 @@ class _$SystemEmail extends SystemEmail {
         password == other.password &&
         port == other.port &&
         host == other.host &&
+        useStartTLS == other.useStartTLS &&
         username == other.username &&
         id == other.id &&
         createdAt == other.createdAt &&
@@ -73,6 +77,7 @@ class _$SystemEmail extends SystemEmail {
     _$hash = $jc(_$hash, password.hashCode);
     _$hash = $jc(_$hash, port.hashCode);
     _$hash = $jc(_$hash, host.hashCode);
+    _$hash = $jc(_$hash, useStartTLS.hashCode);
     _$hash = $jc(_$hash, username.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
@@ -89,6 +94,7 @@ class _$SystemEmail extends SystemEmail {
           ..add('password', password)
           ..add('port', port)
           ..add('host', host)
+          ..add('useStartTLS', useStartTLS)
           ..add('username', username)
           ..add('id', id)
           ..add('createdAt', createdAt)
@@ -114,6 +120,11 @@ class SystemEmailBuilder
   String? _host;
   String? get host => _$this._host;
   set host(covariant String? host) => _$this._host = host;
+
+  bool? _useStartTLS;
+  bool? get useStartTLS => _$this._useStartTLS;
+  set useStartTLS(covariant bool? useStartTLS) =>
+      _$this._useStartTLS = useStartTLS;
 
   String? _username;
   String? get username => _$this._username;
@@ -150,6 +161,7 @@ class SystemEmailBuilder
       _password = $v.password;
       _port = $v.port;
       _host = $v.host;
+      _useStartTLS = $v.useStartTLS;
       _username = $v.username;
       _id = $v.id;
       _createdAt = $v.createdAt;
@@ -181,6 +193,7 @@ class SystemEmailBuilder
             password: password,
             port: port,
             host: host,
+            useStartTLS: useStartTLS,
             username: username,
             id: BuiltValueNullFieldError.checkNotNull(id, r'SystemEmail', 'id'),
             createdAt: BuiltValueNullFieldError.checkNotNull(
