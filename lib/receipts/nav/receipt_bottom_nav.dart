@@ -44,9 +44,16 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       }
     }
 
-    // Process custom fields
+    // Process custom fields - only process fields that are currently part of the receipt
     List<api.CustomFieldValue> customFieldValues = [];
-    for (var customField in customFieldModel.customFields) {
+    for (var existingCustomFieldValue in receiptModel.modifiedReceipt.customFields) {
+      // Find the custom field template
+      var customField = customFieldModel.customFields
+          .where((cf) => cf.id == existingCustomFieldValue.customFieldId)
+          .firstOrNull;
+      
+      if (customField == null) continue; // Skip if template not found
+      
       var fieldKey = "customField_${customField.id}";
       var fieldValue = form[fieldKey];
       
@@ -62,8 +69,13 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       
       if (shouldProcess) {
         var customFieldValueBuilder = api.CustomFieldValueBuilder()
+          ..id = 0  // Use 0 for new custom field values
           ..customFieldId = customField.id
-          ..receiptId = receiptModel.receipt.id;
+          ..receiptId = receiptModel.receipt.id
+          ..createdAt = DateTime.now().toIso8601String()  // Set current timestamp
+          ..createdBy = 0  // Placeholder for user ID
+          ..createdByString = ''  // Empty string placeholder
+          ..updatedAt = '';  // Empty string placeholder
         
         // Set the appropriate value based on the field type
         switch (customField.type) {

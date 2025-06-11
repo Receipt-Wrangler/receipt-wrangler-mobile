@@ -232,8 +232,15 @@ class ReceiptBottomSheetBuilder {
     var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
     List<api.UpsertCustomFieldValueCommand> upsertCustomFieldValues = [];
 
-    // Process custom field values from the form
-    for (var customField in customFieldModel.customFields) {
+    // Process custom field values - only process fields that are currently part of the receipt
+    for (var existingCustomFieldValue in receiptModel.modifiedReceipt.customFields) {
+      // Find the custom field template
+      var customField = customFieldModel.customFields
+          .where((cf) => cf.id == existingCustomFieldValue.customFieldId)
+          .firstOrNull;
+      
+      if (customField == null) continue; // Skip if template not found
+
       var fieldKey = "customField_${customField.id}";
       var fieldValue = form[fieldKey];
 
@@ -310,17 +317,8 @@ class ReceiptBottomSheetBuilder {
       receiptToUpdate.comments = ListBuilder(buildCommentUpsertCommand());
     }
 
-    // Add custom field values 
-    // Note: There's a type mismatch in the generated API - it expects UpsertCustomFieldCommand 
-    // but we need UpsertCustomFieldValueCommand. Let's try casting for now.
-    try {
-      var customFieldValues = buildCustomFieldValueUpsertCommand(form);
-      // TODO: Fix this type mismatch when API spec is corrected
-      receiptToUpdate.customFields = ListBuilder(customFieldValues.cast<api.UpsertCustomFieldCommand>());
-    } catch (e) {
-      print('Custom field processing error: $e');
-      // Continue without custom fields if there's a type error
-    }
+    // Add custom field values
+    receiptToUpdate.customFields = ListBuilder(buildCustomFieldValueUpsertCommand(form));
 
     return receiptToUpdate.build();
   }

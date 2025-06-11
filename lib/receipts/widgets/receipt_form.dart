@@ -40,8 +40,6 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
-  late final modifiedReceipt =
-      Provider.of<ReceiptModel>(context, listen: false).modifiedReceipt;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
@@ -272,29 +270,41 @@ class _ReceiptForm extends State<ReceiptForm> {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 16),
-          ...availableCustomFields.map((customField) {
-            return ListTile(
-              title: Text(customField.name),
-              subtitle: customField.description != null
-                  ? Text(customField.description!)
-                  : null,
-              trailing: Text(customField.type.name),
-              onTap: () {
-                _addCustomField(customField.id);
-                Navigator.of(context).pop();
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: availableCustomFields.length,
+              itemBuilder: (context, index) {
+                final customField = availableCustomFields[index];
+                return ListTile(
+                  title: Text(customField.name),
+                  subtitle: customField.description != null
+                      ? Text(customField.description!)
+                      : null,
+                  trailing: Text(customField.type.name),
+                  onTap: () {
+                    _addCustomField(customField.id);
+                    Navigator.of(context).pop();
+                  },
+                );
               },
-            );
-          }).toList(),
+            ),
+          ),
         ],
       ),
     );
   }
 
   void _addCustomField(int customFieldId) {
-    // Create a new empty custom field value
+    // Create a new empty custom field value with all required fields
     final newCustomFieldValue = (api.CustomFieldValueBuilder()
+          ..id = 0  // Use 0 for new custom field values
           ..customFieldId = customFieldId
-          ..receiptId = modifiedReceipt.id)
+          ..receiptId = modifiedReceipt.id
+          ..createdAt = DateTime.now().toIso8601String()  // Set current timestamp
+          ..createdBy = 0  // Placeholder for user ID
+          ..createdByString = ''  // Empty string placeholder
+          ..updatedAt = '')  // Empty string placeholder
         .build();
 
     // Add it to the modified receipt
@@ -307,7 +317,6 @@ class _ReceiptForm extends State<ReceiptForm> {
       ..customFields = ListBuilder(updatedCustomFields));
 
     receiptModel.setModifiedReceipt(updatedReceipt);
-    setState(() {});
   }
 
   void _removeCustomField(int customFieldId) {
@@ -320,7 +329,6 @@ class _ReceiptForm extends State<ReceiptForm> {
       ..customFields = ListBuilder(updatedCustomFields));
 
     receiptModel.setModifiedReceipt(updatedReceipt);
-    setState(() {});
   }
 
   Widget buildReceiptItemList() {
@@ -489,11 +497,16 @@ class _ReceiptForm extends State<ReceiptForm> {
     }
   }
 
+  // Get the current modified receipt from the model
+  api.Receipt get modifiedReceipt => receiptModel.modifiedReceipt;
+
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
-      key: formKey,
-      child: Column(
+    return Consumer<ReceiptModel>(
+      builder: (context, receiptModel, child) {
+        return FormBuilder(
+          key: formKey,
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           buildAuditDetailSection(),
@@ -547,7 +560,9 @@ class _ReceiptForm extends State<ReceiptForm> {
                   child: Text("Check form value"))
               : SizedBox.shrink(),
         ],
-      ),
+          ),
+        );
+      },
     );
   }
 }
