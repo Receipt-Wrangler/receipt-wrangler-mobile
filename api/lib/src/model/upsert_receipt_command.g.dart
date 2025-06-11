@@ -27,6 +27,8 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
   final BuiltList<UpsertItemCommand>? receiptItems;
   @override
   final BuiltList<UpsertCommentCommand>? comments;
+  @override
+  final BuiltList<UpsertCustomFieldCommand>? customFields;
 
   factory _$UpsertReceiptCommand(
           [void Function(UpsertReceiptCommandBuilder)? updates]) =>
@@ -42,7 +44,8 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
       this.categories,
       this.tags,
       this.receiptItems,
-      this.comments})
+      this.comments,
+      this.customFields})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         name, r'UpsertReceiptCommand', 'name');
@@ -80,7 +83,8 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
         categories == other.categories &&
         tags == other.tags &&
         receiptItems == other.receiptItems &&
-        comments == other.comments;
+        comments == other.comments &&
+        customFields == other.customFields;
   }
 
   @override
@@ -96,6 +100,7 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
     _$hash = $jc(_$hash, tags.hashCode);
     _$hash = $jc(_$hash, receiptItems.hashCode);
     _$hash = $jc(_$hash, comments.hashCode);
+    _$hash = $jc(_$hash, customFields.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -112,7 +117,8 @@ class _$UpsertReceiptCommand extends UpsertReceiptCommand {
           ..add('categories', categories)
           ..add('tags', tags)
           ..add('receiptItems', receiptItems)
-          ..add('comments', comments))
+          ..add('comments', comments)
+          ..add('customFields', customFields))
         .toString();
   }
 }
@@ -168,6 +174,12 @@ class UpsertReceiptCommandBuilder
   set comments(ListBuilder<UpsertCommentCommand>? comments) =>
       _$this._comments = comments;
 
+  ListBuilder<UpsertCustomFieldCommand>? _customFields;
+  ListBuilder<UpsertCustomFieldCommand> get customFields =>
+      _$this._customFields ??= new ListBuilder<UpsertCustomFieldCommand>();
+  set customFields(ListBuilder<UpsertCustomFieldCommand>? customFields) =>
+      _$this._customFields = customFields;
+
   UpsertReceiptCommandBuilder() {
     UpsertReceiptCommand._defaults(this);
   }
@@ -185,6 +197,7 @@ class UpsertReceiptCommandBuilder
       _tags = $v.tags?.toBuilder();
       _receiptItems = $v.receiptItems?.toBuilder();
       _comments = $v.comments?.toBuilder();
+      _customFields = $v.customFields?.toBuilder();
       _$v = null;
     }
     return this;
@@ -224,7 +237,8 @@ class UpsertReceiptCommandBuilder
               categories: _categories?.build(),
               tags: _tags?.build(),
               receiptItems: _receiptItems?.build(),
-              comments: _comments?.build());
+              comments: _comments?.build(),
+              customFields: _customFields?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -236,6 +250,8 @@ class UpsertReceiptCommandBuilder
         _receiptItems?.build();
         _$failedField = 'comments';
         _comments?.build();
+        _$failedField = 'customFields';
+        _customFields?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             r'UpsertReceiptCommand', _$failedField, e.toString());

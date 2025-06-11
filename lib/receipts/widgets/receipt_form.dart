@@ -19,6 +19,7 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/context_model.dart';
+import '../../models/custom_field_model.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
@@ -46,6 +47,8 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
+  late final customFieldModel =
+      Provider.of<CustomFieldModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
@@ -185,6 +188,73 @@ class _ReceiptForm extends State<ReceiptForm> {
                 formKey.currentState!.fields["tags"]!.setValue(tags);
               })
             });
+  }
+
+  Widget buildCustomFields() {
+    return Consumer<CustomFieldModel>(
+      builder: (context, customFieldModel, child) {
+        if (customFieldModel.isLoading) {
+          return Column(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 8),
+              Text("Loading custom fields..."),
+            ],
+          );
+        }
+
+        if (customFieldModel.customFields.isEmpty) {
+          return SizedBox.shrink();
+        }
+
+        return Column(
+          children: customFieldModel.customFields.map((customField) {
+            return Column(
+              children: [
+                buildCustomField(customField),
+                textFieldSpacing,
+              ],
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  Widget buildCustomField(api.CustomField customField) {
+    // For now, only implement TEXT type as requested
+    if (customField.type == api.CustomFieldType.TEXT) {
+      return buildTextCustomField(customField);
+    }
+
+    // Return empty widget for other types for now
+    return SizedBox.shrink();
+  }
+
+  Widget buildTextCustomField(api.CustomField customField) {
+    // Find existing custom field value for this field
+    String? initialValue;
+    var existingValue = modifiedReceipt.customFields?.firstWhere(
+      (cfv) => cfv.customFieldId == customField.id,
+    );
+
+    if (existingValue == null) {
+      return SizedBox.shrink();
+    }
+
+    if (existingValue != null) {
+      initialValue = existingValue.stringValue;
+    }
+
+    return FormBuilderTextField(
+      name: "customField_${customField.id}",
+      decoration: InputDecoration(
+        labelText: customField.name,
+        helperText: customField.description,
+      ),
+      initialValue: initialValue,
+      readOnly: isFieldReadOnly(formState),
+    );
   }
 
   Widget buildReceiptItemList() {
@@ -376,6 +446,7 @@ class _ReceiptForm extends State<ReceiptForm> {
           textFieldSpacing,
           buildStatusField(),
           textFieldSpacing,
+          buildCustomFields(),
           Visibility(
               visible: groupModel
                       .getGroupReceiptSettings(groupId)

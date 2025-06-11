@@ -18,6 +18,7 @@ import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
+import 'package:receipt_wrangler_mobile/models/custom_field_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
@@ -58,6 +59,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => AuthModel()),
       ChangeNotifierProvider(create: (_) => CategoryModel()),
       ChangeNotifierProvider(create: (_) => ContextModel()),
+      ChangeNotifierProvider(create: (_) => CustomFieldModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
       ChangeNotifierProvider(create: (_) => LoadingModel()),
       ChangeNotifierProvider(create: (_) => ReceiptListModel()),
@@ -138,6 +140,13 @@ final _router = GoRouter(
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
+          var customFieldModel =
+              Provider.of<CustomFieldModel>(context, listen: false);
+
+          if (customFieldModel.customFields.isEmpty &&
+              !customFieldModel.isLoading) {
+            customFieldModel.loadCustomFields();
+          }
 
           Future<Response<api.Receipt?>> future = Future.value(
               Response<api.Receipt?>(

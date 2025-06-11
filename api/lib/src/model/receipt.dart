@@ -6,6 +6,7 @@
 import 'package:openapi/src/model/receipt_status.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:openapi/src/model/category.dart';
+import 'package:openapi/src/model/custom_field_value.dart';
 import 'package:openapi/src/model/tag.dart';
 import 'package:openapi/src/model/comment.dart';
 import 'package:openapi/src/model/file_data.dart';
@@ -21,6 +22,7 @@ part 'receipt.g.dart';
 /// * [amount] - Receipt total amount
 /// * [categories] - Categories associated to receipt
 /// * [comments] - Comments associated to receipt
+/// * [customFields] - Custom fields associated to receipt
 /// * [createdAt] 
 /// * [createdBy] 
 /// * [date] - Receipt date
@@ -43,11 +45,15 @@ abstract class Receipt implements Built<Receipt, ReceiptBuilder> {
 
   /// Categories associated to receipt
   @BuiltValueField(wireName: r'categories')
-  BuiltList<Category>? get categories;
+  BuiltList<Category> get categories;
 
   /// Comments associated to receipt
   @BuiltValueField(wireName: r'comments')
-  BuiltList<Comment>? get comments;
+  BuiltList<Comment> get comments;
+
+  /// Custom fields associated to receipt
+  @BuiltValueField(wireName: r'customFields')
+  BuiltList<CustomFieldValue> get customFields;
 
   @BuiltValueField(wireName: r'createdAt')
   String? get createdAt;
@@ -80,7 +86,7 @@ abstract class Receipt implements Built<Receipt, ReceiptBuilder> {
 
   /// Items associated to receipt
   @BuiltValueField(wireName: r'receiptItems')
-  BuiltList<Item>? get receiptItems;
+  BuiltList<Item> get receiptItems;
 
   /// Date resolved
   @BuiltValueField(wireName: r'resolvedDate')
@@ -92,7 +98,7 @@ abstract class Receipt implements Built<Receipt, ReceiptBuilder> {
 
   /// Tags associated to receipt
   @BuiltValueField(wireName: r'tags')
-  BuiltList<Tag>? get tags;
+  BuiltList<Tag> get tags;
 
   @BuiltValueField(wireName: r'updatedAt')
   String? get updatedAt;
@@ -129,20 +135,21 @@ class _$ReceiptSerializer implements PrimitiveSerializer<Receipt> {
       object.amount,
       specifiedType: const FullType(String),
     );
-    if (object.categories != null) {
-      yield r'categories';
-      yield serializers.serialize(
-        object.categories,
-        specifiedType: const FullType(BuiltList, [FullType(Category)]),
-      );
-    }
-    if (object.comments != null) {
-      yield r'comments';
-      yield serializers.serialize(
-        object.comments,
-        specifiedType: const FullType(BuiltList, [FullType(Comment)]),
-      );
-    }
+    yield r'categories';
+    yield serializers.serialize(
+      object.categories,
+      specifiedType: const FullType(BuiltList, [FullType(Category)]),
+    );
+    yield r'comments';
+    yield serializers.serialize(
+      object.comments,
+      specifiedType: const FullType(BuiltList, [FullType(Comment)]),
+    );
+    yield r'customFields';
+    yield serializers.serialize(
+      object.customFields,
+      specifiedType: const FullType(BuiltList, [FullType(CustomFieldValue)]),
+    );
     if (object.createdAt != null) {
       yield r'createdAt';
       yield serializers.serialize(
@@ -189,13 +196,11 @@ class _$ReceiptSerializer implements PrimitiveSerializer<Receipt> {
       object.paidByUserId,
       specifiedType: const FullType(int),
     );
-    if (object.receiptItems != null) {
-      yield r'receiptItems';
-      yield serializers.serialize(
-        object.receiptItems,
-        specifiedType: const FullType(BuiltList, [FullType(Item)]),
-      );
-    }
+    yield r'receiptItems';
+    yield serializers.serialize(
+      object.receiptItems,
+      specifiedType: const FullType(BuiltList, [FullType(Item)]),
+    );
     if (object.resolvedDate != null) {
       yield r'resolvedDate';
       yield serializers.serialize(
@@ -208,13 +213,11 @@ class _$ReceiptSerializer implements PrimitiveSerializer<Receipt> {
       object.status,
       specifiedType: const FullType(ReceiptStatus),
     );
-    if (object.tags != null) {
-      yield r'tags';
-      yield serializers.serialize(
-        object.tags,
-        specifiedType: const FullType(BuiltList, [FullType(Tag)]),
-      );
-    }
+    yield r'tags';
+    yield serializers.serialize(
+      object.tags,
+      specifiedType: const FullType(BuiltList, [FullType(Tag)]),
+    );
     if (object.updatedAt != null) {
       yield r'updatedAt';
       yield serializers.serialize(
@@ -272,6 +275,13 @@ class _$ReceiptSerializer implements PrimitiveSerializer<Receipt> {
             specifiedType: const FullType(BuiltList, [FullType(Comment)]),
           ) as BuiltList<Comment>;
           result.comments.replace(valueDes);
+          break;
+        case r'customFields':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(CustomFieldValue)]),
+          ) as BuiltList<CustomFieldValue>;
+          result.customFields.replace(valueDes);
           break;
         case r'createdAt':
           final valueDes = serializers.deserialize(

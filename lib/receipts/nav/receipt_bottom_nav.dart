@@ -7,6 +7,7 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/routes.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/models/custom_field_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
@@ -22,6 +23,7 @@ class ReceiptBottomNav extends StatefulWidget {
 
 class _ReceiptBottomNav extends State<ReceiptBottomNav> {
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+  late final customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
   var indexSelectedController = StreamController<int>();
   var imagesAddedController = StreamController<api.FileDataView>.broadcast();
 
@@ -41,6 +43,28 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         date = formatDate(zuluDateFormat, DateTime.parse(zuluDate));
       }
     }
+
+    // Process custom fields
+    List<api.CustomFieldValue> customFieldValues = [];
+    for (var customField in customFieldModel.customFields) {
+      var fieldKey = "customField_${customField.id}";
+      var fieldValue = form[fieldKey];
+      
+      if (fieldValue != null && fieldValue.toString().isNotEmpty) {
+        var customFieldValueBuilder = api.CustomFieldValueBuilder()
+          ..customFieldId = customField.id
+          ..receiptId = receiptModel.receipt.id;
+        
+        // Set the appropriate value based on the field type
+        if (customField.type == api.CustomFieldType.TEXT) {
+          customFieldValueBuilder.stringValue = fieldValue.toString();
+        }
+        // Add other field types here when implemented
+        
+        customFieldValues.add(customFieldValueBuilder.build());
+      }
+    }
+
     var modifiedReceipt = (api.ReceiptBuilder()
           ..id = receiptModel.receipt.id
           ..name = form["name"] ?? ""
@@ -53,7 +77,8 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           ..categories = ListBuilder(List<api.Category>.from(
               (form["categories"] ?? []).map((item) => item as api.Category)))
           ..tags = ListBuilder(List<api.Tag>.from(
-              (form["tags"] ?? []).map((item) => item as api.Tag))))
+              (form["tags"] ?? []).map((item) => item as api.Tag)))
+          ..customFields = ListBuilder(customFieldValues))
         .build();
 
     receiptModel.setModifiedReceipt(modifiedReceipt!);

@@ -77,10 +77,16 @@ Class | Method | HTTP request | Description
 [*CategoryApi*](doc/CategoryApi.md) | [**updateCategory**](doc/CategoryApi.md#updatecategory) | **PUT** /category/{categoryId} | Update category
 [*CommentApi*](doc/CommentApi.md) | [**addComment**](doc/CommentApi.md#addcomment) | **POST** /comment/ | Add comment
 [*CommentApi*](doc/CommentApi.md) | [**deleteComment**](doc/CommentApi.md#deletecomment) | **DELETE** /comment/{commentId} | Delete comment
+[*CustomFieldApi*](doc/CustomFieldApi.md) | [**createCustomField**](doc/CustomFieldApi.md#createcustomfield) | **POST** /customField/ | Create custom field
+[*CustomFieldApi*](doc/CustomFieldApi.md) | [**deleteCustomField**](doc/CustomFieldApi.md#deletecustomfield) | **DELETE** /customField/{customFieldId} | Delete custom field
+[*CustomFieldApi*](doc/CustomFieldApi.md) | [**getCustomFieldById**](doc/CustomFieldApi.md#getcustomfieldbyid) | **GET** /customField/{customFieldId} | Get custom field
+[*CustomFieldApi*](doc/CustomFieldApi.md) | [**getPagedCustomFields**](doc/CustomFieldApi.md#getpagedcustomfields) | **POST** /customField/getPagedCustomFields | Get paged custom fields
 [*DashboardApi*](doc/DashboardApi.md) | [**createDashboard**](doc/DashboardApi.md#createdashboard) | **POST** /dashboard/ | Create dashboard
 [*DashboardApi*](doc/DashboardApi.md) | [**deleteDashboard**](doc/DashboardApi.md#deletedashboard) | **DELETE** /dashboard/{dashboardId} | Delete dashboard
 [*DashboardApi*](doc/DashboardApi.md) | [**getDashboardsForUserByGroupId**](doc/DashboardApi.md#getdashboardsforuserbygroupid) | **GET** /dashboard/{groupId} | Get dashboards for a user by group id
 [*DashboardApi*](doc/DashboardApi.md) | [**updateDashboard**](doc/DashboardApi.md#updatedashboard) | **PUT** /dashboard/{dashboardId} | Update dashboard
+[*ExportApi*](doc/ExportApi.md) | [**exportReceiptsById**](doc/ExportApi.md#exportreceiptsbyid) | **POST** /export | Exports receipts
+[*ExportApi*](doc/ExportApi.md) | [**exportReceiptsForGroup**](doc/ExportApi.md#exportreceiptsforgroup) | **POST** /export/{groupId} | Exports receipts
 [*FeatureConfigApi*](doc/FeatureConfigApi.md) | [**getFeatureConfig**](doc/FeatureConfigApi.md#getfeatureconfig) | **GET** /featureConfig | Get feature config
 [*GroupsApi*](doc/GroupsApi.md) | [**createGroup**](doc/GroupsApi.md#creategroup) | **POST** /group | Create group
 [*GroupsApi*](doc/GroupsApi.md) | [**deleteGroup**](doc/GroupsApi.md#deletegroup) | **DELETE** /group/{groupId} | Delete group
@@ -176,8 +182,13 @@ Class | Method | HTTP request | Description
  - [Comment](doc/Comment.md)
  - [CurrencySeparator](doc/CurrencySeparator.md)
  - [CurrencySymbolPosition](doc/CurrencySymbolPosition.md)
+ - [CustomField](doc/CustomField.md)
+ - [CustomFieldOption](doc/CustomFieldOption.md)
+ - [CustomFieldType](doc/CustomFieldType.md)
+ - [CustomFieldValue](doc/CustomFieldValue.md)
  - [Dashboard](doc/Dashboard.md)
  - [EncodedImage](doc/EncodedImage.md)
+ - [ExportFormat](doc/ExportFormat.md)
  - [FeatureConfig](doc/FeatureConfig.md)
  - [FileData](doc/FileData.md)
  - [FileDataView](doc/FileDataView.md)
@@ -233,6 +244,9 @@ Class | Method | HTTP request | Description
  - [UpdateProfileCommand](doc/UpdateProfileCommand.md)
  - [UpsertCategoryCommand](doc/UpsertCategoryCommand.md)
  - [UpsertCommentCommand](doc/UpsertCommentCommand.md)
+ - [UpsertCustomFieldCommand](doc/UpsertCustomFieldCommand.md)
+ - [UpsertCustomFieldOptionCommand](doc/UpsertCustomFieldOptionCommand.md)
+ - [UpsertCustomFieldValueCommand](doc/UpsertCustomFieldValueCommand.md)
  - [UpsertDashboardCommand](doc/UpsertDashboardCommand.md)
  - [UpsertGroupCommand](doc/UpsertGroupCommand.md)
  - [UpsertGroupMemberCommand](doc/UpsertGroupMemberCommand.md)
