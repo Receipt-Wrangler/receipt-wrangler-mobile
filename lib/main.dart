@@ -18,7 +18,6 @@ import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
-import 'package:receipt_wrangler_mobile/models/custom_field_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
@@ -47,6 +46,7 @@ import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 import 'client/client.dart';
 import 'constants/search.dart';
 import 'models/context_model.dart';
+import 'models/custom_field_model.dart';
 import 'models/system_settings_model.dart';
 
 void main() async {
@@ -137,49 +137,75 @@ final _router = GoRouter(
 
           var contextModel = Provider.of<ContextModel>(context, listen: false);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-          var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
-          var bottomSheetBuilder =
-              ReceiptBottomSheetBuilder(context, receiptModel);
           var customFieldModel =
               Provider.of<CustomFieldModel>(context, listen: false);
 
-          if (customFieldModel.customFields.isEmpty &&
-              !customFieldModel.isLoading) {
-            customFieldModel.loadCustomFields();
-          }
-
-          Future<Response<api.Receipt?>> future = Future.value(
-              Response<api.Receipt?>(
-                  data: null, requestOptions: RequestOptions()));
+          var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
+          var bottomSheetBuilder =
+              ReceiptBottomSheetBuilder(context, receiptModel);
 
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
-          if (idsAreDifferent && receiptId.isNotEmpty) {
-            future = OpenApiClient.client.getReceiptApi().getReceiptById(
-                receiptId:
-                    int.parse(state.pathParameters['receiptId'] as String));
+          // Create coordinated loading future for both custom fields and receipt
+          late Future<List<dynamic>> coordinatedFuture;
+          
+          Future<void> customFieldsFuture = Future.value();
+          if (!customFieldModel.isLoading) {
+            customFieldsFuture = customFieldModel.loadCustomFields()
+                .catchError((error) {
+              debugPrint('Custom fields loading failed: $error');
+              return null; // Continue with empty custom fields
+            });
           }
+
+          Future<api.Receipt?> receiptFuture = Future.value(null);
+          if (idsAreDifferent && receiptId.isNotEmpty) {
+            receiptFuture = OpenApiClient.client.getReceiptApi().getReceiptById(
+                receiptId: int.parse(state.pathParameters['receiptId'] as String))
+                .then((response) => response.data)
+                .catchError((error) {
+              debugPrint('Receipt loading failed: $error');
+              throw error; // Receipt failure should trigger error state
+            });
+          }
+
+          // Combine both futures - wait for both to complete
+          // Custom field errors are handled gracefully, receipt errors bubble up
+          coordinatedFuture = Future.wait([
+            customFieldsFuture,
+            receiptFuture,
+          ]);
 
           contextModel.setShellContext(context);
 
-          return FutureBuilder(
-              future: future,
+          return FutureBuilder<List<dynamic>>(
+              future: coordinatedFuture,
               builder: (context, snapshot) {
-                var isReady =
-                    snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData;
+                var isReady = snapshot.connectionState == ConnectionState.done;
+                
+                // Extract receipt data from combined result
+                api.Receipt? receiptData;
+                if (isReady && snapshot.hasData && snapshot.data!.length > 1) {
+                  receiptData = snapshot.data![1] as api.Receipt?;
+                }
 
-                if (isReady && idsAreDifferent) {
-                  receiptModel.setReceipt(
-                      snapshot.data?.data as api.Receipt, false);
+                if (isReady && idsAreDifferent && receiptData != null) {
+                  receiptModel.setReceipt(receiptData, false);
                 }
 
                 if (snapshot.hasError) {
-                  Future.microtask(() =>
-                      showErrorSnackbar(context, "Receipt not available"));
+                  Future.microtask(() {
+                    showErrorSnackbar(context, 
+                        "Failed to load receipt data. Please try again.");
+                  });
                   context.go('/');
                 }
+
+                // Show loading indicator until both custom fields and receipt are ready
+                var showChild = isReady && 
+                    (!idsAreDifferent || receiptData != null) &&
+                    !customFieldModel.isLoading;
 
                 return ScreenWrapper(
                   appBarWidget: ReceiptAppBar(
@@ -187,7 +213,7 @@ final _router = GoRouter(
                   bottomNavigationBarWidget: const ReceiptBottomNav(),
                   bodyPadding: padding,
                   bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-                  child: isReady ? child : const CircularLoadingProgress(),
+                  child: showChild ? child : const CircularLoadingProgress(),
                 );
               });
         },

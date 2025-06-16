@@ -37,8 +37,8 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
   var quickActions = [
     "Split Evenly",
-    "Split Evenly with Portions",
-    "Split by Percentage"
+    "With Portions",
+    "By Percentage"
   ];
   var quickActionsSelection = [true, false, false];
 
@@ -428,10 +428,13 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
                 return SizedBox.shrink();
               },
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [buildToggleButtons()],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [buildToggleButtons()],
+              ),
             ),
             textFieldSpacing,
             buildUserField(),

@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -27,6 +28,7 @@ import '../../shared/functions/forms.dart';
 import '../../shared/functions/status_field.dart';
 import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
+import '../../shared/widgets/custom_field_widget.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -38,8 +40,6 @@ class ReceiptForm extends StatefulWidget {
 class _ReceiptForm extends State<ReceiptForm> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
-  late final modifiedReceipt =
-      Provider.of<ReceiptModel>(context, listen: false).modifiedReceipt;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
@@ -47,8 +47,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
-  late final customFieldModel =
-      Provider.of<CustomFieldModel>(context, listen: false);
+  late final customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
@@ -190,71 +189,164 @@ class _ReceiptForm extends State<ReceiptForm> {
             });
   }
 
-  Widget buildCustomFields() {
-    return Consumer<CustomFieldModel>(
-      builder: (context, customFieldModel, child) {
-        if (customFieldModel.isLoading) {
+  Widget buildCustomFieldsSection() {
+    return Column(
+      children: [
+        // Render existing custom fields
+        ...modifiedReceipt.customFields.map((customFieldValue) {
+          final customField = customFieldModel.customFields
+              .where((cf) => cf.id == customFieldValue.customFieldId)
+              .firstOrNull;
+          
+          // Show loading placeholder if custom field template is not found but still loading
+          if (customField == null) {
+            if (customFieldModel.isLoading) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: const Row(
+                  children: [
+                    SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 8),
+                    Text('Loading custom field...'),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }
+
           return Column(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 8),
-              Text("Loading custom fields..."),
+              CustomFieldWidget(
+                customField: customField,
+                existingValue: customFieldValue,
+                formState: formState,
+                onRemove: formState != WranglerFormState.view
+                    ? () {
+                        _removeCustomField(customFieldValue.customFieldId);
+                      }
+                    : null,
+              ),
+              textFieldSpacing,
             ],
           );
-        }
-
-        if (customFieldModel.customFields.isEmpty) {
-          return SizedBox.shrink();
-        }
-
-        return Column(
-          children: customFieldModel.customFields.map((customField) {
-            return Column(
-              children: [
-                buildCustomField(customField),
-                textFieldSpacing,
-              ],
-            );
-          }).toList(),
-        );
-      },
+        }).toList(),
+        
+        // Add Custom Field button
+        if (formState != WranglerFormState.view)
+          buildAddCustomFieldButton(),
+      ],
     );
   }
 
-  Widget buildCustomField(api.CustomField customField) {
-    // For now, only implement TEXT type as requested
-    if (customField.type == api.CustomFieldType.TEXT) {
-      return buildTextCustomField(customField);
-    }
+  Widget buildAddCustomFieldButton() {
+    // Get custom field IDs that are already added
+    final addedCustomFieldIds = modifiedReceipt.customFields
+        .map((cfv) => cfv.customFieldId)
+        .toSet();
+    
+    // Get available custom fields that haven't been added yet
+    final availableCustomFields = customFieldModel.customFields
+        .where((cf) => !addedCustomFieldIds.contains(cf.id))
+        .toList();
 
-    // Return empty widget for other types for now
-    return SizedBox.shrink();
-  }
-
-  Widget buildTextCustomField(api.CustomField customField) {
-    // Find existing custom field value for this field
-    String? initialValue;
-    var existingValue = modifiedReceipt.customFields?.firstWhere(
-      (cfv) => cfv.customFieldId == customField.id,
-    );
-
-    if (existingValue == null) {
+    if (availableCustomFields.isEmpty) {
       return SizedBox.shrink();
     }
 
-    if (existingValue != null) {
-      initialValue = existingValue.stringValue;
-    }
-
-    return FormBuilderTextField(
-      name: "customField_${customField.id}",
-      decoration: InputDecoration(
-        labelText: customField.name,
-        helperText: customField.description,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButton.icon(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => buildCustomFieldSelectionSheet(availableCustomFields),
+          );
+        },
+        icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+        label: Text(
+          'Add Custom Field',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
       ),
-      initialValue: initialValue,
-      readOnly: isFieldReadOnly(formState),
     );
+  }
+
+  Widget buildCustomFieldSelectionSheet(List<api.CustomField> availableCustomFields) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Select Custom Field',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: availableCustomFields.length,
+              itemBuilder: (context, index) {
+                final customField = availableCustomFields[index];
+                return ListTile(
+                  title: Text(customField.name),
+                  subtitle: customField.description != null
+                      ? Text(customField.description!)
+                      : null,
+                  trailing: Text(customField.type.name),
+                  onTap: () {
+                    _addCustomField(customField.id);
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _addCustomField(int customFieldId) {
+    // Create a new empty custom field value with all required fields
+    final newCustomFieldValue = (api.CustomFieldValueBuilder()
+          ..id = 0  // Use 0 for new custom field values
+          ..customFieldId = customFieldId
+          ..receiptId = modifiedReceipt.id
+          ..createdAt = DateTime.now().toIso8601String()  // Set current timestamp
+          ..createdBy = 0  // Placeholder for user ID
+          ..createdByString = ''  // Empty string placeholder
+          ..updatedAt = '')  // Empty string placeholder
+        .build();
+
+    // Add it to the modified receipt
+    final updatedCustomFields = [
+      ...modifiedReceipt.customFields,
+      newCustomFieldValue,
+    ];
+
+    final updatedReceipt = modifiedReceipt.rebuild((b) => b
+      ..customFields = ListBuilder(updatedCustomFields));
+
+    receiptModel.setModifiedReceipt(updatedReceipt);
+  }
+
+  void _removeCustomField(int customFieldId) {
+    // Remove the custom field from the modified receipt
+    final updatedCustomFields = modifiedReceipt.customFields
+        .where((cfv) => cfv.customFieldId != customFieldId)
+        .toList();
+
+    final updatedReceipt = modifiedReceipt.rebuild((b) => b
+      ..customFields = ListBuilder(updatedCustomFields));
+
+    receiptModel.setModifiedReceipt(updatedReceipt);
   }
 
   Widget buildReceiptItemList() {
@@ -423,11 +515,16 @@ class _ReceiptForm extends State<ReceiptForm> {
     }
   }
 
+  // Get the current modified receipt from the model
+  api.Receipt get modifiedReceipt => receiptModel.modifiedReceipt;
+
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
-      key: formKey,
-      child: Column(
+    return Consumer<ReceiptModel>(
+      builder: (context, receiptModel, child) {
+        return FormBuilder(
+          key: formKey,
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           buildAuditDetailSection(),
@@ -446,7 +543,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           textFieldSpacing,
           buildStatusField(),
           textFieldSpacing,
-          buildCustomFields(),
+          buildCustomFieldsSection(),
+          textFieldSpacing,
           Visibility(
               visible: groupModel
                       .getGroupReceiptSettings(groupId)
@@ -480,7 +578,9 @@ class _ReceiptForm extends State<ReceiptForm> {
                   child: Text("Check form value"))
               : SizedBox.shrink(),
         ],
-      ),
+          ),
+        );
+      },
     );
   }
 }

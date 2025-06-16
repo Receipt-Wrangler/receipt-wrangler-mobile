@@ -8,6 +8,7 @@ import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
+import 'package:openapi/src/api_util.dart';
 import 'package:openapi/src/model/app_data.dart';
 import 'package:openapi/src/model/get_new_refresh_token200_response.dart';
 import 'package:openapi/src/model/internal_error_response.dart';
@@ -129,6 +130,7 @@ class AuthApi {
   ///
   /// Parameters:
   /// * [loginCommand] - Login data
+  /// * [tokensInBody] - When true, tokens are returned in the response body only without setting cookies
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -140,6 +142,7 @@ class AuthApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AppData>> login({ 
     required LoginCommand loginCommand,
+    bool? tokensInBody = false,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -167,6 +170,10 @@ class AuthApi {
       validateStatus: validateStatus,
     );
 
+    final _queryParameters = <String, dynamic>{
+      if (tokensInBody != null) r'tokensInBody': encodeQueryParameter(_serializers, tokensInBody, const FullType(bool)),
+    };
+
     dynamic _bodyData;
 
     try {
@@ -178,6 +185,7 @@ class AuthApi {
          requestOptions: _options.compose(
           _dio.options,
           _path,
+          queryParameters: _queryParameters,
         ),
         type: DioExceptionType.unknown,
         error: error,
@@ -189,6 +197,7 @@ class AuthApi {
       _path,
       data: _bodyData,
       options: _options,
+      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,

@@ -59,7 +59,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **login**
-> AppData login(loginCommand)
+> AppData login(loginCommand, tokensInBody)
 
 Login
 
@@ -71,9 +71,10 @@ import 'package:openapi/api.dart';
 
 final api = Openapi().getAuthApi();
 final LoginCommand loginCommand = ; // LoginCommand | Login data
+final bool tokensInBody = true; // bool | When true, tokens are returned in the response body only without setting cookies
 
 try {
-    final response = api.login(loginCommand);
+    final response = api.login(loginCommand, tokensInBody);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->login: $e\n');
@@ -85,6 +86,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **loginCommand** | [**LoginCommand**](LoginCommand.md)| Login data | 
+ **tokensInBody** | **bool**| When true, tokens are returned in the response body only without setting cookies | [optional] [default to false]
 
 ### Return type
 

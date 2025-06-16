@@ -22,6 +22,7 @@ import 'package:openapi/src/model/associated_entity_type.dart';
 import 'package:openapi/src/model/associated_group.dart';
 import 'package:openapi/src/model/base_model.dart';
 import 'package:openapi/src/model/bulk_status_update_command.dart';
+import 'package:openapi/src/model/bulk_user_delete_command.dart';
 import 'package:openapi/src/model/category.dart';
 import 'package:openapi/src/model/category_view.dart';
 import 'package:openapi/src/model/check_email_connectivity_command.dart';
@@ -126,6 +127,7 @@ part 'serializers.g.dart';
   AssociatedGroup,
   BaseModel,$BaseModel,
   BulkStatusUpdateCommand,
+  BulkUserDeleteCommand,
   Category,
   CategoryView,
   CheckEmailConnectivityCommand,

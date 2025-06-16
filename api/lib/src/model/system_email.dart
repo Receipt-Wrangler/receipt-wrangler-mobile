@@ -21,6 +21,7 @@ part 'system_email.g.dart';
 /// * [port] - IMAP port
 /// * [username] - IMAP username
 /// * [password] - IMAP password
+/// * [useStartTLS] - Whether to use STARTTLS
 @BuiltValue()
 abstract class SystemEmail implements BaseModel, Built<SystemEmail, SystemEmailBuilder> {
   /// IMAP password
@@ -34,6 +35,10 @@ abstract class SystemEmail implements BaseModel, Built<SystemEmail, SystemEmailB
   /// IMAP host
   @BuiltValueField(wireName: r'host')
   String? get host;
+
+  /// Whether to use STARTTLS
+  @BuiltValueField(wireName: r'useStartTLS')
+  bool? get useStartTLS;
 
   /// IMAP username
   @BuiltValueField(wireName: r'username')
@@ -96,6 +101,13 @@ class _$SystemEmailSerializer implements PrimitiveSerializer<SystemEmail> {
       yield serializers.serialize(
         object.host,
         specifiedType: const FullType(String),
+      );
+    }
+    if (object.useStartTLS != null) {
+      yield r'useStartTLS';
+      yield serializers.serialize(
+        object.useStartTLS,
+        specifiedType: const FullType(bool),
       );
     }
     yield r'id';
@@ -181,6 +193,13 @@ class _$SystemEmailSerializer implements PrimitiveSerializer<SystemEmail> {
             specifiedType: const FullType(String),
           ) as String;
           result.host = valueDes;
+          break;
+        case r'useStartTLS':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.useStartTLS = valueDes;
           break;
         case r'id':
           final valueDes = serializers.deserialize(

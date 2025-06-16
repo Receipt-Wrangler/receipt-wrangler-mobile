@@ -149,6 +149,7 @@ Class | Method | HTTP request | Description
 [*TagApi*](doc/TagApi.md) | [**getPagedTags**](doc/TagApi.md#getpagedtags) | **POST** /tag/getPagedTags | Get paged tags
 [*TagApi*](doc/TagApi.md) | [**getTagCountByName**](doc/TagApi.md#gettagcountbyname) | **GET** /tag/{tagName} | Get tag count by name
 [*TagApi*](doc/TagApi.md) | [**updateTag**](doc/TagApi.md#updatetag) | **PUT** /tag/{tagId} | Update tag
+[*UserApi*](doc/UserApi.md) | [**bulkDeleteUsers**](doc/UserApi.md#bulkdeleteusers) | **DELETE** /user/bulk | Bulk delete users
 [*UserApi*](doc/UserApi.md) | [**convertDummyUserById**](doc/UserApi.md#convertdummyuserbyid) | **POST** /user/{userId}/convertDummyUserToNormalUser | Converts dummy user
 [*UserApi*](doc/UserApi.md) | [**createUser**](doc/UserApi.md#createuser) | **POST** /user | Create user
 [*UserApi*](doc/UserApi.md) | [**deleteUserById**](doc/UserApi.md#deleteuserbyid) | **DELETE** /user/{userId} | Delete user
@@ -174,6 +175,7 @@ Class | Method | HTTP request | Description
  - [AssociatedGroup](doc/AssociatedGroup.md)
  - [BaseModel](doc/BaseModel.md)
  - [BulkStatusUpdateCommand](doc/BulkStatusUpdateCommand.md)
+ - [BulkUserDeleteCommand](doc/BulkUserDeleteCommand.md)
  - [Category](doc/Category.md)
  - [CategoryView](doc/CategoryView.md)
  - [CheckEmailConnectivityCommand](doc/CheckEmailConnectivityCommand.md)
