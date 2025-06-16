@@ -137,6 +137,9 @@ final _router = GoRouter(
 
           var contextModel = Provider.of<ContextModel>(context, listen: false);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+          var customFieldModel =
+              Provider.of<CustomFieldModel>(context, listen: false);
+
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
@@ -147,6 +150,10 @@ final _router = GoRouter(
 
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
+
+          if (!customFieldModel.isLoading) {
+            customFieldModel.loadCustomFields();
+          }
 
           if (idsAreDifferent && receiptId.isNotEmpty) {
             future = OpenApiClient.client.getReceiptApi().getReceiptById(
