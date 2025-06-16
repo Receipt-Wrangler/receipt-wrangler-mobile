@@ -144,42 +144,68 @@ final _router = GoRouter(
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
 
-          Future<Response<api.Receipt?>> future = Future.value(
-              Response<api.Receipt?>(
-                  data: null, requestOptions: RequestOptions()));
-
           var receiptId = state.pathParameters['receiptId'] ?? "0";
           var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
+          // Create coordinated loading future for both custom fields and receipt
+          late Future<List<dynamic>> coordinatedFuture;
+          
+          Future<void> customFieldsFuture = Future.value();
           if (!customFieldModel.isLoading) {
-            customFieldModel.loadCustomFields();
+            customFieldsFuture = customFieldModel.loadCustomFields()
+                .catchError((error) {
+              debugPrint('Custom fields loading failed: $error');
+              return null; // Continue with empty custom fields
+            });
           }
 
+          Future<api.Receipt?> receiptFuture = Future.value(null);
           if (idsAreDifferent && receiptId.isNotEmpty) {
-            future = OpenApiClient.client.getReceiptApi().getReceiptById(
-                receiptId:
-                    int.parse(state.pathParameters['receiptId'] as String));
+            receiptFuture = OpenApiClient.client.getReceiptApi().getReceiptById(
+                receiptId: int.parse(state.pathParameters['receiptId'] as String))
+                .then((response) => response.data)
+                .catchError((error) {
+              debugPrint('Receipt loading failed: $error');
+              throw error; // Receipt failure should trigger error state
+            });
           }
+
+          // Combine both futures - wait for both to complete
+          // Custom field errors are handled gracefully, receipt errors bubble up
+          coordinatedFuture = Future.wait([
+            customFieldsFuture,
+            receiptFuture,
+          ]);
 
           contextModel.setShellContext(context);
 
-          return FutureBuilder(
-              future: future,
+          return FutureBuilder<List<dynamic>>(
+              future: coordinatedFuture,
               builder: (context, snapshot) {
-                var isReady =
-                    snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData;
+                var isReady = snapshot.connectionState == ConnectionState.done;
+                
+                // Extract receipt data from combined result
+                api.Receipt? receiptData;
+                if (isReady && snapshot.hasData && snapshot.data!.length > 1) {
+                  receiptData = snapshot.data![1] as api.Receipt?;
+                }
 
-                if (isReady && idsAreDifferent) {
-                  receiptModel.setReceipt(
-                      snapshot.data?.data as api.Receipt, false);
+                if (isReady && idsAreDifferent && receiptData != null) {
+                  receiptModel.setReceipt(receiptData, false);
                 }
 
                 if (snapshot.hasError) {
-                  Future.microtask(() =>
-                      showErrorSnackbar(context, "Receipt not available"));
+                  Future.microtask(() {
+                    showErrorSnackbar(context, 
+                        "Failed to load receipt data. Please try again.");
+                  });
                   context.go('/');
                 }
+
+                // Show loading indicator until both custom fields and receipt are ready
+                var showChild = isReady && 
+                    (!idsAreDifferent || receiptData != null) &&
+                    !customFieldModel.isLoading;
 
                 return ScreenWrapper(
                   appBarWidget: ReceiptAppBar(
@@ -187,7 +213,7 @@ final _router = GoRouter(
                   bottomNavigationBarWidget: const ReceiptBottomNav(),
                   bodyPadding: padding,
                   bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-                  child: isReady ? child : const CircularLoadingProgress(),
+                  child: showChild ? child : const CircularLoadingProgress(),
                 );
               });
         },

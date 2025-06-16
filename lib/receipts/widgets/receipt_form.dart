@@ -198,8 +198,26 @@ class _ReceiptForm extends State<ReceiptForm> {
               .where((cf) => cf.id == customFieldValue.customFieldId)
               .firstOrNull;
           
-          // Skip if custom field template is not found
-          if (customField == null) return const SizedBox.shrink();
+          // Show loading placeholder if custom field template is not found but still loading
+          if (customField == null) {
+            if (customFieldModel.isLoading) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: const Row(
+                  children: [
+                    SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 8),
+                    Text('Loading custom field...'),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }
 
           return Column(
             children: [
