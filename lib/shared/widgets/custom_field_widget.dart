@@ -129,24 +129,17 @@ class CustomFieldWidget extends StatelessWidget {
   }
 
   Widget buildCurrencyField() {
-    return Column(
-      children: [
-        AmountField(
-          label: customField.name,
-          fieldName: fieldName,
-          initialAmount: (initialValue as String?) ?? "0.00",
-          formState: formState,
-        ),
-        if (onRemove != null && !isReadOnly)
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onRemove,
+    return AmountField(
+      label: customField.name,
+      fieldName: fieldName,
+      initialAmount: (initialValue as String?) ?? "0.00",
+      formState: formState,
+      suffixIcon: onRemove != null && !isReadOnly
+          ? IconButton(
               icon: const Icon(Icons.remove_circle_outline),
-              label: const Text('Remove'),
-            ),
-          ),
-      ],
+              onPressed: onRemove,
+            )
+          : null,
     );
   }
 
