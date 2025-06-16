@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:receipt_wrangler_mobile/constants/colors.dart';
 
 class DateBlock extends StatefulWidget {
   const DateBlock({
@@ -25,9 +24,9 @@ class _DateBlock extends State<DateBlock> {
     var dateTextWidgets = formattedDateParts.map((e) {
       return Text(
         e,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          fontWeight: FontWeight.w700,
-          color: gray800,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
       );
     });

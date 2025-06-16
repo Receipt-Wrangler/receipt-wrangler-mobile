@@ -18,7 +18,6 @@ import 'package:receipt_wrangler_mobile/guards/auth-guard.dart';
 import 'package:receipt_wrangler_mobile/home/screens/home.dart';
 import 'package:receipt_wrangler_mobile/models/auth_model.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
-import 'package:receipt_wrangler_mobile/models/custom_field_model.dart';
 import 'package:receipt_wrangler_mobile/models/group_model.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt-list-model.dart';
@@ -45,11 +44,9 @@ import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
 import 'client/client.dart';
-import 'constants/colors.dart';
-import 'constants/font.dart' as typography;
 import 'constants/search.dart';
-import 'constants/theme.dart';
 import 'models/context_model.dart';
+import 'models/custom_field_model.dart';
 import 'models/system_settings_model.dart';
 
 void main() async {
@@ -143,12 +140,6 @@ final _router = GoRouter(
           var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
           var bottomSheetBuilder =
               ReceiptBottomSheetBuilder(context, receiptModel);
-          var customFieldModel =
-              Provider.of<CustomFieldModel>(context, listen: false);
-
-          if (!customFieldModel.isLoading) {
-            customFieldModel.loadCustomFields();
-          }
 
           Future<Response<api.Receipt?>> future = Future.value(
               Response<api.Receipt?>(
@@ -309,186 +300,33 @@ class _ReceiptWrangler extends State<ReceiptWrangler> {
       title: 'Receipt Wrangler',
       theme: ThemeData(
         fontFamily: "Raleway",
-        useMaterial3: true,
-
-        // Color Scheme
-        colorScheme: const ColorScheme(
-          primary: primaryBlue,
-          secondary: secondaryGrayBlue,
-          surface: surfaceColor,
-          error: errorRed,
-          onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: gray900,
-          onError: Colors.white,
-          brightness: Brightness.light,
-          surfaceTint: primaryBlue,
-        ),
-
-        // Typography Theme
-        textTheme: const TextTheme(
-          displayLarge: typography.displayLarge,
-          displayMedium: typography.displayMedium,
-          headlineLarge: typography.headlineLarge,
-          headlineMedium: typography.headlineMedium,
-          titleLarge: typography.titleLarge,
-          titleMedium: typography.titleMedium,
-          bodyLarge: typography.bodyLarge,
-          bodyMedium: typography.bodyMedium,
-          bodySmall: typography.bodySmall,
-          labelLarge: typography.labelLarge,
-          labelMedium: typography.labelMedium,
-          labelSmall: typography.labelSmall,
-        ),
-
-        // Input Decoration Theme
         inputDecorationTheme: const InputDecorationTheme(
-          filled: true,
-          fillColor: gray50,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusMedium)),
-            borderSide: BorderSide(color: gray300, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusMedium)),
-            borderSide: BorderSide(color: gray300, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusMedium)),
-            borderSide: BorderSide(color: primaryBlue, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusMedium)),
-            borderSide: BorderSide(color: errorRed, width: 1),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusMedium)),
-            borderSide: BorderSide(color: errorRed, width: 2),
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
+          border: OutlineInputBorder(),
         ),
-
-        // Card Theme
-        cardTheme: const CardTheme(
-          elevation: elevationLow,
-          shape: cardShape,
-          color: cardColor,
-          shadowColor: shadowMedium,
-          surfaceTintColor: Colors.transparent,
-        ),
-
-        // App Bar Theme
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          scrolledUnderElevation: elevationLow,
-          backgroundColor: surfaceColor,
-          foregroundColor: gray900,
-          titleTextStyle: typography.titleLarge,
-          surfaceTintColor: Colors.transparent,
-        ),
-
-        // Bottom Navigation Theme
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: surfaceColor,
-          selectedItemColor: primaryBlue,
-          unselectedItemColor: gray500,
-          elevation: elevationMedium,
-          type: BottomNavigationBarType.fixed,
-        ),
-
-        // Elevated Button Theme
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: elevationLow,
-            shape: buttonShape,
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-            backgroundColor: primaryBlue,
-            foregroundColor: Colors.white,
-            textStyle: typography.labelLarge,
-          ),
-        ),
-
-        // Outlined Button Theme
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            shape: buttonShape,
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-            side: const BorderSide(color: primaryBlue, width: 1),
-            foregroundColor: primaryBlue,
-            textStyle: typography.labelLarge,
-          ),
-        ),
-
-        // Text Button Theme
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            shape: buttonShape,
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-            foregroundColor: primaryBlue,
-            textStyle: typography.labelLarge,
-          ),
-        ),
-
-        // Chip Theme
         chipTheme: ChipThemeData(
-          shape: chipShape,
-          backgroundColor: gray100,
-          selectedColor: Color.fromRGBO(39, 177, 255, 0.12),
-          labelStyle: typography.labelMedium,
-          elevation: 0,
-          pressElevation: elevationLow,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
         ),
-
-        // Bottom Sheet Theme
         bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: surfaceColor,
-          modalBackgroundColor: surfaceColor,
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(borderRadiusLarge),
-            ),
-          ),
-          elevation: elevationHigh,
+          backgroundColor: Colors.white,
+          modalBackgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
-
-        // Dialog Theme
-        dialogTheme: const DialogTheme(
-          backgroundColor: surfaceColor,
-          surfaceTintColor: Colors.transparent,
-          shape: dialogShape,
-          elevation: elevationMax,
+        colorScheme: const ColorScheme(
+          primary: Color(0xFF27B1FF),
+          secondary: Color(0xFF8EA1AC),
+          surface: Color(0xFFFFFFFF),
+          background: Color(0xFFFFFFFF),
+          error: Color(0xFFd63333),
+          onPrimary: Color(0xFFFFFFFF),
+          onSecondary: Color(0xFF000000),
+          onSurface: Color(0xFF000000),
+          onBackground: Color(0xFF000000),
+          onError: Color(0xFFFFFFFF),
+          brightness: Brightness.light,
         ),
-
-        // Floating Action Button Theme
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
-          elevation: elevationMedium,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadiusLarge)),
-          ),
-        ),
-
-        // List Tile Theme
-        listTileTheme: const ListTileThemeData(
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
-          titleTextStyle: typography.bodyLarge,
-          subtitleTextStyle: typography.bodyMedium,
-        ),
-
-        // Divider Theme
-        dividerTheme: const DividerThemeData(
-          color: gray200,
-          thickness: 1,
-          space: 1,
-        ),
+        useMaterial3: true,
       ),
       routerConfig: _router,
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/models/loading_model.dart';
-import 'package:receipt_wrangler_mobile/constants/theme.dart';
-import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 
 class BottomSubmitButton extends StatefulWidget {
   const BottomSubmitButton(
@@ -23,37 +21,18 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 50,
       child: Consumer<LoadingModel>(
         builder: (context, loadingModel, child) {
-          return ElevatedButton(
+          return MaterialButton(
             onPressed: (loadingModel.isLoading || (widget.disabled ?? false))
                 ? null
                 : widget.onPressed,
-            style: ElevatedButton.styleFrom(
-              elevation: elevationLow,
-              shape: buttonShape,
-              padding: const EdgeInsets.symmetric(
-                vertical: space12,
-                horizontal: space24,
-              ),
+            color: Theme.of(context).primaryColor,
+            child: Text(
+              widget.buttonText ?? "Submit",
+              style: TextStyle(color: Colors.white),
             ),
-            child: loadingModel.isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : Text(
-                    widget.buttonText ?? "Submit",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
           );
         },
       ),
