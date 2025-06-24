@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
-import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/auth/login/screens/auth_screen.dart';
 import 'package:receipt_wrangler_mobile/groups/nav/group/group_app_bar.dart';
@@ -27,9 +26,6 @@ import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
 import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
@@ -38,9 +34,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
-import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
 
-import 'client/client.dart';
 import 'constants/search.dart';
 import 'models/context_model.dart';
 import 'models/custom_field_model.dart';
@@ -124,105 +118,18 @@ final _router = GoRouter(
             builder: (context, state) => const GroupReceiptsScreen(),
           ),
         ]),
-    ShellRoute(
-        builder: (context, state, child) {
-          EdgeInsets? padding;
-
-          var contextModel = Provider.of<ContextModel>(context, listen: false);
-          var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-          var customFieldModel =
-              Provider.of<CustomFieldModel>(context, listen: false);
-
-          var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
-          var bottomSheetBuilder =
-              ReceiptBottomSheetBuilder(context, receiptModel);
-
-          var receiptId = state.pathParameters['receiptId'] ?? "0";
-          var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
-
-          // Create coordinated loading future for both custom fields and receipt
-          late Future<List<dynamic>> coordinatedFuture;
-          
-          Future<void> customFieldsFuture = Future.value();
-          if (!customFieldModel.isLoading) {
-            customFieldsFuture = customFieldModel.loadCustomFields()
-                .catchError((error) {
-              debugPrint('Custom fields loading failed: $error');
-              return null; // Continue with empty custom fields
-            });
-          }
-
-          Future<api.Receipt?> receiptFuture = Future.value(null);
-          if (idsAreDifferent && receiptId.isNotEmpty) {
-            receiptFuture = OpenApiClient.client.getReceiptApi().getReceiptById(
-                receiptId: int.parse(state.pathParameters['receiptId'] as String))
-                .then((response) => response.data)
-                .catchError((error) {
-              debugPrint('Receipt loading failed: $error');
-              throw error; // Receipt failure should trigger error state
-            });
-          }
-
-          // Combine both futures - wait for both to complete
-          // Custom field errors are handled gracefully, receipt errors bubble up
-          coordinatedFuture = Future.wait([
-            customFieldsFuture,
-            receiptFuture,
-          ]);
-
-          contextModel.setShellContext(context);
-
-          return FutureBuilder<List<dynamic>>(
-              future: coordinatedFuture,
-              builder: (context, snapshot) {
-                var isReady = snapshot.connectionState == ConnectionState.done;
-                
-                // Extract receipt data from combined result
-                api.Receipt? receiptData;
-                if (isReady && snapshot.hasData && snapshot.data!.length > 1) {
-                  receiptData = snapshot.data![1] as api.Receipt?;
-                }
-
-                if (isReady && idsAreDifferent && receiptData != null) {
-                  receiptModel.setReceipt(receiptData, false);
-                }
-
-                if (snapshot.hasError) {
-                  Future.microtask(() {
-                    showErrorSnackbar(context, 
-                        "Failed to load receipt data. Please try again.");
-                  });
-                  context.go('/');
-                }
-
-                // Show loading indicator until both custom fields and receipt are ready
-                var showChild = isReady && 
-                    (!idsAreDifferent || receiptData != null) &&
-                    !customFieldModel.isLoading;
-
-                return ScreenWrapper(
-                  appBarWidget: ReceiptAppBar(
-                      actions: actionBuilder.buildAppBarMenu(state)),
-                  bodyPadding: padding,
-                  bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-                  child: showChild ? child : const CircularLoadingProgress(),
-                );
-              });
-        },
-        routes: [
-          GoRoute(
-            path: '/receipts/add',
-            builder: (context, state) => const ReceiptFormScreen(),
-          ),
-          GoRoute(
-            path: '/receipts/:receiptId/view',
-            builder: (context, state) => const ReceiptFormScreen(),
-          ),
-          GoRoute(
-            path: '/receipts/:receiptId/edit',
-            builder: (context, state) => const ReceiptFormScreen(),
-          ),
-        ]),
+    GoRoute(
+      path: '/receipts/add',
+      builder: (context, state) => const ReceiptFormScreen(),
+    ),
+    GoRoute(
+      path: '/receipts/:receiptId/view',
+      builder: (context, state) => const ReceiptFormScreen(),
+    ),
+    GoRoute(
+      path: '/receipts/:receiptId/edit',
+      builder: (context, state) => const ReceiptFormScreen(),
+    ),
     ShellRoute(
       builder: (context, state, child) {
         var searchModel = Provider.of<SearchModel>(context, listen: false);
