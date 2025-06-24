@@ -8,10 +8,11 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
 import '../../models/receipt_model.dart';
-import '../../utils/forms.dart';
 
 class ReceiptImageScreen extends StatefulWidget {
-  const ReceiptImageScreen({super.key});
+  const ReceiptImageScreen({super.key, required this.formState});
+  
+  final WranglerFormState formState;
 
   @override
   State<ReceiptImageScreen> createState() => _ReceiptImageScreen();
@@ -21,7 +22,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
-  late final formState = getFormStateFromContext(context);
+  late final formState = widget.formState;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   var isLoadingBehaviorSubject = BehaviorSubject<bool>();
 
@@ -68,19 +69,28 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-        stream: isLoadingBehaviorSubject.stream,
-        builder: (context, snapshot) {
-          Widget widget = ReceiptImages(
-            imageStream: receiptModel.imageBehaviorSubject.stream,
-            infiniteScrollController: receiptModel.infiniteScrollController,
-          );
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Receipt Images'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: StreamBuilder<bool>(
+          stream: isLoadingBehaviorSubject.stream,
+          builder: (context, snapshot) {
+            Widget widget = ReceiptImages(
+              imageStream: receiptModel.imageBehaviorSubject.stream,
+              infiniteScrollController: receiptModel.infiniteScrollController,
+            );
 
-          if (snapshot.hasData && snapshot.data == true) {
-            widget = const Center(child: CircularProgressIndicator());
-          }
+            if (snapshot.hasData && snapshot.data == true) {
+              widget = const Center(child: CircularProgressIndicator());
+            }
 
-          return widget;
-        });
+            return widget;
+          }),
+    );
   }
 }

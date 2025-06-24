@@ -29,6 +29,7 @@ import '../../shared/functions/status_field.dart';
 import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
 import '../../shared/widgets/custom_field_widget.dart';
+import '../screens/receipt_image_screen.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -363,6 +364,27 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
+  Widget buildViewImagesButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ReceiptImageScreen(formState: formState),
+            ),
+          );
+        },
+        icon: const Icon(Icons.image),
+        label: const Text('View Images'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
   Widget buildSharesHeader() {
     var rowChildren = [
       buildHeaderText("Shares"),
@@ -530,6 +552,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildAuditDetailSection(),
           textFieldSpacing,
           buildDetailsHeader(),
+          textFieldSpacing,
+          buildViewImagesButton(),
           textFieldSpacing,
           buildNameField(),
           textFieldSpacing,

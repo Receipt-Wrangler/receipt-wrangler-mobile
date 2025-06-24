@@ -33,7 +33,6 @@ import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_image_screen.dart';
 import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
 import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
 import 'package:receipt_wrangler_mobile/search/widgets/searchbar.dart';
@@ -130,10 +129,6 @@ final _router = GoRouter(
     ShellRoute(
         builder: (context, state, child) {
           EdgeInsets? padding;
-          var fullPath = state.fullPath!;
-          if (fullPath.contains("images")) {
-            padding = const EdgeInsets.all(0);
-          }
 
           var contextModel = Provider.of<ContextModel>(context, listen: false);
           var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
@@ -218,15 +213,6 @@ final _router = GoRouter(
               });
         },
         routes: [
-          GoRoute(
-              path: '/receipts/images/add',
-              builder: (context, state) => const ReceiptImageScreen()),
-          GoRoute(
-              path: '/receipts/:receiptId/images/view',
-              builder: (context, state) => const ReceiptImageScreen()),
-          GoRoute(
-              path: '/receipts/:receiptId/images/edit',
-              builder: (context, state) => const ReceiptImageScreen()),
           GoRoute(
               path: '/receipts/comments/add',
               builder: (context, state) => const ReceiptCommentScreen()),
