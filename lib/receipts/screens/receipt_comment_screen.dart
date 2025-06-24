@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/receipt_model.dart';
 import '../../enums/form_state.dart';
 import '../widgets/receipt_comments.dart';
+import '../widgets/receipt_comment_app_bar.dart';
 
 class ReceiptCommentScreen extends StatefulWidget {
   const ReceiptCommentScreen({super.key, required this.formState});
@@ -32,12 +33,17 @@ class _ReceiptCommentScreenState extends State<ReceiptCommentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Receipt Comments'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      appBar: ReceiptCommentAppBar(
+        formState: formState,
+        title: 'Receipt Comments',
+        onBack: () => Navigator.of(context).pop(),
+        onEditMode: formState == WranglerFormState.view ? () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => ReceiptCommentScreen(formState: WranglerFormState.edit),
+            ),
+          );
+        } : null,
       ),
       body: Consumer<ReceiptModel>(
         builder: (context, receiptModel, child) {
