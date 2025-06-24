@@ -30,6 +30,7 @@ import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
 import '../../shared/widgets/custom_field_widget.dart';
 import '../screens/receipt_image_screen.dart';
+import '../screens/receipt_comment_screen.dart';
 
 class ReceiptForm extends StatefulWidget {
   const ReceiptForm({super.key});
@@ -385,6 +386,27 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
+  Widget buildViewCommentsButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ReceiptCommentScreen(formState: formState),
+            ),
+          );
+        },
+        icon: const Icon(Icons.chat_bubble),
+        label: const Text('View Comments'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
   Widget buildSharesHeader() {
     var rowChildren = [
       buildHeaderText("Shares"),
@@ -554,6 +576,8 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildDetailsHeader(),
           textFieldSpacing,
           buildViewImagesButton(),
+          textFieldSpacing,
+          buildViewCommentsButton(),
           textFieldSpacing,
           buildNameField(),
           textFieldSpacing,

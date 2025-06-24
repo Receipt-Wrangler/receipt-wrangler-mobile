@@ -144,9 +144,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
           case 0:
             context.go("/receipts/${receipt.id}/${formStateName}");
             break;
-          case 1:
-            context.go("/receipts/${receipt.id}/comments/${formStateName}");
-            break;
           default:
             context.go("/groups");
         }
@@ -154,9 +151,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         switch (indexSelected) {
           case 0:
             context.go("/receipts/${formStateName}");
-            break;
-          case 1:
-            context.go("/receipts/comments/${formStateName}");
             break;
           default:
             context.go("/groups");
@@ -170,9 +164,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
         return 0;
       }
 
-      if (fullPath.contains("comments")) {
-        return 1;
-      }
 
       return 0;
     }
@@ -181,10 +172,6 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       NavigationDestination(
         icon: Icon(Icons.receipt),
         label: "Receipt",
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.chat_bubble),
-        label: "Comments",
       ),
     ];
 

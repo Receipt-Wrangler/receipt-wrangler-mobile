@@ -12,19 +12,19 @@ import '../../models/receipt_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/widgets/user_avatar.dart';
 import '../../utils/date.dart';
-import '../../utils/forms.dart';
 
 class ReceiptComments extends StatefulWidget {
-  const ReceiptComments({super.key, required this.comments});
+  const ReceiptComments({super.key, required this.comments, required this.formState});
 
   final List<api.Comment> comments;
+  final WranglerFormState formState;
 
   @override
   State<ReceiptComments> createState() => _ReceiptComments();
 }
 
 class _ReceiptComments extends State<ReceiptComments> {
-  late final formState = getFormStateFromContext(context);
+  late final formState = widget.formState;
 
   Widget buildWidgetList() {
     var slideEnabled = formState == WranglerFormState.edit ||

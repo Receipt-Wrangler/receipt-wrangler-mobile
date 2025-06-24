@@ -29,9 +29,7 @@ import 'package:receipt_wrangler_mobile/models/user_preferences_model.dart';
 import 'package:receipt_wrangler_mobile/persistence/global_shared_preferences.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar_action_builder.dart';
-import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_nav.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_bottom_sheet_builder.dart';
-import 'package:receipt_wrangler_mobile/receipts/screens/receipt_comment_screen.dart';
 import 'package:receipt_wrangler_mobile/receipts/screens/receipt_form_screen.dart';
 import 'package:receipt_wrangler_mobile/search/nav/search_app_bar.dart';
 import 'package:receipt_wrangler_mobile/search/screens/search_screen.dart';
@@ -205,7 +203,6 @@ final _router = GoRouter(
                 return ScreenWrapper(
                   appBarWidget: ReceiptAppBar(
                       actions: actionBuilder.buildAppBarMenu(state)),
-                  bottomNavigationBarWidget: const ReceiptBottomNav(),
                   bodyPadding: padding,
                   bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
                   child: showChild ? child : const CircularLoadingProgress(),
@@ -213,16 +210,6 @@ final _router = GoRouter(
               });
         },
         routes: [
-          GoRoute(
-              path: '/receipts/comments/add',
-              builder: (context, state) => const ReceiptCommentScreen()),
-          GoRoute(
-              path: '/receipts/:receiptId/comments/view',
-              builder: (context, state) => const ReceiptCommentScreen()),
-          GoRoute(
-            path: '/receipts/:receiptId/comments/edit',
-            builder: (context, state) => const ReceiptCommentScreen(),
-          ),
           GoRoute(
             path: '/receipts/add',
             builder: (context, state) => const ReceiptFormScreen(),
