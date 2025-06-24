@@ -4,6 +4,7 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_app_bar.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
@@ -70,12 +71,17 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Receipt Images'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      appBar: ReceiptImageAppBar(
+        formState: formState,
+        title: 'Receipt Images',
+        onBack: () => Navigator.of(context).pop(),
+        onEditMode: formState == WranglerFormState.view ? () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => ReceiptImageScreen(formState: WranglerFormState.edit),
+            ),
+          );
+        } : null,
       ),
       body: StreamBuilder<bool>(
           stream: isLoadingBehaviorSubject.stream,
