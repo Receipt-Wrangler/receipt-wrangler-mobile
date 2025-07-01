@@ -359,53 +359,98 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildDetailsHeader() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         buildHeaderText("Details"),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCompactActionButton(
+              icon: Icons.image_outlined,
+              label: "Images",
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ReceiptImageScreen(formState: formState),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(width: 12), // Increased spacing to prevent mis-taps
+            _buildCompactActionButton(
+              icon: Icons.chat_bubble_outline,
+              label: "Comments", 
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ReceiptCommentScreen(formState: formState),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ],
     );
   }
 
-  Widget buildViewImagesButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ReceiptImageScreen(formState: formState),
+  Widget _buildCompactActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Tooltip(
+      message: 'View $label',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            // Minimum 48dp touch target for mobile accessibility
+            constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                width: 1,
+              ),
+              // Add subtle shadow for better depth perception
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                ),
+              ],
             ),
-          );
-        },
-        icon: const Icon(Icons.image),
-        label: const Text('View Images'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 20, // Increased from 16 for better visibility
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6), // Increased spacing
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14, // Increased from 12 for better readability
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget buildViewCommentsButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ReceiptCommentScreen(formState: formState),
-            ),
-          );
-        },
-        icon: const Icon(Icons.chat_bubble),
-        label: const Text('View Comments'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
-        ),
-      ),
-    );
-  }
 
   Widget buildSharesHeader() {
     var rowChildren = [
@@ -574,10 +619,6 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildAuditDetailSection(),
           textFieldSpacing,
           buildDetailsHeader(),
-          textFieldSpacing,
-          buildViewImagesButton(),
-          textFieldSpacing,
-          buildViewCommentsButton(),
           textFieldSpacing,
           buildNameField(),
           textFieldSpacing,
