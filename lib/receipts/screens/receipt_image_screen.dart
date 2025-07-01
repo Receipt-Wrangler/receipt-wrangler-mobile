@@ -4,14 +4,16 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_images.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_image_app_bar.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
 import '../../models/receipt_model.dart';
-import '../../utils/forms.dart';
 
 class ReceiptImageScreen extends StatefulWidget {
-  const ReceiptImageScreen({super.key});
+  const ReceiptImageScreen({super.key, required this.formState});
+  
+  final WranglerFormState formState;
 
   @override
   State<ReceiptImageScreen> createState() => _ReceiptImageScreen();
@@ -21,7 +23,7 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
   late final receipt =
       Provider.of<ReceiptModel>(context, listen: false).receipt;
   late final future = getReceiptImageFutures(receipt);
-  late final formState = getFormStateFromContext(context);
+  late final formState = widget.formState;
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   var isLoadingBehaviorSubject = BehaviorSubject<bool>();
 
@@ -68,19 +70,33 @@ class _ReceiptImageScreen extends State<ReceiptImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-        stream: isLoadingBehaviorSubject.stream,
-        builder: (context, snapshot) {
-          Widget widget = ReceiptImages(
-            imageStream: receiptModel.imageBehaviorSubject.stream,
-            infiniteScrollController: receiptModel.infiniteScrollController,
+    return Scaffold(
+      appBar: ReceiptImageAppBar(
+        formState: formState,
+        title: 'Receipt Images',
+        onBack: () => Navigator.of(context).pop(),
+        onEditMode: formState == WranglerFormState.view ? () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => ReceiptImageScreen(formState: WranglerFormState.edit),
+            ),
           );
+        } : null,
+      ),
+      body: StreamBuilder<bool>(
+          stream: isLoadingBehaviorSubject.stream,
+          builder: (context, snapshot) {
+            Widget widget = ReceiptImages(
+              imageStream: receiptModel.imageBehaviorSubject.stream,
+              infiniteScrollController: receiptModel.infiniteScrollController,
+            );
 
-          if (snapshot.hasData && snapshot.data == true) {
-            widget = const Center(child: CircularProgressIndicator());
-          }
+            if (snapshot.hasData && snapshot.data == true) {
+              widget = const Center(child: CircularProgressIndicator());
+            }
 
-          return widget;
-        });
+            return widget;
+          }),
+    );
   }
 }

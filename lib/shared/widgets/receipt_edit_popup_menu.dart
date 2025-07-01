@@ -9,20 +9,22 @@ import '../functions/permissions.dart';
 
 class ReceiptEditPopupMenu extends StatelessWidget {
   const ReceiptEditPopupMenu(
-      {super.key, required this.groupId, required this.popupMenuChildren});
+      {super.key, required this.groupId, required this.popupMenuChildren, this.formState});
 
   final int groupId;
 
   final List<PopupMenuEntry> popupMenuChildren;
 
+  final WranglerFormState? formState;
+
   @override
   Widget build(BuildContext context) {
     late final authModel = Provider.of<AuthModel>(context, listen: false);
     late final groupModel = Provider.of<GroupModel>(context, listen: false);
-    late final formState = getFormStateFromContext(context);
+    late final formStateToUse = formState ?? getFormStateFromContext(context);
     var canEdit = canEditReceipt(authModel, groupModel, groupId);
 
-    if (formState == WranglerFormState.add) {
+    if (formStateToUse == WranglerFormState.add) {
       canEdit = true;
     }
 
