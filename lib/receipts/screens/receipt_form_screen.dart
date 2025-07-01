@@ -22,28 +22,16 @@ class ReceiptFormScreen extends StatefulWidget {
 }
 
 class _ReceiptFormScreen extends State<ReceiptFormScreen> {
-  @override
-  Widget build(BuildContext context) {
-    EdgeInsets? padding;
+  late final Future<List<dynamic>> _coordinatedFuture = _loadData();
 
-    var contextModel = Provider.of<ContextModel>(context, listen: false);
-    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-    var customFieldModel =
-        Provider.of<CustomFieldModel>(context, listen: false);
-
+  Future<List<dynamic>> _loadData() async {
+    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
     var state = GoRouterState.of(context);
-    var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
-    var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel);
-
     var receiptId = state.pathParameters['receiptId'] ?? "0";
-
-    // Create coordinated loading future for both custom fields and receipt
-    late Future<List<dynamic>> coordinatedFuture;
 
     Future<void> customFieldsFuture = Future.value(null);
     if (!customFieldModel.isLoading) {
-      customFieldsFuture =
-          customFieldModel.loadCustomFields().catchError((error) {
+      customFieldsFuture = customFieldModel.loadCustomFields().catchError((error) {
         debugPrint('Custom fields loading failed: $error');
         return null; // Continue with empty custom fields
       });
@@ -64,15 +52,28 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
 
     // Combine both futures - wait for both to complete
     // Custom field errors are handled gracefully, receipt errors bubble up
-    coordinatedFuture = Future.wait([
+    return Future.wait([
       customFieldsFuture,
       receiptFuture,
     ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    EdgeInsets? padding;
+
+    var contextModel = Provider.of<ContextModel>(context, listen: false);
+    var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+
+    var state = GoRouterState.of(context);
+    var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
+    var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel);
 
     contextModel.setShellContext(context);
 
     return FutureBuilder<List<dynamic>>(
-        future: coordinatedFuture,
+        future: _coordinatedFuture,
         builder: (context, snapshot) {
           var isReady = snapshot.connectionState == ConnectionState.done;
 
