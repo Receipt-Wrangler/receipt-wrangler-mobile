@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
@@ -120,6 +119,10 @@ final _router = GoRouter(
         ]),
     GoRoute(
       path: '/receipts/add',
+      redirect: (context, state) {
+        Provider.of<ReceiptModel>(context, listen: false).resetModel();
+        return null;
+      },
       builder: (context, state) => const ReceiptFormScreen(),
     ),
     GoRoute(
