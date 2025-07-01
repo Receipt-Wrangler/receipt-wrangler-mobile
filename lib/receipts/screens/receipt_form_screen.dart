@@ -33,28 +33,28 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
 
     var state = GoRouterState.of(context);
     var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
-    var bottomSheetBuilder =
-        ReceiptBottomSheetBuilder(context, receiptModel);
+    var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel);
 
     var receiptId = state.pathParameters['receiptId'] ?? "0";
-    var idsAreDifferent = receiptId != receiptModel.receipt.id.toString();
 
     // Create coordinated loading future for both custom fields and receipt
     late Future<List<dynamic>> coordinatedFuture;
-    
-    Future<void> customFieldsFuture = Future.value();
+
+    Future<void> customFieldsFuture = Future.value(null);
     if (!customFieldModel.isLoading) {
-      customFieldsFuture = customFieldModel.loadCustomFields()
-          .catchError((error) {
+      customFieldsFuture =
+          customFieldModel.loadCustomFields().catchError((error) {
         debugPrint('Custom fields loading failed: $error');
         return null; // Continue with empty custom fields
       });
     }
 
     Future<api.Receipt?> receiptFuture = Future.value(null);
-    if (idsAreDifferent && receiptId.isNotEmpty) {
-      receiptFuture = OpenApiClient.client.getReceiptApi().getReceiptById(
-          receiptId: int.parse(state.pathParameters['receiptId'] as String))
+    if (receiptId != "0") {
+      receiptFuture = OpenApiClient.client
+          .getReceiptApi()
+          .getReceiptById(
+              receiptId: int.parse(state.pathParameters['receiptId'] as String))
           .then((response) => response.data)
           .catchError((error) {
         debugPrint('Receipt loading failed: $error');
@@ -75,14 +75,14 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
         future: coordinatedFuture,
         builder: (context, snapshot) {
           var isReady = snapshot.connectionState == ConnectionState.done;
-          
+
           // Extract receipt data from combined result
           api.Receipt? receiptData;
           if (isReady && snapshot.hasData && snapshot.data!.length > 1) {
             receiptData = snapshot.data![1] as api.Receipt?;
           }
 
-          if (isReady && idsAreDifferent && receiptData != null) {
+          if (isReady && receiptData != null) {
             receiptModel.setReceipt(receiptData, false);
           }
 
@@ -91,16 +91,14 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
             context.go('/');
           }
 
-          var showChild = isReady && 
-              (!idsAreDifferent || receiptData != null) &&
-              !customFieldModel.isLoading;
+          var showChild = isReady && !customFieldModel.isLoading;
 
           return ScreenWrapper(
-            appBarWidget: ReceiptAppBar(
-                actions: actionBuilder.buildAppBarMenu(state)),
+            appBarWidget:
+                ReceiptAppBar(actions: actionBuilder.buildAppBarMenu(state)),
             bodyPadding: padding,
             bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
-            child: showChild 
+            child: showChild
                 ? SingleChildScrollView(child: const ReceiptForm())
                 : const CircularLoadingProgress(),
           );
