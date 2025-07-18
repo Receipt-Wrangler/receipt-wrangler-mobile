@@ -257,4 +257,3 @@ lib/src/model/widget.dart
 lib/src/model/widget_type.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/bulk_user_delete_command_test.dart

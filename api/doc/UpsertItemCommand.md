@@ -9,7 +9,7 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **amount** | **String** | Amount the item costs | 
-**chargedToUserId** | **int** | User foreign key | 
+**chargedToUserId** | **int** | User foreign key | [optional] 
 **name** | **String** | Item name | 
 **receiptId** | **int** | Receipt foreign key | 
 **status** | [**ItemStatus**](ItemStatus.md) |  | 

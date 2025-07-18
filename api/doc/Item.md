@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **isTaxed** | **bool** | Is taxed (not used) | [optional] 
 **amount** | **String** | Amount the item costs | 
-**chargedToUserId** | **int** | User foreign key | 
+**chargedToUserId** | **int** | User foreign key | [optional] 
 **createdAt** | **String** |  | [optional] 
 **createdBy** | **int** |  | [optional] 
 **id** | **int** |  | [optional] 

@@ -39,7 +39,7 @@ abstract class Item implements Built<Item, ItemBuilder> {
 
   /// User foreign key
   @BuiltValueField(wireName: r'chargedToUserId')
-  int get chargedToUserId;
+  int? get chargedToUserId;
 
   @BuiltValueField(wireName: r'createdAt')
   String? get createdAt;
@@ -108,11 +108,13 @@ class _$ItemSerializer implements PrimitiveSerializer<Item> {
       object.amount,
       specifiedType: const FullType(String),
     );
-    yield r'chargedToUserId';
-    yield serializers.serialize(
-      object.chargedToUserId,
-      specifiedType: const FullType(int),
-    );
+    if (object.chargedToUserId != null) {
+      yield r'chargedToUserId';
+      yield serializers.serialize(
+        object.chargedToUserId,
+        specifiedType: const FullType(int),
+      );
+    }
     if (object.createdAt != null) {
       yield r'createdAt';
       yield serializers.serialize(
