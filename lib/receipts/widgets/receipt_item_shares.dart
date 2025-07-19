@@ -17,8 +17,8 @@ import '../../models/receipt_model.dart';
 import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
-class ReceiptItemItems extends StatefulWidget {
-  const ReceiptItemItems({
+class ReceiptItemShares extends StatefulWidget {
+  const ReceiptItemShares({
     super.key,
     required this.items,
     required this.groupId,
@@ -29,10 +29,10 @@ class ReceiptItemItems extends StatefulWidget {
   final int groupId;
 
   @override
-  State<ReceiptItemItems> createState() => _ReceiptItemItems();
+  State<ReceiptItemShares> createState() => _ReceiptItemShares();
 }
 
-class _ReceiptItemItems extends State<ReceiptItemItems> {
+class _ReceiptItemShares extends State<ReceiptItemShares> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
   late final groupModel = Provider.of<GroupModel>(context, listen: false);

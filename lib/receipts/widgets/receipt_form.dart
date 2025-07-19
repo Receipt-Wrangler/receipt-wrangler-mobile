@@ -10,7 +10,7 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions_submit_button.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
