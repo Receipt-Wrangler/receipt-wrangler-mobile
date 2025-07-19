@@ -11,6 +11,7 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions_submit_button.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
@@ -53,8 +54,10 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final shellContext =
       Provider.of<ContextModel>(context, listen: false).shellContext;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
+  final addItemFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
   bool isAddingShare = false;
+  bool isAddingItem = false;
 
   @override
   void initState() {
@@ -604,6 +607,126 @@ class _ReceiptForm extends State<ReceiptForm> {
     }
   }
 
+  Widget buildItemsHeader() {
+    var rowChildren = [
+      buildHeaderText("Items"),
+    ];
+
+    if (formState != WranglerFormState.view) {
+      rowChildren.add(Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+            onPressed: (isAddingItem || groupId == 0)
+                ? null
+                : () {
+                    setState(() {
+                      isAddingItem = true;
+                    });
+                  },
+          ),
+        ],
+      ));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ...rowChildren,
+      ],
+    );
+  }
+
+  Widget buildAddItemCard() {
+    if (isAddingItem) {
+      return Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(children: [
+                Text(
+                  "Add Item",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ]),
+              textFieldSpacing,
+              FormBuilder(
+                key: addItemFormKey,
+                child: Column(
+                  children: [
+                    FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(labelText: "Name"),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                    textFieldSpacing,
+                    AmountField(
+                        label: "Amount",
+                        fieldName: "amount",
+                        initialAmount: "0.00",
+                        formState: formState),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            child: Text("Add Item"),
+                            onPressed: () {
+                              if (!addItemFormKey.currentState!
+                                  .saveAndValidate()) {
+                                return;
+                              }
+                              var form = addItemFormKey.currentState!.value;
+
+                              var items = [...receiptModel.items];
+                              var newItem = (api.ItemBuilder()
+                                    ..name = form["name"]
+                                    ..amount = form["amount"]
+                                    ..chargedToUserId = null
+                                    ..receiptId = receipt?.id ?? 0
+                                    ..status = api.ItemStatus.OPEN)
+                                  .build();
+
+                              items.add(FormItem.fromItem(newItem));
+
+                              receiptModel.setItems(items);
+                              setState(() {
+                                isAddingItem = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              setState(() {
+                                isAddingItem = false;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
   // Get the current modified receipt from the model
   api.Receipt get modifiedReceipt => receiptModel.modifiedReceipt;
 
@@ -655,6 +778,14 @@ class _ReceiptForm extends State<ReceiptForm> {
           buildSharesHeader(),
           textFieldSpacing,
           buildAddSharesCard(),
+          textFieldSpacing,
+          ReceiptShareField(
+            groupId: groupId,
+          ),
+          textFieldSpacing,
+          buildItemsHeader(),
+          textFieldSpacing,
+          buildAddItemCard(),
           textFieldSpacing,
           buildReceiptItemList(),
           textFieldSpacing,

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_shares.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_items.dart';
 
 import '../../models/receipt_model.dart';
 
-class ReceiptShareField extends StatefulWidget {
-  const ReceiptShareField({super.key, required this.groupId});
+class ReceiptItemField extends StatefulWidget {
+  const ReceiptItemField({super.key, required this.groupId});
 
   final int groupId;
 
   @override
-  _ReceiptShareFieldState createState() {
-    return _ReceiptShareFieldState();
+  _ReceiptItemFieldState createState() {
+    return _ReceiptItemFieldState();
   }
 }
 
-class _ReceiptShareFieldState extends State<ReceiptShareField> {
+class _ReceiptItemFieldState extends State<ReceiptItemField> {
   @override
   void initState() {
     super.initState();
@@ -31,8 +31,8 @@ class _ReceiptShareFieldState extends State<ReceiptShareField> {
     return Consumer<ReceiptModel>(
       builder: (context, consumerModel, child) {
         return InputDecorator(
-          decoration: const InputDecoration(labelText: "Shared With"),
-          child: ReceiptItemShares(
+          decoration: const InputDecoration(labelText: "Items"),
+          child: ReceiptItemItems(
             items: consumerModel.items ?? [],
             groupId: widget.groupId,
           ),

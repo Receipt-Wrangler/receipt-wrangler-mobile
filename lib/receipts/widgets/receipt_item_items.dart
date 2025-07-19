@@ -1,15 +1,11 @@
-// TODO: fix delete, and fix adding new items, fix broken amount owed
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
-import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
-import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/group_model.dart';
@@ -17,121 +13,89 @@ import '../../models/receipt_model.dart';
 import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
-class ReceiptItemShares extends StatefulWidget {
-  const ReceiptItemShares({
+class ReceiptItemItems extends StatefulWidget {
+  const ReceiptItemItems({
     super.key,
     required this.items,
     required this.groupId,
   });
 
   final List<FormItem> items;
-
   final int groupId;
 
   @override
-  State<ReceiptItemShares> createState() => _ReceiptItemShares();
+  State<ReceiptItemItems> createState() => _ReceiptItemItems();
 }
 
-class _ReceiptItemShares extends State<ReceiptItemShares> {
-  var indexSelected = 0;
-  var expandedUserMap = <int, bool>{};
+class _ReceiptItemItems extends State<ReceiptItemItems> {
+  var expandedItemMap = <String, bool>{};
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
-  Map<int, List<FormItem>> getUserItemMap() {
-    var itemMap = <int, List<FormItem>>{};
-    for (var item in widget.items) {
-      // Only include items that have a valid chargedToUserId (shares, not items)
-      if (item.chargedToUserId != null) {
-        if (itemMap.containsKey(item.chargedToUserId)) {
-          itemMap[item.chargedToUserId]!.add(item);
-        } else {
-          itemMap[item.chargedToUserId!] = [item];
-        }
-      }
-    }
-
-    return itemMap;
+  List<FormItem> getItems() {
+    return widget.items.where((item) => item.chargedToUserId == null).toList();
   }
 
-  Widget buildUserExpansionList(Map<int, List<FormItem>> userItemMap) {
+  Widget buildItemExpansionList(List<FormItem> items) {
     var expansionList = ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
-          // TODO: could probably be simplified by using index instead of user id in map
-          var userId = userItemMap.keys.elementAt(index);
-          expandedUserMap[userId] = isExpanded;
+          var item = items[index];
+          expandedItemMap[item.formId] = isExpanded;
         });
       },
-      children: userItemMap.entries
-          .map((e) => buildExpansionPanel(e.key, e.value))
+      children: items
+          .map((item) => buildExpansionPanel(item, items.indexOf(item)))
           .toList(),
     );
 
     return expansionList;
   }
 
-  ExpansionPanel buildExpansionPanel(int userId, List<FormItem> items) {
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    var userIdString = userId.toString();
-    var user = userModel.getUserById(userIdString);
-    var expanded = expandedUserMap[userId] ?? false;
-    
-    // Fallback display name if user not found
-    var displayName = user?.displayName ?? "Unknown User (ID: $userId)";
-
-    var owedAmount = items
-        .map((item) => exchangeUSDToCustom(item.amount))
-        .reduce((value, element) => value + element);
+  ExpansionPanel buildExpansionPanel(FormItem item, int itemIndex) {
+    var expanded = expandedItemMap[item.formId] ?? false;
 
     return ExpansionPanel(
         canTapOnHeader: true,
         isExpanded: expanded,
         headerBuilder: (context, expanded) {
           return ListTile(
-            title: Text("$displayName - Amount Owed: $owedAmount"),
+            title: Text(item.name.isEmpty ? "Unnamed Item" : item.name),
+            subtitle: Text("Amount: ${item.amount}"),
           );
         },
         body: Container(
-          child: buildExpansionPanelBody(items),
+          padding: const EdgeInsets.all(16.0),
+          child: buildExpansionPanelBody(item, itemIndex),
         ));
   }
 
-  Widget buildExpansionPanelBody(List<FormItem> items) {
+  Widget buildExpansionPanelBody(FormItem item, int itemIndex) {
     List<Widget> itemWidgets = [];
-    for (var i = 0; i < items.length; i++) {
-      itemWidgets.add(textFieldSpacing);
 
-      var itemIndex =
-          widget.items.indexWhere((item) => item.formId == items[i].formId);
-
-      itemWidgets.add(buildItemRow(items[i], itemIndex));
-    }
+    var actualIndex = widget.items.indexWhere((i) => i.formId == item.formId);
+    itemWidgets.add(buildItemRow(item, actualIndex));
 
     if (formState != WranglerFormState.view) {
       itemWidgets.add(textFieldSpacing);
       itemWidgets.add(
         ElevatedButton(
           onPressed: () {
-            formKey.currentState?.save();
             var newItems = [...widget.items];
-            var newItem = (api.ItemBuilder()
-                  ..name = ""
-                  ..amount = "0.00"
-                  ..chargedToUserId = items[0].chargedToUserId
-                  ..receiptId = receiptModel.receipt.id
-                  ..status = api.ItemStatus.OPEN)
-                .build();
-            newItems.add(FormItem.fromItem(newItem));
+            newItems.removeAt(actualIndex);
 
             setState(() {
               receiptModel.setItems(newItems);
             });
           },
-          child: const Text("Add Share"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+          ),
+          child: const Text("Delete Item"),
         ),
       );
     }
@@ -158,20 +122,6 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
         formKey.currentState?.fields[categoryName]?.value ?? item.categories;
     var initialTags = formKey.currentState?.fields[tagName]?.value ?? item.tags;
 
-    Widget iconButton = SizedBox.shrink();
-    if (!isFieldReadOnly(formState)) {
-      iconButton = IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
-          onPressed: () {
-            var newItems = [...widget.items];
-            newItems.removeAt(index);
-
-            setState(() {
-              receiptModel.setItems(newItems);
-            });
-          });
-    }
-    // TODO: need to fix new item data being wiped out when adding
     return Column(
       children: [
         Row(
@@ -185,6 +135,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
                 readOnly: isFieldReadOnly(formState),
               ),
             ),
+            const SizedBox(width: 8),
             Expanded(
                 key: Key(amountName),
                 child: AmountField(
@@ -192,6 +143,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
                     fieldName: amountName,
                     initialAmount: initialAmount,
                     formState: formState)),
+            const SizedBox(width: 8),
             Expanded(
               key: Key(statusName),
               child: itemStatusField(
@@ -201,9 +153,9 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
                 formState,
               ),
             ),
-            iconButton
           ],
         ),
+        textFieldSpacing,
         Visibility(
           visible: groupModel
                   .getGroupReceiptSettings(widget.groupId)
@@ -242,12 +194,12 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
 
   @override
   Widget build(BuildContext context) {
-    var userItemMap = getUserItemMap();
+    var items = getItems();
 
-    if (userItemMap.isEmpty) {
-      return const Text("No shares found");
+    if (items.isEmpty) {
+      return const Text("No items found");
     }
 
-    return buildUserExpansionList(userItemMap);
+    return buildItemExpansionList(items);
   }
 }
