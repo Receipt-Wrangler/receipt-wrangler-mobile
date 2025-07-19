@@ -47,7 +47,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       if (itemMap.containsKey(item.chargedToUserId)) {
         itemMap[item.chargedToUserId]!.add(item);
       } else {
-        itemMap[item.chargedToUserId] = [item];
+        itemMap[item.chargedToUserId ?? 0] = [item];
       }
     }
 
