@@ -28,7 +28,7 @@ class ReceiptItemItems extends StatefulWidget {
 }
 
 class _ReceiptItemItems extends State<ReceiptItemItems> {
-  var expandedItemMap = <String, bool>{};
+  bool isExpanded = false;
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
@@ -39,69 +39,121 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     return widget.items.where((item) => item.chargedToUserId == null).toList();
   }
 
-  Widget buildItemExpansionList(List<FormItem> items) {
+  Widget buildSingleExpansionPanel(List<FormItem> items) {
     var expansionList = ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
+      expansionCallback: (int index, bool expanded) {
         setState(() {
-          var item = items[index];
-          expandedItemMap[item.formId] = isExpanded;
+          isExpanded = expanded;
         });
       },
-      children: items
-          .map((item) => buildExpansionPanel(item, items.indexOf(item)))
-          .toList(),
+      children: [
+        ExpansionPanel(
+          canTapOnHeader: true,
+          isExpanded: isExpanded,
+          headerBuilder: (context, expanded) {
+            return ListTile(
+              title: Text("Items (${items.length})"),
+              subtitle: items.isNotEmpty 
+                  ? Text("Total items: ${items.length}")
+                  : Text("No items added"),
+            );
+          },
+          body: buildItemsList(items),
+        ),
+      ],
     );
 
     return expansionList;
   }
 
-  ExpansionPanel buildExpansionPanel(FormItem item, int itemIndex) {
-    var expanded = expandedItemMap[item.formId] ?? false;
-
-    return ExpansionPanel(
-        canTapOnHeader: true,
-        isExpanded: expanded,
-        headerBuilder: (context, expanded) {
-          return ListTile(
-            title: Text(item.name.isEmpty ? "Unnamed Item" : item.name),
-            subtitle: Text("Amount: ${item.amount}"),
-          );
-        },
-        body: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: buildExpansionPanelBody(item, itemIndex),
-        ));
-  }
-
-  Widget buildExpansionPanelBody(FormItem item, int itemIndex) {
-    List<Widget> itemWidgets = [];
-
-    var actualIndex = widget.items.indexWhere((i) => i.formId == item.formId);
-    itemWidgets.add(buildItemRow(item, actualIndex));
-
-    if (formState != WranglerFormState.view) {
-      itemWidgets.add(textFieldSpacing);
-      itemWidgets.add(
-        ElevatedButton(
-          onPressed: () {
-            var newItems = [...widget.items];
-            newItems.removeAt(actualIndex);
-
-            setState(() {
-              receiptModel.setItems(newItems);
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: const Text("Delete Item"),
+  Widget buildItemsList(List<FormItem> items) {
+    if (items.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        child: const Text(
+          "No items added yet. Use the 'Add Item' button above to add items.",
+          style: TextStyle(fontStyle: FontStyle.italic),
+          textAlign: TextAlign.center,
         ),
       );
     }
 
-    return Column(
-      children: itemWidgets,
+    List<Widget> itemWidgets = [];
+    
+    for (int i = 0; i < items.length; i++) {
+      var item = items[i];
+      var actualIndex = widget.items.indexWhere((wi) => wi.formId == item.formId);
+      
+      itemWidgets.add(buildItemCard(item, actualIndex));
+      
+      // Add spacing between items except for the last one
+      if (i < items.length - 1) {
+        itemWidgets.add(const SizedBox(height: 16));
+      }
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: itemWidgets,
+      ),
+    );
+  }
+
+  Widget buildItemCard(FormItem item, int itemIndex) {
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    item.name.isEmpty ? "Unnamed Item" : item.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  item.amount,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            buildItemRow(item, itemIndex),
+            if (formState != WranglerFormState.view) ...[
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    var newItems = [...widget.items];
+                    newItems.removeAt(itemIndex);
+
+                    setState(() {
+                      receiptModel.setItems(newItems);
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text("Delete Item"),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
@@ -200,6 +252,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       return const Text("No items found");
     }
 
-    return buildItemExpansionList(items);
+    return buildSingleExpansionPanel(items);
   }
 }
