@@ -668,6 +668,39 @@ class _ReceiptForm extends State<ReceiptForm> {
                         fieldName: "amount",
                         initialAmount: "0.00",
                         formState: formState),
+                    textFieldSpacing,
+                    Visibility(
+                      visible: Provider.of<GroupModel>(context, listen: false)
+                              .getGroupReceiptSettings(groupId)
+                              ?.hideItemCategories ==
+                          false,
+                      child: CategorySelectField(
+                        label: "Categories",
+                        fieldName: "categories",
+                        initialCategories: [],
+                        formState: formState,
+                        onCategoriesChanged: (categories) {
+                          addItemFormKey.currentState?.fields["categories"]
+                              ?.setValue(categories);
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: Provider.of<GroupModel>(context, listen: false)
+                              .getGroupReceiptSettings(groupId)
+                              ?.hideItemTags ==
+                          false,
+                      child: TagSelectField(
+                        label: "Tags",
+                        fieldName: "tags",
+                        initialTags: [],
+                        formState: formState,
+                        onTagsChanged: (tags) {
+                          addItemFormKey.currentState?.fields["tags"]
+                              ?.setValue(tags);
+                        },
+                      ),
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -682,12 +715,16 @@ class _ReceiptForm extends State<ReceiptForm> {
                               var form = addItemFormKey.currentState!.value;
 
                               var items = [...receiptModel.items];
+                              var categories = form["categories"] ?? [];
+                              var tags = form["tags"] ?? [];
                               var newItem = (api.ItemBuilder()
                                     ..name = form["name"]
                                     ..amount = form["amount"]
                                     ..chargedToUserId = null
                                     ..receiptId = receipt?.id ?? 0
-                                    ..status = api.ItemStatus.OPEN)
+                                    ..status = api.ItemStatus.OPEN
+                                    ..categories = ListBuilder<api.Category>(categories)
+                                    ..tags = ListBuilder<api.Tag>(tags))
                                   .build();
 
                               items.add(FormItem.fromItem(newItem));
