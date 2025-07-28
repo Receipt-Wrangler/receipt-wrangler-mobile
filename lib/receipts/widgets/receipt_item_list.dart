@@ -33,7 +33,6 @@ class _ReceiptItemFieldState extends State<ReceiptItemField> {
         return InputDecorator(
           decoration: const InputDecoration(labelText: "Items"),
           child: ReceiptItemItems(
-            items: consumerModel.items ?? [],
             groupId: widget.groupId,
           ),
         );

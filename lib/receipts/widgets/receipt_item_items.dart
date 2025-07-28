@@ -16,11 +16,9 @@ import '../../utils/forms.dart';
 class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
-    required this.items,
     required this.groupId,
   });
 
-  final List<FormItem> items;
   final int groupId;
 
   @override
@@ -35,8 +33,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   late final formKey =
       Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
-  List<FormItem> getItems() {
-    return widget.items.where((item) => item.chargedToUserId == null).toList();
+  List<FormItem> getItems(List<FormItem> items) {
+    return items.where((item) => item.chargedToUserId == null).toList();
   }
 
   Widget buildSingleExpansionPanel(List<FormItem> items) {
@@ -82,9 +80,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     
     for (int i = 0; i < items.length; i++) {
       var item = items[i];
-      var actualIndex = widget.items.indexWhere((wi) => wi.formId == item.formId);
       
-      itemWidgets.add(buildItemCard(item, actualIndex));
+      itemWidgets.add(buildItemCard(item, i));
       
       // Add spacing between items except for the last one
       if (i < items.length - 1) {
@@ -100,7 +97,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     );
   }
 
-  Widget buildItemCard(FormItem item, int itemIndex) {
+  Widget buildItemCard(FormItem item, int displayIndex) {
     return Card(
       elevation: 2,
       child: Padding(
@@ -129,19 +126,23 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               ],
             ),
             const SizedBox(height: 12),
-            buildItemRow(item, itemIndex),
+            buildItemRow(item, displayIndex),
             if (formState != WranglerFormState.view) ...[
               const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    var newItems = [...widget.items];
-                    newItems.removeAt(itemIndex);
+                    var allItems = receiptModel.items;
+                    var actualIndex = allItems.indexWhere((wi) => wi.formId == item.formId);
+                    if (actualIndex != -1) {
+                      var newItems = [...allItems];
+                      newItems.removeAt(actualIndex);
 
-                    setState(() {
-                      receiptModel.setItems(newItems);
-                    });
+                      setState(() {
+                        receiptModel.setItems(newItems);
+                      });
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -246,12 +247,16 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
 
   @override
   Widget build(BuildContext context) {
-    var items = getItems();
+    return Consumer<ReceiptModel>(
+      builder: (context, consumerModel, child) {
+        var items = getItems(consumerModel.items);
 
-    if (items.isEmpty) {
-      return const Text("No items found");
-    }
+        if (items.isEmpty) {
+          return const Text("No items found");
+        }
 
-    return buildSingleExpansionPanel(items);
+        return buildSingleExpansionPanel(items);
+      },
+    );
   }
 }
