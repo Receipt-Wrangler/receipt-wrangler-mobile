@@ -29,19 +29,16 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
 
   void updateModifiedReceipt() {
     var formState = getFormStateFromContext(context);
-    receiptModel.receiptFormKey.currentState!.save();
-    var form = {...receiptModel.receiptFormKey.currentState!.value};
-    var date = "";
-
-    if (formState == WranglerFormState.view) {
-      date = convertDateFormatForForm(form["date"]);
-    } else {
-      try {
-        date = formatDate(zuluDateFormat, form["date"] as DateTime);
-      } catch (e) {
-        var zuluDate = convertDateFormatForForm(form["date"]);
-        date = formatDate(zuluDateFormat, DateTime.parse(zuluDate));
-      }
+    
+    // If we have a form, save its current state to the model
+    if (receiptModel.receiptFormKey.currentState != null) {
+      receiptModel.receiptFormKey.currentState!.save();
+      var form = {...receiptModel.receiptFormKey.currentState!.value};
+      
+      // Update the model's form data with current form values
+      form.forEach((key, value) {
+        receiptModel.updateFormField(key, value);
+      });
     }
 
     // Process custom fields - only process fields that are currently part of the receipt
@@ -55,7 +52,7 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       if (customField == null) continue; // Skip if template not found
       
       var fieldKey = "customField_${customField.id}";
-      var fieldValue = form[fieldKey];
+      var fieldValue = receiptModel.getFormField(fieldKey);
       
       // Only process if the field has a value (for text/currency fields) or for boolean/select fields
       bool shouldProcess = false;
@@ -108,19 +105,29 @@ class _ReceiptBottomNav extends State<ReceiptBottomNav> {
       }
     }
 
+    // Build the modified receipt from form data with custom fields
+    var formDate = receiptModel.getFormField('date') as DateTime?;
+    var dateString = "";
+    
+    if (formState == WranglerFormState.view) {
+      dateString = receiptModel.modifiedReceipt.date;
+    } else if (formDate != null) {
+      dateString = formatDate(zuluDateFormat, formDate);
+    } else {
+      dateString = receiptModel.modifiedReceipt.date;
+    }
+
     var modifiedReceipt = (api.ReceiptBuilder()
           ..id = receiptModel.receipt.id
-          ..name = form["name"] ?? ""
-          ..amount = form["amount"] ?? "0"
-          ..date = date
-          ..groupId = int.parse((form["groupId"] ?? "0").toString())
-          ..paidByUserId = int.parse((form["paidByUserId"] ?? "0").toString())
-          ..status = form["status"] as api.ReceiptStatus
+          ..name = receiptModel.getFormField('name') ?? receiptModel.modifiedReceipt.name
+          ..amount = receiptModel.getFormField('amount') ?? receiptModel.modifiedReceipt.amount
+          ..date = dateString
+          ..groupId = receiptModel.getFormField('groupId') ?? receiptModel.modifiedReceipt.groupId
+          ..paidByUserId = receiptModel.getFormField('paidByUserId') ?? receiptModel.modifiedReceipt.paidByUserId
+          ..status = receiptModel.getFormField('status') ?? receiptModel.modifiedReceipt.status
           ..comments = ListBuilder(receiptModel.comments ?? [])
-          ..categories = ListBuilder(List<api.Category>.from(
-              (form["categories"] ?? []).map((item) => item as api.Category)))
-          ..tags = ListBuilder(List<api.Tag>.from(
-              (form["tags"] ?? []).map((item) => item as api.Tag)))
+          ..categories = ListBuilder(receiptModel.getFormField('categories') ?? receiptModel.modifiedReceipt.categories)
+          ..tags = ListBuilder(receiptModel.getFormField('tags') ?? receiptModel.modifiedReceipt.tags)
           ..customFields = ListBuilder(customFieldValues))
         .build();
 

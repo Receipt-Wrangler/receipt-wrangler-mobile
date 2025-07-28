@@ -26,7 +26,6 @@ import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../models/tag_model.dart';
 import '../../shared/functions/forms.dart';
-import '../../shared/functions/status_field.dart';
 import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
 import '../../shared/widgets/custom_field_widget.dart';
@@ -79,9 +78,14 @@ class _ReceiptForm extends State<ReceiptForm> {
     return FormBuilderTextField(
       name: "name",
       decoration: const InputDecoration(labelText: "Name"),
-      initialValue: modifiedReceipt.name,
+      initialValue: receiptModel.getFormField('name') ?? modifiedReceipt.name,
       validator: FormBuilderValidators.required(),
       readOnly: isFieldReadOnly(formState),
+      onChanged: (value) {
+        if (value != null) {
+          receiptModel.updateFormField('name', value);
+        }
+      },
     );
   }
 
@@ -89,32 +93,41 @@ class _ReceiptForm extends State<ReceiptForm> {
     return AmountField(
         label: "Amount",
         fieldName: "amount",
-        initialAmount: modifiedReceipt.amount.toString(),
+        initialAmount: receiptModel.getFormField('amount') ?? modifiedReceipt.amount.toString(),
         formState: formState);
   }
 
   Widget buildDateField() {
     if (formState == WranglerFormState.view) {
-      var formattedDate =
-          formatDate(defaultDateFormat, DateTime.parse(modifiedReceipt.date));
+      var storedDate = receiptModel.getFormField('date') as DateTime?;
+      var dateToFormat = storedDate ?? DateTime.parse(modifiedReceipt.date);
+      var formattedDate = formatDate(defaultDateFormat, dateToFormat);
       return FormBuilderTextField(
           name: "date",
           decoration: const InputDecoration(labelText: "Date"),
           initialValue: formattedDate,
           readOnly: true);
     } else {
+      var storedDate = receiptModel.getFormField('date') as DateTime?;
+      var initialDate = storedDate ?? DateTime.parse(modifiedReceipt.date);
       return FormBuilderDateTimePicker(
         name: "date",
         decoration: const InputDecoration(labelText: "Date"),
         validator: FormBuilderValidators.required(),
-        initialValue: DateTime.parse(modifiedReceipt.date),
+        initialValue: initialDate,
         inputType: InputType.date,
+        onChanged: (value) {
+          if (value != null) {
+            receiptModel.updateFormField('date', value);
+          }
+        },
       );
     }
   }
 
   Widget buildGroupField() {
-    int? initialValue = modifiedReceipt.groupId;
+    int? storedGroupId = receiptModel.getFormField('groupId') as int?;
+    int? initialValue = storedGroupId ?? modifiedReceipt.groupId;
     if (formState == WranglerFormState.add && initialValue == 0) {
       initialValue = null;
     }
@@ -128,6 +141,8 @@ class _ReceiptForm extends State<ReceiptForm> {
       validator: FormBuilderValidators.required(),
       onChanged: (value) {
         setState(() {
+          receiptModel.updateFormField('groupId', value);
+          receiptModel.updateFormField('paidByUserId', null);
           formKey.currentState!.fields["paidByUserId"]!.setValue(null);
           groupId = value as int;
         });
@@ -137,8 +152,10 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   Widget buildPaidByField() {
     List<DropdownMenuItem> items = [];
-    var initialValue = null;
-    if (groupId == modifiedReceipt.groupId) {
+    int? storedPaidByUserId = receiptModel.getFormField('paidByUserId') as int?;
+    var initialValue = storedPaidByUserId;
+    
+    if (initialValue == null && groupId == modifiedReceipt.groupId) {
       initialValue = modifiedReceipt.paidByUserId;
     }
 
@@ -157,23 +174,43 @@ class _ReceiptForm extends State<ReceiptForm> {
       initialValue: initialValue,
       validator: FormBuilderValidators.required(),
       enabled: !isFieldReadOnly(formState),
+      onChanged: (value) {
+        receiptModel.updateFormField('paidByUserId', value);
+      },
     );
   }
 
   Widget buildStatusField() {
-    return receiptStatusField(
-        "Status", "status", modifiedReceipt.status, formState);
+    var storedStatus = receiptModel.getFormField('status') as api.ReceiptStatus?;
+    var initialStatus = storedStatus ?? modifiedReceipt.status;
+    
+    return FormBuilderDropdown(
+      name: "status",
+      decoration: const InputDecoration(labelText: "Status"),
+      items: buildReceiptStatusDropDownMenuItems(),
+      initialValue: initialStatus,
+      enabled: !isFieldReadOnly(formState),
+      validator: FormBuilderValidators.required(),
+      onChanged: (value) {
+        receiptModel.updateFormField('status', value);
+      },
+    );
   }
 
   Widget buildCategoryField() {
+    var storedCategories = receiptModel.getFormField('categories') as List<api.Category>?;
+    var initialCategories = storedCategories ?? 
+        formKey.currentState?.fields["categories"]?.value ??
+        modifiedReceipt.categories!.toList();
+    
     return CategorySelectField(
       fieldName: "categories",
       label: "Categories",
-      initialCategories: formKey.currentState?.fields["categories"]?.value ??
-          modifiedReceipt.categories!.toList(),
+      initialCategories: initialCategories,
       formState: formState,
       onCategoriesChanged: (categories) => {
         setState(() {
+          receiptModel.updateFormField('categories', categories);
           formKey.currentState!.fields["categories"]!.setValue(categories);
         }),
       },
@@ -181,14 +218,19 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildTagField() {
+    var storedTags = receiptModel.getFormField('tags') as List<api.Tag>?;
+    var initialTags = storedTags ??
+        formKey.currentState?.fields["tags"]?.value ??
+        modifiedReceipt.tags!.toList();
+    
     return TagSelectField(
         label: "Tags",
         fieldName: "tags",
-        initialTags: formKey.currentState?.fields["tags"]?.value ??
-            modifiedReceipt.tags!.toList(),
+        initialTags: initialTags,
         formState: formState,
         onTagsChanged: (tags) => {
               setState(() {
+                receiptModel.updateFormField('tags', tags);
                 formKey.currentState!.fields["tags"]!.setValue(tags);
               })
             });
