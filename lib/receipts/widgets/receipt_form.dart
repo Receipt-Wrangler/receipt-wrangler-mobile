@@ -465,16 +465,36 @@ class _ReceiptForm extends State<ReceiptForm> {
         children: [
           IconButton(
             icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: (isAddingShare || groupId == 0)
+            onPressed: isAddingShare
                 ? null
                 : () {
+                    if (groupId == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Please select a group before adding shares"),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                      return;
+                    }
                     setState(() {
                       isAddingShare = true;
                     });
                   },
           ),
           IconButton(
-              onPressed: openQuickActionsBottomSheet,
+              onPressed: () {
+                if (groupId == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please select a group before using quick actions"),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+                openQuickActionsBottomSheet();
+              },
               icon: SvgPicture.asset(
                 "assets/icons/split.svg",
                 width: 24,
@@ -617,9 +637,18 @@ class _ReceiptForm extends State<ReceiptForm> {
         children: [
           IconButton(
             icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: (isAddingItem || groupId == 0)
+            onPressed: isAddingItem
                 ? null
                 : () {
+                    if (groupId == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Please select a group before adding items"),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                      return;
+                    }
                     setState(() {
                       isAddingItem = true;
                     });
