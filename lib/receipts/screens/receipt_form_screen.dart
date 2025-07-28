@@ -25,13 +25,15 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
   late final Future<List<dynamic>> _coordinatedFuture = _loadData();
 
   Future<List<dynamic>> _loadData() async {
-    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+    var customFieldModel =
+        Provider.of<CustomFieldModel>(context, listen: false);
     var state = GoRouterState.of(context);
     var receiptId = state.pathParameters['receiptId'] ?? "0";
 
     Future<void> customFieldsFuture = Future.value(null);
     if (!customFieldModel.isLoading) {
-      customFieldsFuture = customFieldModel.loadCustomFields().catchError((error) {
+      customFieldsFuture =
+          customFieldModel.loadCustomFields().catchError((error) {
         debugPrint('Custom fields loading failed: $error');
         return null; // Continue with empty custom fields
       });
@@ -64,7 +66,8 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
 
     var contextModel = Provider.of<ContextModel>(context, listen: false);
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+    var customFieldModel =
+        Provider.of<CustomFieldModel>(context, listen: false);
 
     var state = GoRouterState.of(context);
     var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
@@ -76,6 +79,8 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
         future: _coordinatedFuture,
         builder: (context, snapshot) {
           var isReady = snapshot.connectionState == ConnectionState.done;
+
+          print("building");
 
           // Extract receipt data from combined result
           api.Receipt? receiptData;

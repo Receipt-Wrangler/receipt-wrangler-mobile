@@ -107,6 +107,18 @@ class ReceiptModel extends ChangeNotifier {
       ..tags = ListBuilder(_formData['tags'] ?? _modifiedReceipt.tags));
   }
 
+  // Helper methods for form key management
+  bool isFormKeyValid() {
+    return _receiptFormKey.currentState != null;
+  }
+
+  bool shouldResetFormKey(Receipt newReceipt) {
+    // Reset form key if:
+    // 1. Current form key is null or invalid
+    // 2. Receipt ID has actually changed (switching to different receipt)
+    return !isFormKeyValid() || _receipt.id != newReceipt.id;
+  }
+
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
 
@@ -121,7 +133,10 @@ class ReceiptModel extends ChangeNotifier {
     _imagesToUploadBehaviorSubject =
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
 
-    _receiptFormKey = GlobalKey<FormBuilderState>();
+    // Only reset form key if necessary (receipt changed or form key is invalid)
+    if (shouldResetFormKey(receipt)) {
+      _receiptFormKey = GlobalKey<FormBuilderState>();
+    }
 
     // Load form data from the receipt (without notifying since we'll notify below)
     _loadFormDataFromReceiptInternal(receipt);
