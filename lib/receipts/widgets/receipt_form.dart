@@ -32,9 +32,7 @@ import '../screens/receipt_comment_screen.dart';
 import '../screens/receipt_image_screen.dart';
 
 class ReceiptForm extends StatefulWidget {
-  const ReceiptForm({super.key, required this.context});
-
-  final BuildContext context;
+  const ReceiptForm({super.key});
 
   @override
   State<ReceiptForm> createState() => _ReceiptForm();
@@ -52,7 +50,6 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
   late final customFieldModel =
       Provider.of<CustomFieldModel>(context, listen: false);
-  late final context = widget.context;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
   final addItemFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
@@ -212,7 +209,6 @@ class _ReceiptForm extends State<ReceiptForm> {
       label: "Categories",
       initialCategories: initialCategories,
       formState: formState,
-      context: context,
       onCategoriesChanged: (categories) => {
         setState(() {
           receiptModel.updateFormField('categories', categories);
@@ -233,7 +229,6 @@ class _ReceiptForm extends State<ReceiptForm> {
         fieldName: "tags",
         initialTags: initialTags,
         formState: formState,
-        context: context,
         onTagsChanged: (tags) => {
               setState(() {
                 receiptModel.updateFormField('tags', tags);
@@ -406,7 +401,6 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildReceiptItemList() {
     return ReceiptItemField(
       groupId: groupId,
-      context: context,
     );
   }
 
@@ -577,10 +571,9 @@ class _ReceiptForm extends State<ReceiptForm> {
         context as BuildContext,
         ReceiptQuickActions(
           groupId: groupId,
-          context: context,
         ),
         "Quick Actions",
-        bottomSheetWidget: ReceiptQuickActionsSubmitButton(context: context));
+        bottomSheetWidget: ReceiptQuickActionsSubmitButton());
   }
 
   Widget buildAddSharesCard() {
@@ -769,7 +762,6 @@ class _ReceiptForm extends State<ReceiptForm> {
                         fieldName: "categories",
                         initialCategories: [],
                         formState: formState,
-                        context: context,
                         onCategoriesChanged: (categories) {
                           addItemFormKey.currentState?.fields["categories"]
                               ?.setValue(categories);
@@ -786,7 +778,6 @@ class _ReceiptForm extends State<ReceiptForm> {
                         fieldName: "tags",
                         initialTags: [],
                         formState: formState,
-                        context: context,
                         onTagsChanged: (tags) {
                           addItemFormKey.currentState?.fields["tags"]
                               ?.setValue(tags);
@@ -911,7 +902,6 @@ class _ReceiptForm extends State<ReceiptForm> {
               textFieldSpacing,
               ReceiptShareField(
                 groupId: groupId,
-                context: context,
               ),
               textFieldSpacing,
               buildItemsHeader(),

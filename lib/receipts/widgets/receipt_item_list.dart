@@ -5,11 +5,9 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_items.dart
 import '../../models/receipt_model.dart';
 
 class ReceiptItemField extends StatefulWidget {
-  const ReceiptItemField(
-      {super.key, required this.groupId, required this.context});
+  const ReceiptItemField({super.key, required this.groupId});
 
   final int groupId;
-  final BuildContext context;
 
   @override
   _ReceiptItemFieldState createState() {
@@ -36,7 +34,6 @@ class _ReceiptItemFieldState extends State<ReceiptItemField> {
           decoration: const InputDecoration(labelText: "Items"),
           child: ReceiptItemItems(
             groupId: widget.groupId,
-            context: widget.context,
           ),
         );
       },

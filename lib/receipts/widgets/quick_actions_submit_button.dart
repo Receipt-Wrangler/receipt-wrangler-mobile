@@ -11,9 +11,7 @@ import '../../models/receipt_model.dart';
 import '../../utils/currency.dart';
 
 class ReceiptQuickActionsSubmitButton extends StatefulWidget {
-  const ReceiptQuickActionsSubmitButton({super.key, required this.context});
-
-  final BuildContext context;
+  const ReceiptQuickActionsSubmitButton({super.key});
 
   @override
   State<ReceiptQuickActionsSubmitButton> createState() =>
@@ -26,7 +24,6 @@ class _ReceiptQuickActionsSubmitButton
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-  late final context = widget.context;
 
   List<api.UserView> getSelectedUsers() {
     return formKey.currentState!.value["users"] as List<api.UserView>;
@@ -67,7 +64,7 @@ class _ReceiptQuickActionsSubmitButton
           receiptModel.modifiedReceipt.amount;
       List<FormItem> items = buildEvenSplitFormItems(formAmount);
       receiptModel.setItems(items);
-      Navigator.pop(context as BuildContext);
+      Navigator.pop(context);
     }
   }
 
@@ -103,13 +100,13 @@ class _ReceiptQuickActionsSubmitButton
       if (totalPortionsUSD > receiptTotalUSD) {
         // Convert amounts back to display currency for error message
         String totalPortionsDisplay = formatCurrency(
-                context as BuildContext, totalPortionsUSD.toString()) ??
+                context, totalPortionsUSD.toString()) ??
             "\$0.00";
         String receiptTotalDisplay = formatCurrency(
-                context as BuildContext, receiptTotalUSD.toString()) ??
+                context, receiptTotalUSD.toString()) ??
             "\$0.00";
 
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               "Total portions ($totalPortionsDisplay) cannot exceed receipt amount ($receiptTotalDisplay)",
@@ -155,7 +152,7 @@ class _ReceiptQuickActionsSubmitButton
         ...buildEvenSplitFormItems(remainingAmount.toDouble().toString()),
         ...userPortionsItems
       ]);
-      Navigator.pop(context as BuildContext);
+      Navigator.pop(context);
     }
   }
 
@@ -205,7 +202,7 @@ class _ReceiptQuickActionsSubmitButton
       // Check if total percentage exceeds 100%
       double totalPercentage = calculateTotalPercentage();
       if (totalPercentage > 100.0) {
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               "Total percentage (${totalPercentage.toStringAsFixed(1)}%) cannot exceed 100%",
@@ -225,7 +222,7 @@ class _ReceiptQuickActionsSubmitButton
             .currentState!.fields["percentage_${user.id}"]?.value as String?;
         if (userPercentageSelection == null ||
             userPercentageSelection.isEmpty) {
-          ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 "Please select a percentage for ${user.displayName}",
@@ -307,7 +304,7 @@ class _ReceiptQuickActionsSubmitButton
       });
 
       receiptModel.setItems(items);
-      Navigator.pop(context as BuildContext);
+      Navigator.pop(context);
     }
   }
 

@@ -14,7 +14,6 @@ class CategorySelectField extends StatefulWidget {
     required this.initialCategories,
     required this.formState,
     required this.onCategoriesChanged,
-    required this.context,
   });
 
   final String label;
@@ -27,7 +26,6 @@ class CategorySelectField extends StatefulWidget {
 
   final Function(List<api.Category>)? onCategoriesChanged;
 
-  final BuildContext context;
 
   @override
   State<CategorySelectField> createState() => _CategorySelectField();
@@ -38,7 +36,7 @@ class _CategorySelectField extends State<CategorySelectField> {
 
   void showCategoryMultiSelect() {
     showMultiselectBottomSheet(
-        widget.context,
+        context,
         "Select Categories",
         "Select",
         categoryModel.categories,

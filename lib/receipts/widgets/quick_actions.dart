@@ -16,18 +16,15 @@ import '../../shared/widgets/total_display_widget.dart';
 import '../../utils/currency.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
-  const ReceiptQuickActions(
-      {super.key, required this.groupId, required this.context});
+  const ReceiptQuickActions({super.key, required this.groupId});
 
   final int groupId;
-  final BuildContext context;
 
   @override
   State<ReceiptQuickActions> createState() => _ReceiptQuickActions();
 }
 
 class _ReceiptQuickActions extends State<ReceiptQuickActions> {
-  late final context = widget.context;
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formKey =

@@ -102,7 +102,7 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
             bodyPadding: padding,
             bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
             child: showChild
-                ? SingleChildScrollView(child: ReceiptForm(context: context))
+                ? SingleChildScrollView(child: ReceiptForm())
                 : const CircularLoadingProgress(),
           );
         });

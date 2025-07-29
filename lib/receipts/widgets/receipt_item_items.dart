@@ -17,11 +17,9 @@ class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
     required this.groupId,
-    required this.context,
   });
 
   final int groupId;
-  final BuildContext context;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -222,7 +220,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               fieldName: categoryName,
               initialCategories: initialCategories,
               formState: formState,
-              context: widget.context,
               onCategoriesChanged: (categories) {
                 setState(() {
                   formKey.currentState?.fields[categoryName]
@@ -240,7 +237,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
                 fieldName: tagName,
                 initialTags: initialTags,
                 formState: formState,
-                context: widget.context,
                 onTagsChanged: (tags) {
                   setState(() {
                     formKey.currentState?.fields[tagName]?.setValue(tags);

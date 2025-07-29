@@ -5,11 +5,9 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_shares.dar
 import '../../models/receipt_model.dart';
 
 class ReceiptShareField extends StatefulWidget {
-  const ReceiptShareField(
-      {super.key, required this.groupId, required this.context});
+  const ReceiptShareField({super.key, required this.groupId});
 
   final int groupId;
-  final BuildContext context;
 
   @override
   _ReceiptShareFieldState createState() {
@@ -37,7 +35,6 @@ class _ReceiptShareFieldState extends State<ReceiptShareField> {
           child: ReceiptItemShares(
             items: consumerModel.items ?? [],
             groupId: widget.groupId,
-            context: widget.context,
           ),
         );
       },

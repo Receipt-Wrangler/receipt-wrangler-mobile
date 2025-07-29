@@ -14,7 +14,6 @@ class TagSelectField extends StatefulWidget {
     required this.initialTags,
     required this.formState,
     required this.onTagsChanged,
-    required this.context,
   });
 
   final String label;
@@ -27,7 +26,6 @@ class TagSelectField extends StatefulWidget {
 
   final Function(List<api.Tag>)? onTagsChanged;
 
-  final BuildContext context;
 
   @override
   State<TagSelectField> createState() => _TagSelectField();
@@ -37,7 +35,7 @@ class _TagSelectField extends State<TagSelectField> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
 
   void showTagMultiSelect() {
-    showMultiselectBottomSheet(widget.context, "Select Tags", "Select",
+    showMultiselectBottomSheet(context, "Select Tags", "Select",
         tagModel.tags, widget.initialTags, (tag) => tag.name).then((value) {
       if (value != null) {
         var tags = List<api.Tag>.from(value.map((item) => item as api.Tag));
