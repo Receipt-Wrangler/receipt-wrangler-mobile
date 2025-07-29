@@ -22,11 +22,13 @@ class ReceiptItemShares extends StatefulWidget {
     super.key,
     required this.items,
     required this.groupId,
+    required this.context,
   });
 
   final List<FormItem> items;
 
   final int groupId;
+  final BuildContext context;
 
   @override
   State<ReceiptItemShares> createState() => _ReceiptItemShares();
@@ -79,7 +81,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
     var userIdString = userId.toString();
     var user = userModel.getUserById(userIdString);
     var expanded = expandedUserMap[userId] ?? false;
-    
+
     // Fallback display name if user not found
     var displayName = user?.displayName ?? "Unknown User (ID: $userId)";
 
@@ -214,6 +216,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
               fieldName: categoryName,
               initialCategories: initialCategories,
               formState: formState,
+              context: widget.context,
               onCategoriesChanged: (categories) {
                 setState(() {
                   formKey.currentState?.fields[categoryName]
@@ -231,6 +234,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
                 fieldName: tagName,
                 initialTags: initialTags,
                 formState: formState,
+                context: widget.context,
                 onTagsChanged: (tags) {
                   setState(() {
                     formKey.currentState?.fields[tagName]?.setValue(tags);

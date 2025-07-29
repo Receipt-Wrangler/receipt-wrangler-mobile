@@ -10,8 +10,8 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions_submit_button.dart';
-import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
@@ -20,7 +20,6 @@ import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
-import '../../models/context_model.dart';
 import '../../models/custom_field_model.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
@@ -29,11 +28,13 @@ import '../../shared/functions/forms.dart';
 import '../../shared/widgets/audit_detail_section.dart';
 import '../../shared/widgets/category_select_field.dart';
 import '../../shared/widgets/custom_field_widget.dart';
-import '../screens/receipt_image_screen.dart';
 import '../screens/receipt_comment_screen.dart';
+import '../screens/receipt_image_screen.dart';
 
 class ReceiptForm extends StatefulWidget {
-  const ReceiptForm({super.key});
+  const ReceiptForm({super.key, required this.context});
+
+  final BuildContext context;
 
   @override
   State<ReceiptForm> createState() => _ReceiptForm();
@@ -49,9 +50,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final formState = getFormStateFromContext(context);
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
   late final tagModel = Provider.of<TagModel>(context, listen: false);
-  late final customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
-  late final shellContext =
-      Provider.of<ContextModel>(context, listen: false).shellContext;
+  late final customFieldModel =
+      Provider.of<CustomFieldModel>(context, listen: false);
+  late final context = widget.context;
   final addSharesFormKey = GlobalKey<FormBuilderState>();
   final addItemFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
@@ -93,7 +94,8 @@ class _ReceiptForm extends State<ReceiptForm> {
     return AmountField(
         label: "Amount",
         fieldName: "amount",
-        initialAmount: receiptModel.getFormField('amount') ?? modifiedReceipt.amount.toString(),
+        initialAmount: receiptModel.getFormField('amount') ??
+            modifiedReceipt.amount.toString(),
         formState: formState);
   }
 
@@ -154,7 +156,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     List<DropdownMenuItem> items = [];
     int? storedPaidByUserId = receiptModel.getFormField('paidByUserId') as int?;
     var initialValue = storedPaidByUserId;
-    
+
     if (initialValue == null && groupId == modifiedReceipt.groupId) {
       initialValue = modifiedReceipt.paidByUserId;
     }
@@ -181,9 +183,10 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildStatusField() {
-    var storedStatus = receiptModel.getFormField('status') as api.ReceiptStatus?;
+    var storedStatus =
+        receiptModel.getFormField('status') as api.ReceiptStatus?;
     var initialStatus = storedStatus ?? modifiedReceipt.status;
-    
+
     return FormBuilderDropdown(
       name: "status",
       decoration: const InputDecoration(labelText: "Status"),
@@ -198,16 +201,18 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildCategoryField() {
-    var storedCategories = receiptModel.getFormField('categories') as List<api.Category>?;
-    var initialCategories = storedCategories ?? 
+    var storedCategories =
+        receiptModel.getFormField('categories') as List<api.Category>?;
+    var initialCategories = storedCategories ??
         formKey.currentState?.fields["categories"]?.value ??
         modifiedReceipt.categories!.toList();
-    
+
     return CategorySelectField(
       fieldName: "categories",
       label: "Categories",
       initialCategories: initialCategories,
       formState: formState,
+      context: context,
       onCategoriesChanged: (categories) => {
         setState(() {
           receiptModel.updateFormField('categories', categories);
@@ -222,12 +227,13 @@ class _ReceiptForm extends State<ReceiptForm> {
     var initialTags = storedTags ??
         formKey.currentState?.fields["tags"]?.value ??
         modifiedReceipt.tags!.toList();
-    
+
     return TagSelectField(
         label: "Tags",
         fieldName: "tags",
         initialTags: initialTags,
         formState: formState,
+        context: context,
         onTagsChanged: (tags) => {
               setState(() {
                 receiptModel.updateFormField('tags', tags);
@@ -244,7 +250,7 @@ class _ReceiptForm extends State<ReceiptForm> {
           final customField = customFieldModel.customFields
               .where((cf) => cf.id == customFieldValue.customFieldId)
               .firstOrNull;
-          
+
           // Show loading placeholder if custom field template is not found but still loading
           if (customField == null) {
             if (customFieldModel.isLoading) {
@@ -282,20 +288,18 @@ class _ReceiptForm extends State<ReceiptForm> {
             ],
           );
         }).toList(),
-        
+
         // Add Custom Field button
-        if (formState != WranglerFormState.view)
-          buildAddCustomFieldButton(),
+        if (formState != WranglerFormState.view) buildAddCustomFieldButton(),
       ],
     );
   }
 
   Widget buildAddCustomFieldButton() {
     // Get custom field IDs that are already added
-    final addedCustomFieldIds = modifiedReceipt.customFields
-        .map((cfv) => cfv.customFieldId)
-        .toSet();
-    
+    final addedCustomFieldIds =
+        modifiedReceipt.customFields.map((cfv) => cfv.customFieldId).toSet();
+
     // Get available custom fields that haven't been added yet
     final availableCustomFields = customFieldModel.customFields
         .where((cf) => !addedCustomFieldIds.contains(cf.id))
@@ -311,7 +315,8 @@ class _ReceiptForm extends State<ReceiptForm> {
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            builder: (context) => buildCustomFieldSelectionSheet(availableCustomFields),
+            builder: (context) =>
+                buildCustomFieldSelectionSheet(availableCustomFields),
           );
         },
         icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
@@ -323,7 +328,8 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildCustomFieldSelectionSheet(List<api.CustomField> availableCustomFields) {
+  Widget buildCustomFieldSelectionSheet(
+      List<api.CustomField> availableCustomFields) {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -363,13 +369,14 @@ class _ReceiptForm extends State<ReceiptForm> {
   void _addCustomField(int customFieldId) {
     // Create a new empty custom field value with all required fields
     final newCustomFieldValue = (api.CustomFieldValueBuilder()
-          ..id = 0  // Use 0 for new custom field values
+          ..id = 0 // Use 0 for new custom field values
           ..customFieldId = customFieldId
           ..receiptId = modifiedReceipt.id
-          ..createdAt = DateTime.now().toIso8601String()  // Set current timestamp
-          ..createdBy = 0  // Placeholder for user ID
-          ..createdByString = ''  // Empty string placeholder
-          ..updatedAt = '')  // Empty string placeholder
+          ..createdAt =
+              DateTime.now().toIso8601String() // Set current timestamp
+          ..createdBy = 0 // Placeholder for user ID
+          ..createdByString = '' // Empty string placeholder
+          ..updatedAt = '') // Empty string placeholder
         .build();
 
     // Add it to the modified receipt
@@ -378,8 +385,8 @@ class _ReceiptForm extends State<ReceiptForm> {
       newCustomFieldValue,
     ];
 
-    final updatedReceipt = modifiedReceipt.rebuild((b) => b
-      ..customFields = ListBuilder(updatedCustomFields));
+    final updatedReceipt = modifiedReceipt
+        .rebuild((b) => b..customFields = ListBuilder(updatedCustomFields));
 
     receiptModel.setModifiedReceipt(updatedReceipt);
   }
@@ -390,8 +397,8 @@ class _ReceiptForm extends State<ReceiptForm> {
         .where((cfv) => cfv.customFieldId != customFieldId)
         .toList();
 
-    final updatedReceipt = modifiedReceipt.rebuild((b) => b
-      ..customFields = ListBuilder(updatedCustomFields));
+    final updatedReceipt = modifiedReceipt
+        .rebuild((b) => b..customFields = ListBuilder(updatedCustomFields));
 
     receiptModel.setModifiedReceipt(updatedReceipt);
   }
@@ -399,6 +406,7 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildReceiptItemList() {
     return ReceiptItemField(
       groupId: groupId,
+      context: context,
     );
   }
 
@@ -416,7 +424,8 @@ class _ReceiptForm extends State<ReceiptForm> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ReceiptImageScreen(formState: formState),
+                    builder: (context) =>
+                        ReceiptImageScreen(formState: formState),
                   ),
                 );
               },
@@ -424,11 +433,12 @@ class _ReceiptForm extends State<ReceiptForm> {
             const SizedBox(width: 12), // Increased spacing to prevent mis-taps
             _buildCompactActionButton(
               icon: Icons.chat_bubble_outline,
-              label: "Comments", 
+              label: "Comments",
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ReceiptCommentScreen(formState: formState),
+                    builder: (context) =>
+                        ReceiptCommentScreen(formState: formState),
                   ),
                 );
               },
@@ -459,13 +469,19 @@ class _ReceiptForm extends State<ReceiptForm> {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.3),
                 width: 1,
               ),
               // Add subtle shadow for better depth perception
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .shadow
+                      .withValues(alpha: 0.1),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                 ),
@@ -496,7 +512,6 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-
   Widget buildSharesHeader() {
     var rowChildren = [
       buildHeaderText("Shares"),
@@ -513,7 +528,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                     if (groupId == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please select a group before adding shares"),
+                          content: Text(
+                              "Please select a group before adding shares"),
                           backgroundColor: Colors.orange,
                         ),
                       );
@@ -529,7 +545,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                 if (groupId == 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("Please select a group before using quick actions"),
+                      content: Text(
+                          "Please select a group before using quick actions"),
                       backgroundColor: Colors.orange,
                     ),
                   );
@@ -557,12 +574,13 @@ class _ReceiptForm extends State<ReceiptForm> {
   void openQuickActionsBottomSheet() {
     receiptModel.resetQuickActionsFormKey();
     showFullscreenBottomSheet(
-        shellContext as BuildContext,
+        context as BuildContext,
         ReceiptQuickActions(
           groupId: groupId,
+          context: context,
         ),
         "Quick Actions",
-        bottomSheetWidget: const ReceiptQuickActionsSubmitButton());
+        bottomSheetWidget: ReceiptQuickActionsSubmitButton(context: context));
   }
 
   Widget buildAddSharesCard() {
@@ -685,7 +703,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                     if (groupId == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please select a group before adding items"),
+                          content:
+                              Text("Please select a group before adding items"),
                           backgroundColor: Colors.orange,
                         ),
                       );
@@ -750,6 +769,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                         fieldName: "categories",
                         initialCategories: [],
                         formState: formState,
+                        context: context,
                         onCategoriesChanged: (categories) {
                           addItemFormKey.currentState?.fields["categories"]
                               ?.setValue(categories);
@@ -766,6 +786,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                         fieldName: "tags",
                         initialTags: [],
                         formState: formState,
+                        context: context,
                         onTagsChanged: (tags) {
                           addItemFormKey.currentState?.fields["tags"]
                               ?.setValue(tags);
@@ -794,7 +815,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                                     ..chargedToUserId = null
                                     ..receiptId = receipt?.id ?? 0
                                     ..status = api.ItemStatus.OPEN
-                                    ..categories = ListBuilder<api.Category>(categories)
+                                    ..categories =
+                                        ListBuilder<api.Category>(categories)
                                     ..tags = ListBuilder<api.Tag>(tags))
                                   .build();
 
@@ -845,67 +867,68 @@ class _ReceiptForm extends State<ReceiptForm> {
         return FormBuilder(
           key: formKey,
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          buildAuditDetailSection(),
-          textFieldSpacing,
-          buildDetailsHeader(),
-          textFieldSpacing,
-          buildNameField(),
-          textFieldSpacing,
-          buildAmountField(),
-          textFieldSpacing,
-          buildDateField(),
-          textFieldSpacing,
-          buildGroupField(),
-          textFieldSpacing,
-          buildPaidByField(),
-          textFieldSpacing,
-          buildStatusField(),
-          textFieldSpacing,
-          buildCustomFieldsSection(),
-          textFieldSpacing,
-          Visibility(
-              visible: groupModel
-                      .getGroupReceiptSettings(groupId)
-                      ?.hideReceiptCategories ==
-                  false,
-              child: Column(children: [
-                buildCategoryField(),
-                textFieldSpacing,
-              ])),
-          Visibility(
-              visible: groupModel
-                      .getGroupReceiptSettings(groupId)
-                      ?.hideReceiptTags ==
-                  false,
-              child: Column(children: [
-                buildTagField(),
-                textFieldSpacing,
-              ])),
-          buildSharesHeader(),
-          textFieldSpacing,
-          buildAddSharesCard(),
-          textFieldSpacing,
-          ReceiptShareField(
-            groupId: groupId,
-          ),
-          textFieldSpacing,
-          buildItemsHeader(),
-          textFieldSpacing,
-          buildAddItemCard(),
-          textFieldSpacing,
-          buildReceiptItemList(),
-          textFieldSpacing,
-          kDebugMode
-              ? ElevatedButton(
-                  onPressed: () => {
-                        if (formKey.currentState!.saveAndValidate())
-                          {print(formKey.currentState!.value)}
-                      },
-                  child: Text("Check form value"))
-              : SizedBox.shrink(),
-        ],
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buildAuditDetailSection(),
+              textFieldSpacing,
+              buildDetailsHeader(),
+              textFieldSpacing,
+              buildNameField(),
+              textFieldSpacing,
+              buildAmountField(),
+              textFieldSpacing,
+              buildDateField(),
+              textFieldSpacing,
+              buildGroupField(),
+              textFieldSpacing,
+              buildPaidByField(),
+              textFieldSpacing,
+              buildStatusField(),
+              textFieldSpacing,
+              buildCustomFieldsSection(),
+              textFieldSpacing,
+              Visibility(
+                  visible: groupModel
+                          .getGroupReceiptSettings(groupId)
+                          ?.hideReceiptCategories ==
+                      false,
+                  child: Column(children: [
+                    buildCategoryField(),
+                    textFieldSpacing,
+                  ])),
+              Visibility(
+                  visible: groupModel
+                          .getGroupReceiptSettings(groupId)
+                          ?.hideReceiptTags ==
+                      false,
+                  child: Column(children: [
+                    buildTagField(),
+                    textFieldSpacing,
+                  ])),
+              buildSharesHeader(),
+              textFieldSpacing,
+              buildAddSharesCard(),
+              textFieldSpacing,
+              ReceiptShareField(
+                groupId: groupId,
+                context: context,
+              ),
+              textFieldSpacing,
+              buildItemsHeader(),
+              textFieldSpacing,
+              buildAddItemCard(),
+              textFieldSpacing,
+              buildReceiptItemList(),
+              textFieldSpacing,
+              kDebugMode
+                  ? ElevatedButton(
+                      onPressed: () => {
+                            if (formKey.currentState!.saveAndValidate())
+                              {print(formKey.currentState!.value)}
+                          },
+                      child: Text("Check form value"))
+                  : SizedBox.shrink(),
+            ],
           ),
         );
       },

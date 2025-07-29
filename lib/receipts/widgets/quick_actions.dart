@@ -8,7 +8,6 @@ import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/utils/users.dart';
 
-import '../../models/context_model.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
 import '../../shared/functions/multi_select_bottom_sheet.dart';
@@ -17,17 +16,18 @@ import '../../shared/widgets/total_display_widget.dart';
 import '../../utils/currency.dart';
 
 class ReceiptQuickActions extends StatefulWidget {
-  const ReceiptQuickActions({super.key, required this.groupId});
+  const ReceiptQuickActions(
+      {super.key, required this.groupId, required this.context});
 
   final int groupId;
+  final BuildContext context;
 
   @override
   State<ReceiptQuickActions> createState() => _ReceiptQuickActions();
 }
 
 class _ReceiptQuickActions extends State<ReceiptQuickActions> {
-  late final shellContext =
-      Provider.of<ContextModel>(context, listen: false).shellContext;
+  late final context = widget.context;
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formKey =
@@ -35,11 +35,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
   final formState = WranglerFormState.edit;
 
-  var quickActions = [
-    "Split Evenly",
-    "With Portions",
-    "By Percentage"
-  ];
+  var quickActions = ["Split Evenly", "With Portions", "By Percentage"];
   var quickActionsSelection = [true, false, false];
 
   var percentageOptions = ["25%", "50%", "75%", "100%", "Custom"];
@@ -102,7 +98,8 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   String formatCurrencyWithNegatives(BuildContext context, double amount) {
     if (amount < 0) {
       // Format positive amount and add negative sign
-      String positiveAmount = formatCurrency(context, (-amount).toString()) ?? "\$0.00";
+      String positiveAmount =
+          formatCurrency(context, (-amount).toString()) ?? "\$0.00";
       return "-$positiveAmount";
     } else {
       return formatCurrency(context, amount.toString()) ?? "\$0.00";
@@ -119,13 +116,15 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
       if (users.isNotEmpty) {
         // Get receipt amount in display currency and convert to USD for calculation
         String receiptAmountDisplay = getReceiptAmount();
-        double receiptAmountUSD = exchangeCustomToUSD(receiptAmountDisplay).toDouble();
-        
+        double receiptAmountUSD =
+            exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+
         // Calculate per-person amount in USD
         double perPersonAmountUSD = receiptAmountUSD / users.length;
-        
+
         // Convert back to display currency for showing to user
-        String perPersonAmountDisplay = formatCurrency(context, perPersonAmountUSD.toString()) ?? "\$0.00";
+        String perPersonAmountDisplay =
+            formatCurrency(context, perPersonAmountUSD.toString()) ?? "\$0.00";
 
         fields.add(const SizedBox(height: 10));
         fields.add(TotalDisplayWidget(
@@ -156,7 +155,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
   void showUserMultiSelect() {
     showMultiselectBottomSheet(
-        shellContext,
+        context,
         "Select Users",
         "Select",
         getUsersInGroup(userModel, groupModel, widget.groupId.toString()),
@@ -207,9 +206,10 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
     for (api.UserView user in users) {
       var fieldValue = formKey.currentState?.fields["${user.id}"]?.value;
       String portionAmountDisplay = fieldValue?.toString() ?? "0";
-      
+
       // Convert display currency amount to USD for calculation
-      double portionValueUSD = exchangeCustomToUSD(portionAmountDisplay).toDouble();
+      double portionValueUSD =
+          exchangeCustomToUSD(portionAmountDisplay).toDouble();
       totalUSD += portionValueUSD;
     }
 
@@ -240,19 +240,23 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
 
         // Get receipt amount and convert to USD for calculation
         String receiptAmountDisplay = getReceiptAmount();
-        double receiptValueUSD = exchangeCustomToUSD(receiptAmountDisplay).toDouble();
-        
+        double receiptValueUSD =
+            exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+
         // Calculate total portions in USD
         double totalPortionsUSD = calculateTotalPortionsInUSD();
         double remainingAmountUSD = receiptValueUSD - totalPortionsUSD;
         bool isValid = remainingAmountUSD >= 0;
 
         // Convert amounts back to display currency for showing to user
-        String totalPortionsDisplay = formatCurrencyWithNegatives(context, totalPortionsUSD);
-        String remainingAmountDisplay = formatCurrencyWithNegatives(context, remainingAmountUSD);
+        String totalPortionsDisplay =
+            formatCurrencyWithNegatives(context, totalPortionsUSD);
+        String remainingAmountDisplay =
+            formatCurrencyWithNegatives(context, remainingAmountUSD);
 
         fields.add(TotalDisplayWidget(
-          value: "Portions: $totalPortionsDisplay, Remaining: $remainingAmountDisplay",
+          value:
+              "Portions: $totalPortionsDisplay, Remaining: $remainingAmountDisplay",
           isValid: isValid,
           errorMessage: !isValid ? "Portions exceed receipt total" : null,
         ));

@@ -17,9 +17,11 @@ class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
     required this.groupId,
+    required this.context,
   });
 
   final int groupId;
+  final BuildContext context;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -51,7 +53,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
           headerBuilder: (context, expanded) {
             return ListTile(
               title: Text("Items (${items.length})"),
-              subtitle: items.isNotEmpty 
+              subtitle: items.isNotEmpty
                   ? Text("Total items: ${items.length}")
                   : Text("No items added"),
             );
@@ -77,12 +79,12 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     }
 
     List<Widget> itemWidgets = [];
-    
+
     for (int i = 0; i < items.length; i++) {
       var item = items[i];
-      
+
       itemWidgets.add(buildItemCard(item, i));
-      
+
       // Add spacing between items except for the last one
       if (i < items.length - 1) {
         itemWidgets.add(const SizedBox(height: 16));
@@ -134,7 +136,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
                 child: ElevatedButton(
                   onPressed: () {
                     var allItems = receiptModel.items;
-                    var actualIndex = allItems.indexWhere((wi) => wi.formId == item.formId);
+                    var actualIndex =
+                        allItems.indexWhere((wi) => wi.formId == item.formId);
                     if (actualIndex != -1) {
                       var newItems = [...allItems];
                       newItems.removeAt(actualIndex);
@@ -219,6 +222,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               fieldName: categoryName,
               initialCategories: initialCategories,
               formState: formState,
+              context: widget.context,
               onCategoriesChanged: (categories) {
                 setState(() {
                   formKey.currentState?.fields[categoryName]
@@ -236,6 +240,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
                 fieldName: tagName,
                 initialTags: initialTags,
                 formState: formState,
+                context: widget.context,
                 onTagsChanged: (tags) {
                   setState(() {
                     formKey.currentState?.fields[tagName]?.setValue(tags);

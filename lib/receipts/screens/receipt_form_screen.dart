@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/client/client.dart';
-import 'package:receipt_wrangler_mobile/models/context_model.dart';
 import 'package:receipt_wrangler_mobile/models/custom_field_model.dart';
 import 'package:receipt_wrangler_mobile/models/receipt_model.dart';
 import 'package:receipt_wrangler_mobile/receipts/nav/receipt_app_bar.dart';
@@ -64,7 +63,6 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
   Widget build(BuildContext context) {
     EdgeInsets? padding;
 
-    var contextModel = Provider.of<ContextModel>(context, listen: false);
     var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
     var customFieldModel =
         Provider.of<CustomFieldModel>(context, listen: false);
@@ -73,7 +71,6 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
     var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
     var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel);
 
-    contextModel.setShellContext(context);
 
     return FutureBuilder<List<dynamic>>(
         future: _coordinatedFuture,
@@ -105,7 +102,7 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
             bodyPadding: padding,
             bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
             child: showChild
-                ? SingleChildScrollView(child: const ReceiptForm())
+                ? SingleChildScrollView(child: ReceiptForm(context: context))
                 : const CircularLoadingProgress(),
           );
         });
