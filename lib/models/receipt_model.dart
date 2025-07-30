@@ -52,7 +52,21 @@ class ReceiptModel extends ChangeNotifier {
 
   Map<String, dynamic> _quickActionsFormData = {};
 
-  Map<String, dynamic> get quickActionsFormData => Map.from(_quickActionsFormData);
+  Map<String, dynamic> get quickActionsFormData =>
+      Map.from(_quickActionsFormData);
+
+  // UI state flags for form interactions - use ValueNotifiers to avoid full rebuilds
+  ValueNotifier<bool> _isAddingShareNotifier = ValueNotifier(false);
+
+  ValueNotifier<bool> get isAddingShareNotifier => _isAddingShareNotifier;
+
+  bool get isAddingShare => _isAddingShareNotifier.value;
+
+  ValueNotifier<bool> _isAddingItemNotifier = ValueNotifier(false);
+
+  ValueNotifier<bool> get isAddingItemNotifier => _isAddingItemNotifier;
+
+  bool get isAddingItem => _isAddingItemNotifier.value;
 
   // Keep form keys for backward compatibility during transition
   var _receiptFormKey = GlobalKey<FormBuilderState>();
@@ -82,6 +96,15 @@ class ReceiptModel extends ChangeNotifier {
     return _quickActionsFormData[key];
   }
 
+  // UI state management methods - update ValueNotifiers without triggering full rebuilds
+  void setIsAddingShare(bool value) {
+    _isAddingShareNotifier.value = value;
+  }
+
+  void setIsAddingItem(bool value) {
+    _isAddingItemNotifier.value = value;
+  }
+
   void resetFormData() {
     _formData.clear();
     _quickActionsFormData.clear();
@@ -99,11 +122,14 @@ class ReceiptModel extends ChangeNotifier {
     return _modifiedReceipt.rebuild((b) => b
       ..name = _formData['name'] ?? _modifiedReceipt.name
       ..amount = _formData['amount'] ?? _modifiedReceipt.amount
-      ..date = (_formData['date'] as DateTime?)?.toIso8601String() ?? _modifiedReceipt.date
+      ..date = (_formData['date'] as DateTime?)?.toIso8601String() ??
+          _modifiedReceipt.date
       ..groupId = _formData['groupId'] ?? _modifiedReceipt.groupId
-      ..paidByUserId = _formData['paidByUserId'] ?? _modifiedReceipt.paidByUserId
+      ..paidByUserId =
+          _formData['paidByUserId'] ?? _modifiedReceipt.paidByUserId
       ..status = _formData['status'] ?? _modifiedReceipt.status
-      ..categories = ListBuilder(_formData['categories'] ?? _modifiedReceipt.categories)
+      ..categories =
+          ListBuilder(_formData['categories'] ?? _modifiedReceipt.categories)
       ..tags = ListBuilder(_formData['tags'] ?? _modifiedReceipt.tags));
   }
 
@@ -141,6 +167,10 @@ class ReceiptModel extends ChangeNotifier {
     // Load form data from the receipt (without notifying since we'll notify below)
     _loadFormDataFromReceiptInternal(receipt);
 
+    // Reset UI state flags when switching receipts
+    _isAddingShareNotifier.value = false;
+    _isAddingItemNotifier.value = false;
+
     if (notify) {
       notifyListeners();
     }
@@ -157,7 +187,7 @@ class ReceiptModel extends ChangeNotifier {
       'categories': receipt.categories?.toList() ?? [],
       'tags': receipt.tags?.toList() ?? [],
     };
-    
+
     // Add custom fields to form data
     for (var customFieldValue in receipt.customFields) {
       String fieldKey = "customField_${customFieldValue.customFieldId}";
@@ -205,9 +235,13 @@ class ReceiptModel extends ChangeNotifier {
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
     _infiniteScrollController = InfiniteScrollController();
     _receiptFormKey = GlobalKey<FormBuilderState>();
-    
+
     // Reset form data
     _formData.clear();
     _quickActionsFormData.clear();
+
+    // Reset UI state flags
+    _isAddingShareNotifier.value = false;
+    _isAddingItemNotifier.value = false;
   }
 }

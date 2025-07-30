@@ -21,14 +21,6 @@ class ReceiptAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ReceiptAppBar extends State<ReceiptAppBar> {
-  String buildBackUrl(WranglerFormState formState, ReceiptModel receiptModel) {
-    if (formState == WranglerFormState.add) {
-      return "/groups";
-    } else {
-      return "/groups/${receiptModel.receipt.groupId}/receipts";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var uri = GoRouter.of(context).routeInformationProvider.value.uri;
@@ -36,16 +28,26 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
     List<Widget> actions = [...widget.actions ?? []];
 
     // TODO: fix add redirect
-    return Consumer<ReceiptModel>(
-        builder: (context, receiptModel, child) => TopAppBar(
-              titleText: getTitleText(formState, receiptModel.receipt.name),
-              leadingArrowRedirect: buildBackUrl(formState, receiptModel),
-              leadingArrowPop: false,
-              onLeadingArrowPressed: () {
-                receiptModel.resetModel();
-              },
-              actions: actions,
-              hideAvatar: true,
-            ));
+    // Use Selector to only rebuild when receipt name or groupId changes
+    return Selector<ReceiptModel, ({String name, int groupId})>(
+        selector: (context, model) =>
+            (name: model.receipt.name, groupId: model.receipt.groupId),
+        shouldRebuild: (previous, next) =>
+            previous.name != next.name || previous.groupId != next.groupId,
+        builder: (context, data, child) {
+          var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+          return TopAppBar(
+            titleText: getTitleText(formState, data.name),
+            leadingArrowRedirect: formState == WranglerFormState.add
+                ? "/groups"
+                : "/groups/${data.groupId}/receipts",
+            leadingArrowPop: false,
+            onLeadingArrowPressed: () {
+              receiptModel.resetModel();
+            },
+            actions: actions,
+            hideAvatar: true,
+          );
+        });
   }
 }

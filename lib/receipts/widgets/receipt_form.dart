@@ -53,8 +53,6 @@ class _ReceiptForm extends State<ReceiptForm> {
   final addSharesFormKey = GlobalKey<FormBuilderState>();
   final addItemFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
-  bool isAddingShare = false;
-  bool isAddingItem = false;
 
   @override
   void initState() {
@@ -514,25 +512,26 @@ class _ReceiptForm extends State<ReceiptForm> {
     if (formState != WranglerFormState.view) {
       rowChildren.add(Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: isAddingShare
-                ? null
-                : () {
-                    if (groupId == 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "Please select a group before adding shares"),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                      return;
-                    }
-                    setState(() {
-                      isAddingShare = true;
-                    });
-                  },
+          ValueListenableBuilder<bool>(
+            valueListenable: receiptModel.isAddingShareNotifier,
+            builder: (context, isAddingShare, child) => IconButton(
+              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+              onPressed: isAddingShare
+                  ? null
+                  : () {
+                      if (groupId == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "Please select a group before adding shares"),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+                      receiptModel.setIsAddingShare(true);
+                    },
+            ),
           ),
           IconButton(
               onPressed: () {
@@ -577,107 +576,111 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAddSharesCard() {
-    if (isAddingShare) {
-      return Card(
-        color: Colors.white,
-        surfaceTintColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(children: [
-                Text(
-                  "Add Share",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-              ]),
-              textFieldSpacing,
-              FormBuilder(
-                key: addSharesFormKey,
-                child: Column(
-                  children: [
-                    FormBuilderDropdown(
-                      name: "chargedToUserId",
-                      decoration:
-                          const InputDecoration(labelText: "Shared With"),
-                      items: buildGroupMemberDropDownMenuItems(
-                          context, groupId.toString()),
-                      initialValue: "",
-                      validator: FormBuilderValidators.required(),
-                      enabled: !isFieldReadOnly(formState),
-                    ),
-                    textFieldSpacing,
-                    FormBuilderTextField(
-                      name: "name",
-                      decoration: InputDecoration(labelText: "Name"),
-                      validator: FormBuilderValidators.required(),
-                    ),
-                    textFieldSpacing,
-                    AmountField(
-                        label: "Amount",
-                        fieldName: "amount",
-                        initialAmount: "0.00",
-                        formState: formState),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            child: Text("Add Share"),
-                            onPressed: () {
-                              if (!addSharesFormKey.currentState!
-                                  .saveAndValidate()) {
-                                return;
-                              }
-                              var form = addSharesFormKey.currentState!.value;
+    return ValueListenableBuilder<bool>(
+      valueListenable: receiptModel.isAddingShareNotifier,
+      builder: (context, isAddingShare, child) {
+        if (!isAddingShare) {
+          return SizedBox.shrink();
+        }
 
-                              var items = [...receiptModel.items];
-                              var newItem = (api.ItemBuilder()
-                                    ..name = form["name"]
-                                    ..amount = form["amount"]
-                                    ..chargedToUserId = form["chargedToUserId"]
-                                    ..receiptId = receipt?.id ?? 0
-                                    ..status = api.ItemStatus.OPEN)
-                                  .build();
+        return _buildAddSharesCardContent();
+      },
+    );
+  }
 
-                              items.add(FormItem.fromItem(newItem));
+  Widget _buildAddSharesCardContent() {
+    return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(children: [
+              Text(
+                "Add Share",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+            ]),
+            textFieldSpacing,
+            FormBuilder(
+              key: addSharesFormKey,
+              child: Column(
+                children: [
+                  FormBuilderDropdown(
+                    name: "chargedToUserId",
+                    decoration: const InputDecoration(labelText: "Shared With"),
+                    items: buildGroupMemberDropDownMenuItems(
+                        context, groupId.toString()),
+                    initialValue: "",
+                    validator: FormBuilderValidators.required(),
+                    enabled: !isFieldReadOnly(formState),
+                  ),
+                  textFieldSpacing,
+                  FormBuilderTextField(
+                    name: "name",
+                    decoration: InputDecoration(labelText: "Name"),
+                    validator: FormBuilderValidators.required(),
+                  ),
+                  textFieldSpacing,
+                  AmountField(
+                      label: "Amount",
+                      fieldName: "amount",
+                      initialAmount: "0.00",
+                      formState: formState),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          child: Text("Add Share"),
+                          onPressed: () {
+                            if (!addSharesFormKey.currentState!
+                                .saveAndValidate()) {
+                              return;
+                            }
+                            var form = addSharesFormKey.currentState!.value;
 
-                              receiptModel.setItems(items);
-                              setState(() {
-                                isAddingShare = false;
-                              });
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              setState(() {
-                                isAddingShare = false;
-                              });
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
-              // user field,
-              // item name
-              // amount field,
-            ],
-          ),
+                            var items = [...receiptModel.items];
+                            var newItem = (api.ItemBuilder()
+                                  ..name = form["name"]
+                                  ..amount = form["amount"]
+                                  ..chargedToUserId = form["chargedToUserId"]
+                                  ..receiptId = receipt?.id ?? 0
+                                  ..status = api.ItemStatus.OPEN)
+                                .build();
+
+                            items.add(FormItem.fromItem(newItem));
+
+                            receiptModel.setItems(items);
+                            receiptModel.setIsAddingShare(false);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            receiptModel.setIsAddingShare(false);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+            // user field,
+            // item name
+            // amount field,
+          ],
         ),
-      );
-    } else {
-      return SizedBox.shrink();
-    }
+      ),
+    );
   }
 
   Widget buildItemsHeader() {
@@ -688,25 +691,26 @@ class _ReceiptForm extends State<ReceiptForm> {
     if (formState != WranglerFormState.view) {
       rowChildren.add(Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            onPressed: isAddingItem
-                ? null
-                : () {
-                    if (groupId == 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text("Please select a group before adding items"),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                      return;
-                    }
-                    setState(() {
-                      isAddingItem = true;
-                    });
-                  },
+          ValueListenableBuilder<bool>(
+            valueListenable: receiptModel.isAddingItemNotifier,
+            builder: (context, isAddingItem, child) => IconButton(
+              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
+              onPressed: isAddingItem
+                  ? null
+                  : () {
+                      if (groupId == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "Please select a group before adding items"),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+                      receiptModel.setIsAddingItem(true);
+                    },
+            ),
           ),
         ],
       ));
@@ -721,131 +725,136 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAddItemCard() {
-    if (isAddingItem) {
-      return Card(
-        color: Colors.white,
-        surfaceTintColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(children: [
-                Text(
-                  "Add Item",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-              ]),
-              textFieldSpacing,
-              FormBuilder(
-                key: addItemFormKey,
-                child: Column(
-                  children: [
-                    FormBuilderTextField(
-                      name: "name",
-                      decoration: InputDecoration(labelText: "Name"),
-                      validator: FormBuilderValidators.required(),
-                    ),
-                    textFieldSpacing,
-                    AmountField(
-                        label: "Amount",
-                        fieldName: "amount",
-                        initialAmount: "0.00",
-                        formState: formState),
-                    textFieldSpacing,
-                    Visibility(
-                      visible: Provider.of<GroupModel>(context, listen: false)
-                              .getGroupReceiptSettings(groupId)
-                              ?.hideItemCategories ==
-                          false,
-                      child: CategorySelectField(
-                        label: "Categories",
-                        fieldName: "categories",
-                        initialCategories: [],
-                        formState: formState,
-                        onCategoriesChanged: (categories) {
-                          addItemFormKey.currentState?.fields["categories"]
-                              ?.setValue(categories);
-                        },
-                      ),
-                    ),
-                    Visibility(
-                      visible: Provider.of<GroupModel>(context, listen: false)
-                              .getGroupReceiptSettings(groupId)
-                              ?.hideItemTags ==
-                          false,
-                      child: TagSelectField(
-                        label: "Tags",
-                        fieldName: "tags",
-                        initialTags: [],
-                        formState: formState,
-                        onTagsChanged: (tags) {
-                          addItemFormKey.currentState?.fields["tags"]
-                              ?.setValue(tags);
-                        },
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            child: Text("Add Item"),
-                            onPressed: () {
-                              if (!addItemFormKey.currentState!
-                                  .saveAndValidate()) {
-                                return;
-                              }
-                              var form = addItemFormKey.currentState!.value;
+    return ValueListenableBuilder<bool>(
+      valueListenable: receiptModel.isAddingItemNotifier,
+      builder: (context, isAddingItem, child) {
+        if (!isAddingItem) {
+          return SizedBox.shrink();
+        }
 
-                              var items = [...receiptModel.items];
-                              var categories = form["categories"] ?? [];
-                              var tags = form["tags"] ?? [];
-                              var newItem = (api.ItemBuilder()
-                                    ..name = form["name"]
-                                    ..amount = form["amount"]
-                                    ..chargedToUserId = null
-                                    ..receiptId = receipt?.id ?? 0
-                                    ..status = api.ItemStatus.OPEN
-                                    ..categories =
-                                        ListBuilder<api.Category>(categories)
-                                    ..tags = ListBuilder<api.Tag>(tags))
-                                  .build();
+        return _buildAddItemCardContent();
+      },
+    );
+  }
 
-                              items.add(FormItem.fromItem(newItem));
+  Widget _buildAddItemCardContent() {
+    return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(children: [
+              Text(
+                "Add Item",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+            ]),
+            textFieldSpacing,
+            FormBuilder(
+              key: addItemFormKey,
+              child: Column(
+                children: [
+                  FormBuilderTextField(
+                    name: "name",
+                    decoration: InputDecoration(labelText: "Name"),
+                    validator: FormBuilderValidators.required(),
+                  ),
+                  textFieldSpacing,
+                  AmountField(
+                      label: "Amount",
+                      fieldName: "amount",
+                      initialAmount: "0.00",
+                      formState: formState),
+                  textFieldSpacing,
+                  Visibility(
+                    visible: Provider.of<GroupModel>(context, listen: false)
+                            .getGroupReceiptSettings(groupId)
+                            ?.hideItemCategories ==
+                        false,
+                    child: CategorySelectField(
+                      label: "Categories",
+                      fieldName: "categories",
+                      initialCategories: [],
+                      formState: formState,
+                      onCategoriesChanged: (categories) {
+                        addItemFormKey.currentState?.fields["categories"]
+                            ?.setValue(categories);
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: Provider.of<GroupModel>(context, listen: false)
+                            .getGroupReceiptSettings(groupId)
+                            ?.hideItemTags ==
+                        false,
+                    child: TagSelectField(
+                      label: "Tags",
+                      fieldName: "tags",
+                      initialTags: [],
+                      formState: formState,
+                      onTagsChanged: (tags) {
+                        addItemFormKey.currentState?.fields["tags"]
+                            ?.setValue(tags);
+                      },
+                    ),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          child: Text("Add Item"),
+                          onPressed: () {
+                            if (!addItemFormKey.currentState!
+                                .saveAndValidate()) {
+                              return;
+                            }
+                            var form = addItemFormKey.currentState!.value;
 
-                              receiptModel.setItems(items);
-                              setState(() {
-                                isAddingItem = false;
-                              });
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              setState(() {
-                                isAddingItem = false;
-                              });
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                            var items = [...receiptModel.items];
+                            var categories = form["categories"] ?? [];
+                            var tags = form["tags"] ?? [];
+                            var newItem = (api.ItemBuilder()
+                                  ..name = form["name"]
+                                  ..amount = form["amount"]
+                                  ..chargedToUserId = null
+                                  ..receiptId = receipt?.id ?? 0
+                                  ..status = api.ItemStatus.OPEN
+                                  ..categories =
+                                      ListBuilder<api.Category>(categories)
+                                  ..tags = ListBuilder<api.Tag>(tags))
+                                .build();
+
+                            items.add(FormItem.fromItem(newItem));
+
+                            receiptModel.setItems(items);
+                            receiptModel.setIsAddingItem(false);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            receiptModel.setIsAddingItem(false);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
-      );
-    } else {
-      return SizedBox.shrink();
-    }
+      ),
+    );
   }
 
   // Get the current modified receipt from the model
