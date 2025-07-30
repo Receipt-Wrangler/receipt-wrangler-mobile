@@ -10,6 +10,7 @@ import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions_submit_button.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/quick_add_item_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
@@ -51,8 +52,8 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final customFieldModel =
       Provider.of<CustomFieldModel>(context, listen: false);
   final addSharesFormKey = GlobalKey<FormBuilderState>();
-  final addItemFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
+  bool _showQuickAdd = false;
 
   @override
   void initState() {
@@ -663,179 +664,77 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildItemsHeader() {
-    var rowChildren = [
-      buildHeaderText("Items"),
-    ];
-
-    if (formState != WranglerFormState.view) {
-      rowChildren.add(Row(
-        children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: receiptModel.isAddingItemNotifier,
-            builder: (context, isAddingItem, child) => IconButton(
-              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-              onPressed: isAddingItem
-                  ? null
-                  : () {
-                      if (groupId == 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "Please select a group before adding items"),
-                            backgroundColor: Colors.orange,
-                          ),
-                        );
-                        return;
-                      }
-                      receiptModel.setIsAddingItem(true);
-                    },
+  Widget buildItemsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            buildHeaderText("Items"),
+            if (formState != WranglerFormState.view && groupId > 0)
+              TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _showQuickAdd = !_showQuickAdd;
+                  });
+                },
+                icon: Icon(
+                  _showQuickAdd ? Icons.remove : Icons.add,
+                  color: Theme.of(context).primaryColor,
+                  size: 20,
+                ),
+                label: Text(
+                  _showQuickAdd ? "Hide Quick Add" : "Quick Add Item",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                ),
+              ),
+          ],
+        ),
+        if (formState != WranglerFormState.view && groupId > 0)
+          QuickAddItemBar(
+            groupId: groupId,
+            formState: formState,
+            isVisible: _showQuickAdd,
+            onToggleVisibility: () {
+              setState(() {
+                _showQuickAdd = false;
+              });
+            },
+          ),
+        if (groupId == 0 && formState != WranglerFormState.view) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Please select a group before adding items",
+                    style: TextStyle(color: Colors.orange[800]),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
-      ));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ...rowChildren,
       ],
     );
   }
 
-  Widget buildAddItemCard() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: receiptModel.isAddingItemNotifier,
-      builder: (context, isAddingItem, child) {
-        if (!isAddingItem) {
-          return SizedBox.shrink();
-        }
-
-        return _buildAddItemCardContent();
-      },
-    );
-  }
-
-  Widget _buildAddItemCardContent() {
-    return Card(
-      color: Colors.white,
-      surfaceTintColor: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(children: [
-              Text(
-                "Add Item",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-            ]),
-            textFieldSpacing,
-            FormBuilder(
-              key: addItemFormKey,
-              child: Column(
-                children: [
-                  FormBuilderTextField(
-                    name: "name",
-                    decoration: InputDecoration(labelText: "Name"),
-                    validator: FormBuilderValidators.required(),
-                  ),
-                  textFieldSpacing,
-                  AmountField(
-                      label: "Amount",
-                      fieldName: "amount",
-                      initialAmount: "0.00",
-                      formState: formState),
-                  textFieldSpacing,
-                  Visibility(
-                    visible: Provider.of<GroupModel>(context, listen: false)
-                            .getGroupReceiptSettings(groupId)
-                            ?.hideItemCategories ==
-                        false,
-                    child: CategorySelectField(
-                      label: "Categories",
-                      fieldName: "categories",
-                      initialCategories: [],
-                      formState: formState,
-                      onCategoriesChanged: (categories) {
-                        addItemFormKey.currentState?.fields["categories"]
-                            ?.setValue(categories);
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: Provider.of<GroupModel>(context, listen: false)
-                            .getGroupReceiptSettings(groupId)
-                            ?.hideItemTags ==
-                        false,
-                    child: TagSelectField(
-                      label: "Tags",
-                      fieldName: "tags",
-                      initialTags: [],
-                      formState: formState,
-                      onTagsChanged: (tags) {
-                        addItemFormKey.currentState?.fields["tags"]
-                            ?.setValue(tags);
-                      },
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          child: Text("Add Item"),
-                          onPressed: () {
-                            if (!addItemFormKey.currentState!
-                                .saveAndValidate()) {
-                              return;
-                            }
-                            var form = addItemFormKey.currentState!.value;
-
-                            var items = [...receiptModel.items];
-                            var categories = form["categories"] ?? [];
-                            var tags = form["tags"] ?? [];
-                            var newItem = (api.ItemBuilder()
-                                  ..name = form["name"]
-                                  ..amount = form["amount"]
-                                  ..chargedToUserId = null
-                                  ..receiptId = receipt?.id ?? 0
-                                  ..status = api.ItemStatus.OPEN
-                                  ..categories =
-                                      ListBuilder<api.Category>(categories)
-                                  ..tags = ListBuilder<api.Tag>(tags))
-                                .build();
-
-                            items.add(FormItem.fromItem(newItem));
-
-                            receiptModel.setItems(items);
-                            receiptModel.setIsAddingItem(false);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            receiptModel.setIsAddingItem(false);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 
   // Get the current modified receipt from the model
   api.Receipt get modifiedReceipt => receiptModel.modifiedReceipt;
@@ -892,9 +791,7 @@ class _ReceiptForm extends State<ReceiptForm> {
               formKey: widget.formKey,
             ),
             textFieldSpacing,
-            buildItemsHeader(),
-            textFieldSpacing,
-            buildAddItemCard(),
+            buildItemsSection(),
             textFieldSpacing,
             buildReceiptItemList(),
             textFieldSpacing,
