@@ -125,14 +125,23 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildGroupField() {
     int? storedGroupId = receiptModel.getFormField('groupId') as int?;
     int? initialValue = storedGroupId ?? modifiedReceipt.groupId;
-    if (formState == WranglerFormState.add && initialValue == 0) {
+
+    // Always convert 0 to null for dropdowns, regardless of form state
+    if (initialValue == 0) {
+      initialValue = null;
+    }
+
+    // Ensure initialValue exists in dropdown items
+    final items = buildGroupDropDownMenuItems(context);
+    if (initialValue != null &&
+        !items.any((item) => item.value == initialValue)) {
       initialValue = null;
     }
 
     return FormBuilderDropdown(
       name: "groupId",
       decoration: const InputDecoration(labelText: "Group"),
-      items: buildGroupDropDownMenuItems(context),
+      items: items,
       initialValue: initialValue,
       enabled: !isFieldReadOnly(formState),
       validator: FormBuilderValidators.required(),
@@ -160,7 +169,14 @@ class _ReceiptForm extends State<ReceiptForm> {
       items = buildGroupMemberDropDownMenuItems(context, groupId.toString());
     }
 
-    if (formState == WranglerFormState.add && initialValue == 0) {
+    // Always convert 0 to null for dropdowns, regardless of form state
+    if (initialValue == 0) {
+      initialValue = null;
+    }
+
+    // Ensure initialValue exists in dropdown items
+    if (initialValue != null &&
+        !items.any((item) => item.value == initialValue)) {
       initialValue = null;
     }
 

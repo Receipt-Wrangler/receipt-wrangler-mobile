@@ -35,16 +35,13 @@ class _ReceiptAppBar extends State<ReceiptAppBar> {
         shouldRebuild: (previous, next) =>
             previous.name != next.name || previous.groupId != next.groupId,
         builder: (context, data, child) {
-          var receiptModel = Provider.of<ReceiptModel>(context, listen: false);
           return TopAppBar(
             titleText: getTitleText(formState, data.name),
             leadingArrowRedirect: formState == WranglerFormState.add
                 ? "/groups"
                 : "/groups/${data.groupId}/receipts",
             leadingArrowPop: false,
-            onLeadingArrowPressed: () {
-              receiptModel.resetModel();
-            },
+            onLeadingArrowPressed: null,
             actions: actions,
             hideAvatar: true,
           );
