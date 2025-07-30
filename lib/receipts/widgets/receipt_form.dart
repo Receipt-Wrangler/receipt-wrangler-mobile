@@ -508,8 +508,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                       color: Theme.of(context).primaryColor,
                     ),
                     tooltip: _showQuickAddShare
-                        ? "Hide Quick Add"
-                        : "Quick Add Share",
+                        ? "Hide Add"
+                        : "Add Share",
                   ),
                   IconButton(
                     onPressed: () {
@@ -604,7 +604,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                   _showQuickAdd ? Icons.remove : Icons.add,
                   color: Theme.of(context).primaryColor,
                 ),
-                tooltip: _showQuickAdd ? "Hide Quick Add" : "Quick Add Item",
+                tooltip: _showQuickAdd ? "Hide Add" : "Add Item",
               ),
           ],
         ),

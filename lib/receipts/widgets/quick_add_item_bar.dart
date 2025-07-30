@@ -73,7 +73,7 @@ class _QuickAddItemBarState extends State<QuickAddItemBar> {
   @override
   Widget build(BuildContext context) {
     return QuickAddShell(
-      title: "Quick Add Item",
+      title: "Add Item",
       formKey: _quickAddFormKey,
       formState: widget.formState,
       isVisible: widget.isVisible,

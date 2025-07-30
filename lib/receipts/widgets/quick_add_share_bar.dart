@@ -74,7 +74,7 @@ class _QuickAddShareBarState extends State<QuickAddShareBar> {
   @override
   Widget build(BuildContext context) {
     return QuickAddShell(
-      title: "Quick Add Share",
+      title: "Add Share",
       formKey: _quickAddFormKey,
       formState: widget.formState,
       isVisible: widget.isVisible,
