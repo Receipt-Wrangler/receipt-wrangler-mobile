@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_shares.dart';
 
 import '../../models/receipt_model.dart';
 
 class ReceiptShareField extends StatefulWidget {
-  const ReceiptShareField({super.key, required this.groupId});
+  const ReceiptShareField({super.key, required this.groupId, required this.formKey});
 
   final int groupId;
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   _ReceiptShareFieldState createState() {
@@ -35,6 +37,7 @@ class _ReceiptShareFieldState extends State<ReceiptShareField> {
           child: ReceiptItemShares(
             items: consumerModel.items ?? [],
             groupId: widget.groupId,
+            formKey: widget.formKey,
           ),
         );
       },

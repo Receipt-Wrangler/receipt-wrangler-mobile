@@ -17,9 +17,11 @@ class ReceiptItemItems extends StatefulWidget {
   const ReceiptItemItems({
     super.key,
     required this.groupId,
+    required this.formKey,
   });
 
   final int groupId;
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -30,8 +32,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-  late final formKey =
-      Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
   List<FormItem> getItems(List<FormItem> items) {
     return items.where((item) => item.chargedToUserId == null).toList();
@@ -167,14 +167,16 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     var tagName = FormItem.buildItemTagName(item);
 
     var initialName =
-        formKey.currentState?.fields[itemName]?.value ?? item.name;
+        widget.formKey.currentState?.fields[itemName]?.value ?? item.name;
     var initialAmount =
-        formKey.currentState?.fields[amountName]?.value ?? item.amount;
+        widget.formKey.currentState?.fields[amountName]?.value ?? item.amount;
     var initialStatus =
-        formKey.currentState?.fields[statusName]?.value ?? item.status;
+        widget.formKey.currentState?.fields[statusName]?.value ?? item.status;
     var initialCategories =
-        formKey.currentState?.fields[categoryName]?.value ?? item.categories;
-    var initialTags = formKey.currentState?.fields[tagName]?.value ?? item.tags;
+        widget.formKey.currentState?.fields[categoryName]?.value ??
+            item.categories;
+    var initialTags =
+        widget.formKey.currentState?.fields[tagName]?.value ?? item.tags;
 
     return Column(
       children: [
@@ -222,7 +224,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
               formState: formState,
               onCategoriesChanged: (categories) {
                 setState(() {
-                  formKey.currentState?.fields[categoryName]
+                  widget.formKey.currentState?.fields[categoryName]
                       ?.setValue(categories);
                 });
               }),
@@ -239,7 +241,8 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
                 formState: formState,
                 onTagsChanged: (tags) {
                   setState(() {
-                    formKey.currentState?.fields[tagName]?.setValue(tags);
+                    widget.formKey.currentState?.fields[tagName]
+                        ?.setValue(tags);
                   });
                 }))
       ],

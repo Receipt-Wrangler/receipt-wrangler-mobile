@@ -25,13 +25,16 @@ class ReceiptBottomSheetBuilder {
 
   late final BuildContext context;
 
+  late final GlobalKey<FormBuilderState> formKey;
+
   late final textBehaviorSubject = BehaviorSubject<String>();
 
   late final formState = getFormStateFromContext(context);
 
-  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel) {
+  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel, GlobalKey<FormBuilderState> formKey) {
     this.context = context;
     this.receiptModel = receiptModel;
+    this.formKey = formKey;
   }
 
   Widget buildBottomSheet(GoRouterState state) {
@@ -299,7 +302,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   api.UpsertReceiptCommand buildReceiptUpsertCommand() {
-    var form = {...receiptModel.receiptFormKey.currentState!.value};
+    var form = {...formKey.currentState!.value};
 
     var date = form["date"] as DateTime;
     form["date"] = formatDate(zuluDateFormat, date);
@@ -364,8 +367,7 @@ class ReceiptBottomSheetBuilder {
     if (isEditingBasedOnFullPath(fullPath)) {
       return BottomSubmitButton(
         onPressed: () async {
-          if (receiptModel?.receiptFormKey?.currentState?.saveAndValidate() ??
-              false) {
+          if (formKey.currentState?.saveAndValidate() ?? false) {
             try {
               var receiptToUpdate = buildReceiptUpsertCommand();
 
@@ -379,7 +381,7 @@ class ReceiptBottomSheetBuilder {
               print(e);
             }
           } else {
-            print(receiptModel?.receiptFormKey?.currentState);
+            print(formKey.currentState);
           }
         },
       );

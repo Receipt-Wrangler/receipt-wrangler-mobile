@@ -85,11 +85,8 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
   }
 
   String getReceiptAmount() {
-    // Get amount from centralized form data or fallback to form key
-    return receiptModel.getFormField('amount') ??
-        receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
-        receiptModel.modifiedReceipt.amount ??
-        "0";
+    // Get amount from the receipt model modified receipt
+    return receiptModel.modifiedReceipt.amount ?? "0";
   }
 
   String formatCurrencyWithNegatives(BuildContext context, double amount) {

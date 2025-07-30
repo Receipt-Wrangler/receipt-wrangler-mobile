@@ -22,11 +22,13 @@ class ReceiptItemShares extends StatefulWidget {
     super.key,
     required this.items,
     required this.groupId,
+    required this.formKey,
   });
 
   final List<FormItem> items;
 
   final int groupId;
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   State<ReceiptItemShares> createState() => _ReceiptItemShares();
@@ -38,8 +40,6 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-  late final formKey =
-      Provider.of<ReceiptModel>(context, listen: false).receiptFormKey;
 
   Map<int, List<FormItem>> getUserItemMap() {
     var itemMap = <int, List<FormItem>>{};
@@ -116,7 +116,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
       itemWidgets.add(
         ElevatedButton(
           onPressed: () {
-            formKey.currentState?.save();
+            widget.formKey.currentState?.save();
             var newItems = [...widget.items];
             var newItem = (api.ItemBuilder()
                   ..name = ""
@@ -149,14 +149,14 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
     var tagName = FormItem.buildItemTagName(item);
 
     var initialName =
-        formKey.currentState?.fields[itemName]?.value ?? item.name;
+        widget.formKey.currentState?.fields[itemName]?.value ?? item.name;
     var initialAmount =
-        formKey.currentState?.fields[amountName]?.value ?? item.amount;
+        widget.formKey.currentState?.fields[amountName]?.value ?? item.amount;
     var initialStatus =
-        formKey.currentState?.fields[statusName]?.value ?? item.status;
+        widget.formKey.currentState?.fields[statusName]?.value ?? item.status;
     var initialCategories =
-        formKey.currentState?.fields[categoryName]?.value ?? item.categories;
-    var initialTags = formKey.currentState?.fields[tagName]?.value ?? item.tags;
+        widget.formKey.currentState?.fields[categoryName]?.value ?? item.categories;
+    var initialTags = widget.formKey.currentState?.fields[tagName]?.value ?? item.tags;
 
     Widget iconButton = SizedBox.shrink();
     if (!isFieldReadOnly(formState)) {
@@ -216,7 +216,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
               formState: formState,
               onCategoriesChanged: (categories) {
                 setState(() {
-                  formKey.currentState?.fields[categoryName]
+                  widget.formKey.currentState?.fields[categoryName]
                       ?.setValue(categories);
                 });
               }),
@@ -233,7 +233,7 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
                 formState: formState,
                 onTagsChanged: (tags) {
                   setState(() {
-                    formKey.currentState?.fields[tagName]?.setValue(tags);
+                    widget.formKey.currentState?.fields[tagName]?.setValue(tags);
                   });
                 }))
       ],

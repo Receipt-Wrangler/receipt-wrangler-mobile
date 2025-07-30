@@ -58,10 +58,8 @@ class _ReceiptQuickActionsSubmitButton
   // TODO: don't forget about validation
   void splitEvenly() {
     if (formKey.currentState!.saveAndValidate()) {
-      // Get amount from centralized form data or fallback to form key
-      var formAmount = receiptModel.getFormField('amount') ??
-          receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
-          receiptModel.modifiedReceipt.amount;
+      // Get amount from the receipt model modified receipt or fallback
+      var formAmount = receiptModel.modifiedReceipt.amount;
       List<FormItem> items = buildEvenSplitFormItems(formAmount);
       receiptModel.setItems(items);
       Navigator.pop(context);
@@ -88,11 +86,8 @@ class _ReceiptQuickActionsSubmitButton
   void splitEvenlyWithPortions() {
     if (formKey.currentState!.saveAndValidate()) {
       // Additional validation for portions not exceeding receipt total
-      // Get amount from centralized form data or fallback to form key
-      String receiptAmountDisplay = receiptModel.getFormField('amount') ??
-          receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
-          receiptModel.modifiedReceipt.amount ??
-          "0";
+      // Get amount from the receipt model modified receipt
+      String receiptAmountDisplay = receiptModel.modifiedReceipt.amount ?? "0";
       double receiptTotalUSD =
           exchangeCustomToUSD(receiptAmountDisplay).toDouble();
       double totalPortionsUSD = calculateTotalPortionsInUSD();
@@ -119,11 +114,8 @@ class _ReceiptQuickActionsSubmitButton
       }
       List<FormItem> userPortionsItems = [];
       var selectedUsers = getSelectedUsers();
-      // Get amount from centralized form data or fallback to form key
-      var receiptAmountValue = receiptModel.getFormField('amount') ??
-          receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
-          receiptModel.modifiedReceipt.amount ??
-          "0";
+      // Get amount from the receipt model modified receipt
+      var receiptAmountValue = receiptModel.modifiedReceipt.amount ?? "0";
       var remainingAmount =
           Money.parse(receiptAmountValue, isoCode: customCurrencyISOCode);
 
@@ -234,11 +226,8 @@ class _ReceiptQuickActionsSubmitButton
           return;
         }
       }
-      // Get amount from centralized form data or fallback to form key
-      var receiptAmountValue = receiptModel.getFormField('amount') ??
-          receiptModel.receiptFormKey.currentState?.fields["amount"]?.value ??
-          receiptModel.modifiedReceipt.amount ??
-          "0";
+      // Get amount from the receipt model modified receipt
+      var receiptAmountValue = receiptModel.modifiedReceipt.amount ?? "0";
       var receiptAmount = Money.parse(
           receiptAmountValue.isNotEmpty ? receiptAmountValue : "0",
           isoCode: customCurrencyISOCode);

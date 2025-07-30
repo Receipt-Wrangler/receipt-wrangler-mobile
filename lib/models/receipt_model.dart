@@ -45,11 +45,6 @@ class ReceiptModel extends ChangeNotifier {
   InfiniteScrollController get infiniteScrollController =>
       _infiniteScrollController;
 
-  // New form state storage - replaces form keys
-  Map<String, dynamic> _formData = {};
-
-  Map<String, dynamic> get formData => Map.from(_formData);
-
   Map<String, dynamic> _quickActionsFormData = {};
 
   Map<String, dynamic> get quickActionsFormData =>
@@ -68,24 +63,11 @@ class ReceiptModel extends ChangeNotifier {
 
   bool get isAddingItem => _isAddingItemNotifier.value;
 
-  // Keep form keys for backward compatibility during transition
-  var _receiptFormKey = GlobalKey<FormBuilderState>();
-
-  GlobalKey<FormBuilderState> get receiptFormKey => _receiptFormKey;
-
   var _quickActionsFormKey = GlobalKey<FormBuilderState>();
 
   GlobalKey<FormBuilderState> get quickActionsFormKey => _quickActionsFormKey;
 
-  // Form state management methods
-  void updateFormField(String key, dynamic value) {
-    _formData[key] = value;
-    notifyListeners();
-  }
-
-  dynamic getFormField(String key) {
-    return _formData[key];
-  }
+  // Form state management methods for quick actions only
 
   void updateQuickActionsFormField(String key, dynamic value) {
     _quickActionsFormData[key] = value;
@@ -105,44 +87,9 @@ class ReceiptModel extends ChangeNotifier {
     _isAddingItemNotifier.value = value;
   }
 
-  void resetFormData() {
-    _formData.clear();
+  void resetQuickActionsFormData() {
     _quickActionsFormData.clear();
     notifyListeners();
-  }
-
-  void loadFormDataFromReceipt(Receipt receipt) {
-    _loadFormDataFromReceiptInternal(receipt);
-    notifyListeners();
-  }
-
-  Receipt buildReceiptFromFormData() {
-    // This method will be used when we need to convert form data back to Receipt
-    // (for API calls, etc.)
-    return _modifiedReceipt.rebuild((b) => b
-      ..name = _formData['name'] ?? _modifiedReceipt.name
-      ..amount = _formData['amount'] ?? _modifiedReceipt.amount
-      ..date = (_formData['date'] as DateTime?)?.toIso8601String() ??
-          _modifiedReceipt.date
-      ..groupId = _formData['groupId'] ?? _modifiedReceipt.groupId
-      ..paidByUserId =
-          _formData['paidByUserId'] ?? _modifiedReceipt.paidByUserId
-      ..status = _formData['status'] ?? _modifiedReceipt.status
-      ..categories =
-          ListBuilder(_formData['categories'] ?? _modifiedReceipt.categories)
-      ..tags = ListBuilder(_formData['tags'] ?? _modifiedReceipt.tags));
-  }
-
-  // Helper methods for form key management
-  bool isFormKeyValid() {
-    return _receiptFormKey.currentState != null;
-  }
-
-  bool shouldResetFormKey(Receipt newReceipt) {
-    // Reset form key if:
-    // 1. Current form key is null or invalid
-    // 2. Receipt ID has actually changed (switching to different receipt)
-    return !isFormKeyValid() || _receipt.id != newReceipt.id;
   }
 
   void setReceipt(Receipt receipt, bool notify) {
@@ -159,14 +106,6 @@ class ReceiptModel extends ChangeNotifier {
     _imagesToUploadBehaviorSubject =
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
 
-    // Only reset form key if necessary (receipt changed or form key is invalid)
-    if (shouldResetFormKey(receipt)) {
-      _receiptFormKey = GlobalKey<FormBuilderState>();
-    }
-
-    // Load form data from the receipt (without notifying since we'll notify below)
-    _loadFormDataFromReceiptInternal(receipt);
-
     // Reset UI state flags when switching receipts
     _isAddingShareNotifier.value = false;
     _isAddingItemNotifier.value = false;
@@ -176,35 +115,6 @@ class ReceiptModel extends ChangeNotifier {
     }
   }
 
-  void _loadFormDataFromReceiptInternal(Receipt receipt) {
-    _formData = {
-      'name': receipt.name,
-      'amount': receipt.amount,
-      'date': DateTime.parse(receipt.date),
-      'groupId': receipt.groupId,
-      'paidByUserId': receipt.paidByUserId,
-      'status': receipt.status,
-      'categories': receipt.categories?.toList() ?? [],
-      'tags': receipt.tags?.toList() ?? [],
-    };
-
-    // Add custom fields to form data
-    for (var customFieldValue in receipt.customFields) {
-      String fieldKey = "customField_${customFieldValue.customFieldId}";
-      // Set the appropriate value based on what's available
-      if (customFieldValue.stringValue != null) {
-        _formData[fieldKey] = customFieldValue.stringValue;
-      } else if (customFieldValue.dateValue != null) {
-        _formData[fieldKey] = DateTime.parse(customFieldValue.dateValue!);
-      } else if (customFieldValue.selectValue != null) {
-        _formData[fieldKey] = customFieldValue.selectValue;
-      } else if (customFieldValue.currencyValue != null) {
-        _formData[fieldKey] = customFieldValue.currencyValue;
-      } else if (customFieldValue.booleanValue != null) {
-        _formData[fieldKey] = customFieldValue.booleanValue;
-      }
-    }
-  }
 
   void setComments(List<Comment> comments) {
     _comments = comments;
@@ -234,10 +144,8 @@ class ReceiptModel extends ChangeNotifier {
     _imagesToUploadBehaviorSubject =
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
     _infiniteScrollController = InfiniteScrollController();
-    _receiptFormKey = GlobalKey<FormBuilderState>();
 
-    // Reset form data
-    _formData.clear();
+    // Reset quick actions form data
     _quickActionsFormData.clear();
 
     // Reset UI state flags

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
   bool _isLoading = true;
   bool _receiptLoaded = false;
   bool _hasLoadedData = false;
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -109,7 +111,7 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
 
     var state = GoRouterState.of(context);
     var actionBuilder = ReceiptAppBarActionBuilder(context, receiptModel);
-    var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel);
+    var bottomSheetBuilder = ReceiptBottomSheetBuilder(context, receiptModel, _formKey);
 
     print("building");
 
@@ -121,7 +123,12 @@ class _ReceiptFormScreen extends State<ReceiptFormScreen> {
       bodyPadding: padding,
       bottomSheetWidget: bottomSheetBuilder.buildBottomSheet(state),
       child: showChild
-          ? SingleChildScrollView(child: ReceiptForm())
+          ? FormBuilder(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: ReceiptForm(formKey: _formKey),
+              ),
+            )
           : const CircularLoadingProgress(),
     );
   }
