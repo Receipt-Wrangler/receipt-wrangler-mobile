@@ -497,7 +497,7 @@ class _ReceiptForm extends State<ReceiptForm> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextButton.icon(
+                  IconButton(
                     onPressed: () {
                       setState(() {
                         _showQuickAddShare = !_showQuickAddShare;
@@ -506,18 +506,10 @@ class _ReceiptForm extends State<ReceiptForm> {
                     icon: Icon(
                       _showQuickAddShare ? Icons.remove : Icons.add,
                       color: Theme.of(context).primaryColor,
-                      size: 20,
                     ),
-                    label: Text(
-                      _showQuickAddShare ? "Hide Quick Add" : "Quick Add Share",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    ),
+                    tooltip: _showQuickAddShare
+                        ? "Hide Quick Add"
+                        : "Quick Add Share",
                   ),
                   IconButton(
                     onPressed: () {
@@ -593,7 +585,6 @@ class _ReceiptForm extends State<ReceiptForm> {
         bottomSheetWidget: ReceiptQuickActionsSubmitButton());
   }
 
-
   Widget buildItemsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -603,7 +594,7 @@ class _ReceiptForm extends State<ReceiptForm> {
           children: [
             buildHeaderText("Items"),
             if (formState != WranglerFormState.view && groupId > 0)
-              TextButton.icon(
+              IconButton(
                 onPressed: () {
                   setState(() {
                     _showQuickAdd = !_showQuickAdd;
@@ -612,18 +603,8 @@ class _ReceiptForm extends State<ReceiptForm> {
                 icon: Icon(
                   _showQuickAdd ? Icons.remove : Icons.add,
                   color: Theme.of(context).primaryColor,
-                  size: 20,
                 ),
-                label: Text(
-                  _showQuickAdd ? "Hide Quick Add" : "Quick Add Item",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                ),
+                tooltip: _showQuickAdd ? "Hide Quick Add" : "Quick Add Item",
               ),
           ],
         ),
@@ -664,7 +645,6 @@ class _ReceiptForm extends State<ReceiptForm> {
       ],
     );
   }
-
 
   // Get the current modified receipt from the model
   api.Receipt get modifiedReceipt => receiptModel.modifiedReceipt;
