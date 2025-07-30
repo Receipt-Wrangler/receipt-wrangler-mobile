@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/quick_add_shell.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 
 import '../../interfaces/form_item.dart';
@@ -72,123 +73,79 @@ class _QuickAddShareBarState extends State<QuickAddShareBar> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.formState == WranglerFormState.view) {
-      return const SizedBox.shrink();
-    }
+    return QuickAddShell(
+      title: "Quick Add Share",
+      formKey: _quickAddFormKey,
+      formState: widget.formState,
+      isVisible: widget.isVisible,
+      onToggleVisibility: widget.onToggleVisibility,
+      onSubmit: _addShare,
+      submitButtonText: "Add Share",
+      submitButtonIcon: Icons.share,
+      child: _buildFormContent(),
+    );
+  }
 
-    if (!widget.isVisible) {
-      return const SizedBox.shrink();
-    }
-
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FormBuilder(
-          key: _quickAddFormKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Quick Add Share",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  IconButton(
-                    onPressed: widget.onToggleVisibility,
-                    icon: const Icon(Icons.close, size: 20),
-                    iconSize: 20,
-                    constraints: const BoxConstraints(
-                      minWidth: 32,
-                      minHeight: 32,
-                    ),
-                    padding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              FormBuilderDropdown(
-                name: "chargedToUserId",
-                decoration: const InputDecoration(
-                  labelText: "Shared With",
-                  hintText: "Select who this share is for",
-                  border: OutlineInputBorder(),
-                ),
-                items: buildGroupMemberDropDownMenuItems(
-                    context, widget.groupId.toString()),
-                validator: FormBuilderValidators.required(),
-                enabled: !isFieldReadOnly(widget.formState),
-              ),
-              const SizedBox(height: 16),
-              FormBuilderTextField(
-                name: "name",
-                decoration: const InputDecoration(
-                  labelText: "Share Name",
-                  hintText: "Enter name for this share",
-                  border: OutlineInputBorder(),
-                ),
-                validator: FormBuilderValidators.required(),
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: 16),
-              AmountField(
-                label: "Amount",
-                fieldName: "amount",
-                initialAmount: "0.00",
-                formState: widget.formState,
-              ),
-              if (_showCategories) ...[
-                const SizedBox(height: 16),
-                CategorySelectField(
-                  label: "Categories",
-                  fieldName: "categories",
-                  initialCategories: [],
-                  formState: widget.formState,
-                  onCategoriesChanged: (categories) {
-                    _quickAddFormKey.currentState!.fields["categories"]!
-                        .setValue(categories);
-                  },
-                ),
-              ],
-              if (_showTags) ...[
-                const SizedBox(height: 16),
-                TagSelectField(
-                  label: "Tags",
-                  fieldName: "tags",
-                  initialTags: [],
-                  formState: widget.formState,
-                  onTagsChanged: (tags) {
-                    _quickAddFormKey.currentState!.fields["tags"]!
-                        .setValue(tags);
-                  },
-                ),
-              ],
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _addShare,
-                  icon: const Icon(Icons.share),
-                  label: const Text("Add Share"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildFormContent() {
+    return Column(
+      children: [
+        FormBuilderDropdown(
+          name: "chargedToUserId",
+          decoration: const InputDecoration(
+            labelText: "Shared With",
+            hintText: "Select who this share is for",
+            border: OutlineInputBorder(),
           ),
+          items: buildGroupMemberDropDownMenuItems(
+              context, widget.groupId.toString()),
+          validator: FormBuilderValidators.required(),
+          enabled: !isFieldReadOnly(widget.formState),
         ),
-      ),
+        const SizedBox(height: 16),
+        FormBuilderTextField(
+          name: "name",
+          decoration: const InputDecoration(
+            labelText: "Share Name",
+            hintText: "Enter name for this share",
+            border: OutlineInputBorder(),
+          ),
+          validator: FormBuilderValidators.required(),
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 16),
+        AmountField(
+          label: "Amount",
+          fieldName: "amount",
+          initialAmount: "0.00",
+          formState: widget.formState,
+        ),
+        if (_showCategories) ...[
+          const SizedBox(height: 16),
+          CategorySelectField(
+            label: "Categories",
+            fieldName: "categories",
+            initialCategories: [],
+            formState: widget.formState,
+            onCategoriesChanged: (categories) {
+              _quickAddFormKey.currentState!.fields["categories"]!
+                  .setValue(categories);
+            },
+          ),
+        ],
+        if (_showTags) ...[
+          const SizedBox(height: 16),
+          TagSelectField(
+            label: "Tags",
+            fieldName: "tags",
+            initialTags: [],
+            formState: widget.formState,
+            onTagsChanged: (tags) {
+              _quickAddFormKey.currentState!.fields["tags"]!
+                  .setValue(tags);
+            },
+          ),
+        ],
+      ],
     );
   }
 }
