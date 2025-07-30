@@ -11,6 +11,7 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_actions_submit_button.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_add_item_bar.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/quick_add_share_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
@@ -19,7 +20,6 @@ import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
-import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/custom_field_model.dart';
 import '../../models/group_model.dart';
@@ -51,9 +51,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
   late final customFieldModel =
       Provider.of<CustomFieldModel>(context, listen: false);
-  final addSharesFormKey = GlobalKey<FormBuilderState>();
   int groupId = 0;
   bool _showQuickAdd = false;
+  bool _showQuickAddShare = false;
 
   @override
   void initState() {
@@ -485,62 +485,99 @@ class _ReceiptForm extends State<ReceiptForm> {
     );
   }
 
-  Widget buildSharesHeader() {
-    var rowChildren = [
-      buildHeaderText("Shares"),
-    ];
-
-    if (formState != WranglerFormState.view) {
-      rowChildren.add(Row(
-        children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: receiptModel.isAddingShareNotifier,
-            builder: (context, isAddingShare, child) => IconButton(
-              icon: Icon(Icons.add, color: Theme.of(context).primaryColor),
-              onPressed: isAddingShare
-                  ? null
-                  : () {
+  Widget buildSharesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            buildHeaderText("Shares"),
+            if (formState != WranglerFormState.view && groupId > 0)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _showQuickAddShare = !_showQuickAddShare;
+                      });
+                    },
+                    icon: Icon(
+                      _showQuickAddShare ? Icons.remove : Icons.add,
+                      color: Theme.of(context).primaryColor,
+                      size: 20,
+                    ),
+                    label: Text(
+                      _showQuickAddShare ? "Hide Quick Add" : "Quick Add Share",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
                       if (groupId == 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                "Please select a group before adding shares"),
+                                "Please select a group before using quick actions"),
                             backgroundColor: Colors.orange,
                           ),
                         );
                         return;
                       }
-                      receiptModel.setIsAddingShare(true);
+                      openQuickActionsBottomSheet();
                     },
+                    icon: SvgPicture.asset(
+                      "assets/icons/split.svg",
+                      width: 24,
+                      height: 24,
+                    ),
+                    tooltip: "Quick Actions",
+                  ),
+                ],
+              ),
+          ],
+        ),
+        if (formState != WranglerFormState.view && groupId > 0)
+          QuickAddShareBar(
+            groupId: groupId,
+            formState: formState,
+            isVisible: _showQuickAddShare,
+            onToggleVisibility: () {
+              setState(() {
+                _showQuickAddShare = false;
+              });
+            },
+          ),
+        if (groupId == 0 && formState != WranglerFormState.view) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Please select a group before adding shares",
+                    style: TextStyle(color: Colors.orange[800]),
+                  ),
+                ),
+              ],
             ),
           ),
-          IconButton(
-              onPressed: () {
-                if (groupId == 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          "Please select a group before using quick actions"),
-                      backgroundColor: Colors.orange,
-                    ),
-                  );
-                  return;
-                }
-                openQuickActionsBottomSheet();
-              },
-              icon: SvgPicture.asset(
-                "assets/icons/split.svg",
-                width: 24,
-                height: 24,
-              ))
         ],
-      ));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ...rowChildren,
       ],
     );
   }
@@ -556,113 +593,6 @@ class _ReceiptForm extends State<ReceiptForm> {
         bottomSheetWidget: ReceiptQuickActionsSubmitButton());
   }
 
-  Widget buildAddSharesCard() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: receiptModel.isAddingShareNotifier,
-      builder: (context, isAddingShare, child) {
-        if (!isAddingShare) {
-          return SizedBox.shrink();
-        }
-
-        return _buildAddSharesCardContent();
-      },
-    );
-  }
-
-  Widget _buildAddSharesCardContent() {
-    return Card(
-      color: Colors.white,
-      surfaceTintColor: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(children: [
-              Text(
-                "Add Share",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-            ]),
-            textFieldSpacing,
-            FormBuilder(
-              key: addSharesFormKey,
-              child: Column(
-                children: [
-                  FormBuilderDropdown(
-                    name: "chargedToUserId",
-                    decoration: const InputDecoration(labelText: "Shared With"),
-                    items: buildGroupMemberDropDownMenuItems(
-                        context, groupId.toString()),
-                    initialValue: "",
-                    validator: FormBuilderValidators.required(),
-                    enabled: !isFieldReadOnly(formState),
-                  ),
-                  textFieldSpacing,
-                  FormBuilderTextField(
-                    name: "name",
-                    decoration: InputDecoration(labelText: "Name"),
-                    validator: FormBuilderValidators.required(),
-                  ),
-                  textFieldSpacing,
-                  AmountField(
-                      label: "Amount",
-                      fieldName: "amount",
-                      initialAmount: "0.00",
-                      formState: formState),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          child: Text("Add Share"),
-                          onPressed: () {
-                            if (!addSharesFormKey.currentState!
-                                .saveAndValidate()) {
-                              return;
-                            }
-                            var form = addSharesFormKey.currentState!.value;
-
-                            var items = [...receiptModel.items];
-                            var newItem = (api.ItemBuilder()
-                                  ..name = form["name"]
-                                  ..amount = form["amount"]
-                                  ..chargedToUserId = form["chargedToUserId"]
-                                  ..receiptId = receipt?.id ?? 0
-                                  ..status = api.ItemStatus.OPEN)
-                                .build();
-
-                            items.add(FormItem.fromItem(newItem));
-
-                            receiptModel.setItems(items);
-                            receiptModel.setIsAddingShare(false);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            receiptModel.setIsAddingShare(false);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-            // user field,
-            // item name
-            // amount field,
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget buildItemsSection() {
     return Column(
@@ -782,9 +712,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                   buildTagField(),
                   textFieldSpacing,
                 ])),
-            buildSharesHeader(),
-            textFieldSpacing,
-            buildAddSharesCard(),
+            buildSharesSection(),
             textFieldSpacing,
             ReceiptShareField(
               groupId: groupId,
