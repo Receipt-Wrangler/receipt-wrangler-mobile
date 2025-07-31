@@ -120,13 +120,14 @@ class _ReceiptForm extends State<ReceiptForm> {
           label: "Amount",
           fieldName: "amount",
           initialAmount: receiptModel.modifiedReceipt.amount.toString(),
-          formState: receiptModel.syncWithItems ? WranglerFormState.view : formState,
-          decoration: receiptModel.syncWithItems 
-            ? const InputDecoration(
-                labelText: "Amount",
-                helperText: "Calculated from items total",
-              )
-            : null,
+          formState:
+              receiptModel.syncWithItems ? WranglerFormState.view : formState,
+          decoration: receiptModel.syncWithItems
+              ? const InputDecoration(
+                  labelText: "Amount",
+                  helperText: "Calculated from items total",
+                )
+              : null,
         );
       },
     );
@@ -230,10 +231,9 @@ class _ReceiptForm extends State<ReceiptForm> {
     var initialCategories = modifiedReceipt.categories?.toList() ?? [];
 
     return Visibility(
-      visible: groupModel
-              .getGroupReceiptSettings(groupId)
-              ?.hideReceiptCategories ==
-          false,
+      visible:
+          groupModel.getGroupReceiptSettings(groupId)?.hideReceiptCategories ==
+              false,
       child: CategorySelectField(
         fieldName: "categories",
         label: "Categories",
@@ -253,10 +253,8 @@ class _ReceiptForm extends State<ReceiptForm> {
     var initialTags = modifiedReceipt.tags?.toList() ?? [];
 
     return Visibility(
-      visible: groupModel
-              .getGroupReceiptSettings(groupId)
-              ?.hideReceiptTags ==
-          false,
+      visible:
+          groupModel.getGroupReceiptSettings(groupId)?.hideReceiptTags == false,
       child: TagSelectField(
           label: "Tags",
           fieldName: "tags",
@@ -563,9 +561,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                       _showQuickAddShare ? Icons.remove : Icons.add,
                       color: Theme.of(context).primaryColor,
                     ),
-                    tooltip: _showQuickAddShare
-                        ? "Hide Add"
-                        : "Add Share",
+                    tooltip: _showQuickAddShare ? "Hide Add" : "Add Share",
                   ),
                   IconButton(
                     onPressed: () {
@@ -737,16 +733,16 @@ class _ReceiptForm extends State<ReceiptForm> {
             textFieldSpacing,
             buildTagField(),
             textFieldSpacing,
+            buildItemsSection(),
+            textFieldSpacing,
+            buildReceiptItemList(),
+            textFieldSpacing,
             buildSharesSection(),
             textFieldSpacing,
             ReceiptShareField(
               groupId: groupId,
               formKey: widget.formKey,
             ),
-            textFieldSpacing,
-            buildItemsSection(),
-            textFieldSpacing,
-            buildReceiptItemList(),
             textFieldSpacing,
             kDebugMode
                 ? ElevatedButton(
