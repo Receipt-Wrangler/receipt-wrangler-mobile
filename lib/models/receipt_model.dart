@@ -67,6 +67,35 @@ class ReceiptModel extends ChangeNotifier {
 
   GlobalKey<FormBuilderState> get quickActionsFormKey => _quickActionsFormKey;
 
+  bool _syncWithItems = false;
+
+  bool get syncWithItems => _syncWithItems;
+
+  void setSyncWithItems(bool value) {
+    _syncWithItems = value;
+    if (value) {
+      _updateAmountFromItems();
+    }
+    notifyListeners();
+  }
+
+  void _updateAmountFromItems() {
+    if (!_syncWithItems) return;
+    
+    double total = 0.0;
+    for (var item in _items.where((item) => item.chargedToUserId == null)) {
+      try {
+        total += double.parse(item.amount ?? '0.0');
+      } catch (e) {
+        // Handle parsing errors gracefully
+      }
+    }
+    
+    // Update the modified receipt with new amount
+    _modifiedReceipt = _modifiedReceipt.rebuild((b) => b..amount = total.toStringAsFixed(2));
+    notifyListeners();
+  }
+
   // Form state management methods for quick actions only
 
   void updateQuickActionsFormField(String key, dynamic value) {
@@ -109,6 +138,7 @@ class ReceiptModel extends ChangeNotifier {
     // Reset UI state flags when switching receipts
     _isAddingShareNotifier.value = false;
     _isAddingItemNotifier.value = false;
+    _syncWithItems = false;
 
     if (notify) {
       notifyListeners();
@@ -123,6 +153,9 @@ class ReceiptModel extends ChangeNotifier {
 
   void setItems(List<FormItem> items) {
     _items = items;
+    if (_syncWithItems) {
+      _updateAmountFromItems();
+    }
     notifyListeners();
   }
 
@@ -151,5 +184,6 @@ class ReceiptModel extends ChangeNotifier {
     // Reset UI state flags
     _isAddingShareNotifier.value = false;
     _isAddingItemNotifier.value = false;
+    _syncWithItems = false;
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openapi/openapi.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
+import 'package:receipt_wrangler_mobile/interfaces/form_item.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
 String? getReceiptId(BuildContext context) {
@@ -108,4 +109,16 @@ ReceiptPagedRequestFilterBuilder dashboardConfigurationToFilter(
   });
 
   return filter;
+}
+
+double calculateItemsTotal(List<FormItem> items) {
+  double total = 0.0;
+  for (var item in items.where((item) => item.chargedToUserId == null)) {
+    try {
+      total += double.parse(item.amount);
+    } catch (e) {
+      debugPrint('Error parsing item amount: ${item.amount}');
+    }
+  }
+  return total;
 }
