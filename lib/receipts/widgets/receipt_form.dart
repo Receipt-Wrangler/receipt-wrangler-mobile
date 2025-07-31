@@ -229,33 +229,45 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildCategoryField() {
     var initialCategories = modifiedReceipt.categories?.toList() ?? [];
 
-    return CategorySelectField(
-      fieldName: "categories",
-      label: "Categories",
-      initialCategories: initialCategories,
-      formState: formState,
-      onCategoriesChanged: (categories) => {
-        setState(() {
-          widget.formKey.currentState?.fields["categories"]
-              ?.setValue(categories);
-        }),
-      },
+    return Visibility(
+      visible: groupModel
+              .getGroupReceiptSettings(groupId)
+              ?.hideReceiptCategories ==
+          false,
+      child: CategorySelectField(
+        fieldName: "categories",
+        label: "Categories",
+        initialCategories: initialCategories,
+        formState: formState,
+        onCategoriesChanged: (categories) => {
+          setState(() {
+            widget.formKey.currentState?.fields["categories"]
+                ?.setValue(categories);
+          }),
+        },
+      ),
     );
   }
 
   Widget buildTagField() {
     var initialTags = modifiedReceipt.tags?.toList() ?? [];
 
-    return TagSelectField(
-        label: "Tags",
-        fieldName: "tags",
-        initialTags: initialTags,
-        formState: formState,
-        onTagsChanged: (tags) => {
-              setState(() {
-                widget.formKey.currentState?.fields["tags"]?.setValue(tags);
-              })
-            });
+    return Visibility(
+      visible: groupModel
+              .getGroupReceiptSettings(groupId)
+              ?.hideReceiptTags ==
+          false,
+      child: TagSelectField(
+          label: "Tags",
+          fieldName: "tags",
+          initialTags: initialTags,
+          formState: formState,
+          onTagsChanged: (tags) => {
+                setState(() {
+                  widget.formKey.currentState?.fields["tags"]?.setValue(tags);
+                })
+              }),
+    );
   }
 
   Widget buildCustomFieldsSection() {
@@ -721,24 +733,10 @@ class _ReceiptForm extends State<ReceiptForm> {
             textFieldSpacing,
             buildCustomFieldsSection(),
             textFieldSpacing,
-            Visibility(
-                visible: groupModel
-                        .getGroupReceiptSettings(groupId)
-                        ?.hideReceiptCategories ==
-                    false,
-                child: Column(children: [
-                  buildCategoryField(),
-                  textFieldSpacing,
-                ])),
-            Visibility(
-                visible: groupModel
-                        .getGroupReceiptSettings(groupId)
-                        ?.hideReceiptTags ==
-                    false,
-                child: Column(children: [
-                  buildTagField(),
-                  textFieldSpacing,
-                ])),
+            buildCategoryField(),
+            textFieldSpacing,
+            buildTagField(),
+            textFieldSpacing,
             buildSharesSection(),
             textFieldSpacing,
             ReceiptShareField(
