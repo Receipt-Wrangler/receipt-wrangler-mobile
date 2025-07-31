@@ -120,13 +120,14 @@ class _ReceiptForm extends State<ReceiptForm> {
           label: "Amount",
           fieldName: "amount",
           initialAmount: receiptModel.modifiedReceipt.amount.toString(),
-          formState: receiptModel.syncWithItems ? WranglerFormState.view : formState,
-          decoration: receiptModel.syncWithItems 
-            ? const InputDecoration(
-                labelText: "Amount",
-                helperText: "Calculated from items total",
-              )
-            : null,
+          formState:
+              receiptModel.syncWithItems ? WranglerFormState.view : formState,
+          decoration: receiptModel.syncWithItems
+              ? const InputDecoration(
+                  labelText: "Amount",
+                  helperText: "Calculated from items total",
+                )
+              : null,
         );
       },
     );
@@ -229,33 +230,42 @@ class _ReceiptForm extends State<ReceiptForm> {
   Widget buildCategoryField() {
     var initialCategories = modifiedReceipt.categories?.toList() ?? [];
 
-    return CategorySelectField(
-      fieldName: "categories",
-      label: "Categories",
-      initialCategories: initialCategories,
-      formState: formState,
-      onCategoriesChanged: (categories) => {
-        setState(() {
-          widget.formKey.currentState?.fields["categories"]
-              ?.setValue(categories);
-        }),
-      },
+    return Visibility(
+      visible:
+          groupModel.getGroupReceiptSettings(groupId)?.hideReceiptCategories ==
+              false,
+      child: CategorySelectField(
+        fieldName: "categories",
+        label: "Categories",
+        initialCategories: initialCategories,
+        formState: formState,
+        onCategoriesChanged: (categories) => {
+          setState(() {
+            widget.formKey.currentState?.fields["categories"]
+                ?.setValue(categories);
+          }),
+        },
+      ),
     );
   }
 
   Widget buildTagField() {
     var initialTags = modifiedReceipt.tags?.toList() ?? [];
 
-    return TagSelectField(
-        label: "Tags",
-        fieldName: "tags",
-        initialTags: initialTags,
-        formState: formState,
-        onTagsChanged: (tags) => {
-              setState(() {
-                widget.formKey.currentState?.fields["tags"]?.setValue(tags);
-              })
-            });
+    return Visibility(
+      visible:
+          groupModel.getGroupReceiptSettings(groupId)?.hideReceiptTags == false,
+      child: TagSelectField(
+          label: "Tags",
+          fieldName: "tags",
+          initialTags: initialTags,
+          formState: formState,
+          onTagsChanged: (tags) => {
+                setState(() {
+                  widget.formKey.currentState?.fields["tags"]?.setValue(tags);
+                })
+              }),
+    );
   }
 
   Widget buildCustomFieldsSection() {
@@ -551,9 +561,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                       _showQuickAddShare ? Icons.remove : Icons.add,
                       color: Theme.of(context).primaryColor,
                     ),
-                    tooltip: _showQuickAddShare
-                        ? "Hide Add"
-                        : "Add Share",
+                    tooltip: _showQuickAddShare ? "Hide Add" : "Add Share",
                   ),
                   IconButton(
                     onPressed: () {
@@ -721,34 +729,20 @@ class _ReceiptForm extends State<ReceiptForm> {
             textFieldSpacing,
             buildCustomFieldsSection(),
             textFieldSpacing,
-            Visibility(
-                visible: groupModel
-                        .getGroupReceiptSettings(groupId)
-                        ?.hideReceiptCategories ==
-                    false,
-                child: Column(children: [
-                  buildCategoryField(),
-                  textFieldSpacing,
-                ])),
-            Visibility(
-                visible: groupModel
-                        .getGroupReceiptSettings(groupId)
-                        ?.hideReceiptTags ==
-                    false,
-                child: Column(children: [
-                  buildTagField(),
-                  textFieldSpacing,
-                ])),
+            buildCategoryField(),
+            textFieldSpacing,
+            buildTagField(),
+            textFieldSpacing,
+            buildItemsSection(),
+            textFieldSpacing,
+            buildReceiptItemList(),
+            textFieldSpacing,
             buildSharesSection(),
             textFieldSpacing,
             ReceiptShareField(
               groupId: groupId,
               formKey: widget.formKey,
             ),
-            textFieldSpacing,
-            buildItemsSection(),
-            textFieldSpacing,
-            buildReceiptItemList(),
             textFieldSpacing,
             kDebugMode
                 ? ElevatedButton(
