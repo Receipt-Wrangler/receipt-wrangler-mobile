@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/constants/spacing.dart';
-import 'package:receipt_wrangler_mobile/enums/form_state.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_item_display.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
-import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
 class ReceiptItemItems extends StatefulWidget {
@@ -93,7 +88,27 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
     for (int i = 0; i < items.length; i++) {
       var item = items[i];
 
-      itemWidgets.add(buildItemCard(item, i));
+      itemWidgets.add(ReceiptItemDisplay(
+        item: item,
+        displayIndex: i,
+        groupId: widget.groupId,
+        formKey: widget.formKey,
+        formState: formState,
+        groupModel: groupModel,
+        onDelete: () {
+          var allItems = receiptModel.items;
+          var actualIndex =
+              allItems.indexWhere((wi) => wi.formId == item.formId);
+          if (actualIndex != -1) {
+            var newItems = [...allItems];
+            newItems.removeAt(actualIndex);
+
+            setState(() {
+              receiptModel.setItems(newItems);
+            });
+          }
+        },
+      ));
 
       // Add spacing between items except for the last one
       if (i < items.length - 1) {
@@ -106,158 +121,6 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
       child: Column(
         children: itemWidgets,
       ),
-    );
-  }
-
-  Widget buildItemCard(FormItem item, int displayIndex) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    item.name.isEmpty ? "Unnamed Item" : item.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  item.amount,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            buildItemRow(item, displayIndex),
-            if (formState != WranglerFormState.view) ...[
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    var allItems = receiptModel.items;
-                    var actualIndex =
-                        allItems.indexWhere((wi) => wi.formId == item.formId);
-                    if (actualIndex != -1) {
-                      var newItems = [...allItems];
-                      newItems.removeAt(actualIndex);
-
-                      setState(() {
-                        receiptModel.setItems(newItems);
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Delete Item"),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildItemRow(FormItem item, int index) {
-    var itemName = FormItem.buildItemNameName(item);
-    var amountName = FormItem.buildItemAmountName(item);
-    var statusName = FormItem.buildItemStatusName(item);
-    var categoryName = FormItem.buildItemCategoryName(item);
-    var tagName = FormItem.buildItemTagName(item);
-
-    var initialName =
-        widget.formKey.currentState?.fields[itemName]?.value ?? item.name;
-    var initialAmount =
-        widget.formKey.currentState?.fields[amountName]?.value ?? item.amount;
-    var initialStatus =
-        widget.formKey.currentState?.fields[statusName]?.value ?? item.status;
-    var initialCategories =
-        widget.formKey.currentState?.fields[categoryName]?.value ??
-            item.categories;
-    var initialTags =
-        widget.formKey.currentState?.fields[tagName]?.value ?? item.tags;
-
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              key: Key(itemName),
-              child: FormBuilderTextField(
-                name: itemName,
-                initialValue: initialName,
-                decoration: const InputDecoration(label: Text("Name")),
-                readOnly: isFieldReadOnly(formState),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-                key: Key(amountName),
-                child: AmountField(
-                    label: "Amount",
-                    fieldName: amountName,
-                    initialAmount: initialAmount,
-                    formState: formState)),
-            const SizedBox(width: 8),
-            Expanded(
-              key: Key(statusName),
-              child: itemStatusField(
-                "Status",
-                statusName,
-                initialStatus,
-                formState,
-              ),
-            ),
-          ],
-        ),
-        textFieldSpacing,
-        Visibility(
-          visible: groupModel
-                  .getGroupReceiptSettings(widget.groupId)
-                  ?.hideItemCategories ==
-              false,
-          child: CategorySelectField(
-              label: "Categories",
-              fieldName: categoryName,
-              initialCategories: initialCategories,
-              formState: formState,
-              onCategoriesChanged: (categories) {
-                setState(() {
-                  widget.formKey.currentState?.fields[categoryName]
-                      ?.setValue(categories);
-                });
-              }),
-        ),
-        Visibility(
-            visible: groupModel
-                    .getGroupReceiptSettings(widget.groupId)
-                    ?.hideItemTags ==
-                false,
-            child: TagSelectField(
-                label: "Tags",
-                fieldName: tagName,
-                initialTags: initialTags,
-                formState: formState,
-                onTagsChanged: (tags) {
-                  setState(() {
-                    widget.formKey.currentState?.fields[tagName]
-                        ?.setValue(tags);
-                  });
-                }))
-      ],
     );
   }
 

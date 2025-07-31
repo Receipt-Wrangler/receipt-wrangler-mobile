@@ -6,15 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
-import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
-import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/receipt_item_display.dart';
 import 'package:receipt_wrangler_mobile/utils/currency.dart';
 
 import '../../interfaces/form_item.dart';
 import '../../models/group_model.dart';
 import '../../models/receipt_model.dart';
-import '../../shared/widgets/tag_select_field.dart';
 import '../../utils/forms.dart';
 
 class ReceiptItemShares extends StatefulWidget {
@@ -102,141 +99,69 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
 
   Widget buildExpansionPanelBody(List<FormItem> items) {
     List<Widget> itemWidgets = [];
+    
     for (var i = 0; i < items.length; i++) {
-      itemWidgets.add(textFieldSpacing);
-
       var itemIndex =
           widget.items.indexWhere((item) => item.formId == items[i].formId);
 
-      itemWidgets.add(buildItemRow(items[i], itemIndex));
+      itemWidgets.add(ReceiptItemDisplay(
+        item: items[i],
+        displayIndex: i,
+        groupId: widget.groupId,
+        formKey: widget.formKey,
+        formState: formState,
+        groupModel: groupModel,
+        onDelete: formState != WranglerFormState.view
+            ? () {
+                var newItems = [...widget.items];
+                newItems.removeAt(itemIndex);
+
+                setState(() {
+                  receiptModel.setItems(newItems);
+                });
+              }
+            : null,
+      ));
+
+      // Add spacing between items
+      if (i < items.length - 1) {
+        itemWidgets.add(const SizedBox(height: 16));
+      }
     }
 
     if (formState != WranglerFormState.view) {
-      itemWidgets.add(textFieldSpacing);
+      itemWidgets.add(const SizedBox(height: 16));
       itemWidgets.add(
-        ElevatedButton(
-          onPressed: () {
-            widget.formKey.currentState?.save();
-            var newItems = [...widget.items];
-            var newItem = (api.ItemBuilder()
-                  ..name = ""
-                  ..amount = "0.00"
-                  ..chargedToUserId = items[0].chargedToUserId
-                  ..receiptId = receiptModel.receipt.id
-                  ..status = api.ItemStatus.OPEN)
-                .build();
-            newItems.add(FormItem.fromItem(newItem));
+        Align(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              widget.formKey.currentState?.save();
+              var newItems = [...widget.items];
+              var newItem = (api.ItemBuilder()
+                    ..name = ""
+                    ..amount = "0.00"
+                    ..chargedToUserId = items[0].chargedToUserId
+                    ..receiptId = receiptModel.receipt.id
+                    ..status = api.ItemStatus.OPEN)
+                  .build();
+              newItems.add(FormItem.fromItem(newItem));
 
-            setState(() {
-              receiptModel.setItems(newItems);
-            });
-          },
-          child: const Text("Add Share"),
+              setState(() {
+                receiptModel.setItems(newItems);
+              });
+            },
+            child: const Text("Add Share"),
+          ),
         ),
       );
     }
 
-    return Column(
-      children: itemWidgets,
-    );
-  }
-
-  Widget buildItemRow(FormItem item, int index) {
-    var itemName = FormItem.buildItemNameName(item);
-    var amountName = FormItem.buildItemAmountName(item);
-    var statusName = FormItem.buildItemStatusName(item);
-    var categoryName = FormItem.buildItemCategoryName(item);
-    var tagName = FormItem.buildItemTagName(item);
-
-    var initialName =
-        widget.formKey.currentState?.fields[itemName]?.value ?? item.name;
-    var initialAmount =
-        widget.formKey.currentState?.fields[amountName]?.value ?? item.amount;
-    var initialStatus =
-        widget.formKey.currentState?.fields[statusName]?.value ?? item.status;
-    var initialCategories =
-        widget.formKey.currentState?.fields[categoryName]?.value ?? item.categories;
-    var initialTags = widget.formKey.currentState?.fields[tagName]?.value ?? item.tags;
-
-    Widget iconButton = SizedBox.shrink();
-    if (!isFieldReadOnly(formState)) {
-      iconButton = IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
-          onPressed: () {
-            var newItems = [...widget.items];
-            newItems.removeAt(index);
-
-            setState(() {
-              receiptModel.setItems(newItems);
-            });
-          });
-    }
-    // TODO: need to fix new item data being wiped out when adding
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              key: Key(itemName),
-              child: FormBuilderTextField(
-                name: itemName,
-                initialValue: initialName,
-                decoration: const InputDecoration(label: Text("Name")),
-                readOnly: isFieldReadOnly(formState),
-              ),
-            ),
-            Expanded(
-                key: Key(amountName),
-                child: AmountField(
-                    label: "Amount",
-                    fieldName: amountName,
-                    initialAmount: initialAmount,
-                    formState: formState)),
-            Expanded(
-              key: Key(statusName),
-              child: itemStatusField(
-                "Status",
-                statusName,
-                initialStatus,
-                formState,
-              ),
-            ),
-            iconButton
-          ],
-        ),
-        Visibility(
-          visible: groupModel
-                  .getGroupReceiptSettings(widget.groupId)
-                  ?.hideItemCategories ==
-              false,
-          child: CategorySelectField(
-              label: "Categories",
-              fieldName: categoryName,
-              initialCategories: initialCategories,
-              formState: formState,
-              onCategoriesChanged: (categories) {
-                setState(() {
-                  widget.formKey.currentState?.fields[categoryName]
-                      ?.setValue(categories);
-                });
-              }),
-        ),
-        Visibility(
-            visible: groupModel
-                    .getGroupReceiptSettings(widget.groupId)
-                    ?.hideItemTags ==
-                false,
-            child: TagSelectField(
-                label: "Tags",
-                fieldName: tagName,
-                initialTags: initialTags,
-                formState: formState,
-                onTagsChanged: (tags) {
-                  setState(() {
-                    widget.formKey.currentState?.fields[tagName]?.setValue(tags);
-                  });
-                }))
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: itemWidgets,
+      ),
     );
   }
 
