@@ -30,7 +30,7 @@ abstract class UpsertItemCommand implements Built<UpsertItemCommand, UpsertItemC
 
   /// User foreign key
   @BuiltValueField(wireName: r'chargedToUserId')
-  int get chargedToUserId;
+  int? get chargedToUserId;
 
   /// Item name
   @BuiltValueField(wireName: r'name')
@@ -80,11 +80,13 @@ class _$UpsertItemCommandSerializer implements PrimitiveSerializer<UpsertItemCom
       object.amount,
       specifiedType: const FullType(String),
     );
-    yield r'chargedToUserId';
-    yield serializers.serialize(
-      object.chargedToUserId,
-      specifiedType: const FullType(int),
-    );
+    if (object.chargedToUserId != null) {
+      yield r'chargedToUserId';
+      yield serializers.serialize(
+        object.chargedToUserId,
+        specifiedType: const FullType(int),
+      );
+    }
     yield r'name';
     yield serializers.serialize(
       object.name,

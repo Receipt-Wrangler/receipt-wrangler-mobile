@@ -5,7 +5,7 @@ class FormItem {
   final String formId;
   final String name;
   final String amount;
-  final int chargedToUserId;
+  final int? chargedToUserId;
   final int receiptId;
   final api.ItemStatus status;
   final List<api.Category> categories;
@@ -15,7 +15,7 @@ class FormItem {
     required this.formId,
     required String name,
     required String amount,
-    required int chargedToUserId,
+    required int? chargedToUserId,
     required int receiptId,
     required api.ItemStatus status,
     required this.categories,

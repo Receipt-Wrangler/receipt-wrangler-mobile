@@ -12,7 +12,7 @@ class _$Item extends Item {
   @override
   final String amount;
   @override
-  final int chargedToUserId;
+  final int? chargedToUserId;
   @override
   final String? createdAt;
   @override
@@ -38,7 +38,7 @@ class _$Item extends Item {
   _$Item._(
       {this.isTaxed,
       required this.amount,
-      required this.chargedToUserId,
+      this.chargedToUserId,
       this.createdAt,
       this.createdBy,
       this.id,
@@ -50,8 +50,6 @@ class _$Item extends Item {
       this.updatedAt})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(amount, r'Item', 'amount');
-    BuiltValueNullFieldError.checkNotNull(
-        chargedToUserId, r'Item', 'chargedToUserId');
     BuiltValueNullFieldError.checkNotNull(name, r'Item', 'name');
     BuiltValueNullFieldError.checkNotNull(receiptId, r'Item', 'receiptId');
     BuiltValueNullFieldError.checkNotNull(status, r'Item', 'status');
@@ -220,8 +218,7 @@ class ItemBuilder implements Builder<Item, ItemBuilder> {
               isTaxed: isTaxed,
               amount: BuiltValueNullFieldError.checkNotNull(
                   amount, r'Item', 'amount'),
-              chargedToUserId: BuiltValueNullFieldError.checkNotNull(
-                  chargedToUserId, r'Item', 'chargedToUserId'),
+              chargedToUserId: chargedToUserId,
               createdAt: createdAt,
               createdBy: createdBy,
               id: id,

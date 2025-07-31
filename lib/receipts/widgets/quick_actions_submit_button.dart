@@ -3,7 +3,6 @@ import 'package:money2/money2.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/currency.dart';
-import 'package:receipt_wrangler_mobile/models/context_model.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/bottom_submit_button.dart';
 
@@ -25,8 +24,6 @@ class _ReceiptQuickActionsSubmitButton
       Provider.of<ReceiptModel>(context, listen: false).quickActionsFormKey;
   late final userModel = Provider.of<UserModel>(context, listen: false);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
-  late final shellContext =
-      Provider.of<ContextModel>(context, listen: false).shellContext;
 
   List<api.UserView> getSelectedUsers() {
     return formKey.currentState!.value["users"] as List<api.UserView>;
@@ -61,43 +58,50 @@ class _ReceiptQuickActionsSubmitButton
   // TODO: don't forget about validation
   void splitEvenly() {
     if (formKey.currentState!.saveAndValidate()) {
-      var formAmount =
-          receiptModel.receiptFormKey.currentState!.fields["amount"]!.value;
+      // Get amount from the receipt model modified receipt or fallback
+      var formAmount = receiptModel.modifiedReceipt.amount;
       List<FormItem> items = buildEvenSplitFormItems(formAmount);
       receiptModel.setItems(items);
-      Navigator.pop(shellContext as BuildContext);
+      Navigator.pop(context);
     }
   }
 
   double calculateTotalPortionsInUSD() {
     var selectedUsers = getSelectedUsers();
     double totalUSD = 0.0;
-    
+
     for (api.UserView user in selectedUsers) {
       var fieldValue = formKey.currentState?.fields["${user.id}"]?.value;
       String portionAmountDisplay = fieldValue?.toString() ?? "0";
-      
+
       // Convert display currency amount to USD for calculation
-      double portionValueUSD = exchangeCustomToUSD(portionAmountDisplay).toDouble();
+      double portionValueUSD =
+          exchangeCustomToUSD(portionAmountDisplay).toDouble();
       totalUSD += portionValueUSD;
     }
-    
+
     return totalUSD;
   }
 
   void splitEvenlyWithPortions() {
     if (formKey.currentState!.saveAndValidate()) {
       // Additional validation for portions not exceeding receipt total
-      String receiptAmountDisplay = receiptModel.receiptFormKey.currentState!.fields["amount"]!.value ?? "0";
-      double receiptTotalUSD = exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+      // Get amount from the receipt model modified receipt
+      String receiptAmountDisplay = receiptModel.modifiedReceipt.amount ?? "0";
+      double receiptTotalUSD =
+          exchangeCustomToUSD(receiptAmountDisplay).toDouble();
       double totalPortionsUSD = calculateTotalPortionsInUSD();
-      
+
       if (totalPortionsUSD > receiptTotalUSD) {
         // Convert amounts back to display currency for error message
-        String totalPortionsDisplay = formatCurrency(shellContext as BuildContext, totalPortionsUSD.toString()) ?? "\$0.00";
-        String receiptTotalDisplay = formatCurrency(shellContext as BuildContext, receiptTotalUSD.toString()) ?? "\$0.00";
-        
-        ScaffoldMessenger.of(shellContext as BuildContext).showSnackBar(
+        String totalPortionsDisplay = formatCurrency(
+                context, totalPortionsUSD.toString()) ??
+            "\$0.00";
+        String receiptTotalDisplay = formatCurrency(
+                context, receiptTotalUSD.toString()) ??
+            "\$0.00";
+
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               "Total portions ($totalPortionsDisplay) cannot exceed receipt amount ($receiptTotalDisplay)",
@@ -110,9 +114,10 @@ class _ReceiptQuickActionsSubmitButton
       }
       List<FormItem> userPortionsItems = [];
       var selectedUsers = getSelectedUsers();
-      var remainingAmount = Money.parse(
-          receiptModel.receiptFormKey.currentState!.fields["amount"]!.value,
-          isoCode: customCurrencyISOCode);
+      // Get amount from the receipt model modified receipt
+      var receiptAmountValue = receiptModel.modifiedReceipt.amount ?? "0";
+      var remainingAmount =
+          Money.parse(receiptAmountValue, isoCode: customCurrencyISOCode);
 
       selectedUsers.forEach((user) {
         var splitAmount =
@@ -139,18 +144,20 @@ class _ReceiptQuickActionsSubmitButton
         ...buildEvenSplitFormItems(remainingAmount.toDouble().toString()),
         ...userPortionsItems
       ]);
-      Navigator.pop(shellContext as BuildContext);
+      Navigator.pop(context);
     }
   }
 
   double calculateTotalPercentage() {
     var selectedUsers = getSelectedUsers();
     double total = 0.0;
-    
+
     for (api.UserView user in selectedUsers) {
-      var userPercentageSelection = formKey.currentState!.fields["percentage_${user.id}"]?.value as String?;
-      
-      if (userPercentageSelection != null && userPercentageSelection.isNotEmpty) {
+      var userPercentageSelection = formKey
+          .currentState!.fields["percentage_${user.id}"]?.value as String?;
+
+      if (userPercentageSelection != null &&
+          userPercentageSelection.isNotEmpty) {
         switch (userPercentageSelection) {
           case "25%":
             total += 25.0;
@@ -165,7 +172,9 @@ class _ReceiptQuickActionsSubmitButton
             total += 100.0;
             break;
           case "Custom":
-            var customPercentageStr = formKey.currentState!.fields["custom_percentage_${user.id}"]?.value?.toString();
+            var customPercentageStr = formKey
+                .currentState!.fields["custom_percentage_${user.id}"]?.value
+                ?.toString();
             if (customPercentageStr != null && customPercentageStr.isNotEmpty) {
               final customPercentage = double.tryParse(customPercentageStr);
               if (customPercentage != null) {
@@ -176,7 +185,7 @@ class _ReceiptQuickActionsSubmitButton
         }
       }
     }
-    
+
     return total;
   }
 
@@ -185,7 +194,7 @@ class _ReceiptQuickActionsSubmitButton
       // Check if total percentage exceeds 100%
       double totalPercentage = calculateTotalPercentage();
       if (totalPercentage > 100.0) {
-        ScaffoldMessenger.of(shellContext as BuildContext).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               "Total percentage (${totalPercentage.toStringAsFixed(1)}%) cannot exceed 100%",
@@ -196,14 +205,16 @@ class _ReceiptQuickActionsSubmitButton
         );
         return;
       }
-      
+
       var selectedUsers = getSelectedUsers();
-      
+
       // Check if all users have percentage selections
       for (api.UserView user in selectedUsers) {
-        var userPercentageSelection = formKey.currentState!.fields["percentage_${user.id}"]?.value as String?;
-        if (userPercentageSelection == null || userPercentageSelection.isEmpty) {
-          ScaffoldMessenger.of(shellContext as BuildContext).showSnackBar(
+        var userPercentageSelection = formKey
+            .currentState!.fields["percentage_${user.id}"]?.value as String?;
+        if (userPercentageSelection == null ||
+            userPercentageSelection.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 "Please select a percentage for ${user.displayName}",
@@ -215,26 +226,28 @@ class _ReceiptQuickActionsSubmitButton
           return;
         }
       }
+      // Get amount from the receipt model modified receipt
+      var receiptAmountValue = receiptModel.modifiedReceipt.amount ?? "0";
       var receiptAmount = Money.parse(
-          receiptModel.receiptFormKey.currentState!.fields["amount"]!.value.isNotEmpty 
-              ? receiptModel.receiptFormKey.currentState!.fields["amount"]!.value 
-              : "0",
+          receiptAmountValue.isNotEmpty ? receiptAmountValue : "0",
           isoCode: customCurrencyISOCode);
-      
+
       var items = [...receiptModel.items];
-      
+
       selectedUsers.forEach((user) {
         // Get the percentage selection for this specific user
-        var userPercentageSelection = formKey.currentState!.fields["percentage_${user.id}"]?.value as String?;
-        
-        if (userPercentageSelection == null || userPercentageSelection.isEmpty) {
+        var userPercentageSelection = formKey
+            .currentState!.fields["percentage_${user.id}"]?.value as String?;
+
+        if (userPercentageSelection == null ||
+            userPercentageSelection.isEmpty) {
           // Skip users without percentage selection
           return;
         }
-        
+
         double percentage = 0.0;
         String percentageLabel = "";
-        
+
         switch (userPercentageSelection) {
           case "25%":
             percentage = 0.25;
@@ -254,17 +267,19 @@ class _ReceiptQuickActionsSubmitButton
             break;
           case "Custom":
             // Get custom percentage value for this user
-            var customPercentageStr = formKey.currentState!.fields["custom_percentage_${user.id}"]?.value?.toString();
+            var customPercentageStr = formKey
+                .currentState!.fields["custom_percentage_${user.id}"]?.value
+                ?.toString();
             if (customPercentageStr != null && customPercentageStr.isNotEmpty) {
               percentage = double.parse(customPercentageStr) / 100.0;
               percentageLabel = "${customPercentageStr}%";
             }
             break;
         }
-        
+
         if (percentage > 0) {
           var userAmount = receiptAmount * percentage;
-          
+
           var newItem = (api.ItemBuilder()
                 ..name = "${user.displayName}'s $percentageLabel Portion"
                 ..amount = userAmount.toDouble().toString()
@@ -272,13 +287,13 @@ class _ReceiptQuickActionsSubmitButton
                 ..receiptId = receiptModel.receipt.id
                 ..status = api.ItemStatus.OPEN)
               .build();
-          
+
           items.add(FormItem.fromItem(newItem));
         }
       });
-      
+
       receiptModel.setItems(items);
-      Navigator.pop(shellContext as BuildContext);
+      Navigator.pop(context);
     }
   }
 

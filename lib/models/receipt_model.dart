@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -44,13 +45,52 @@ class ReceiptModel extends ChangeNotifier {
   InfiniteScrollController get infiniteScrollController =>
       _infiniteScrollController;
 
-  var _receiptFormKey = GlobalKey<FormBuilderState>();
+  Map<String, dynamic> _quickActionsFormData = {};
 
-  GlobalKey<FormBuilderState> get receiptFormKey => _receiptFormKey;
+  Map<String, dynamic> get quickActionsFormData =>
+      Map.from(_quickActionsFormData);
+
+  // UI state flags for form interactions - use ValueNotifiers to avoid full rebuilds
+  ValueNotifier<bool> _isAddingShareNotifier = ValueNotifier(false);
+
+  ValueNotifier<bool> get isAddingShareNotifier => _isAddingShareNotifier;
+
+  bool get isAddingShare => _isAddingShareNotifier.value;
+
+  ValueNotifier<bool> _isAddingItemNotifier = ValueNotifier(false);
+
+  ValueNotifier<bool> get isAddingItemNotifier => _isAddingItemNotifier;
+
+  bool get isAddingItem => _isAddingItemNotifier.value;
 
   var _quickActionsFormKey = GlobalKey<FormBuilderState>();
 
   GlobalKey<FormBuilderState> get quickActionsFormKey => _quickActionsFormKey;
+
+  // Form state management methods for quick actions only
+
+  void updateQuickActionsFormField(String key, dynamic value) {
+    _quickActionsFormData[key] = value;
+    notifyListeners();
+  }
+
+  dynamic getQuickActionsFormField(String key) {
+    return _quickActionsFormData[key];
+  }
+
+  // UI state management methods - update ValueNotifiers without triggering full rebuilds
+  void setIsAddingShare(bool value) {
+    _isAddingShareNotifier.value = value;
+  }
+
+  void setIsAddingItem(bool value) {
+    _isAddingItemNotifier.value = value;
+  }
+
+  void resetQuickActionsFormData() {
+    _quickActionsFormData.clear();
+    notifyListeners();
+  }
 
   void setReceipt(Receipt receipt, bool notify) {
     _receipt = receipt;
@@ -66,12 +106,15 @@ class ReceiptModel extends ChangeNotifier {
     _imagesToUploadBehaviorSubject =
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
 
-    _receiptFormKey = GlobalKey<FormBuilderState>();
+    // Reset UI state flags when switching receipts
+    _isAddingShareNotifier.value = false;
+    _isAddingItemNotifier.value = false;
 
     if (notify) {
       notifyListeners();
     }
   }
+
 
   void setComments(List<Comment> comments) {
     _comments = comments;
@@ -101,6 +144,12 @@ class ReceiptModel extends ChangeNotifier {
     _imagesToUploadBehaviorSubject =
         BehaviorSubject<List<UploadMultipartFileData>>.seeded([]);
     _infiniteScrollController = InfiniteScrollController();
-    _receiptFormKey = GlobalKey<FormBuilderState>();
+
+    // Reset quick actions form data
+    _quickActionsFormData.clear();
+
+    // Reset UI state flags
+    _isAddingShareNotifier.value = false;
+    _isAddingItemNotifier.value = false;
   }
 }

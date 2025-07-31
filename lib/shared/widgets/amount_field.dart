@@ -19,6 +19,7 @@ class AmountField extends StatefulWidget {
     required this.initialAmount,
     required this.formState,
     this.suffixIcon,
+    this.decoration,
   });
 
   final String label;
@@ -30,6 +31,8 @@ class AmountField extends StatefulWidget {
   final WranglerFormState formState;
 
   final Widget? suffixIcon;
+
+  final InputDecoration? decoration;
 
   @override
   State<AmountField> createState() => _AmountField();
@@ -80,7 +83,12 @@ class _AmountField extends State<AmountField> {
     return FormBuilderTextField(
       key: widget.key,
       name: widget.fieldName,
-      decoration: InputDecoration(
+      decoration: widget.decoration?.copyWith(
+        labelText: widget.decoration?.labelText ?? widget.label,
+        prefixText: widget.decoration?.prefixText ?? prefix,
+        suffixText: widget.decoration?.suffixText ?? suffix,
+        suffixIcon: widget.decoration?.suffixIcon ?? widget.suffixIcon,
+      ) ?? InputDecoration(
         labelText: widget.label,
         prefixText: prefix,
         suffixText: suffix,

@@ -10,7 +10,7 @@ class _$UpsertItemCommand extends UpsertItemCommand {
   @override
   final String amount;
   @override
-  final int chargedToUserId;
+  final int? chargedToUserId;
   @override
   final String name;
   @override
@@ -28,7 +28,7 @@ class _$UpsertItemCommand extends UpsertItemCommand {
 
   _$UpsertItemCommand._(
       {required this.amount,
-      required this.chargedToUserId,
+      this.chargedToUserId,
       required this.name,
       required this.receiptId,
       required this.status,
@@ -37,8 +37,6 @@ class _$UpsertItemCommand extends UpsertItemCommand {
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         amount, r'UpsertItemCommand', 'amount');
-    BuiltValueNullFieldError.checkNotNull(
-        chargedToUserId, r'UpsertItemCommand', 'chargedToUserId');
     BuiltValueNullFieldError.checkNotNull(name, r'UpsertItemCommand', 'name');
     BuiltValueNullFieldError.checkNotNull(
         receiptId, r'UpsertItemCommand', 'receiptId');
@@ -171,8 +169,7 @@ class UpsertItemCommandBuilder
           new _$UpsertItemCommand._(
               amount: BuiltValueNullFieldError.checkNotNull(
                   amount, r'UpsertItemCommand', 'amount'),
-              chargedToUserId: BuiltValueNullFieldError.checkNotNull(
-                  chargedToUserId, r'UpsertItemCommand', 'chargedToUserId'),
+              chargedToUserId: chargedToUserId,
               name: BuiltValueNullFieldError.checkNotNull(
                   name, r'UpsertItemCommand', 'name'),
               receiptId: BuiltValueNullFieldError.checkNotNull(

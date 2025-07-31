@@ -25,13 +25,16 @@ class ReceiptBottomSheetBuilder {
 
   late final BuildContext context;
 
+  late final GlobalKey<FormBuilderState> formKey;
+
   late final textBehaviorSubject = BehaviorSubject<String>();
 
   late final formState = getFormStateFromContext(context);
 
-  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel) {
+  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel, GlobalKey<FormBuilderState> formKey) {
     this.context = context;
     this.receiptModel = receiptModel;
+    this.formKey = formKey;
   }
 
   Widget buildBottomSheet(GoRouterState state) {
@@ -229,16 +232,18 @@ class ReceiptBottomSheetBuilder {
 
   List<api.UpsertCustomFieldValueCommand> buildCustomFieldValueUpsertCommand(
       Map<String, dynamic> form) {
-    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+    var customFieldModel =
+        Provider.of<CustomFieldModel>(context, listen: false);
     List<api.UpsertCustomFieldValueCommand> upsertCustomFieldValues = [];
 
     // Process custom field values - only process fields that are currently part of the receipt
-    for (var existingCustomFieldValue in receiptModel.modifiedReceipt.customFields) {
+    for (var existingCustomFieldValue
+        in receiptModel.modifiedReceipt.customFields) {
       // Find the custom field template
       var customField = customFieldModel.customFields
           .where((cf) => cf.id == existingCustomFieldValue.customFieldId)
           .firstOrNull;
-      
+
       if (customField == null) continue; // Skip if template not found
 
       var fieldKey = "customField_${customField.id}";
@@ -246,9 +251,11 @@ class ReceiptBottomSheetBuilder {
 
       // Only process if the field has a value (for text/currency fields) or for boolean/select fields
       bool shouldProcess = false;
-      if (customField.type == api.CustomFieldType.BOOLEAN && fieldValue is bool) {
+      if (customField.type == api.CustomFieldType.BOOLEAN &&
+          fieldValue is bool) {
         shouldProcess = true;
-      } else if (customField.type == api.CustomFieldType.SELECT && fieldValue is int) {
+      } else if (customField.type == api.CustomFieldType.SELECT &&
+          fieldValue is int) {
         shouldProcess = true;
       } else if (fieldValue != null && fieldValue.toString().isNotEmpty) {
         shouldProcess = true;
@@ -266,7 +273,8 @@ class ReceiptBottomSheetBuilder {
             break;
           case api.CustomFieldType.DATE:
             if (fieldValue is DateTime) {
-              customFieldValueBuilder.dateValue = formatDate(zuluDateFormat, fieldValue);
+              customFieldValueBuilder.dateValue =
+                  formatDate(zuluDateFormat, fieldValue);
             } else if (fieldValue is String) {
               customFieldValueBuilder.dateValue = fieldValue;
             }
@@ -294,7 +302,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   api.UpsertReceiptCommand buildReceiptUpsertCommand() {
-    var form = {...receiptModel.receiptFormKey.currentState!.value};
+    var form = {...formKey.currentState!.value};
 
     var date = form["date"] as DateTime;
     form["date"] = formatDate(zuluDateFormat, date);
@@ -318,7 +326,8 @@ class ReceiptBottomSheetBuilder {
     }
 
     // Add custom field values
-    receiptToUpdate.customFields = ListBuilder(buildCustomFieldValueUpsertCommand(form));
+    receiptToUpdate.customFields =
+        ListBuilder(buildCustomFieldValueUpsertCommand(form));
 
     return receiptToUpdate.build();
   }
@@ -358,7 +367,7 @@ class ReceiptBottomSheetBuilder {
     if (isEditingBasedOnFullPath(fullPath)) {
       return BottomSubmitButton(
         onPressed: () async {
-          if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {
+          if (formKey.currentState?.saveAndValidate() ?? false) {
             try {
               var receiptToUpdate = buildReceiptUpsertCommand();
 
@@ -371,6 +380,8 @@ class ReceiptBottomSheetBuilder {
               handleApiError(context, e);
               print(e);
             }
+          } else {
+            print(formKey.currentState);
           }
         },
       );

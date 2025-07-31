@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
-import 'package:receipt_wrangler_mobile/models/context_model.dart';
 import 'package:receipt_wrangler_mobile/models/tag_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/multi_select_bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
@@ -27,22 +26,17 @@ class TagSelectField extends StatefulWidget {
 
   final Function(List<api.Tag>)? onTagsChanged;
 
+
   @override
   State<TagSelectField> createState() => _TagSelectField();
 }
 
 class _TagSelectField extends State<TagSelectField> {
   late final tagModel = Provider.of<TagModel>(context, listen: false);
-  late final contextModel = Provider.of<ContextModel>(context, listen: false);
 
   void showTagMultiSelect() {
-    showMultiselectBottomSheet(
-        contextModel.shellContext,
-        "Select Tags",
-        "Select",
-        tagModel.tags,
-        widget.initialTags,
-        (tag) => tag.name).then((value) {
+    showMultiselectBottomSheet(context, "Select Tags", "Select",
+        tagModel.tags, widget.initialTags, (tag) => tag.name).then((value) {
       if (value != null) {
         var tags = List<api.Tag>.from(value.map((item) => item as api.Tag));
 
