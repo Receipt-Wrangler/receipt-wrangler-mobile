@@ -115,9 +115,9 @@ double calculateItemsTotal(List<FormItem> items) {
   double total = 0.0;
   for (var item in items.where((item) => item.chargedToUserId == null)) {
     try {
-      total += double.parse(item.amount);
+      total += double.parse(item.amount ?? '0.0');
     } catch (e) {
-      debugPrint('Error parsing item amount: ${item.amount}');
+      debugPrint('Error parsing item amount: "${item.amount ?? 'null'}" for item "${item.name}" - $e');
     }
   }
   return total;

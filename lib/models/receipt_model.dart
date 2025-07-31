@@ -82,14 +82,7 @@ class ReceiptModel extends ChangeNotifier {
   void _updateAmountFromItems() {
     if (!_syncWithItems) return;
     
-    double total = 0.0;
-    for (var item in _items.where((item) => item.chargedToUserId == null)) {
-      try {
-        total += double.parse(item.amount ?? '0.0');
-      } catch (e) {
-        // Handle parsing errors gracefully
-      }
-    }
+    double total = calculateItemsTotal(_items);
     
     // Update the modified receipt with new amount
     _modifiedReceipt = _modifiedReceipt.rebuild((b) => b..amount = total.toStringAsFixed(2));
