@@ -119,7 +119,7 @@ class _ReceiptForm extends State<ReceiptForm> {
         return AmountField(
           label: "Amount",
           fieldName: "amount",
-          initialAmount: modifiedReceipt.amount.toString(),
+          initialAmount: receiptModel.modifiedReceipt.amount.toString(),
           formState: receiptModel.syncWithItems ? WranglerFormState.view : formState,
           decoration: receiptModel.syncWithItems 
             ? const InputDecoration(

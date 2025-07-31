@@ -39,19 +39,52 @@ class AmountField extends StatefulWidget {
 }
 
 class _AmountField extends State<AmountField> {
-  late final systemSettingsModel = Provider.of<SystemSettingsModel>(context);
-  late final controller = CurrencyTextFieldController(
-      decimalSymbol: systemSettingsModel.currencyHideDecimalPlaces
+  SystemSettingsModel? systemSettingsModel;
+  CurrencyTextFieldController? controller;
+
+  CurrencyTextFieldController _createController() {
+    final settings = systemSettingsModel!;
+    return CurrencyTextFieldController(
+      decimalSymbol: settings.currencyHideDecimalPlaces
           ? ""
-          : getCurrencySeparatorLiteral(
-              systemSettingsModel.currencyDecimalSeparator),
-      thousandSymbol: getCurrencySeparatorLiteral(
-          systemSettingsModel.currencyThousandSeparator),
+          : getCurrencySeparatorLiteral(settings.currencyDecimalSeparator),
+      thousandSymbol: getCurrencySeparatorLiteral(settings.currencyThousandSeparator),
       initDoubleValue: getInitialAmount(),
-      numberOfDecimals: systemSettingsModel.currencyHideDecimalPlaces ? 0 : 2,
+      numberOfDecimals: settings.currencyHideDecimalPlaces ? 0 : 2,
       currencySymbol: "",
       startWithSeparator: true,
-      forceCursorToEnd: false);
+      forceCursorToEnd: false,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newSystemSettingsModel = Provider.of<SystemSettingsModel>(context);
+    
+    // Initialize or recreate controller if dependencies changed
+    if (systemSettingsModel != newSystemSettingsModel || controller == null) {
+      controller?.dispose();
+      systemSettingsModel = newSystemSettingsModel;
+      controller = _createController();
+    }
+  }
+
+  @override
+  void didUpdateWidget(AmountField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialAmount != widget.initialAmount) {
+      // Recreate the controller with the new initial amount
+      controller?.dispose();
+      controller = _createController();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 
   double getInitialAmount() {
     var doubleAmount = 0.0;
@@ -68,6 +101,11 @@ class _AmountField extends State<AmountField> {
 
   @override
   Widget build(BuildContext context) {
+    // If controller is not ready, return a loading placeholder
+    if (controller == null) {
+      return const SizedBox.shrink();
+    }
+
     var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
     var prefix = systemSettingsModel.currencySymbolPosition ==
@@ -99,7 +137,7 @@ class _AmountField extends State<AmountField> {
         FormBuilderValidators.required(),
       ]),
       readOnly: isFieldReadOnly(widget.formState),
-      controller: controller,
+      controller: controller!,
       valueTransformer: (value) {
         return exchangeCustomToUSD(value)
             .format(numberFormatWithoutSymbolOrGroupSeparator);
