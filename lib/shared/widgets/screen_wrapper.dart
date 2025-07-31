@@ -8,6 +8,7 @@ class ScreenWrapper extends StatefulWidget {
     this.appBarWidget,
     this.bodyPadding,
     this.bottomSheetWidget,
+    this.floatingActionButton,
   });
 
   final Widget child;
@@ -15,6 +16,7 @@ class ScreenWrapper extends StatefulWidget {
   final PreferredSizeWidget? appBarWidget;
   final EdgeInsets? bodyPadding;
   final Widget? bottomSheetWidget;
+  final Widget? floatingActionButton;
 
   @override
   State<ScreenWrapper> createState() => _ScreenWrapper();
@@ -35,6 +37,7 @@ class _ScreenWrapper extends State<ScreenWrapper> {
         appBar: widget.appBarWidget,
         bottomSheet: widget.bottomSheetWidget,
         bottomNavigationBar: widget.bottomNavigationBarWidget,
+        floatingActionButton: widget.floatingActionButton,
         body: Container(
           padding:
               widget.bodyPadding ?? const EdgeInsets.only(left: 16, right: 16),

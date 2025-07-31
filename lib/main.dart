@@ -33,6 +33,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/circular_loading_progress
 import 'package:receipt_wrangler_mobile/shared/widgets/screen_wrapper.dart';
 import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/quick_scan_fab.dart';
 
 import 'constants/search.dart';
 import 'models/context_model.dart';
@@ -86,6 +87,7 @@ final _router = GoRouter(
           return ScreenWrapper(
             appBarWidget: const GroupSelectAppBar(),
             bottomNavigationBarWidget: const GroupSelectBottomNav(),
+            floatingActionButton: const QuickScanFAB(),
             child: child,
           );
         },
@@ -104,6 +106,7 @@ final _router = GoRouter(
             appBarWidget: const GroupAppBar(),
             bottomNavigationBarWidget: const GroupBottomNav(),
             bodyPadding: padding,
+            floatingActionButton: const QuickScanFAB(),
             child: child,
           );
         },
