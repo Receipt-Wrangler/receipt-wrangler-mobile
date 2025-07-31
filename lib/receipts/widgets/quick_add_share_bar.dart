@@ -22,12 +22,14 @@ class QuickAddShareBar extends StatefulWidget {
     required this.formState,
     required this.isVisible,
     required this.onToggleVisibility,
+    this.onSuccessCallback,
   });
 
   final int groupId;
   final WranglerFormState formState;
   final bool isVisible;
   final VoidCallback onToggleVisibility;
+  final VoidCallback? onSuccessCallback;
 
   @override
   State<QuickAddShareBar> createState() => _QuickAddShareBarState();
@@ -82,6 +84,7 @@ class _QuickAddShareBarState extends State<QuickAddShareBar> {
       onSubmit: _addShare,
       submitButtonText: "Add Share",
       submitButtonIcon: Icons.share,
+      onSuccessCallback: widget.onSuccessCallback,
       child: _buildFormContent(),
     );
   }

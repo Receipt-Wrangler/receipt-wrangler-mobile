@@ -21,12 +21,14 @@ class QuickAddItemBar extends StatefulWidget {
     required this.formState,
     required this.isVisible,
     required this.onToggleVisibility,
+    this.onSuccessCallback,
   });
 
   final int groupId;
   final WranglerFormState formState;
   final bool isVisible;
   final VoidCallback onToggleVisibility;
+  final VoidCallback? onSuccessCallback;
 
   @override
   State<QuickAddItemBar> createState() => _QuickAddItemBarState();
@@ -81,6 +83,7 @@ class _QuickAddItemBarState extends State<QuickAddItemBar> {
       onSubmit: _addItem,
       submitButtonText: "Add Item",
       submitButtonIcon: Icons.add,
+      onSuccessCallback: widget.onSuccessCallback,
       child: _buildFormContent(),
     );
   }

@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 
-class QuickAddShell extends StatelessWidget {
+class QuickAddShell extends StatefulWidget {
   const QuickAddShell({
     super.key,
     required this.title,
@@ -14,6 +15,7 @@ class QuickAddShell extends StatelessWidget {
     required this.submitButtonText,
     required this.submitButtonIcon,
     required this.child,
+    this.onSuccessCallback,
   });
 
   final String title;
@@ -25,14 +27,51 @@ class QuickAddShell extends StatelessWidget {
   final String submitButtonText;
   final IconData submitButtonIcon;
   final Widget child;
+  final VoidCallback? onSuccessCallback;
+
+  @override
+  State<QuickAddShell> createState() => _QuickAddShellState();
+}
+
+class _QuickAddShellState extends State<QuickAddShell> {
+  bool _isShowingSuccess = false;
+  Timer? _successTimer;
+
+  @override
+  void dispose() {
+    _successTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handleSubmit() {
+    widget.onSubmit();
+    _showSuccess();
+  }
+
+  void _showSuccess() {
+    setState(() {
+      _isShowingSuccess = true;
+    });
+
+    _successTimer?.cancel();
+    _successTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isShowingSuccess = false;
+        });
+      }
+    });
+
+    widget.onSuccessCallback?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (formState == WranglerFormState.view) {
+    if (widget.formState == WranglerFormState.view) {
       return const SizedBox.shrink();
     }
 
-    if (!isVisible) {
+    if (!widget.isVisible) {
       return const SizedBox.shrink();
     }
 
@@ -42,7 +81,7 @@ class QuickAddShell extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FormBuilder(
-          key: formKey,
+          key: widget.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,13 +89,13 @@ class QuickAddShell extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title,
+                    widget.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   IconButton(
-                    onPressed: onToggleVisibility,
+                    onPressed: widget.onToggleVisibility,
                     icon: const Icon(Icons.close, size: 20),
                     iconSize: 20,
                     constraints: const BoxConstraints(
@@ -68,16 +107,18 @@ class QuickAddShell extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              child,
+              widget.child,
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: onSubmit,
-                  icon: Icon(submitButtonIcon),
-                  label: Text(submitButtonText),
+                  onPressed: _isShowingSuccess ? null : _handleSubmit,
+                  icon: Icon(_isShowingSuccess ? Icons.check : widget.submitButtonIcon),
+                  label: Text(_isShowingSuccess ? "Added!" : widget.submitButtonText),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: _isShowingSuccess 
+                        ? Colors.green 
+                        : Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(

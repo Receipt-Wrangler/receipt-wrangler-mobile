@@ -54,6 +54,9 @@ class _ReceiptForm extends State<ReceiptForm> {
   int groupId = 0;
   bool _showQuickAdd = false;
   bool _showQuickAddShare = false;
+  bool _forceExpandItems = false;
+  bool _forceExpandShares = false;
+  Set<String> _newItemIds = {};
 
   @override
   void initState() {
@@ -61,6 +64,34 @@ class _ReceiptForm extends State<ReceiptForm> {
     Provider.of<ReceiptModel>(context, listen: false);
 
     groupId = modifiedReceipt.groupId;
+  }
+
+  void _onItemAdded() {
+    setState(() {
+      _forceExpandItems = true;
+    });
+    // Reset the force expand after a brief delay to allow the component to react
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() {
+          _forceExpandItems = false;
+        });
+      }
+    });
+  }
+
+  void _onShareAdded() {
+    setState(() {
+      _forceExpandShares = true;
+    });
+    // Reset the force expand after a brief delay to allow the component to react
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() {
+          _forceExpandShares = false;
+        });
+      }
+    });
   }
 
   Widget buildAuditDetailSection() {
@@ -380,6 +411,7 @@ class _ReceiptForm extends State<ReceiptForm> {
     return ReceiptItemField(
       groupId: groupId,
       formKey: widget.formKey,
+      forceExpanded: _forceExpandItems,
     );
   }
 
@@ -546,6 +578,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                 _showQuickAddShare = false;
               });
             },
+            onSuccessCallback: _onShareAdded,
           ),
         if (groupId == 0 && formState != WranglerFormState.view) ...[
           const SizedBox(height: 8),
@@ -618,6 +651,7 @@ class _ReceiptForm extends State<ReceiptForm> {
                 _showQuickAdd = false;
               });
             },
+            onSuccessCallback: _onItemAdded,
           ),
         if (groupId == 0 && formState != WranglerFormState.view) ...[
           const SizedBox(height: 8),

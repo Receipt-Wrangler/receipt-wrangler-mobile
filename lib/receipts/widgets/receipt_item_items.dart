@@ -18,10 +18,12 @@ class ReceiptItemItems extends StatefulWidget {
     super.key,
     required this.groupId,
     required this.formKey,
+    this.forceExpanded = false,
   });
 
   final int groupId;
   final GlobalKey<FormBuilderState> formKey;
+  final bool forceExpanded;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -32,6 +34,16 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
+
+  @override
+  void didUpdateWidget(ReceiptItemItems oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.forceExpanded && !oldWidget.forceExpanded) {
+      setState(() {
+        isExpanded = true;
+      });
+    }
+  }
 
   List<FormItem> getItems(List<FormItem> items) {
     return items.where((item) => item.chargedToUserId == null).toList();
