@@ -51,31 +51,17 @@ class ReceiptItemDisplay extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  item.amount,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                if (formState != WranglerFormState.view && onDelete != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: Colors.red,
+                    onPressed: onDelete,
+                    tooltip: 'Delete Item',
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 12),
             _buildItemFields(),
-            if (formState != WranglerFormState.view && onDelete != null) ...[
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: onDelete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Delete Item"),
-                ),
-              ),
-            ],
           ],
         ),
       ),
