@@ -14,6 +14,7 @@ import 'package:receipt_wrangler_mobile/receipts/widgets/quick_add_item_bar.dart
 import 'package:receipt_wrangler_mobile/receipts/widgets/quick_add_share_bar.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_list.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_share_list.dart';
+import 'package:receipt_wrangler_mobile/receipts/widgets/sync_with_items_checkbox.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
@@ -113,11 +114,22 @@ class _ReceiptForm extends State<ReceiptForm> {
   }
 
   Widget buildAmountField() {
-    return AmountField(
-        label: "Amount",
-        fieldName: "amount",
-        initialAmount: modifiedReceipt.amount.toString(),
-        formState: formState);
+    return Consumer<ReceiptModel>(
+      builder: (context, receiptModel, child) {
+        return AmountField(
+          label: "Amount",
+          fieldName: "amount",
+          initialAmount: receiptModel.modifiedReceipt.amount.toString(),
+          formState: receiptModel.syncWithItems ? WranglerFormState.view : formState,
+          decoration: receiptModel.syncWithItems 
+            ? const InputDecoration(
+                labelText: "Amount",
+                helperText: "Calculated from items total",
+              )
+            : null,
+        );
+      },
+    );
   }
 
   Widget buildDateField() {
@@ -697,6 +709,7 @@ class _ReceiptForm extends State<ReceiptForm> {
             buildNameField(),
             textFieldSpacing,
             buildAmountField(),
+            SyncWithItemsCheckbox(formState: formState),
             textFieldSpacing,
             buildDateField(),
             textFieldSpacing,
