@@ -180,6 +180,54 @@ class ReceiptBottomSheetBuilder {
         .toList();
   }
 
+  api.UpsertItemCommand buildSingleUpsertItemCommand(
+      FormItem item, Map<String, dynamic> form) {
+    var itemName = FormItem.buildItemNameName(item);
+    var amountName = FormItem.buildItemAmountName(item);
+    var statusName = FormItem.buildItemStatusName(item);
+    var categoryName = FormItem.buildItemCategoryName(item);
+    var tagName = FormItem.buildItemTagName(item);
+
+    // Recursively build linked items (one level deep only as per API spec)
+    List<api.UpsertItemCommand> linkedCommands = [];
+    if (item.linkedItems.isNotEmpty) {
+      for (var linkedItem in item.linkedItems) {
+        // Build linked item without further recursion (one level deep only)
+        var linkedItemName = FormItem.buildItemNameName(linkedItem);
+        var linkedAmountName = FormItem.buildItemAmountName(linkedItem);
+        var linkedStatusName = FormItem.buildItemStatusName(linkedItem);
+        var linkedCategoryName = FormItem.buildItemCategoryName(linkedItem);
+        var linkedTagName = FormItem.buildItemTagName(linkedItem);
+        
+        var linkedCommand = (api.UpsertItemCommandBuilder()
+              ..amount = form[linkedAmountName]
+              ..chargedToUserId = linkedItem.chargedToUserId
+              ..name = form[linkedItemName]
+              ..receiptId = linkedItem.receiptId
+              ..status = form[linkedStatusName]
+              ..categories =
+                  ListBuilder(buildUpsertCategoryCommand(form, linkedCategoryName))
+              ..tags = ListBuilder(buildUpsertTagCommand(form, linkedTagName)))
+            .build();
+        linkedCommands.add(linkedCommand);
+      }
+    }
+
+    var command = (api.UpsertItemCommandBuilder()
+          ..amount = form[amountName]
+          ..chargedToUserId = item.chargedToUserId
+          ..name = form[itemName]
+          ..receiptId = item.receiptId
+          ..status = form[statusName]
+          ..categories =
+              ListBuilder(buildUpsertCategoryCommand(form, categoryName))
+          ..tags = ListBuilder(buildUpsertTagCommand(form, tagName))
+          ..linkedItems = linkedCommands.isNotEmpty ? ListBuilder(linkedCommands) : null)
+        .build();
+
+    return command;
+  }
+
   List<api.UpsertItemCommand> buildUpsertItemCommand(
       Map<String, dynamic> form) {
     var items = Provider.of<ReceiptModel>(context, listen: false).items;
@@ -187,24 +235,9 @@ class ReceiptBottomSheetBuilder {
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-
-      var itemName = FormItem.buildItemNameName(item);
-      var amountName = FormItem.buildItemAmountName(item);
-      var statusName = FormItem.buildItemStatusName(item);
-      var categoryName = FormItem.buildItemCategoryName(item);
-      var tagName = FormItem.buildItemTagName(item);
-
-      var command = (api.UpsertItemCommandBuilder()
-            ..amount = form[amountName]
-            ..chargedToUserId = item.chargedToUserId
-            ..name = form[itemName]
-            ..receiptId = item?.receiptId ?? 0
-            ..status = form[statusName]
-            ..categories =
-                ListBuilder(buildUpsertCategoryCommand(form, categoryName))
-            ..tags = ListBuilder(buildUpsertTagCommand(form, tagName)))
-          .build();
-
+      // Only add top-level items (not linked items, as they're handled recursively)
+      // Items with chargedToUserId are shares and should still be included at top level
+      var command = buildSingleUpsertItemCommand(item, form);
       upsertItems.add(command);
     }
 

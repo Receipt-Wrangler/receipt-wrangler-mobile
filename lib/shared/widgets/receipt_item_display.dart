@@ -5,6 +5,7 @@ import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/status_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/amount_field.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/category_select_field.dart';
+import 'package:receipt_wrangler_mobile/shared/widgets/linked_item_indicator.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/tag_select_field.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
@@ -20,6 +21,7 @@ class ReceiptItemDisplay extends StatelessWidget {
     required this.formKey,
     required this.formState,
     required this.groupModel,
+    this.parentItem,
     this.onDelete,
   });
 
@@ -29,6 +31,7 @@ class ReceiptItemDisplay extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
   final WranglerFormState formState;
   final GroupModel groupModel;
+  final FormItem? parentItem;
   final VoidCallback? onDelete;
 
   @override
@@ -60,6 +63,11 @@ class ReceiptItemDisplay extends StatelessWidget {
                   ),
               ],
             ),
+            // Show linked item indicator if this item is linked to a parent
+            if (parentItem != null) ...[
+              const SizedBox(height: 8),
+              LinkedItemIndicator(parentItem: parentItem!),
+            ],
             const SizedBox(height: 12),
             _buildItemFields(),
           ],
