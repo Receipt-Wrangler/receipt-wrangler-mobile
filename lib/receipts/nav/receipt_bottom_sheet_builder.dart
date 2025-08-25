@@ -154,6 +154,11 @@ class ReceiptBottomSheetBuilder {
 
   List<api.UpsertCategoryCommand> buildUpsertCategoryCommand(
       Map<String, dynamic> form, String name) {
+    // Handle null or missing form fields
+    if (form[name] == null) {
+      return [];
+    }
+    
     var categories =
         List<api.Category>.from(form[name].map((item) => item as api.Category));
 
@@ -169,6 +174,11 @@ class ReceiptBottomSheetBuilder {
   List<api.UpsertTagCommand> buildUpsertTagCommand(
       Map<String, dynamic> form, name) {
     // TODO: move these into shared funcs
+    // Handle null or missing form fields
+    if (form[name] == null) {
+      return [];
+    }
+    
     var tags = List<api.Tag>.from(form[name].map((item) => item as api.Tag));
 
     return tags
@@ -199,15 +209,36 @@ class ReceiptBottomSheetBuilder {
         var linkedCategoryName = FormItem.buildItemCategoryName(linkedItem);
         var linkedTagName = FormItem.buildItemTagName(linkedItem);
         
+        // Check if form fields exist for this linked item
+        // If not, use the linkedItem's existing data directly
         var linkedCommand = (api.UpsertItemCommandBuilder()
-              ..amount = form[linkedAmountName]
+              ..amount = form.containsKey(linkedAmountName) 
+                  ? form[linkedAmountName] 
+                  : linkedItem.amount
               ..chargedToUserId = linkedItem.chargedToUserId
-              ..name = form[linkedItemName]
+              ..name = form.containsKey(linkedItemName) 
+                  ? form[linkedItemName] 
+                  : linkedItem.name
               ..receiptId = linkedItem.receiptId
-              ..status = form[linkedStatusName]
-              ..categories =
-                  ListBuilder(buildUpsertCategoryCommand(form, linkedCategoryName))
-              ..tags = ListBuilder(buildUpsertTagCommand(form, linkedTagName)))
+              ..status = form.containsKey(linkedStatusName) 
+                  ? form[linkedStatusName] 
+                  : linkedItem.status
+              ..categories = form.containsKey(linkedCategoryName)
+                  ? ListBuilder(buildUpsertCategoryCommand(form, linkedCategoryName))
+                  : ListBuilder(linkedItem.categories.map((cat) => 
+                      (api.UpsertCategoryCommandBuilder()
+                        ..id = cat.id
+                        ..name = cat.name ?? ""
+                        ..description = cat.description ?? "")
+                      .build()))
+              ..tags = form.containsKey(linkedTagName)
+                  ? ListBuilder(buildUpsertTagCommand(form, linkedTagName))
+                  : ListBuilder(linkedItem.tags.map((tag) => 
+                      (api.UpsertTagCommandBuilder()
+                        ..id = tag.id  
+                        ..name = tag.name ?? ""
+                        ..description = tag.description ?? "")
+                      .build())))
             .build();
         linkedCommands.add(linkedCommand);
       }
