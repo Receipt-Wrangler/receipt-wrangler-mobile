@@ -84,9 +84,9 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
     return calculateTotalPercentage() <= 100.0;
   }
 
-  String getReceiptAmount() {
-    // Get amount from the receipt model modified receipt
-    return receiptModel.modifiedReceipt.amount ?? "0";
+  String getSplitAmount() {
+    // Get split amount from the receipt model split context
+    return receiptModel.splitAmount ?? "0";
   }
 
   String formatCurrencyWithNegatives(BuildContext context, double amount) {
@@ -108,13 +108,13 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
               [];
 
       if (users.isNotEmpty) {
-        // Get receipt amount in display currency and convert to USD for calculation
-        String receiptAmountDisplay = getReceiptAmount();
-        double receiptAmountUSD =
-            exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+        // Get split amount in display currency and convert to USD for calculation
+        String splitAmountDisplay = getSplitAmount();
+        double splitAmountUSD =
+            exchangeCustomToUSD(splitAmountDisplay).toDouble();
 
         // Calculate per-person amount in USD
-        double perPersonAmountUSD = receiptAmountUSD / users.length;
+        double perPersonAmountUSD = splitAmountUSD / users.length;
 
         // Convert back to display currency for showing to user
         String perPersonAmountDisplay =
@@ -232,14 +232,14 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
       if (users.isNotEmpty) {
         fields.add(const SizedBox(height: 10));
 
-        // Get receipt amount and convert to USD for calculation
-        String receiptAmountDisplay = getReceiptAmount();
-        double receiptValueUSD =
-            exchangeCustomToUSD(receiptAmountDisplay).toDouble();
+        // Get split amount and convert to USD for calculation
+        String splitAmountDisplay = getSplitAmount();
+        double splitValueUSD =
+            exchangeCustomToUSD(splitAmountDisplay).toDouble();
 
         // Calculate total portions in USD
         double totalPortionsUSD = calculateTotalPortionsInUSD();
-        double remainingAmountUSD = receiptValueUSD - totalPortionsUSD;
+        double remainingAmountUSD = splitValueUSD - totalPortionsUSD;
         bool isValid = remainingAmountUSD >= 0;
 
         // Convert amounts back to display currency for showing to user
@@ -252,7 +252,7 @@ class _ReceiptQuickActions extends State<ReceiptQuickActions> {
           value:
               "Portions: $totalPortionsDisplay, Remaining: $remainingAmountDisplay",
           isValid: isValid,
-          errorMessage: !isValid ? "Portions exceed receipt total" : null,
+          errorMessage: !isValid ? "Portions exceed total amount" : null,
         ));
       } else {
         fields.add(const SizedBox(height: 10));

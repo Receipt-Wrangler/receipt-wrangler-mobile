@@ -21,6 +21,7 @@ import 'package:receipt_wrangler_mobile/utils/bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/utils/date.dart';
 import 'package:receipt_wrangler_mobile/utils/forms.dart';
 
+import '../../interfaces/form_item.dart';
 import '../../models/category_model.dart';
 import '../../models/custom_field_model.dart';
 import '../../models/group_model.dart';
@@ -434,6 +435,7 @@ class _ReceiptForm extends State<ReceiptForm> {
       groupId: groupId,
       formKey: widget.formKey,
       forceExpanded: _forceExpandItems,
+      onItemSplit: openItemQuickActionsBottomSheet,
     );
   }
 
@@ -629,12 +631,29 @@ class _ReceiptForm extends State<ReceiptForm> {
 
   void openQuickActionsBottomSheet() {
     receiptModel.resetQuickActionsFormKey();
+    // Setup split context for receipt-level splitting
+    receiptModel.setSplitAmount(receiptModel.modifiedReceipt.amount ?? "0");
+    receiptModel.setSplitItemFormId(null); // null indicates receipt splitting
     showFullscreenBottomSheet(
         context as BuildContext,
         ReceiptQuickActions(
           groupId: groupId,
         ),
         "Quick Actions",
+        bottomSheetWidget: ReceiptQuickActionsSubmitButton());
+  }
+
+  void openItemQuickActionsBottomSheet(FormItem item) {
+    receiptModel.resetQuickActionsFormKey();
+    // Setup split context for item-level splitting
+    receiptModel.setSplitAmount(item.amount);
+    receiptModel.setSplitItemFormId(item.formId);
+    showFullscreenBottomSheet(
+        context as BuildContext,
+        ReceiptQuickActions(
+          groupId: groupId,
+        ),
+        "Split Item",
         bottomSheetWidget: ReceiptQuickActionsSubmitButton());
   }
 

@@ -23,6 +23,7 @@ class ReceiptItemDisplay extends StatelessWidget {
     required this.groupModel,
     this.parentItem,
     this.onDelete,
+    this.onSplit,
   });
 
   final FormItem item;
@@ -33,6 +34,7 @@ class ReceiptItemDisplay extends StatelessWidget {
   final GroupModel groupModel;
   final FormItem? parentItem;
   final VoidCallback? onDelete;
+  final VoidCallback? onSplit;
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +56,28 @@ class ReceiptItemDisplay extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (formState != WranglerFormState.view && onDelete != null)
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    color: Colors.red,
-                    onPressed: onDelete,
-                    tooltip: 'Delete Item',
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Only show split button for regular items (not shares) in edit mode
+                    if (formState != WranglerFormState.view && 
+                        item.chargedToUserId == null && 
+                        onSplit != null)
+                      IconButton(
+                        icon: const Icon(Icons.call_split),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: onSplit,
+                        tooltip: 'Split Item',
+                      ),
+                    if (formState != WranglerFormState.view && onDelete != null)
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Colors.red,
+                        onPressed: onDelete,
+                        tooltip: 'Delete Item',
+                      ),
+                  ],
+                ),
               ],
             ),
             // Show linked item indicator if this item is linked to a parent

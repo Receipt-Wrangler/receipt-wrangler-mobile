@@ -67,6 +67,26 @@ class ReceiptModel extends ChangeNotifier {
 
   GlobalKey<FormBuilderState> get quickActionsFormKey => _quickActionsFormKey;
 
+  // Split context for quick actions - tracks what is being split
+  String? _splitAmount;
+  String? _splitItemFormId; // null = splitting receipt, non-null = splitting specific item
+
+  String? get splitAmount => _splitAmount;
+  String? get splitItemFormId => _splitItemFormId;
+
+  void setSplitAmount(String? amount) {
+    _splitAmount = amount;
+    notifyListeners();
+  }
+
+  void setSplitItemFormId(String? formId) {
+    _splitItemFormId = formId;
+    notifyListeners();
+  }
+
+  bool get isSplittingReceipt => _splitItemFormId == null;
+  bool get isSplittingItem => _splitItemFormId != null;
+
   bool _syncWithItems = false;
 
   bool get syncWithItems => _syncWithItems;
@@ -159,6 +179,8 @@ class ReceiptModel extends ChangeNotifier {
 
   void resetQuickActionsFormKey() {
     _quickActionsFormKey = GlobalKey<FormBuilderState>();
+    _splitAmount = null;
+    _splitItemFormId = null;
   }
 
   void resetModel() {
@@ -178,5 +200,9 @@ class ReceiptModel extends ChangeNotifier {
     _isAddingShareNotifier.value = false;
     _isAddingItemNotifier.value = false;
     _syncWithItems = false;
+    
+    // Reset split context
+    _splitAmount = null;
+    _splitItemFormId = null;
   }
 }
