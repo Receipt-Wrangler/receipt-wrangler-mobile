@@ -26,6 +26,8 @@ class _$Item extends Item {
   @override
   final ItemStatus status;
   @override
+  final BuiltList<Item>? linkedItems;
+  @override
   final BuiltList<Category>? categories;
   @override
   final BuiltList<Tag>? tags;
@@ -45,6 +47,7 @@ class _$Item extends Item {
       required this.name,
       required this.receiptId,
       required this.status,
+      this.linkedItems,
       this.categories,
       this.tags,
       this.updatedAt})
@@ -75,6 +78,7 @@ class _$Item extends Item {
         name == other.name &&
         receiptId == other.receiptId &&
         status == other.status &&
+        linkedItems == other.linkedItems &&
         categories == other.categories &&
         tags == other.tags &&
         updatedAt == other.updatedAt;
@@ -92,6 +96,7 @@ class _$Item extends Item {
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, receiptId.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
+    _$hash = $jc(_$hash, linkedItems.hashCode);
     _$hash = $jc(_$hash, categories.hashCode);
     _$hash = $jc(_$hash, tags.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
@@ -111,6 +116,7 @@ class _$Item extends Item {
           ..add('name', name)
           ..add('receiptId', receiptId)
           ..add('status', status)
+          ..add('linkedItems', linkedItems)
           ..add('categories', categories)
           ..add('tags', tags)
           ..add('updatedAt', updatedAt))
@@ -158,6 +164,12 @@ class ItemBuilder implements Builder<Item, ItemBuilder> {
   ItemStatus? get status => _$this._status;
   set status(ItemStatus? status) => _$this._status = status;
 
+  ListBuilder<Item>? _linkedItems;
+  ListBuilder<Item> get linkedItems =>
+      _$this._linkedItems ??= new ListBuilder<Item>();
+  set linkedItems(ListBuilder<Item>? linkedItems) =>
+      _$this._linkedItems = linkedItems;
+
   ListBuilder<Category>? _categories;
   ListBuilder<Category> get categories =>
       _$this._categories ??= new ListBuilder<Category>();
@@ -188,6 +200,7 @@ class ItemBuilder implements Builder<Item, ItemBuilder> {
       _name = $v.name;
       _receiptId = $v.receiptId;
       _status = $v.status;
+      _linkedItems = $v.linkedItems?.toBuilder();
       _categories = $v.categories?.toBuilder();
       _tags = $v.tags?.toBuilder();
       _updatedAt = $v.updatedAt;
@@ -228,12 +241,15 @@ class ItemBuilder implements Builder<Item, ItemBuilder> {
                   receiptId, r'Item', 'receiptId'),
               status: BuiltValueNullFieldError.checkNotNull(
                   status, r'Item', 'status'),
+              linkedItems: _linkedItems?.build(),
               categories: _categories?.build(),
               tags: _tags?.build(),
               updatedAt: updatedAt);
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'linkedItems';
+        _linkedItems?.build();
         _$failedField = 'categories';
         _categories?.build();
         _$failedField = 'tags';

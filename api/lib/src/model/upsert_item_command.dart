@@ -22,6 +22,7 @@ part 'upsert_item_command.g.dart';
 /// * [status] 
 /// * [categories] - Categories associated to item
 /// * [tags] - Tags associated to item
+/// * [linkedItems] - Items linked to this item (for sharing) - one level deep only
 @BuiltValue()
 abstract class UpsertItemCommand implements Built<UpsertItemCommand, UpsertItemCommandBuilder> {
   /// Amount the item costs
@@ -51,6 +52,10 @@ abstract class UpsertItemCommand implements Built<UpsertItemCommand, UpsertItemC
   /// Tags associated to item
   @BuiltValueField(wireName: r'tags')
   BuiltList<UpsertTagCommand>? get tags;
+
+  /// Items linked to this item (for sharing) - one level deep only
+  @BuiltValueField(wireName: r'linkedItems')
+  BuiltList<UpsertItemCommand>? get linkedItems;
 
   UpsertItemCommand._();
 
@@ -114,6 +119,13 @@ class _$UpsertItemCommandSerializer implements PrimitiveSerializer<UpsertItemCom
       yield serializers.serialize(
         object.tags,
         specifiedType: const FullType(BuiltList, [FullType(UpsertTagCommand)]),
+      );
+    }
+    if (object.linkedItems != null) {
+      yield r'linkedItems';
+      yield serializers.serialize(
+        object.linkedItems,
+        specifiedType: const FullType(BuiltList, [FullType(UpsertItemCommand)]),
       );
     }
   }
@@ -187,6 +199,13 @@ class _$UpsertItemCommandSerializer implements PrimitiveSerializer<UpsertItemCom
             specifiedType: const FullType(BuiltList, [FullType(UpsertTagCommand)]),
           ) as BuiltList<UpsertTagCommand>;
           result.tags.replace(valueDes);
+          break;
+        case r'linkedItems':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(UpsertItemCommand)]),
+          ) as BuiltList<UpsertItemCommand>;
+          result.linkedItems.replace(valueDes);
           break;
         default:
           unhandled.add(key);

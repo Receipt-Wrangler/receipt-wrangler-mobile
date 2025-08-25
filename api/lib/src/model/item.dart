@@ -24,6 +24,7 @@ part 'item.g.dart';
 /// * [name] - Item name
 /// * [receiptId] - Receipt foreign key
 /// * [status] 
+/// * [linkedItems] - Items linked to this item (for sharing)
 /// * [categories] - Categories associated to the item
 /// * [tags] - Tags associated to the item
 /// * [updatedAt] 
@@ -61,6 +62,10 @@ abstract class Item implements Built<Item, ItemBuilder> {
   @BuiltValueField(wireName: r'status')
   ItemStatus get status;
   // enum statusEnum {  OPEN,  RESOLVED,  DRAFT,  };
+
+  /// Items linked to this item (for sharing)
+  @BuiltValueField(wireName: r'linkedItems')
+  BuiltList<Item>? get linkedItems;
 
   /// Categories associated to the item
   @BuiltValueField(wireName: r'categories')
@@ -151,6 +156,13 @@ class _$ItemSerializer implements PrimitiveSerializer<Item> {
       object.status,
       specifiedType: const FullType(ItemStatus),
     );
+    if (object.linkedItems != null) {
+      yield r'linkedItems';
+      yield serializers.serialize(
+        object.linkedItems,
+        specifiedType: const FullType(BuiltList, [FullType(Item)]),
+      );
+    }
     if (object.categories != null) {
       yield r'categories';
       yield serializers.serialize(
@@ -257,6 +269,13 @@ class _$ItemSerializer implements PrimitiveSerializer<Item> {
             specifiedType: const FullType(ItemStatus),
           ) as ItemStatus;
           result.status = valueDes;
+          break;
+        case r'linkedItems':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(Item)]),
+          ) as BuiltList<Item>;
+          result.linkedItems.replace(valueDes);
           break;
         case r'categories':
           final valueDes = serializers.deserialize(

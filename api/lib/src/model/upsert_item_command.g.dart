@@ -21,6 +21,8 @@ class _$UpsertItemCommand extends UpsertItemCommand {
   final BuiltList<UpsertCategoryCommand>? categories;
   @override
   final BuiltList<UpsertTagCommand>? tags;
+  @override
+  final BuiltList<UpsertItemCommand>? linkedItems;
 
   factory _$UpsertItemCommand(
           [void Function(UpsertItemCommandBuilder)? updates]) =>
@@ -33,7 +35,8 @@ class _$UpsertItemCommand extends UpsertItemCommand {
       required this.receiptId,
       required this.status,
       this.categories,
-      this.tags})
+      this.tags,
+      this.linkedItems})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         amount, r'UpsertItemCommand', 'amount');
@@ -62,7 +65,8 @@ class _$UpsertItemCommand extends UpsertItemCommand {
         receiptId == other.receiptId &&
         status == other.status &&
         categories == other.categories &&
-        tags == other.tags;
+        tags == other.tags &&
+        linkedItems == other.linkedItems;
   }
 
   @override
@@ -75,6 +79,7 @@ class _$UpsertItemCommand extends UpsertItemCommand {
     _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jc(_$hash, categories.hashCode);
     _$hash = $jc(_$hash, tags.hashCode);
+    _$hash = $jc(_$hash, linkedItems.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -88,7 +93,8 @@ class _$UpsertItemCommand extends UpsertItemCommand {
           ..add('receiptId', receiptId)
           ..add('status', status)
           ..add('categories', categories)
-          ..add('tags', tags))
+          ..add('tags', tags)
+          ..add('linkedItems', linkedItems))
         .toString();
   }
 }
@@ -129,6 +135,12 @@ class UpsertItemCommandBuilder
       _$this._tags ??= new ListBuilder<UpsertTagCommand>();
   set tags(ListBuilder<UpsertTagCommand>? tags) => _$this._tags = tags;
 
+  ListBuilder<UpsertItemCommand>? _linkedItems;
+  ListBuilder<UpsertItemCommand> get linkedItems =>
+      _$this._linkedItems ??= new ListBuilder<UpsertItemCommand>();
+  set linkedItems(ListBuilder<UpsertItemCommand>? linkedItems) =>
+      _$this._linkedItems = linkedItems;
+
   UpsertItemCommandBuilder() {
     UpsertItemCommand._defaults(this);
   }
@@ -143,6 +155,7 @@ class UpsertItemCommandBuilder
       _status = $v.status;
       _categories = $v.categories?.toBuilder();
       _tags = $v.tags?.toBuilder();
+      _linkedItems = $v.linkedItems?.toBuilder();
       _$v = null;
     }
     return this;
@@ -177,7 +190,8 @@ class UpsertItemCommandBuilder
               status: BuiltValueNullFieldError.checkNotNull(
                   status, r'UpsertItemCommand', 'status'),
               categories: _categories?.build(),
-              tags: _tags?.build());
+              tags: _tags?.build(),
+              linkedItems: _linkedItems?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -185,6 +199,8 @@ class UpsertItemCommandBuilder
         _categories?.build();
         _$failedField = 'tags';
         _tags?.build();
+        _$failedField = 'linkedItems';
+        _linkedItems?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             r'UpsertItemCommand', _$failedField, e.toString());

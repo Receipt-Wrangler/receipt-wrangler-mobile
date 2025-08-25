@@ -127,12 +127,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Tag)]),
           () => new ListBuilder<Tag>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(Category)]),
-          () => new ListBuilder<Category>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(Tag)]),
-          () => new ListBuilder<Tag>())
-      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(CustomFieldOption)]),
           () => new ListBuilder<CustomFieldOption>())
       ..addBuilderFactory(
@@ -153,6 +147,15 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GroupMember)]),
           () => new ListBuilder<GroupMember>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Item)]),
+          () => new ListBuilder<Item>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Category)]),
+          () => new ListBuilder<Category>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Tag)]),
+          () => new ListBuilder<Tag>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(PagedDataDataInner)]),
           () => new ListBuilder<PagedDataDataInner>())
@@ -190,6 +193,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(UpsertTagCommand)]),
           () => new ListBuilder<UpsertTagCommand>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(UpsertItemCommand)]),
+          () => new ListBuilder<UpsertItemCommand>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(UpsertCategoryCommand)]),

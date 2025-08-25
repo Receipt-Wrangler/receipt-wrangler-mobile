@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **status** | [**ItemStatus**](ItemStatus.md) |  | 
 **categories** | [**BuiltList&lt;UpsertCategoryCommand&gt;**](UpsertCategoryCommand.md) | Categories associated to item | [optional] 
 **tags** | [**BuiltList&lt;UpsertTagCommand&gt;**](UpsertTagCommand.md) | Tags associated to item | [optional] 
+**linkedItems** | [**BuiltList&lt;UpsertItemCommand&gt;**](UpsertItemCommand.md) | Items linked to this item (for sharing) - one level deep only | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
