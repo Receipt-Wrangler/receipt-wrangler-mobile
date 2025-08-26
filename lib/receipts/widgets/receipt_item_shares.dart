@@ -44,9 +44,13 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
     // Track which items are linked items and their parent
     var linkedItemsWithParent = <FormItem, FormItem>{};
     
+    // Track items that have already been processed to avoid duplicates
+    var processedItemIds = <String>{};
+    
     for (var item in widget.items) {
       // Process direct shares (items with chargedToUserId)
       if (item.chargedToUserId != null) {
+        processedItemIds.add(item.formId);
         if (itemMap.containsKey(item.chargedToUserId)) {
           itemMap[item.chargedToUserId]!.add(item);
         } else {
@@ -57,9 +61,11 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
       // Process linked items from regular items
       if (item.chargedToUserId == null && item.linkedItems.isNotEmpty) {
         for (var linkedItem in item.linkedItems) {
-          if (linkedItem.chargedToUserId != null) {
+          if (linkedItem.chargedToUserId != null && !processedItemIds.contains(linkedItem.formId)) {
+            // Only process if not already processed as a direct share
             // Store the parent-child relationship
             linkedItemsWithParent[linkedItem] = item;
+            processedItemIds.add(linkedItem.formId);
             
             if (itemMap.containsKey(linkedItem.chargedToUserId)) {
               itemMap[linkedItem.chargedToUserId]!.add(linkedItem);

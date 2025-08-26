@@ -118,29 +118,44 @@ class _AmountField extends State<AmountField> {
         ? systemSettingsModel.currencyDisplay
         : null;
 
-    return FormBuilderTextField(
+    return FormBuilderField<String>(
       key: widget.key,
       name: widget.fieldName,
-      decoration: widget.decoration?.copyWith(
-        labelText: widget.decoration?.labelText ?? widget.label,
-        prefixText: widget.decoration?.prefixText ?? prefix,
-        suffixText: widget.decoration?.suffixText ?? suffix,
-        suffixIcon: widget.decoration?.suffixIcon ?? widget.suffixIcon,
-      ) ?? InputDecoration(
-        labelText: widget.label,
-        prefixText: prefix,
-        suffixText: suffix,
-        suffixIcon: widget.suffixIcon,
-      ),
-      keyboardType: TextInputType.number,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
-      ]),
-      readOnly: isFieldReadOnly(widget.formState),
-      controller: controller!,
+      initialValue: widget.initialAmount,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
       valueTransformer: (value) {
         return exchangeCustomToUSD(value)
             .format(numberFormatWithoutSymbolOrGroupSeparator);
+      },
+      builder: (FormFieldState<String> field) {
+        return TextField(
+          controller: controller!,
+          keyboardType: TextInputType.number,
+          readOnly: isFieldReadOnly(widget.formState),
+          onChanged: (value) {
+            // Manually update form field state
+            field.didChange(value);
+            print("DEBUG AmountField changed - fieldName: ${widget.fieldName}, value: $value");
+          },
+          decoration: (widget.decoration?.copyWith(
+            labelText: widget.decoration?.labelText ?? widget.label,
+            prefixText: widget.decoration?.prefixText ?? prefix,
+            suffixText: widget.decoration?.suffixText ?? suffix,
+            suffixIcon: widget.decoration?.suffixIcon ?? widget.suffixIcon,
+            errorText: field.errorText,
+          ) ?? InputDecoration(
+            labelText: widget.label,
+            prefixText: prefix,
+            suffixText: suffix,
+            suffixIcon: widget.suffixIcon,
+            errorText: field.errorText,
+          )),
+        );
       },
     );
   }

@@ -211,6 +211,27 @@ class ReceiptBottomSheetBuilder {
         
         // Check if form fields exist for this linked item
         // If not, use the linkedItem's existing data directly
+        print("=== DEBUGGING LINKED ITEM ===");
+        print("LinkedItem formId: ${linkedItem.formId}");
+        print("Generated field name: $linkedAmountName");
+        print("Form contains field: ${form.containsKey(linkedAmountName)}");
+        
+        // Show all form keys that contain this formId
+        var matchingKeys = form.keys.where((key) => key.toString().contains(linkedItem.formId)).toList();
+        print("Form keys containing formId '${linkedItem.formId}': $matchingKeys");
+        
+        // Show all form keys that look like amount fields
+        var amountKeys = form.keys.where((key) => key.toString().contains('.amount')).toList();
+        print("All amount field keys: $amountKeys");
+        
+        if (form.containsKey(linkedAmountName)) {
+          print("Form value for $linkedAmountName: ${form[linkedAmountName]}");
+        } else {
+          print("Field $linkedAmountName NOT FOUND in form");
+        }
+        print("Original linkedItem.amount: ${linkedItem.amount}");
+        print("================================");
+        
         var linkedCommand = (api.UpsertItemCommandBuilder()
               ..amount = form.containsKey(linkedAmountName) 
                   ? form[linkedAmountName] 
