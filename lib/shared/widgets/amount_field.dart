@@ -140,7 +140,6 @@ class _AmountField extends State<AmountField> {
           onChanged: (value) {
             // Manually update form field state
             field.didChange(value);
-            print("DEBUG AmountField changed - fieldName: ${widget.fieldName}, value: $value");
           },
           decoration: (widget.decoration?.copyWith(
             labelText: widget.decoration?.labelText ?? widget.label,
