@@ -124,9 +124,6 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
     List<Widget> itemWidgets = [];
     
     for (var i = 0; i < items.length; i++) {
-      var itemIndex =
-          widget.items.indexWhere((item) => item.formId == items[i].formId);
-      
       // Check if this item is a linked item and get its parent
       var parentItem = _linkedItemsParentMap[items[i]];
 
@@ -140,12 +137,53 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
         parentItem: parentItem, // Pass the parent item if it exists
         onDelete: formState != WranglerFormState.view
             ? () {
-                var newItems = [...widget.items];
-                newItems.removeAt(itemIndex);
-
-                setState(() {
-                  receiptModel.setItems(newItems);
-                });
+                var currentItem = items[i];
+                var parentItem = _linkedItemsParentMap[currentItem];
+                
+                if (parentItem != null) {
+                  // This is a linked item - need to remove from parent's linkedItems
+                  var parentIndex = widget.items.indexWhere(
+                    (item) => item.formId == parentItem.formId
+                  );
+                  
+                  if (parentIndex != -1) {
+                    // Create updated parent with linkedItem removed
+                    var updatedParent = FormItem(
+                      formId: parentItem.formId,
+                      name: parentItem.name,
+                      amount: parentItem.amount,
+                      chargedToUserId: parentItem.chargedToUserId,
+                      receiptId: parentItem.receiptId,
+                      status: parentItem.status,
+                      categories: parentItem.categories,
+                      tags: parentItem.tags,
+                      linkedItems: parentItem.linkedItems
+                          .where((linkedItem) => linkedItem.formId != currentItem.formId)
+                          .toList(),
+                    );
+                    
+                    var newItems = [...widget.items];
+                    newItems[parentIndex] = updatedParent;
+                    
+                    setState(() {
+                      receiptModel.setItems(newItems);
+                    });
+                  }
+                } else {
+                  // This is a direct share - use existing logic
+                  var itemIndex = widget.items.indexWhere(
+                    (item) => item.formId == currentItem.formId
+                  );
+                  
+                  if (itemIndex != -1) {
+                    var newItems = [...widget.items];
+                    newItems.removeAt(itemIndex);
+                    
+                    setState(() {
+                      receiptModel.setItems(newItems);
+                    });
+                  }
+                }
               }
             : null,
       ));
