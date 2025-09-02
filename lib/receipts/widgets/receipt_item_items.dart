@@ -14,11 +14,13 @@ class ReceiptItemItems extends StatefulWidget {
     required this.groupId,
     required this.formKey,
     this.forceExpanded = false,
+    this.onItemSplit,
   });
 
   final int groupId;
   final GlobalKey<FormBuilderState> formKey;
   final bool forceExpanded;
+  final Function(FormItem)? onItemSplit;
 
   @override
   State<ReceiptItemItems> createState() => _ReceiptItemItems();
@@ -108,6 +110,7 @@ class _ReceiptItemItems extends State<ReceiptItemItems> {
             });
           }
         },
+        onSplit: widget.onItemSplit != null ? () => widget.onItemSplit!(item) : null,
       ));
 
       // Add spacing between items except for the last one

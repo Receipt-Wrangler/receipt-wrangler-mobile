@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
-import 'package:receipt_wrangler_mobile/constants/spacing.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/user_model.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/receipt_item_display.dart';
@@ -34,22 +33,52 @@ class ReceiptItemShares extends StatefulWidget {
 class _ReceiptItemShares extends State<ReceiptItemShares> {
   var indexSelected = 0;
   var expandedUserMap = <int, bool>{};
+  var _linkedItemsParentMap = <FormItem, FormItem>{};
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
   late final formState = getFormStateFromContext(context);
   late final receiptModel = Provider.of<ReceiptModel>(context, listen: false);
 
   Map<int, List<FormItem>> getUserItemMap() {
     var itemMap = <int, List<FormItem>>{};
+    
+    // Track which items are linked items and their parent
+    var linkedItemsWithParent = <FormItem, FormItem>{};
+    
+    // Track items that have already been processed to avoid duplicates
+    var processedItemIds = <String>{};
+    
     for (var item in widget.items) {
-      // Only include items that have a valid chargedToUserId (shares, not items)
+      // Process direct shares (items with chargedToUserId)
       if (item.chargedToUserId != null) {
+        processedItemIds.add(item.formId);
         if (itemMap.containsKey(item.chargedToUserId)) {
           itemMap[item.chargedToUserId]!.add(item);
         } else {
           itemMap[item.chargedToUserId!] = [item];
         }
       }
+      
+      // Process linked items from regular items
+      if (item.chargedToUserId == null && item.linkedItems.isNotEmpty) {
+        for (var linkedItem in item.linkedItems) {
+          if (linkedItem.chargedToUserId != null && !processedItemIds.contains(linkedItem.formId)) {
+            // Only process if not already processed as a direct share
+            // Store the parent-child relationship
+            linkedItemsWithParent[linkedItem] = item;
+            processedItemIds.add(linkedItem.formId);
+            
+            if (itemMap.containsKey(linkedItem.chargedToUserId)) {
+              itemMap[linkedItem.chargedToUserId]!.add(linkedItem);
+            } else {
+              itemMap[linkedItem.chargedToUserId!] = [linkedItem];
+            }
+          }
+        }
+      }
     }
+    
+    // Store the linked items mapping for later use
+    _linkedItemsParentMap = linkedItemsWithParent;
 
     return itemMap;
   }
@@ -101,8 +130,8 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
     List<Widget> itemWidgets = [];
     
     for (var i = 0; i < items.length; i++) {
-      var itemIndex =
-          widget.items.indexWhere((item) => item.formId == items[i].formId);
+      // Check if this item is a linked item and get its parent
+      var parentItem = _linkedItemsParentMap[items[i]];
 
       itemWidgets.add(ReceiptItemDisplay(
         item: items[i],
@@ -111,14 +140,56 @@ class _ReceiptItemShares extends State<ReceiptItemShares> {
         formKey: widget.formKey,
         formState: formState,
         groupModel: groupModel,
+        parentItem: parentItem, // Pass the parent item if it exists
         onDelete: formState != WranglerFormState.view
             ? () {
-                var newItems = [...widget.items];
-                newItems.removeAt(itemIndex);
-
-                setState(() {
-                  receiptModel.setItems(newItems);
-                });
+                var currentItem = items[i];
+                var parentItem = _linkedItemsParentMap[currentItem];
+                
+                if (parentItem != null) {
+                  // This is a linked item - need to remove from parent's linkedItems
+                  var parentIndex = widget.items.indexWhere(
+                    (item) => item.formId == parentItem.formId
+                  );
+                  
+                  if (parentIndex != -1) {
+                    // Create updated parent with linkedItem removed
+                    var updatedParent = FormItem(
+                      formId: parentItem.formId,
+                      name: parentItem.name,
+                      amount: parentItem.amount,
+                      chargedToUserId: parentItem.chargedToUserId,
+                      receiptId: parentItem.receiptId,
+                      status: parentItem.status,
+                      categories: parentItem.categories,
+                      tags: parentItem.tags,
+                      linkedItems: parentItem.linkedItems
+                          .where((linkedItem) => linkedItem.formId != currentItem.formId)
+                          .toList(),
+                    );
+                    
+                    var newItems = [...widget.items];
+                    newItems[parentIndex] = updatedParent;
+                    
+                    setState(() {
+                      receiptModel.setItems(newItems);
+                    });
+                  }
+                } else {
+                  // This is a direct share - use existing logic
+                  var itemIndex = widget.items.indexWhere(
+                    (item) => item.formId == currentItem.formId
+                  );
+                  
+                  if (itemIndex != -1) {
+                    var newItems = [...widget.items];
+                    newItems.removeAt(itemIndex);
+                    
+                    setState(() {
+                      receiptModel.setItems(newItems);
+                    });
+                  }
+                }
               }
             : null,
       ));
