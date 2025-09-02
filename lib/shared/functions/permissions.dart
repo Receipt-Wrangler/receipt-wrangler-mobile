@@ -17,17 +17,18 @@ bool canEditReceipt(AuthModel authModel, GroupModel groupModel, int groupId) {
 }
 
 GroupRole? getUserRoleInGroup(int userId, int groupId, GroupModel groupModel) {
-  var group = groupModel.getGroupById(groupId.toString());
+  final group = groupModel.getGroupById(groupId.toString());
   if (group == null) {
     return null;
   }
 
-  var groupMember = group.groupMembers.firstWhere(
-    (groupMember) => groupMember.userId == userId,
-  );
-  if (groupMember == null) {
+  try {
+    final member = group.groupMembers.firstWhere(
+      (m) => m.userId == userId,
+    );
+    return member.groupRole;
+  } catch (_) {
+    // No matching member found
     return null;
   }
-
-  return groupMember.groupRole;
 }
