@@ -14,6 +14,7 @@ import 'package:receipt_wrangler_mobile/shared/widgets/delete_button.dart';
 import 'package:receipt_wrangler_mobile/utils/has_feature.dart';
 import 'package:receipt_wrangler_mobile/utils/scan.dart';
 import 'package:receipt_wrangler_mobile/utils/snackbar.dart';
+import 'package:receipt_wrangler_mobile/utils/forms.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../client/client.dart';
@@ -79,15 +80,35 @@ Widget _getGalleryUploadImage(
 }
 
 Widget _getSubmitButton(
-    BuildContext context, BehaviorSubject<List<QuickScanImage>> imageSubject) {
-  return BottomSubmitButton(
-    onPressed: () async {
-      await _submitQuickScan(context, imageSubject.value);
-    },
-  );
+    BuildContext context,
+    BehaviorSubject<List<QuickScanImage>> imageSubject,
+    BehaviorSubject<bool> submitSucceededSubject) {
+  return StreamBuilder<bool>(
+      stream: submitSucceededSubject.stream,
+      initialData: submitSucceededSubject.value,
+      builder: (context, snapshot) {
+        final hideButton = snapshot.data == true;
+        if (hideButton) {
+          return const SizedBox.shrink();
+        }
+
+        return BottomSubmitButton(
+          onPressed: () async {
+            try {
+              setLoadingBarState(context, true);
+              final success = await _submitQuickScan(context, imageSubject.value);
+              if (success) {
+                submitSucceededSubject.add(true);
+              }
+            } finally {
+              setLoadingBarState(context, false);
+            }
+          },
+        );
+      });
 }
 
-Future<void> _submitQuickScan(
+Future<bool> _submitQuickScan(
     BuildContext context, List<QuickScanImage> images) async {
   List<int> groupIds = [];
   List<int> paidByUserIds = [];
@@ -96,7 +117,7 @@ Future<void> _submitQuickScan(
 
   if (images.isEmpty) {
     showErrorSnackbar(context, "Please upload at least one image");
-    return;
+    return false;
   }
 
   var errored = false;
@@ -124,7 +145,7 @@ Future<void> _submitQuickScan(
   }
 
   if (errored) {
-    return;
+    return false;
   }
 
   try {
@@ -143,10 +164,10 @@ Future<void> _submitQuickScan(
   } catch (e) {
     print(e);
     showApiErrorSnackbar(context, e as dynamic);
-    return;
+    return false;
   }
 
-  return;
+  return true;
 }
 
 Widget _getDeleteIcon(InfiniteScrollController infiniteScrollController,
@@ -195,5 +216,6 @@ showQuickScanBottomSheet(context) {
       "Quick Scan",
       actions: actions,
       bodyPadding: EdgeInsets.zero,
-      bottomSheetWidget: _getSubmitButton(context, imageSubject));
+      bottomSheetWidget: _getSubmitButton(
+          context, imageSubject, BehaviorSubject<bool>.seeded(false)));
 }

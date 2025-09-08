@@ -25,13 +25,16 @@ class ReceiptBottomSheetBuilder {
 
   late final BuildContext context;
 
+  late final GlobalKey<FormBuilderState> formKey;
+
   late final textBehaviorSubject = BehaviorSubject<String>();
 
   late final formState = getFormStateFromContext(context);
 
-  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel) {
+  ReceiptBottomSheetBuilder(BuildContext context, ReceiptModel receiptModel, GlobalKey<FormBuilderState> formKey) {
     this.context = context;
     this.receiptModel = receiptModel;
+    this.formKey = formKey;
   }
 
   Widget buildBottomSheet(GoRouterState state) {
@@ -151,6 +154,11 @@ class ReceiptBottomSheetBuilder {
 
   List<api.UpsertCategoryCommand> buildUpsertCategoryCommand(
       Map<String, dynamic> form, String name) {
+    // Handle null or missing form fields
+    if (form[name] == null) {
+      return [];
+    }
+    
     var categories =
         List<api.Category>.from(form[name].map((item) => item as api.Category));
 
@@ -166,6 +174,11 @@ class ReceiptBottomSheetBuilder {
   List<api.UpsertTagCommand> buildUpsertTagCommand(
       Map<String, dynamic> form, name) {
     // TODO: move these into shared funcs
+    // Handle null or missing form fields
+    if (form[name] == null) {
+      return [];
+    }
+    
     var tags = List<api.Tag>.from(form[name].map((item) => item as api.Tag));
 
     return tags
@@ -177,6 +190,76 @@ class ReceiptBottomSheetBuilder {
         .toList();
   }
 
+  api.UpsertItemCommand buildSingleUpsertItemCommand(
+      FormItem item, Map<String, dynamic> form) {
+    var itemName = FormItem.buildItemNameName(item);
+    var amountName = FormItem.buildItemAmountName(item);
+    var statusName = FormItem.buildItemStatusName(item);
+    var categoryName = FormItem.buildItemCategoryName(item);
+    var tagName = FormItem.buildItemTagName(item);
+
+    // Recursively build linked items (one level deep only as per API spec)
+    List<api.UpsertItemCommand> linkedCommands = [];
+    if (item.linkedItems.isNotEmpty) {
+      for (var linkedItem in item.linkedItems) {
+        // Build linked item without further recursion (one level deep only)
+        var linkedItemName = FormItem.buildItemNameName(linkedItem);
+        var linkedAmountName = FormItem.buildItemAmountName(linkedItem);
+        var linkedStatusName = FormItem.buildItemStatusName(linkedItem);
+        var linkedCategoryName = FormItem.buildItemCategoryName(linkedItem);
+        var linkedTagName = FormItem.buildItemTagName(linkedItem);
+        
+        // Check if form fields exist for this linked item
+        // If not, use the linkedItem's existing data directly
+        
+        var linkedCommand = (api.UpsertItemCommandBuilder()
+              ..amount = form.containsKey(linkedAmountName) 
+                  ? form[linkedAmountName] 
+                  : linkedItem.amount
+              ..chargedToUserId = linkedItem.chargedToUserId
+              ..name = form.containsKey(linkedItemName) 
+                  ? form[linkedItemName] 
+                  : linkedItem.name
+              ..receiptId = linkedItem.receiptId
+              ..status = form.containsKey(linkedStatusName) 
+                  ? form[linkedStatusName] 
+                  : linkedItem.status
+              ..categories = form.containsKey(linkedCategoryName)
+                  ? ListBuilder(buildUpsertCategoryCommand(form, linkedCategoryName))
+                  : ListBuilder(linkedItem.categories.map((cat) => 
+                      (api.UpsertCategoryCommandBuilder()
+                        ..id = cat.id
+                        ..name = cat.name ?? ""
+                        ..description = cat.description ?? "")
+                      .build()))
+              ..tags = form.containsKey(linkedTagName)
+                  ? ListBuilder(buildUpsertTagCommand(form, linkedTagName))
+                  : ListBuilder(linkedItem.tags.map((tag) => 
+                      (api.UpsertTagCommandBuilder()
+                        ..id = tag.id  
+                        ..name = tag.name ?? ""
+                        ..description = tag.description ?? "")
+                      .build())))
+            .build();
+        linkedCommands.add(linkedCommand);
+      }
+    }
+
+    var command = (api.UpsertItemCommandBuilder()
+          ..amount = form[amountName]
+          ..chargedToUserId = item.chargedToUserId
+          ..name = form[itemName]
+          ..receiptId = item.receiptId
+          ..status = form[statusName]
+          ..categories =
+              ListBuilder(buildUpsertCategoryCommand(form, categoryName))
+          ..tags = ListBuilder(buildUpsertTagCommand(form, tagName))
+          ..linkedItems = linkedCommands.isNotEmpty ? ListBuilder(linkedCommands) : null)
+        .build();
+
+    return command;
+  }
+
   List<api.UpsertItemCommand> buildUpsertItemCommand(
       Map<String, dynamic> form) {
     var items = Provider.of<ReceiptModel>(context, listen: false).items;
@@ -184,24 +267,9 @@ class ReceiptBottomSheetBuilder {
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-
-      var itemName = FormItem.buildItemNameName(item);
-      var amountName = FormItem.buildItemAmountName(item);
-      var statusName = FormItem.buildItemStatusName(item);
-      var categoryName = FormItem.buildItemCategoryName(item);
-      var tagName = FormItem.buildItemTagName(item);
-
-      var command = (api.UpsertItemCommandBuilder()
-            ..amount = form[amountName]
-            ..chargedToUserId = item.chargedToUserId
-            ..name = form[itemName]
-            ..receiptId = item?.receiptId ?? 0
-            ..status = form[statusName]
-            ..categories =
-                ListBuilder(buildUpsertCategoryCommand(form, categoryName))
-            ..tags = ListBuilder(buildUpsertTagCommand(form, tagName)))
-          .build();
-
+      // Only add top-level items (not linked items, as they're handled recursively)
+      // Items with chargedToUserId are shares and should still be included at top level
+      var command = buildSingleUpsertItemCommand(item, form);
       upsertItems.add(command);
     }
 
@@ -229,16 +297,18 @@ class ReceiptBottomSheetBuilder {
 
   List<api.UpsertCustomFieldValueCommand> buildCustomFieldValueUpsertCommand(
       Map<String, dynamic> form) {
-    var customFieldModel = Provider.of<CustomFieldModel>(context, listen: false);
+    var customFieldModel =
+        Provider.of<CustomFieldModel>(context, listen: false);
     List<api.UpsertCustomFieldValueCommand> upsertCustomFieldValues = [];
 
     // Process custom field values - only process fields that are currently part of the receipt
-    for (var existingCustomFieldValue in receiptModel.modifiedReceipt.customFields) {
+    for (var existingCustomFieldValue
+        in receiptModel.modifiedReceipt.customFields) {
       // Find the custom field template
       var customField = customFieldModel.customFields
           .where((cf) => cf.id == existingCustomFieldValue.customFieldId)
           .firstOrNull;
-      
+
       if (customField == null) continue; // Skip if template not found
 
       var fieldKey = "customField_${customField.id}";
@@ -246,9 +316,11 @@ class ReceiptBottomSheetBuilder {
 
       // Only process if the field has a value (for text/currency fields) or for boolean/select fields
       bool shouldProcess = false;
-      if (customField.type == api.CustomFieldType.BOOLEAN && fieldValue is bool) {
+      if (customField.type == api.CustomFieldType.BOOLEAN &&
+          fieldValue is bool) {
         shouldProcess = true;
-      } else if (customField.type == api.CustomFieldType.SELECT && fieldValue is int) {
+      } else if (customField.type == api.CustomFieldType.SELECT &&
+          fieldValue is int) {
         shouldProcess = true;
       } else if (fieldValue != null && fieldValue.toString().isNotEmpty) {
         shouldProcess = true;
@@ -266,7 +338,8 @@ class ReceiptBottomSheetBuilder {
             break;
           case api.CustomFieldType.DATE:
             if (fieldValue is DateTime) {
-              customFieldValueBuilder.dateValue = formatDate(zuluDateFormat, fieldValue);
+              customFieldValueBuilder.dateValue =
+                  formatDate(zuluDateFormat, fieldValue);
             } else if (fieldValue is String) {
               customFieldValueBuilder.dateValue = fieldValue;
             }
@@ -294,7 +367,7 @@ class ReceiptBottomSheetBuilder {
   }
 
   api.UpsertReceiptCommand buildReceiptUpsertCommand() {
-    var form = {...receiptModel.receiptFormKey.currentState!.value};
+    var form = {...formKey.currentState!.value};
 
     var date = form["date"] as DateTime;
     form["date"] = formatDate(zuluDateFormat, date);
@@ -318,7 +391,8 @@ class ReceiptBottomSheetBuilder {
     }
 
     // Add custom field values
-    receiptToUpdate.customFields = ListBuilder(buildCustomFieldValueUpsertCommand(form));
+    receiptToUpdate.customFields =
+        ListBuilder(buildCustomFieldValueUpsertCommand(form));
 
     return receiptToUpdate.build();
   }
@@ -358,7 +432,7 @@ class ReceiptBottomSheetBuilder {
     if (isEditingBasedOnFullPath(fullPath)) {
       return BottomSubmitButton(
         onPressed: () async {
-          if (receiptModel.receiptFormKey.currentState!.saveAndValidate()) {
+          if (formKey.currentState?.saveAndValidate() ?? false) {
             try {
               var receiptToUpdate = buildReceiptUpsertCommand();
 
@@ -371,6 +445,8 @@ class ReceiptBottomSheetBuilder {
               handleApiError(context, e);
               print(e);
             }
+          } else {
+            print(formKey.currentState);
           }
         },
       );

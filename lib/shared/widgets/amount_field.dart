@@ -19,6 +19,7 @@ class AmountField extends StatefulWidget {
     required this.initialAmount,
     required this.formState,
     this.suffixIcon,
+    this.decoration,
   });
 
   final String label;
@@ -31,24 +32,59 @@ class AmountField extends StatefulWidget {
 
   final Widget? suffixIcon;
 
+  final InputDecoration? decoration;
+
   @override
   State<AmountField> createState() => _AmountField();
 }
 
 class _AmountField extends State<AmountField> {
-  late final systemSettingsModel = Provider.of<SystemSettingsModel>(context);
-  late final controller = CurrencyTextFieldController(
-      decimalSymbol: systemSettingsModel.currencyHideDecimalPlaces
+  SystemSettingsModel? systemSettingsModel;
+  CurrencyTextFieldController? controller;
+
+  CurrencyTextFieldController _createController() {
+    final settings = systemSettingsModel!;
+    return CurrencyTextFieldController(
+      decimalSymbol: settings.currencyHideDecimalPlaces
           ? ""
-          : getCurrencySeparatorLiteral(
-              systemSettingsModel.currencyDecimalSeparator),
-      thousandSymbol: getCurrencySeparatorLiteral(
-          systemSettingsModel.currencyThousandSeparator),
+          : getCurrencySeparatorLiteral(settings.currencyDecimalSeparator),
+      thousandSymbol: getCurrencySeparatorLiteral(settings.currencyThousandSeparator),
       initDoubleValue: getInitialAmount(),
-      numberOfDecimals: systemSettingsModel.currencyHideDecimalPlaces ? 0 : 2,
+      numberOfDecimals: settings.currencyHideDecimalPlaces ? 0 : 2,
       currencySymbol: "",
       startWithSeparator: true,
-      forceCursorToEnd: false);
+      forceCursorToEnd: false,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newSystemSettingsModel = Provider.of<SystemSettingsModel>(context);
+    
+    // Initialize or recreate controller if dependencies changed
+    if (systemSettingsModel != newSystemSettingsModel || controller == null) {
+      controller?.dispose();
+      systemSettingsModel = newSystemSettingsModel;
+      controller = _createController();
+    }
+  }
+
+  @override
+  void didUpdateWidget(AmountField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialAmount != widget.initialAmount) {
+      // Recreate the controller with the new initial amount
+      controller?.dispose();
+      controller = _createController();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 
   double getInitialAmount() {
     var doubleAmount = 0.0;
@@ -65,6 +101,11 @@ class _AmountField extends State<AmountField> {
 
   @override
   Widget build(BuildContext context) {
+    // If controller is not ready, return a loading placeholder
+    if (controller == null) {
+      return const SizedBox.shrink();
+    }
+
     var systemSettingsModel = Provider.of<SystemSettingsModel>(context);
 
     var prefix = systemSettingsModel.currencySymbolPosition ==
@@ -77,24 +118,43 @@ class _AmountField extends State<AmountField> {
         ? systemSettingsModel.currencyDisplay
         : null;
 
-    return FormBuilderTextField(
+    return FormBuilderField<String>(
       key: widget.key,
       name: widget.fieldName,
-      decoration: InputDecoration(
-        labelText: widget.label,
-        prefixText: prefix,
-        suffixText: suffix,
-        suffixIcon: widget.suffixIcon,
-      ),
-      keyboardType: TextInputType.number,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
-      ]),
-      readOnly: isFieldReadOnly(widget.formState),
-      controller: controller,
+      initialValue: widget.initialAmount,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
       valueTransformer: (value) {
         return exchangeCustomToUSD(value)
             .format(numberFormatWithoutSymbolOrGroupSeparator);
+      },
+      builder: (FormFieldState<String> field) {
+        return TextField(
+          controller: controller!,
+          keyboardType: TextInputType.number,
+          readOnly: isFieldReadOnly(widget.formState),
+          onChanged: (value) {
+            // Manually update form field state
+            field.didChange(value);
+          },
+          decoration: (widget.decoration?.copyWith(
+            labelText: widget.decoration?.labelText ?? widget.label,
+            prefixText: widget.decoration?.prefixText ?? prefix,
+            suffixText: widget.decoration?.suffixText ?? suffix,
+            suffixIcon: widget.decoration?.suffixIcon ?? widget.suffixIcon,
+            errorText: field.errorText,
+          ) ?? InputDecoration(
+            labelText: widget.label,
+            prefixText: prefix,
+            suffixText: suffix,
+            suffixIcon: widget.suffixIcon,
+            errorText: field.errorText,
+          )),
+        );
       },
     );
   }

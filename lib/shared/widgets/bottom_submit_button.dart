@@ -24,15 +24,34 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
       height: 50,
       child: Consumer<LoadingModel>(
         builder: (context, loadingModel, child) {
+          final isBusy = loadingModel.isLoading || (widget.disabled ?? false);
           return MaterialButton(
-            onPressed: (loadingModel.isLoading || (widget.disabled ?? false))
-                ? null
-                : widget.onPressed,
+            onPressed: isBusy ? null : widget.onPressed,
             color: Theme.of(context).primaryColor,
-            child: Text(
-              widget.buttonText ?? "Submit",
-              style: TextStyle(color: Colors.white),
-            ),
+            child: isBusy
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        widget.buttonText ?? "Submitting...",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  )
+                : Text(
+                    widget.buttonText ?? "Submit",
+                    style: const TextStyle(color: Colors.white),
+                  ),
           );
         },
       ),

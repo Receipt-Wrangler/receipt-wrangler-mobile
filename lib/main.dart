@@ -35,7 +35,6 @@ import 'package:receipt_wrangler_mobile/utils/auth.dart';
 import 'package:receipt_wrangler_mobile/utils/permissions.dart';
 
 import 'constants/search.dart';
-import 'models/context_model.dart';
 import 'models/custom_field_model.dart';
 import 'models/system_settings_model.dart';
 
@@ -48,7 +47,6 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AuthModel()),
       ChangeNotifierProvider(create: (_) => CategoryModel()),
-      ChangeNotifierProvider(create: (_) => ContextModel()),
       ChangeNotifierProvider(create: (_) => CustomFieldModel()),
       ChangeNotifierProvider(create: (_) => GroupModel()),
       ChangeNotifierProvider(create: (_) => LoadingModel()),

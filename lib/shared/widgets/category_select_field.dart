@@ -3,7 +3,6 @@ import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/enums/form_state.dart';
 import 'package:receipt_wrangler_mobile/models/category_model.dart';
-import 'package:receipt_wrangler_mobile/models/context_model.dart';
 import 'package:receipt_wrangler_mobile/shared/functions/multi_select_bottom_sheet.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/multi-select-field.dart';
 
@@ -27,17 +26,17 @@ class CategorySelectField extends StatefulWidget {
 
   final Function(List<api.Category>)? onCategoriesChanged;
 
+
   @override
   State<CategorySelectField> createState() => _CategorySelectField();
 }
 
 class _CategorySelectField extends State<CategorySelectField> {
   late final categoryModel = Provider.of<CategoryModel>(context, listen: false);
-  late final contextModel = Provider.of<ContextModel>(context, listen: false);
 
   void showCategoryMultiSelect() {
     showMultiselectBottomSheet(
-        contextModel.shellContext,
+        context,
         "Select Categories",
         "Select",
         categoryModel.categories,

@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/receipts/widgets/receipt_item_items.dart';
 
+import '../../interfaces/form_item.dart';
 import '../../models/receipt_model.dart';
 
 class ReceiptItemField extends StatefulWidget {
-  const ReceiptItemField({super.key, required this.groupId});
+  const ReceiptItemField({
+    super.key, 
+    required this.groupId, 
+    required this.formKey,
+    this.forceExpanded = false,
+    this.onItemSplit,
+  });
 
   final int groupId;
+  final GlobalKey<FormBuilderState> formKey;
+  final bool forceExpanded;
+  final Function(FormItem)? onItemSplit;
 
   @override
   _ReceiptItemFieldState createState() {
@@ -31,10 +42,12 @@ class _ReceiptItemFieldState extends State<ReceiptItemField> {
     return Consumer<ReceiptModel>(
       builder: (context, consumerModel, child) {
         return InputDecorator(
-          decoration: const InputDecoration(labelText: "Shared With"),
+          decoration: const InputDecoration(labelText: "Items"),
           child: ReceiptItemItems(
-            items: consumerModel.items ?? [],
             groupId: widget.groupId,
+            formKey: widget.formKey,
+            forceExpanded: widget.forceExpanded,
+            onItemSplit: widget.onItemSplit,
           ),
         );
       },

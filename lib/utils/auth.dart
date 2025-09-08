@@ -120,12 +120,14 @@ Future<void> storeAppData(
     TagModel tagModel,
     SystemSettingsModel systemSettingsModel,
     AppData appData) async {
-  if (appData!.jwt!.isNotEmpty) {
-    await authModel.setJwt(appData.jwt);
+  final jwt = appData.jwt;
+  final refresh = appData.refreshToken;
+  if ((jwt ?? '').isNotEmpty) {
+    await authModel.setJwt(jwt);
   }
 
-  if (appData.refreshToken!.isNotEmpty) {
-    await authModel.setRefreshToken(appData.refreshToken);
+  if ((refresh ?? '').isNotEmpty) {
+    await authModel.setRefreshToken(refresh);
   }
 
   authModel.setClaims(appData.claims);

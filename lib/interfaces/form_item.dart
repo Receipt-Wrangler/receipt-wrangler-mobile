@@ -5,28 +5,37 @@ class FormItem {
   final String formId;
   final String name;
   final String amount;
-  final int chargedToUserId;
+  final int? chargedToUserId;
   final int receiptId;
   final api.ItemStatus status;
   final List<api.Category> categories;
   final List<api.Tag> tags;
+  final List<FormItem> linkedItems;
 
   FormItem({
     required this.formId,
     required String name,
     required String amount,
-    required int chargedToUserId,
+    required int? chargedToUserId,
     required int receiptId,
     required api.ItemStatus status,
     required this.categories,
     required this.tags,
+    List<FormItem>? linkedItems,
   })  : name = name,
         amount = amount,
         chargedToUserId = chargedToUserId,
         receiptId = receiptId,
-        status = status;
+        status = status,
+        linkedItems = linkedItems ?? [];
 
   static FormItem fromItem(api.Item item) {
+    // Recursively convert linked items
+    List<FormItem> linkedFormItems = [];
+    if (item.linkedItems != null && item.linkedItems!.isNotEmpty) {
+      linkedFormItems = item.linkedItems!.map((linkedItem) => FormItem.fromItem(linkedItem)).toList();
+    }
+    
     return FormItem(
       formId: Uuid().v4(),
       name: item.name,
@@ -36,6 +45,7 @@ class FormItem {
       status: item.status,
       categories: item.categories?.toList() ?? [],
       tags: item.tags?.toList() ?? [],
+      linkedItems: linkedFormItems,
     );
   }
 
