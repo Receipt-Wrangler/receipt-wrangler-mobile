@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:receipt_wrangler_mobile/groups/widgets/constants/text_styles.dart';
 import 'package:receipt_wrangler_mobile/shared/widgets/paged_data_list.dart';
@@ -20,8 +19,6 @@ class FilteredReceipts extends StatefulWidget {
 
 class _FilteredReceipts extends State<FilteredReceipts> {
   late final groupId = getGroupId(context);
-  final PagingController<int, api.PagedDataDataInner> _pagingController =
-      PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,6 @@ class _FilteredReceipts extends State<FilteredReceipts> {
             style: dashboardWidgetNameStyle,
           ),
           PagedDataList(
-              pagingController: _pagingController,
               noItemsFoundText: "No receipts found",
               listItemBuilder: (context, receipt, index) {
                 return ReceiptListItem(
@@ -60,11 +56,5 @@ class _FilteredReceipts extends State<FilteredReceipts> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }

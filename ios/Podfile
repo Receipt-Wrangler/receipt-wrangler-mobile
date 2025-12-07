@@ -60,6 +60,11 @@ post_install do |installer|
         'PERMISSION_CAMERA=1',
       ]
 
+      # Fix iOS deployment target warnings - enforce minimum 12.0
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 12.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+      end
+
     end
     # End of the permission_handler configuration
   end

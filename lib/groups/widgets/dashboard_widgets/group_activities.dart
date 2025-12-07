@@ -1,6 +1,5 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/groups/widgets/constants/text_styles.dart';
@@ -23,8 +22,6 @@ class GroupActivities extends StatefulWidget {
 class _GroupActivities extends State<GroupActivities> {
   late final groupId = getGroupId(context);
   late final groupModel = Provider.of<GroupModel>(context, listen: false);
-  final PagingController<int, api.PagedDataDataInner> _pagingController =
-      PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
   api.PagedActivityRequestCommandBuilder buildCommand(int page) {
     var groupIds = ListBuilder<int>([int.parse(groupId)]);
@@ -54,7 +51,6 @@ class _GroupActivities extends State<GroupActivities> {
             style: dashboardWidgetNameStyle,
           ),
           PagedDataList(
-              pagingController: _pagingController,
               noItemsFoundText: "No activity found",
               listItemBuilder: (context, activity, index) {
                 return GroupActivityListItem(
@@ -72,11 +68,5 @@ class _GroupActivities extends State<GroupActivities> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }

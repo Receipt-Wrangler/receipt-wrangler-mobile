@@ -1,21 +1,16 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 
 class PagedDataList extends StatefulWidget {
-  const PagedDataList(
-      {super.key,
-      required PagingController<int, api.PagedDataDataInner>
-          this.pagingController,
-      required Future<Response<api.PagedData>> Function(int)
-          this.getPagedDataFuture,
-      required Widget Function(BuildContext, api.PagedDataDataInner, int)
-          this.listItemBuilder,
-      required this.noItemsFoundText});
-
-  final PagingController<int, api.PagedDataDataInner> pagingController;
+  const PagedDataList({
+    super.key,
+    required this.getPagedDataFuture,
+    required this.listItemBuilder,
+    required this.noItemsFoundText,
+    this.onRefreshCallbackSet,
+  });
 
   final Future<Response<api.PagedData>> Function(int) getPagedDataFuture;
 
@@ -24,6 +19,8 @@ class PagedDataList extends StatefulWidget {
 
   final String noItemsFoundText;
 
+  final void Function(VoidCallback)? onRefreshCallbackSet;
+
   @override
   _PagedDataListState createState() {
     return _PagedDataListState();
@@ -31,40 +28,51 @@ class PagedDataList extends StatefulWidget {
 }
 
 class _PagedDataListState extends State<PagedDataList> {
+  late final PagingController<int, api.PagedDataDataInner> _pagingController;
+  int? _totalCount;
+
   @override
   void initState() {
-    widget.pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
     super.initState();
+
+    _pagingController = PagingController<int, api.PagedDataDataInner>(
+      getNextPageKey: (state) {
+        if (_totalCount == null) return state.nextIntPageKey;
+        final itemsLength = state.items?.length ?? 0;
+        if (itemsLength >= _totalCount!) return null;
+        return state.nextIntPageKey;
+      },
+      fetchPage: (pageKey) async {
+        final response = await widget.getPagedDataFuture(pageKey);
+        if (response.data != null) {
+          _totalCount = response.data!.totalCount;
+          return response.data!.data.toList();
+        }
+        return [];
+      },
+    );
+
+    // Provide refresh callback to parent widget
+    widget.onRefreshCallbackSet?.call(() {
+      _pagingController.refresh();
+    });
   }
 
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      final pagedData = await widget.getPagedDataFuture(pageKey);
-
-      if (pagedData.data != null) {
-        var length = widget.pagingController.itemList?.length ?? 0;
-        var newData =
-            pagedData.data?.data ?? BuiltList<api.PagedDataDataInner>([]);
-
-        if (length == (pagedData.data?.totalCount ?? 0)) {
-          widget.pagingController.appendLastPage(newData.toList());
-        } else {
-          widget.pagingController.appendPage(newData.toList(), pageKey + 1);
-        }
-      }
-    } catch (error) {
-      print(error);
-      widget.pagingController.error = error;
-    }
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: PagedListView<int, api.PagedDataDataInner>(
-            pagingController: widget.pagingController,
+      child: PagingListener<int, api.PagedDataDataInner>(
+        controller: _pagingController,
+        builder: (context, state, fetchNextPage) {
+          return PagedListView<int, api.PagedDataDataInner>(
+            state: state,
+            fetchNextPage: fetchNextPage,
             builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
               itemBuilder: (context, item, index) {
                 return widget.listItemBuilder(context, item, index);
@@ -72,6 +80,11 @@ class _PagedDataListState extends State<PagedDataList> {
               noItemsFoundIndicatorBuilder: (context) => Center(
                 child: Text(widget.noItemsFoundText),
               ),
-            )));
+              invisibleItemsThreshold: 5,
+            ),
+          );
+        },
+      ),
+    );
   }
 }

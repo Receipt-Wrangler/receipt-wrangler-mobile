@@ -10,11 +10,14 @@ class QuickScan extends StatefulWidget {
   const QuickScan(
       {super.key,
       required this.imageSubject,
-      required this.infiniteScrollController});
+      required this.infiniteScrollController,
+      required this.isCompletedSubject});
 
   final BehaviorSubject<List<QuickScanImage>> imageSubject;
 
   final InfiniteScrollController infiniteScrollController;
+
+  final BehaviorSubject<bool> isCompletedSubject;
 
   @override
   State<QuickScan> createState() => _QuickScan();
@@ -29,7 +32,7 @@ class _QuickScan extends State<QuickScan> {
         child: ImageViewer(image: image));
   }
 
-  Widget _buildCarousel() {
+  Widget _buildCarousel(bool isCompleted) {
     return InfiniteCarousel.builder(
       itemCount: widget.imageSubject.value.length,
       itemExtent: MediaQuery.of(context).size.width,
@@ -50,6 +53,7 @@ class _QuickScan extends State<QuickScan> {
                   formKey: widget.imageSubject.value[realIndex].formKey,
                   image: widget.imageSubject.value[realIndex],
                   index: realIndex,
+                  enabled: !isCompleted,
                   onFormChangeCallback: (groupId, paidByUserId, status) {
                     var newImage = widget.imageSubject.value[realIndex];
                     newImage.groupId = groupId;
@@ -72,24 +76,30 @@ class _QuickScan extends State<QuickScan> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: widget.imageSubject.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text("Scan or upload an image to get started"),
-            );
-          }
+    return StreamBuilder<bool>(
+        stream: widget.isCompletedSubject.stream,
+        builder: (context, completedSnapshot) {
+          final isCompleted = completedSnapshot.hasData && completedSnapshot.data == true;
 
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: _buildCarousel(),
-            );
-          }
+          return StreamBuilder<List<QuickScanImage>>(
+              stream: widget.imageSubject.stream,
+              builder: (context, imageSnapshot) {
+                if (imageSnapshot.hasData && imageSnapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text("Scan or upload an image to get started"),
+                  );
+                }
 
-          return SizedBox.shrink();
+                if (imageSnapshot.hasData && imageSnapshot.data!.isNotEmpty) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: _buildCarousel(isCompleted),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              });
         });
   }
 }

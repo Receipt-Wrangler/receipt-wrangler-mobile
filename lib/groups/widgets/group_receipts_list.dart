@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:openapi/openapi.dart' as api;
 import 'package:provider/provider.dart';
 import 'package:receipt_wrangler_mobile/constants/receipts.dart';
@@ -18,8 +17,7 @@ class GroupReceiptsList extends StatefulWidget {
 }
 
 class _GroupReceiptsList extends State<GroupReceiptsList> {
-  final PagingController<int, api.PagedDataDataInner> _pagingController =
-      PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
+  VoidCallback? _refreshCallback;
 
   Widget buildSortFilterBar() {
     return Row(
@@ -56,7 +54,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
       onSelected: (value) {
         var model = Provider.of<ReceiptListModel>(context, listen: false);
         model.setSortDirection(value, false);
-        _pagingController.refresh();
+        _refreshCallback?.call();
       },
     );
   }
@@ -75,7 +73,7 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
       onSelected: (value) {
         var model = Provider.of<ReceiptListModel>(context, listen: false);
         model.setOrderBy(value, false);
-        _pagingController.refresh();
+        _refreshCallback?.call();
       },
     );
   }
@@ -92,25 +90,15 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
     return option.displayLabel;
   }
 
-  Widget buildReceiptList() {
-    return Expanded(
-        child: PagedListView<int, api.PagedDataDataInner>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<api.PagedDataDataInner>(
-              itemBuilder: (context, item, index) {
-                var receipt = item.anyOf.values[0] as api.Receipt;
-                return ReceiptListItem(receipt: receipt);
-              },
-            )));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         buildSortFilterBar(),
         PagedDataList(
-          pagingController: _pagingController,
+          onRefreshCallbackSet: (callback) {
+            _refreshCallback = callback;
+          },
           noItemsFoundText: "No receipts found",
           listItemBuilder: (context, receipt, index) {
             return ReceiptListItem(
@@ -129,11 +117,5 @@ class _GroupReceiptsList extends State<GroupReceiptsList> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }

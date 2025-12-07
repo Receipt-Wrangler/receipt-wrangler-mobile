@@ -70,7 +70,7 @@ Money exchangeCustomToUSD(String? customValue) {
       Money.parse(customValue, isoCode: customCurrencyISOCode);
 
   ExchangeRate exchangeRate = ExchangeRate.fromNum(1,
-      decimalDigits: 2, fromCode: customCurrencyISOCode, toCode: "USD");
+      decimalDigits: 2, fromIsoCode: customCurrencyISOCode, toIsoCode: "USD");
 
   var usdValue = exchangeRate.applyRate(parsedCustomValue);
   return usdValue;
@@ -84,7 +84,7 @@ Money exchangeUSDToCustom(String? usdValue) {
   var parsedUSDValue = Money.parse(usdValue, isoCode: "USD");
 
   ExchangeRate exchangeRate = ExchangeRate.fromNum(1,
-      decimalDigits: 2, fromCode: "USD", toCode: customCurrencyISOCode);
+      decimalDigits: 2, fromIsoCode: "USD", toIsoCode: customCurrencyISOCode);
 
   var customValue = exchangeRate.applyRate(parsedUSDValue);
   return customValue;
