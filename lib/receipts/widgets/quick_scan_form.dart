@@ -15,12 +15,14 @@ class QuickScanForm extends StatefulWidget {
       required this.formKey,
       required this.image,
       required this.index,
-      required this.onFormChangeCallback});
+      required this.onFormChangeCallback,
+      this.enabled = true});
 
   final GlobalKey<FormBuilderState> formKey;
   final QuickScanImage image;
   final int index;
   final void Function(int?, int?, api.ReceiptStatus?) onFormChangeCallback;
+  final bool enabled;
 
   @override
   State<QuickScanForm> createState() => _QuickScanForm();
@@ -59,6 +61,7 @@ class _QuickScanForm extends State<QuickScanForm> {
       items: dropdownItems,
       validator: FormBuilderValidators.required(),
       initialValue: valueExists ? initialValue : null,
+      enabled: widget.enabled,
       // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();
@@ -87,6 +90,7 @@ class _QuickScanForm extends State<QuickScanForm> {
       items: items,
       validator: FormBuilderValidators.required(),
       initialValue: valueExists ? initialValue : null,
+      enabled: widget.enabled,
       // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();
@@ -107,6 +111,7 @@ class _QuickScanForm extends State<QuickScanForm> {
       items: items,
       validator: FormBuilderValidators.required(),
       initialValue: valueExists ? initialValue : null,
+      enabled: widget.enabled,
       // Set to null if value doesn't exist
       onChanged: (value) {
         onValueChange();

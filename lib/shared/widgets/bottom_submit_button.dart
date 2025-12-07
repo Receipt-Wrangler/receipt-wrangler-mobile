@@ -29,10 +29,15 @@ class _BottomSubmitButtonState extends State<BottomSubmitButton> {
                 ? null
                 : widget.onPressed,
             color: Theme.of(context).primaryColor,
-            child: Text(
-              widget.buttonText ?? "Submit",
-              style: TextStyle(color: Colors.white),
-            ),
+            child: loadingModel.isLoading
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  )
+                : Text(
+                    widget.buttonText ?? "Submit",
+                    style: const TextStyle(color: Colors.white),
+                  ),
           );
         },
       ),
