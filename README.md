@@ -1,3 +1,5 @@
+Archived since this has been combined in the monorepository: https://github.com/Receipt-Wrangler/receipt-wrangler
+
 # Receipt Wrangler Mobile
 
 The Receipt Wrangler Mobile application provides a native mobile interface for Receipt Wrangler, a free and open-source receipt management and splitting application.
